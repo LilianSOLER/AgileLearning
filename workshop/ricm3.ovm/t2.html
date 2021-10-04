@@ -1,0 +1,346 @@
+<vars>
+  sprint=ricm3.ovm
+  task=t2
+</vars>
+
+<p>
+  Our programming language will be inspired by Java, but much simplified.
+  We provide here the description of what you can write with this
+  language. The semantics will be the same as in Java.
+  We will also draw your attention on the syntactical limitations of
+  our language compared to Java.
+</p>
+<p>
+  We draw your attention on the importance of reading and understanding
+  the following paragraphs. It is a good opportunity for you to check
+  that you understood the core concepts of programming and that you have
+  mastering the right vocabulary to discuss or describe these concepts.
+  Do not settle for an approximative understanding, you will pay the price
+  later when trying to implement the interpreter. No one can code something
+  they do not understand fully.
+</p>
+<p>
+  Note: every year, some students fail implementing the interpreter fully,
+  complaining it is too hard and that what was expected was not clear. For
+  a few, they have done their homework and they are really experiencing some
+  difficulties, but they can be helped with these difficulties quite easily.
+  But for too many, the problem
+  originates with the too common attitude of "let's read through all this
+  quickly, we already know that stuff, and there are just too many details...
+  and too many new words to remember...". We will see later.
+  Well, invariably, they see, they fail, and then they complain.
+  So please, take charge of your learning.
+</p>
+
+<h3>The elements of the language</h3>
+
+<h4>Primitive Types</h4>
+
+<p>
+  The language supports several primitive types:
+  <span class="java-keyword">int</span>,
+  <span class="java-keyword">float</span>,
+  <span class="java-keyword">char</span>,
+  and <span class="java-keyword">boolean</span>.
+</p>
+
+<h4>Variables</h4>
+
+<p>
+  The language supports the concept of variables, typed with primitive types.
+</p>
+<pre class="prettyprint lang-java">
+  int v1;
+  float v2;
+  char v3;
+  boolean v4;
+</pre>
+
+<h4>Arrays</h4>
+
+<p>
+  The language supports the concept of arrays of primitive types.
+</p>
+<pre class="prettyprint lang-java">
+  int[] intArray = new int[3];
+  char[] charArray = new char[2];
+  float[] floatArray = new float[10];
+  boolean[] boolArray = new boolean[5];
+</pre>
+<p>
+  Remember to use the syntax used above, you
+  <b>cannot use</b> the following syntax:
+</p>
+<pre class="prettyprint lang-java">
+  int intArray[];
+</pre>
+<p>
+  Note: the language supports the polymorphic type 
+  <span class="java-keyword">any</span> that represents
+  any of the above primitive types. This allows to define
+  polymorphic functions such as:
+</p>
+<pre class="prettyprint lang-java">
+  int length(any[] array);  // returns the length of an array.
+</pre>
+<p>
+  The language also supports the concept of arrays of
+  arrays:
+</p>
+<pre class="prettyprint lang-java">
+  int[][] array = new int[3][4];
+</pre>
+
+<h4>Native functions</h4>
+
+<p>
+  Certain functions cannot be written in the language, they
+  are called native functions. The list is the following:
+</p>
+<pre class="prettyprint lang-java">
+  void length(any[]);
+  void printc(char);
+  void printi(int);
+  void printf(float);
+  void printb(boolean);
+  float random();    // valeur entre [0.0, 1.0[
+  char read();       // lie l’entrée standard
+  void env() ;       // print les variables globales
+  void load(char[]); // charge un fichier de code
+</pre>
+<p>
+  Note: if you find that you are missing some native functions,
+  you can send an email to the teaching staff so that we may improve
+  that list of native functions through the years.
+  <xfr>
+    Note : Si vous en trouvez d’autres qui vous marque,
+    envoyez un email au groupe, incluant les
+    professeurs, pour que l’on puisse améliorer cette liste.
+    Merci d’avance.
+  </xfr>
+</p>
+
+<h4>User-defined functions</h4>
+
+<p>
+  The language allows you to define functions.
+  Since you can define functions, you may also invoke
+  already defined functions.
+  A few examples are the following:
+</p>
+<pre class="prettyprint lang-java">
+  int fact(int n) {
+    if (n==1) {
+      return n ;
+    }
+    return n * fact(n-1) ;
+  }
+  void foo() {}
+  void bar() {
+    return;
+  }
+  float min(float x, float y) {
+    float min = x;
+    if (y &lt; x) {
+      min = y;
+    }
+    return min;
+  }
+</pre>
+<p>
+  Notice the concept of a lexical block, delimited by "{ ... }".
+</p>
+
+<h4>Lexical Blocks</h4>
+
+<p>
+  Lexical blocks are really important for three reasons.
+</p>
+<p>
+  First, a lexical block represents a sequence of statements
+  that will be executed in sequence. Of course, some statements
+  are controlling that execution flow, see below for
+  <em>control flow statements</em>.
+</p>
+<p>
+  Second, any block may define local variables. 
+  Local variables only exist within the block they are defined in.
+  Therefore, each block manages a context of local variables.
+</p>
+</p>
+  Variables defined outside of any lexical block are global variables.
+  Global variables live forever in the global context of the
+  interpreter.
+</p>
+<p>
+  Third, lexical blocks participate in looking up variables.
+  Indeed, lexical blocks naturally nest during execution,
+  either because of function invocations or because of
+  control flow statements. For example:
+</p>
+<pre class="prettyprint lang-java">
+  int fact(int n) {
+    if (n==1) {
+      return n ;
+    }
+    return n * fact(n-1) ;
+  }
+  int x = fact(3);
+</pre>
+<p>
+  The invocation of the <em>fact</em> function will end up
+  during the execution by nesting up to 4 lexical blocks.
+</p>
+<pre class="prettyprint lang-java">
+fact(3);
+->  fact(3) {
+    |  return n * fact(n-1);
+    |  -> fact(2) {
+    |     |  return n * fact(n-1) {
+    |     |  -> fact(1) {
+    |     |     |  if (n==1) {
+    |     |     |  |  return n;
+    |     |     |  }
+    |     |     }
+    |     }
+    }
+</pre>
+<p>
+  Therefore, the nesting of lexical blocks form a stack
+  of contexts that must be used to lookup variables by name.
+  This means that when looking up a variable by name,
+  let's "n", the current block at the top of the stack
+  must be used to lookup the variable. If not a variable
+  by that name is not found, the next block on the stack
+  must be tried, and so on, until the global context
+  is tried.
+</p>
+<p>
+  Notice that function calls will also require a lookup
+  by name, but the lookup is much simpler since we only
+  allow functions to be defined in the global context.
+  This means that looking up a function by name is only
+  tried in the global context.
+</p>
+   
+<h4>Control flow statements</h4>
+
+<p>
+  The language supports three statements that control the execution flow:
+  <xfr>
+    Les structures de contrôle du flot d’exécution sont les suivantes:
+  </xfr>
+</p>
+<ol>
+  <li>if-then-else</li>
+  <li>while</li>
+  <li>return</li>
+</ol>
+<p>
+  Find below a few examples:
+</p>
+<pre class="prettyprint lang-java">
+  if (i &gt; 10) {
+    i = 10 ;
+  } else {
+    if (i &lt; 0) {
+      i = 0;
+    }
+  }
+  while (i &gt; 0) {
+    i = i - 1 ;
+  } 
+</pre>
+<p>
+  Notice that all blocks must be defined by "{...}".
+  You <b>cannot write</b> the following:
+  <xfr>
+    Il faut savoir que tout bloc commence et se termine avec des accolades.
+    Vous ne pouvez pas écrire ce qui suit:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  if (i &gt; 10) 
+    i = 10 ;
+  else {
+    if (i &lt; 0) 
+      i = 0;
+  }
+</pre>
+<p>
+  Also notice that we do not support "else if" construct.
+  You <b>cannot write</b> the following:
+  <xfr>
+    If faut aussi se rappeler que le langage n'inclu pas la construction
+    "else if".
+    Vous ne pouvez pas écrire ce qui suit:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  if (i &gt; 10) {
+    i = 10 ;
+  } else if (i &lt; 0) {
+    i = 0;
+  }
+</pre>
+	     
+<h3>Interpreter Session</h3>
+
+<p>
+  An interpreter session begins when you launch the interpreter
+  and ends when you quit the interpreter. During a session,
+  the interpreter manages a global context, holding the global
+  variables that have been defined. For example:
+</p>
+<pre class="prettyprint lang-java">
+  > int x = 3;
+  > int y = 2 * x;
+  > printi(x);
+  3
+  > printi(y);
+  6
+  >
+</pre>
+<p>
+  Then, you can define functions at the global level, like you just
+  did with global variables.
+</p>
+<pre class="prettyprint lang-java">
+ >  int fact(int n) {
+      if (n==1) {
+        return n ;
+      } 
+      return n * fact(n-1) ;
+    }
+ > int z = fact(5);
+ > printi(z);
+ 120
+ >
+</pre>
+<p>
+  You can look in the <em>"samples"</em> directory where you
+  will find samples of pretty much all the features of our
+  language.
+</p>
+
+<h3>Caveats</h3>
+
+<p>
+  Please be understanding, writing a parser is a difficult task.
+  We did our best, but the parser we provided you will
+  have bugs and error messages will not be that user-friendly.
+  So please accept our apologies in advance. To improve your experience,
+  respect the syntax used in the examples above. Especially respect the
+  <b>do-not</b> points discussed above.
+</p>
+<p>
+  Before complaining, remember that we gave you a working parser, we
+  could have asked that you implemented one. Do you really think
+  yours will be less buggy? Maybe, but probably not. So accept
+  our apologies for the inconvenience and move on, find ways around
+  the parser bugs. Furthermore, bugs are unavoidable, so you see,
+  you are not the only ones introducing bugs in released code.
+  And you know what... bugs are what keep us employed...<br>
+  <img src="/emoticons/smile.png" style="display: line;" height="26px"/>
+</p>
+ 

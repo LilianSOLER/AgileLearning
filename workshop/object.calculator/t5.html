@@ -1,0 +1,265 @@
+<vars>
+  sprint=object.calculator
+  task=t5
+</vars>
+
+<p>
+  This task is about introducing variables in our language.
+  Variables greatly improve the use of a calculator.
+  These are your typical variables, with a name and a type.
+  So we want to be able to type something like this:
+  <xfr>
+    Cette tâche introduit la notion de variable dans notre language.
+    Les variables améliorent les capacités d'un calculateur.
+    Ces variables ont un nom et un type.
+    Nous souhaitons pouvoir taper les lignes
+    suivantes dans la console de notre calculateur:
+  </xfr>
+</p>
+<pre class="terminal">
+  > int x = 3;
+  = 3
+  > float y = * 2.0 x;
+  = 6.0
+  > x;
+  = 3
+  > / 6.0 x;
+  = 2.0
+</pre>
+<p>
+  This is not hard, but this requires to discuss several
+  points:
+</p>
+<ul>
+  <li>what is a variable?</li>
+  <li>what is a scope?</li>
+  <li>what is a symbol?</li>
+</ul>
+<p>
+  Since you are programming, you should perfectly know what they are,
+  right? You are supposed to know because you are using these concepts
+  all the time when programming.
+  <xfr>
+    Puisque vous programmez, vous devez parfaitement savoir ce que sont
+    des variables, n'est-ce pas? Vous devez savoir puisque vous les utilisez
+    pour programmer.
+  </xfr>
+</p>
+<p>
+  A variable is a <em>named storage</em> that <em>holds a value</em>
+  of a certain type.
+  A variable can be written, with a new value, through an <em>assignment</em>.
+  A variable can be read, reading the value it holds. In
+  <em>any expression</em>,
+  using the variable name as a <em>symbol</em> will read the value
+	of that variable.
+  A variable lives within a
+  <em>scope</em>, where it can be used in expressions and assignments.
+  <xfr>
+    Une variable est un endroit de mémoire nommé qui contient une
+    valeur d'un certain type. On peut écrire une variable, avec
+    une nouvelle valeur, au travers d'une assignation. Une variable
+    peut être lue, ce qui donne la valeur que cette variable
+    contient. Dans toute expression, utiliser le nom d'une variable
+    comme symbole va lire la variable. Une variable vit dans un scope
+    où elle peut être recherchée par son nom.
+  </xfr>
+</p>
+<p>
+  A symbol is the name of a variable used in an expression, such as
+  "+ 2 * x y" where we have two symbols "x" and "y". These symbols
+  should corresponds to two variables named "x" and "y" in the
+  current scope. If not, the expression is not valid as it refers
+  to a non-existant variable.
+  <xfr>
+    Un symbol est le nom d'une variable utilisée dans une expression,
+    comme par example "+ 2 * x y" où nous avons les deux symboles
+    "x" and "y". Ces symboles représentent les deux variables 
+    "x" and "y" dans le scope courant. Si ce n'est pas le cas,
+    l'expression est invalide puisqu'elle référence une ou deux
+    variables qui n'existent pas.
+  </xfr>
+</p>
+<p>
+  In programming languages like Java, a local variable belongs to
+  a lexical block, delimited by braces '{' and '}'. The lexical block
+  corresponds to a scope. So for instance, the block of a method or the block
+  of a while statement. We do not have lexical blocks in our language
+  yet. Therefore, we will have only
+  one global scope, holding global variables.
+  <xfr>
+    Dans les languages de programmation comme Java, une variable locale
+    appartient à un scope lexical, c'est à dire une zone de votre source
+    délimitée par des accolades '{' et '}'. Le bloc lexical corresponds
+    à un scope. Dans notre calculateur, nous n'avons pas de blocs lexicaux.
+    Nous aurons donc qu'un seul scope global qui contiendra des variables
+    globales.
+    Mais comme dans les languages typés comme Java, les variables sont
+    typés à la déclaration: "int x;". 
+  </xfr>
+</p>
+<pre class="terminal">
+  > int x = 3;
+  > float y = 4.3;
+  > bool z = true;
+  > float u = + x y;
+  > bool v = & true z
+</pre>
+<p>
+  With the above statements, all the variables belong the global scope.
+  The variables are also typed as declared. The variable "x" is typed as
+  holding integer values, the variable "y" is typed as holding
+  float values, and the variable "z" is typed as holding
+  boolean values. The variable "u" is typed float and this must
+  be compatible the
+  type of the expression "+ x y", which depends on the lifting
+  of the types of the variable "x" and "y". In this case, it will
+  be float.  Note that 
+  a variable may not change its type through assignment. Therefore,
+  the following statements are illegal:
+  <xfr>
+    La variable "x" sera typée comme contenant des valeurs entières.
+    La variable "y" sera typée comme contenant des valeurs réelles.
+    La variable "z" sera typée comme contenant des valeurs booléennes.
+    La variable "u" est typée réelle et cela doit être compatible
+    avec le type du résultat de l'évaluation
+    de l'expression "+ x y", ce qui dépends du type des variables "x"
+    et "y". Dans notre cas, cela sera le lift(int,float), ce qui est
+    le type float. Notez qu'une variable ne peut pas changer de type
+    au travers de l'assignation de valeurs, ce qui suit est illegal:
+  </xfr>
+</p>
+<pre class="terminal">
+  > int x = 3;
+  > x = 4.3
+  invalid: (int)(float)
+</pre>
+<p>
+  It is time to look at the corresponding classes and finish
+  up the code.
+</p>
+<ul>
+  <li>Class <span class="java-class">Variable</span> </li>
+  <li>Class <span class="java-class">Scope</span> </li>
+  <li>Class <span class="java-class">Symbol</span> </li>
+  <li>Class <span class="java-class">Assignment</span> </li>
+</ul>
+<p>
+  We gave you the code for the classes
+  <span class="java-class">Variable</span> and
+  <span class="java-class">Scope</span>.
+  The code is trivial, but you need to read it
+  to confirm your understanding of a scope and
+  variables.
+</p>
+<p>
+  You have to finish the implementation of the classes
+  <span class="java-class">Symbol</span> and
+  <span class="java-class">Assignment</span>.
+</p>
+
+<h3>Testing</h3>
+
+<p>
+  You can test your code by trying out comparison
+  expressions when running the class
+  <span class="java-class">CalcMainV5</span>.
+  Of course, use the debugger to single step
+  the execution, it is the best way to learn.
+  <xfr>
+    Vous pouvez tester votre code via 
+    différentes expressions de comparaisons
+    en lançant la classe
+    <span class="java-class">CalcMainV5</span>.
+    Bien sûr, utilisez le debugger pour suivre
+    l'evaluation pas à pas, c'est le meilleur
+    moyen d'apprendre.
+  </xfr>
+</p>
+<pre class="terminal">
+  > int x = 1;
+  OK: int x = 1;
+  > int y = 2
+  OK: int y = 2;
+  > (x==y);
+  OK: (x == y)
+  -> false
+  > (x&lt;y);
+  OK:(x &lt; y)
+  -> true
+  > float f = 2.1;
+  > (x == f);
+  OK: ((float)x == y)
+  -> false
+  > f = x;
+  OK: f = x;
+  -> 2.0;
+  > (x == f);
+  OK: ((float)x == y)
+  -> true
+</pre>
+<!--
+<p>
+  <b>Caveat:</b> we hope that the parser will behave and that you will
+  not experience too much unwarranted parser errors.
+  But before you blame the parser, make sure that your syntax
+  is correct. Most of the time, you will have made a mistake
+  since you no longer have Eclipse to help you with writing
+  syntactically correct code in our language.
+  <xfr>
+    Caveat: nous espérons que le parser va marcher au mieux
+    et que vous n'aurez pas trop de bug de parsing.
+    Mais avant d'incriminer le parser, assurez vous que la
+    syntax est correcte. La plupart du temps, vous aurez fait
+    une faute de syntax car vous n'avez plus Eclipse pour vous
+    aidez lors de l'écriture de code dans notre langage.
+  </xfr>
+</p>
+<p>
+  Remember that it is hard to write a parser that produces
+  understandable error messages when the parsing fails.
+  So we apologize in advance for any inconvenience that you
+  will certainly experience when writing code in your own language
+  and trying to get it to parse correctly.
+  Good luck and keep a positive attitude, life is not perfect.
+  Don't forget to email us with your sources that do not parse
+  and that you think should.
+  <xfr>
+    Rappelez vous que c'est difficile d'écrire un parser qui produit
+    des messages d'erreurs intelligibles. Nous sommes désolé si
+    certains messages manquent de clarté. Restez positif, la vie
+    n'est pas un long fleuve tranquille. Aidez nous, envoyez nous
+    les sources qui ne parsent pas pour que nous puissions améliorer
+    le parser.
+  </xfr>
+</p>
+-->
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.calculator"
+   classpath="bin;tests.jar;parser.jar;../object.collections/edu-polytech-ricm-oop-collections.jar"
+   classname="calculator.TestCalcV5_01"> 
+  <banner>
+    Once you think your tested your entire code and
+    it works, then you can try to run our tests.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check5_01_unfold">
+  </unfold>
+</check>
+  
+
+<h3>That's all folks</h3>
+
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint calculator, Task5 completed"
+  $ git push --all
+</textarea>

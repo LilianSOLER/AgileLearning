@@ -1,0 +1,473 @@
+<vars>
+  sprint=prog.basics
+  task=t1
+  step=t1-s2
+</vars>
+
+<p>
+  In the directory <em>~/AgileLearning/workshops/oop</em> directory,
+  where you git-cloned this workshop,
+  you can see a directory called <b>workspace</b>. It is your workspace
+  for this workshop, that is, the space where you will do your coding
+  and testing work, hence the name workspace.
+  By work, we mean the programming, writting code, within different
+  projects, as you move along sprints and tasks.
+  Most tasks will ask you to look at code or write your own. The code
+  will always be within a project inside your workspace.
+  <xfr>
+    Dans le dossier où vous avez fait le clone de cet atelier,
+    vous voyez un dossier <em>workspace</em>. C'est votre workspace pour
+    cet atelier, c'est à dire l'endroit où vous allez faire le travail
+    demandé dans les différentes tâches des différents sprints. Nous
+    parlons ici du travail de programmation. La plupart des tâches
+    vous demanderont de lire ou d'écrire du code et cela se fera dans
+    les projets du workshpace.
+  </xfr>
+</p>
+<p>
+  As a matter of fact, you already started since you already created
+  a class <em>HelloWorld</em> in the directory
+  <em>~/AgileLearning/workshops/oop/workspace/hello.world</em> directory.
+  Remember? Great.
+	<xfr>
+		Rappelez vous que vous aviez déjà créé une class <em>HelloWorld</em>
+		dans le dossier 
+		<em>~/AgileLearning/workshops/oop/workspace/hello.world</em>.
+		Vous vous en souveniez? Super.
+	</xfr>
+</p>
+<p>
+  For now, locate the <em>workspace/hello.world</em> directory,
+  this is where you will carry
+  the work of this task. You will see a file <em>tests.jar</em> already there,
+  just ignore it
+  for now, but do not remove it and do not rename it.
+  <xfr>
+    Allez dans le dossier <em>hello.world</em>, 
+    où vous allez faire le travail de cette tâche. Ce dossier n'est pas vide,
+    il contient une archive <em>tests.jar</em>, n'y touchez pas.
+</p>	
+<p>
+  Now, we will set up the <em>hello.world</em> project with
+  a classical structure. We want a <em>"src"</em> directory to hold our Java
+  sources and we want a <em>"bin"</em> directory to hold our Java class files.
+  You do remember that Java sources are in files with a <em>".java"</em> extension.
+  The Java class files are produced by the Java compiler and have
+  a <em>".class"</em> extension.
+  <xfr>
+    Vous allez maintenant configurer le projet <em>hello.world</em> avec
+    une structure classique de projet Java. Nous voulons
+    un dossier "src" qui contiendra les sources de vos classes et
+    un dossier "bin" qui contiendra les class files, la version
+    compilée de vos classes. Les sources ont une extension ".java"
+    et les class files ont une extension ".class".
+  </xfr>
+</p>
+<textarea class="terminal" rows="4" >
+  oop$ cd workspace/hello.world
+  hello.world$ mkdir src
+  hello.world$ mkdir bin
+</textarea>
+<p>
+  Now, let's <b>copy</b> 
+  your class HelloWorld in the directory <em>src</em>,
+  the one you created in the previous step of this task.
+  <b>Do not move the file <em>HelloWorld.java</em>, copy it</b>.
+  So both files <em>HelloWorld.java</em> contain the same
+  source, it still looks like before:
+  <xfr>
+    Maintenant, copiez votre classe HelloWorld dans le dossier <em>src</em>,
+    celle que vous avez créé dans l'étape précédente. Ne déplacez pas
+    le fichier <em>HelloWorld.java</em>, copiez le.
+    Les deux fichiers <em>HelloWorld.java</em> contiennent donc le
+    même source, celui-ci:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class HelloWorld {
+    public static void main(String[] args) {
+      System.out.println("Hello World!");
+      return;
+    }
+  }
+</pre>
+<p>
+  There are several points to understand that we didn't fully
+  discuss earlier.
+</p>
+<ol>
+  <li>
+    Notice that the file name corresponds exactly to the class name,
+    with the extension <em>".java"</em>.
+    <xfr>
+      Notez que le nom du fichier corresponds exactement au nom
+      de la classe, mais avec l'extension ".java".
+    </xfr>
+  </li>
+  <li>
+    The entry point of a Java program is a
+    method <span class="java-method">main(String[])</span> defined
+    on a class. This is where the execution will start.
+    <xfr>
+      Le point d'entrée du programme Java est la méthode
+      <span class="java-method">main(String[])</span> définie
+      sur cette classe. C'est là que l'exécution va commencer.
+    </xfr>
+  </li>
+  <li>
+    The method <span class="java-method">main(String[])</span> must
+    be defined as
+    <span class="java-keyword">static</span>
+    and
+    <span class="java-keyword">public</span>.
+    <xfr>
+      La méthode <span class="java-method">main(String[])</span>
+      doit être qualifiée de 
+      <span class="java-keyword">static</span>
+      et
+      <span class="java-keyword">public</span>.	    
+    </xfr>
+  </li>
+  <li>
+    The method <span class="java-method">main</span> must have
+    a single argument, typed as an array of strings (String[]).
+    We know that this point may be abstract for beginners, do not worry,
+    this is ok, we will come back to that.
+    <xfr>
+      La méthode <span class="java-method">main(String[])</span>
+      doit prendre un seul argument, typé comme un tableau de
+      chaînes de caractères. Nous savons que cela est probablement
+      assez abstrait pour ceux qui débutent, pas d'inquiétude,
+      nous y reviendrons.
+    </xfr>
+  </li>
+</ol>
+<p>
+  The entry point means that the execution will start there
+  when we will launch the execution of the 
+  class <span class="java-class">HelloWorld</span>.
+  But before we can actually launch an execution,
+  we need to compile our 
+  class <span class="java-class">HelloWorld</span>,
+  like we did before. However, we have now separated
+  the source and class files, so we need to have a look
+  at a more advanced usage of the Java compiler.
+  Have a look at the help from javac:
+  <xfr>
+    Le point d'entrée désigne le point par lequel l'exécution
+    du code va débuter. Mais avant de pouvoir exécuter, il
+    faut bien sûr compiler notre source, comme nous l'avions
+    fait précédement, mais il faudra avoir recours à un usage
+    plus avancé du compilateur Java puisque nous voulons
+    séparer les fichiers sources et les fichiers classes.
+    Regardons l'aide offerte par javac:
+  </xfr>
+</p>
+<textarea class="terminal" rows="3">
+  hello.world$ javac -help
+  ...
+</textarea>
+<p>
+  OK, so this is a bit too much to read for now, we will guide you.
+  To compile our class <span class="java-class">HelloWorld</span>,
+  with the corresponding source in
+  the file <em>HelloWorld.java</em> under the <em>src</em> folder.
+  we need to issue the following command (which you can cut and paste
+	into a shell terminal, but make sure you source "setenv.sh" and
+	that you are in the correct directory "hello.word"):
+	<xfr>
+		Nous allons compiler notre nouveau source "src/HelloWorld.java"
+		et faire que le compilateur Java produise la <em>classfile</em>
+		dans le dossier "bin", voici la commande que vous pouvez
+		couper&coller dans votre shell:
+	</xfr>
+</p>
+<textarea class="terminal" rows="3">
+  hello.world$ javac -g -sourcepath ./src -classpath ./bin -s ./bin -d ./bin src/HelloWorld.java
+</textarea>
+<p>
+  Let's look at the different arguments given to the Java compiler.
+  <xfr>
+    Regardons les arguments donnés au compilateur:
+  </xfr>
+</p>
+<ul>
+  <li>"-g"<br>
+    Ask the compiler to generate all debugging info.
+    Trust us, you will want debug information.
+    <xfr>
+      Demande de générer les informations pour le debugger.
+    </xfr>
+  </li>
+  <li>"-sourcepath ./src"<br>
+    The source path is the path of directories where the classes to compile
+    can be found. We recognize the <em>"src"</em> directory we created earlier.
+    <xfr>
+      Donne le chemin où se trouve les sources de nos classes. Nous reconnaissons
+      le dossier "src".
+    </xfr>
+  </li>
+  <li>"-classpath ./bin"<br>
+    The class path is the path of directories where already compiled classes
+    can be found. We recognize the <em>"bin"</em> directory we created earlier.
+    This is quite normal since this is where we want all
+    class files to go, read below.
+    <xfr>
+      Donne le chemin où se trouve les classes compilées. Nous reconnaissons
+      le dossier "bin".
+    </xfr>    
+  </li>
+  <li>"-s ./bin -d ./bin"<br>
+    -d "directory" Specify where to place generated class files<br>
+    -s "directory" Specify where to place generated source files<br>
+	  These are necessary, but a bit advanced for you.
+	  Just recognize the <em>"bin"</em> directory we created earlier.
+	  In essence, anything generated by the Java
+	  compiler will go under the <em>"bin"</em> directory.
+    <xfr>
+      Ces options sont plus difficile à comprendre mais elles indiquent
+      au compilateur d'utiliser le dossier "bin" si il a besoin de
+      générer des sources ou des class files lors de la compilation.
+    </xfr>
+  </li>
+  <li>"src/HelloWorld.java"<br>
+    We recognize the name of the file containing the Java class
+    that we wish to compile.
+    <xfr>
+      Nous reconnaissons le chemin du fichier contenant le source
+      de notre classe <span class="java-class">HelloWorld</span>.
+    </xfr>
+  </li>
+</ul>
+<p>
+  Let's launch the execution of our program,
+  the class <span class="java-class">HelloWorld</span>:
+  <xfr>
+    Lançons l'exécution de notre programme,
+    la classe <span class="java-class">HelloWorld</span>:
+  </xfr>
+</p>
+<textarea class="terminal" rows="2" >
+  hello.world$ java -classpath ./bin HelloWorld
+  Hello World!
+</textarea>
+<p>
+  Looking at the arguments given to the <em>java</em> platform.
+</p>
+<ol>
+  <li>Argument: "-classpath ./bin"<br>
+    We immediately recognize the directory <em>"bin"</em> where
+    we generated the class files. The classpath tells Java where
+    to go to look for your compiled classes.
+  </li>
+  <li>Argument: "HelloWorld"<br>
+    We recognized the name of our class, the one that you want
+    Java to load and execute.
+  </li>
+</ol>    
+</p>
+<check
+   silent="onSuccess"
+   blocking="false"
+   lang="java"
+   cwd="workspace/hello.world"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task1.Check2">
+  <banner>
+    The following check will just try to execute your
+    class <span class="java-class">HelloWorld</span>, as illustrated above.
+  </banner>
+  <hint>
+    Something is not quite right, check your <em>hello.world</em> project
+    in the <em>workspace</em> directory:
+    <ol>
+      <li>
+	Make sure that you have a file called HelloWorld.java under
+	the "src" directory.
+      </li>
+      <li>
+	Make sure that you also have a file called "HelloWorld.class"
+	under the "bin" directory.
+      </li>
+      <li>
+	Make sure that you can load and execute your class HelloWorld
+	like this:
+	<textarea class="terminal" rows="4" >
+  hello.world$ java -classpath ./bin HelloWorld
+  Hello World!
+	</textarea>
+      </li>
+    </ol>
+    Ask for help if you need to.
+  </hint>
+  <success>
+    Everything looks fine.<br>
+    Congratulations!
+  </success>
+  <unfold></unfold>
+</check>
+
+<h3>Introducing Java Packages</h3>
+<p>
+  The concept of <b>Java packages</b>
+  is important as it impacts not only how we organize classes, but also how
+  we compile and execute them.
+  <xfr>
+    Le concept de paquet Java est important car il impacte non seulement
+    la manière dont vous allez organiser vos classes mais aussi la manière
+    de les compiler et de les exécuter.
+  </xfr>
+</p>
+<p>
+  Java <em>packages</em> organize Java classes into namespaces, organizing classes
+  in a world-wide tree. The intent is to avoid that two organizations around
+  the world produces Java classes with the same name.
+  Therefore, each organization that produces a Java class is
+  expected to use a proper package name that distinguishes its own classes 
+  from other classes from other organizations.
+  <xfr>
+    Les paquets Java organisent les classes dans des espaces de noms,
+    organisant tout le code Java du monde au sein d'un arbre de paquets.
+    L'intention est d'éviter les conflits de nom entre classes produites
+    par des organisations différentes. Ainsi, chaque organisation qui
+    développe du code Java doit choisir des noms de paquets Java qui lui
+    sont propre.
+  </xfr>
+</p>
+<p> Let's apply this idea to our HelloWorld class. 
+  We could use the following package name: 
+  <span class="java-package">edu.polytech.oop</span>.
+  Why? Because Polytech is an educational institution (edu),
+  this class is the Object-Oriented Programming
+  workshop (OOP).
+  Of course, we could pick another name, as long as it is a
+  name related to the organization (edu.polytech).
+  <xfr>
+    Appliquons cette idée à notre classe HelloWorld.
+    Nous pourrions utiliser le nom de paquet suivant:
+    <span class="java-package">edu.polytech.oop</span>.
+    Why? Parce que Polytech est une institution académique (edu),
+    cette classe est l'atelier OOP (Object-Oriented
+    Programming).
+  </xfr>
+</p>
+<p>
+  Adopting a Java package has two immediate impacts on how we write
+  our class <span class="java-class">HelloWorld</span>.
+  <xfr>
+    Le fait d'utiliser un paquet a deux effets immédiat sur l'écriture
+    de notre classe <span class="java-class">HelloWorld</span>.
+  </xfr>
+</p>
+<ol>
+  <li>
+    <p>
+      We must mention the package at the beginning
+      of the source file for the class <span class="java-class">HelloWorld</span>:
+      <xfr>
+        Nous devons mentionner le paquet au début du source, comme ceci:
+      </xfr>
+    </p>
+    <pre class="prettyprint lang-java">
+  package edu.polytech.oop;
+  public class HelloWorld {
+    public static void main(String[] args) {
+      System.out.println("Hello World!");
+    } 
+  }
+    </pre>
+  </li>
+  <li>
+    We must store the file <em>HelloWorld.java</em> in a directory
+    whose path matches the package name. In our case, for a package
+    <span class="java-package">edu.polytech.oop</span>, we would have
+    the following path: src/edu/polytech/oop/HelloWorld.java starting
+    from the <em>hello.world</em> directory.
+    <xfr>
+      Nous devons avoir le fichier <em>HelloWorld.java</em> dans un
+      dossier dont le chemin correspond au nom du paquet Java.
+      Dans notre cas, le paquet est
+      <span class="java-package">edu.polytech.oop</span>,
+      nous devons donc avoir le cheming correspondant
+      (src/edu/polytech/oop/HelloWorld.java) en partant
+      du dossier du projet <em>hello.world</em>.
+    </xfr>
+  </li>
+</ol>
+<p>
+  Let's do it. Do what is necessary to have a copy of earlier class
+  <span class="java-class">HelloWorld</span> 
+  in the package <span class="java-package">edu.polytech.oop</span>.
+  Then, compile it like this:
+  <xfr>    
+    Introduisons les paquets dans notre approache, faites ce qui est
+    nécessaire pour avoir une copie de la classe
+    <span class="java-class">HelloWorld</span> 
+    dans le paquet <span class="java-package">edu.polytech.oop</span>.
+    Pour compiler:
+  </xfr>
+</p>
+<textarea class="terminal" rows="2">
+ hello.world$ javac -g -sourcepath ./src -classpath ./bin -s ./bin -d ./bin src/edu/polytech/oop/HelloWorld.java
+</textarea>
+<p>
+  Notice that the sourcepath and classpath remain the same,
+  only the name of the class changes, taking into account the
+  full path to the source file.
+  <xfr>
+    Noter que le chemin vers les sources et les classes ne changent
+    pas (sourcepath et classpath), seul le nom de la classe à compiler
+    change, en prenant en compte le nom du paquet de la classe.
+  </xfr>
+</p>
+<p>
+  Now look under the <em>"bin"</em> directory. You also have an
+  interesting hierarchy of folders now. The Java compiler generated
+  the class files in folders that corresponds to package names.
+  <xfr>
+    Regardez sous le dossier <em>bin</em>. Vous avez une hiérarchie
+    de dossier correspondant aux paquets pour lesquels des classes
+    ont été compilé. 
+  </xfr>
+</p>
+<check
+   silent="onSuccess"
+   blocking="false"
+   lang="java"
+   cwd="workspace/hello.world"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task1.Check2a">
+  <banner>
+    The following check will just try to execute your
+    class <span class="java-class">edu.polytech.oop.HelloWorld</span>,
+    as illustrated above.
+  </banner>
+  <hint>
+    Something is not quite right, check your <em>hello.world</em> project
+    in the <em>workspace</em> directory:
+    <ol>
+      <li>
+				Make sure that you have a file called HelloWorld.java under
+				the "src/edu/polytech/oop" directory.
+      </li>
+      <li>
+				Make sure that you also have a file called "HelloWorld.class"
+				under the "bin/edu/polytech/oop" directory.
+      </li>
+      <li>
+				Make sure that you can load and execute your class HelloWorld
+				like this:
+				<textarea class="terminal" rows="4" >
+  hello.world$ java -classpath ./bin edu.polytech.oop.HelloWorld
+  Hello World!
+				</textarea>
+      </li>
+    </ol>
+    Ask for help if you need to.
+  </hint>
+  <success>
+    Everything looks fine.<br>
+    Congratulations!
+  </success>
+  <unfold></unfold>
+</check>

@@ -1,0 +1,163 @@
+<vars>
+  sprint=prog.basics
+  task=t2
+</vars>
+
+<p>
+  This task is about Java programming basics, in the Eclipse IDE.
+  Learning at least one IDE is a must for any decent
+  Java developer. No serious Java developer uses a text editor and
+  no debugger. For 40 years, debuggers have been around and helped
+  millions of developers be more efficient. Why would you want to be
+  more efficient? To have more quality fun times with your friends.
+  So why would anyone deprived oneself of quality fun times with one's
+  friends? Beats us, so we are teaching you how to use Eclipse.
+  <xfr>
+    Cette tâche a pour but de refaire la précédente mais sous Eclipse,
+    de façon à faire vos premiers pas sous Eclipse.
+  </xfr>
+</p>
+<p>
+  <b>Using Eclipse is mandatory</b>, even if you know another IDE and you
+  are more familiar with it. Sorry, but you will have to learn Eclipse.
+  Sorry to break the bad news, but often, in a work environment,
+  working within a development team, you will not have the luxury
+  to choose your favorite tools, it will be a consensus across team
+  members. Here, the consensus is imposed, it is to use Eclipse.
+	<xfr>
+		L'utilisation de Eclipse n'est pas négotiable, même si vous connaissez
+		déjà un autre IDE ou que vous ne voyez pas l'intérêt d'apprendre Eclipse
+		ou n'importe quels autres IDE. 
+	</xfr>
+</p>
+
+<h3>Reminder: Launching Eclipse</h3>
+
+<p>
+  We have provided you with an Eclipse already.
+  It is important that you use the Eclipse we provided you.
+  We know, you all want to use the latest and greatest,
+  but we have to maintain the homogeneity of the environment.
+  You will all be using Java projects that we started under
+  the provided Eclipse and we do not want to run into configuration
+  problems.
+</p>
+<ul>
+  <li><b>DO NOT INSTALL ECLIPSE VIA YOUR NORMAL INSTALLER</b>.</li>
+  <li><b>DO NOT DOWNLOAD ECLIPSE FROM THE ECLIPSE WEBSITE</b>.</li>
+  <li>
+    <b>
+      DO NOT LAUNCH ECLIPSE BY CLICKING ON A DESKTOP ICON.
+  </b>
+  </li>
+  <li>
+    <b>
+      OR BY ANY OTHER MEANS, BUT THE ONE GIVEN BELOW.
+  </b>
+  </li>
+</ul>
+<p>
+  We will launch Eclipse manually, from a terminal.
+  This is really important, do follow <b>exactly</b> the instructions below.
+</p>
+<pre class="terminal">
+  ~$ cd ~/AgileLearning/workshops/oop
+  oop$ source setenv.sh 
+  oop$ eclipse -data workspace/
+</pre>
+<p>
+  <b>ALWAYS START ECLIPSE THIS WAY FOR THIS WORKSHOP.</b>
+</p>
+<h3>Nice cookie</h3>
+<p>
+  Maybe, you are annoyed as we are with your shell,
+  because it is showing very long directory path, as
+  part of its prompt. Like this:
+</p>
+<pre class="terminal">
+  ~$ cd ~/AgileLearning/workshops/oop
+  ~/AgileLearning/workshops/oop$ 
+</pre>
+<p>
+  And at some point, the prompting of the current directory
+  takes an entire line. Well, if this is as annoying to you
+  as it is to us, you can
+  configure your shell to give you a shorter prompt. Under
+  Ubuntu, using the standard shell, you can type the following
+  command:
+</p>
+<pre class="terminal">
+  ~$ export PS1="\u@\h:\W$"
+</pre>
+<p>
+  It takes effect only in the terminal you typed it in.
+  If you want to make the change permanent, you need to add
+  it to the startup file for your shell (~/.bashrc for the
+  bash shell). Just overwrite the setting there.
+</p>
+<p>
+  If this cookie does not make sense to you, no biggie,
+  just ignore it.
+</p>
+
+<h3>Steps</h3>
+
+<!--
+<p>
+  <b>Important:</b> during the following steps, we will use more and more
+  checks, as buttons you will click to verify some of your work.
+  Hopefully, these tests will pass and if they do not pass, the
+  error message will be clear enough for you to understand and fix
+  the bugs you have in your code. However, in certain situations,
+  the error messages may not make sense or may not be enough.
+  First, discuss it with other students. Second, discuss it with
+  the teaching staff. If you are not a beginner, you may want to
+  peek ahead at the last step below "Workshop tests" that provides
+  details on our test framework that sits behind the check buttons.
+  We present things in this order because you need the knowledge
+  taught in the first steps to understand the last.
+  <xfr>
+    Important: pendant les étapes ci-dessous, nous allons utiliser
+    de plus en plus de vérification automatique de ce que vous faites
+    par le biais des boutons "check". On espère que ces tests passeront
+    et que si ils ne passent pas, que les messages d'erreurs seront assez
+    claire pour vous permettre de comprendre et de corriger les bugs.
+    Si ce n'est pas le cas, discuter avec les autres étudiants, d'autres
+    auront peut-être déjà eu le même problème. Puis, discutez en avec les
+    enseignants. Enfin, si vous n'êtes pas un débutant, vous pouvez aussi
+    aller jeter un oeil dans la dernière étape "Workshop tests" ci dessous
+    qui rentre dans les détails de notre canevas de tests qui se cache
+    derrière les boutons "Check". Nous présentons ces étapes dans cet
+    ordre car pour bien comprendre la dernière étape il faut avoir acquis
+    les connaissances des étapes précédentes.
+  </xfr>
+</p>
+-->
+<steps>
+  <step name="t2-s1" label="Setup">
+  </step>
+  <step name="t2-s2" label="Creating classes in packages">
+  </step>
+  <step name="t2-s3" label="Java basic concepts and statements">
+  </step>
+  <step name="t2-s4" label="Coding with Eclipse - Part One">
+  </step>
+  <step name="t2-s5" label="Coding with Eclipse - Part Two">
+  </step>
+  <step name="t2-s6" label="Testing with Eclipse">
+  </step>
+  <step name="t2-s7" label="Workshop tests">
+  </step>
+</steps>
+
+<p>
+  That's all folks for this task. It was a long task.
+  Please make sure that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint dev.env, Task2 completed"
+  $ git push --all
+</textarea>
+

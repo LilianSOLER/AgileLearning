@@ -1,0 +1,197 @@
+<vars>
+  sprint=prog.basics
+  task=t3
+</vars>
+
+<p>
+  This task is about programming in Java.
+  In the previous tasks, we have presented Eclipse and
+  the basic constructs and concepts of Java,
+  enough to get you started coding.
+  There is no better way to learn coding than doing it.
+  <xfr>
+  Cette tâche concerne la programmation Java.
+  Dans les tâches précédentes, nous avons présenté Eclipse et les
+  constructions et concepts élémentaires de Java, suffisamment pour
+  vous permettre de coder. 
+  Il n'y a pas de meilleur moyen pour apprendre à coder que de faire..
+  </xfr>
+</p>
+<p>
+  This task is still very much guided, so we apologize for those of you
+  that have already coded in other languages and who would like to write
+  their own code from scratch. We know this task will not be
+  the most fun, but it is a necessary step for memorizing the basics
+  of the Java language. Like in music or sports, progress requires
+  work, and it is not always about fun.
+  Next, we will code a simple game, so it will be more fun, promised.
+  <xfr>
+  Cette tâche est toujours très guidée, donc nous nous excusons pour
+  ceux d'entre vous qui ont déjà codé dans d'autres langages et qui 
+  voudraient écrire leur propre code en toute liberté. Nous savons que cette 
+  tâche ne va pas être sympa, mais c'est une étape nécessaire pour
+  mémoriser les bases du langage Java. Comme la musique ou le sport,
+  la progression requiert du travail. Ensuite, nous coderons des jeux
+  simples, ce sera plus fun.
+  </xfr>
+</p>
+<p>
+  If you have not done so already, launch Eclipse manually, from a terminal.
+  This is really important, do follow <b>exactly</b> the instructions below.
+  Remember to always start Eclipse this way, for this workshop, after sourcing
+  the file "setenv.sh".
+  <xfr>
+  Si vous ne l'avez pas déjà fait, lancez Eclipse manuellement, depuis
+  un terminal. Ceci est vraiment important, suivez <b>exactement</b>
+  les instructions ci-après. Rappellez-vous de toujours lancer Eclipse
+  comme cela.
+  </xfr>
+</p>
+<pre class="terminal">
+  ~$ cd ~/AgileLearning/workshops/oop
+  oop$ source setenv.sh 
+  oop$ eclipse -data workspace/
+</pre>
+<p>
+  Then, switch to the Java perspective, if you are not already there.
+  Under the Java perspective, in the <em>Package Explorer</em> view,
+  on the left-hand side of the window, you can see the
+  <em>prog.basics</em> project into your Eclipse workspace.
+  Indeed, you imported that project earlier.
+  This task will take place in this project <em>prog.basics</em>.
+  <xfr>
+  Allez maintenant sur la perspective Java, si vous n'y êtes pas déjà.
+  Sous cette perspective, dans la vue <em>Package Explorer</em>, 
+  sur le coin gauche de la fenêtre, vous pouvez voir le projet
+  <em>prog.basics</em> dans votre workspace.
+  En effet, vous avez importé ce projet précédemment. 
+  Cette étape concerne ce projet.
+  </xfr>
+</p>
+<p>
+  Browse the <em>prog.basics</em> project to find the Java package
+  <span class="java-package">oop.util</span>. You can see two classes:
+  <span class="java-class">MathUtils</span> and
+  <span class="java-class">ArrayUtils</span>.
+  You will implement all the methods of those two classes.
+  You will be able to test your coding with our tests,
+  you can look for our tests in the Java package
+  <span class="java-package">oop.util.tests</span>. 
+  In particular, look at the class 
+  <span class="java-class">AllTests</span> that
+  runs all of our tests.
+  <xfr>
+  Parcourez the projet <em>prog.basics</em> pour trouver le package
+  <span class="java-package">oop.util</span>. Vous pouvez voir 2 classes:
+  <span class="java-class">MathUtils</span> et
+  <span class="java-class">ArrayUtils</span>.
+  Vous allez implémenter toutes les méthodes de ces classes.
+  Vous allez également tester votre code avec nos tests,
+  que vous pouvez voir dans le package
+  <span class="java-package">oop.util.tests</span>. 
+  En particulier, regardez la classe 
+  <span class="java-class">AllTests</span> qui exécute tous les
+  tests.
+  </xfr>
+</p>
+
+<h3>Steps</h3>
+
+<steps>
+  <step name="t3-s1" label="Simple mathematical methods">
+  </step>
+  <step name="t3-s2" label="Simple array methods">
+  </step>
+  <step name="t3-s3" label="Java Exceptions">
+  </step>
+  <step name="t3-s4" label="Tic-Tac-Toe">
+  </step>
+</steps>
+
+<!--
+<p>
+  <span style="color: red;">
+    An important advice:
+  </span>
+  we hope that you did not only read and understood 
+  the contents of these web pages. We hope that you realized
+  that you need to not only undertand but also memorize
+  all the finer points that we talked about: the concepts,
+  the grammar, and the syntax. Why? 
+  Because it is hard to speak a language
+  that you do not know the syntax of. It does not help either
+  if you do not know the grammar or the meaning of the different
+  words and common expressions.
+  Well, programming is like speaking a foreign language, it is about
+  expressing thoughts in a specific language. The less you know the language
+  concepts, grammar, and syntax, the less fluent you will be and the
+  less efficient you will be at translating ideas into Java sources.
+  <xfr>
+    Un conseil important: ne faites pas que lire et comprendre.
+    Vous devez mémoriser tout cela, les concepst, la grammaire, et
+    la syntax. Pourquoi? Parce que il est difficile de parler
+    une langue étrangère if vous n'en connaissez ni la syntax, ni
+    la grammaire, ni le sens des mots. Et programmer est comme
+    parler une langue étrangère, il est question d'exprimer des idées
+    dans ce langage. Moins vous connaissez la syntax, la grammaire,
+    le sens des mots, moins vous pouvez exprimer vos idées dans ce
+    langage.
+  </xfr>
+</p>
+<p>
+  We know that some of you think that can just look all that up on the Web,
+  that there are snippets of code for everything. That is true. But, do you
+  really want to be the kind of developers reading these web pages
+  or do you have the ambition to become the kind of developers
+  that can actually write them? Also, how
+  efficient is it to Google everything all the time?
+  <xfr>
+    Nous savons que beaucoup d'entre vous pense qu'ils n'ont que faire une
+    recherche sur le Web pour trouver tout cela. C'est vrai, on trouve
+    presque tout via Google ou autres. Mais voulez-vous vraiment rester
+    un développeur qui a besoin de lire ces pages ou avez-vous l'ambition
+    de devenir un développeur qui peut les écrire? De plus, posez vous la
+    question suivante: est-ce efficace de toujours compter sur le Web
+    pour savoir écrire 3 lignes de code?
+  </xfr>
+</p>
+<p>
+  We also know that
+  many of you think it is a lot of details, too many details probably.
+  Well, let's put all this in perspective, shall we? All these details
+  are just a few points that you can find in the Java Language Specification
+  (JLS), a
+  PDF document that is 844 pages long. The JLS is the bible, it tells what
+  can be written in Java and what cannot. Any decent professional Java
+  engineer needs to have read, understood, and mostly memorized the contents
+  of the JLS.
+  And don't think it is just Java, the same is true for JavaScript,
+  Python, or C, each programming language has its own language specification
+  book and they are all about the same size.
+  <xfr>
+    Nous savons aussi que beaucoup d'entre vous pense que cela est beaucoup
+    d'information, trop même. Et bien, mettons les choses en perspective.
+    Tous les points que nous abordons ici sont juste quelques points que l'on
+    peut trouver dans la Spécification du Langage Java (SLJ), un document PDF
+    de 844 pages, la bible qui spécifie ce que l'on peut ou ne peut pas écrire
+    en Java. Tout ingénieur professionnel qui se dit compétent en Java se doit
+    d'avoir lu ce document, de l'avoir compris, et d'en avoir mémorisé la plus
+    grande partie. 
+  </xfr>
+</p>
+-->
+<p>
+  That's all folks for this task. It was a long task.
+  Please make sure that you commit and push your work to our server.
+  This is how:
+  <xfr>
+  C'est tout pour cette tâche. C'était une tâche longue. Vérifiez que
+  vous avez "committé" et poussé (push) vos modifications sur notre serveur,
+  comme cela:
+  </xfr>
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint prog.basics, Task3 completed"
+  $ git push --all
+</textarea>

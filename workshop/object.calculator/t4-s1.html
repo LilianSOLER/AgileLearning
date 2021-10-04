@@ -1,0 +1,643 @@
+<vars>
+  sprint=object.calculator
+  task=t4
+	step=t4-s1
+</vars>
+
+<p>
+	Let's discuss how you have probably implemented the classes
+  <span class="java-class">UnaryOp</span> and
+  <span class="java-class">BinaryOp</span> in the previous
+	task. It is quite likely that your code looks something like this:
+  <xfr>
+    Discutons maintenant comment vous avez implémenté les classes
+    <span class="java-class">UnaryOp</span> et
+    <span class="java-class">BinaryOp</span>. Votre code ressemble
+		probablement à ceci:    
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public abstract class BinaryOp extends Expression {
+  char op;
+  Expression left, right;
+  @Override
+  public Value eval() {
+    Value l, r;
+    boolean z;
+    l = left.eval();
+    r = right.eval();
+    switch (op) {
+    case '&':
+      z = ...;
+      return new BoolValue(z);
+    case '|':
+      z = ...;
+      return new BoolValue(z);
+    }
+    if (l instanceof FloatValue || r instanceof FloatValue) {
+      float v;
+      switch (op) {
+      case '+':
+        v = ...;
+        return new FloatValue(v);
+      case '-':
+        v = ...;
+        return new FloatValue(v);
+      case '*':
+        v = ...;
+        return new FloatValue(v);
+      case '/':
+        v = ...;
+        return new FloatValue(v);
+      case '!':
+      default:
+        throw new IllegalStateException();
+      }
+    } else if (l instanceof IntValue && r instanceof IntValue) {
+      int v;
+      switch (op) {
+      case '+':
+        v = ...;
+        return new IntValue(v);
+      case '-':
+        v = ...;
+        return new IntValue(v);
+      case '*':
+        v = ...;
+        return new IntValue(v);
+      case '/':
+        v = ...;
+        return new IntValue(v);
+      case '!':
+      default:
+        throw new IllegalStateException();
+      }
+    } else
+      throw new IllegalStateException();
+  }
+}
+</pre>
+<p>
+  We can see switches all over the place as well as many tests on
+  the nature of objects via
+  the <span class="java-keyword">instanceof</span> operator.
+  First of all, the code is just <b>ugly</b> and difficult to read
+  in the sense of guessing what it does and even more so in the
+  sense to figure out if it is complete and correct or
+  if it is incomplete and buggy. <u>Good luck finding a bug
+  in that kind of code</u>.
+  <xfr>
+    Nous pouvons voir des switch et des tests sur le type
+    d'instance partout. On peut dire sans hésiter que le code
+    est juste moche, difficile à lire dans le sense de comprendre
+    ce qu'il est censé faire. Il est aussi difficile à lire
+    dans le sens de voir si il est complet et correct.
+    Bon courage pour trouver un bug la dedans.
+  </xfr>
+</p>
+<p>
+  Furthermore, we may ask how modular and how extensible
+  is that code? Should the class
+  <span class="java-class">BinaryOp</span>
+  know all the details of the supported operators and
+  values? If it does, then it will have to be modified
+  every single time a new kind of value is introduced
+  and every single time a new operator is introduced.
+  Not a great design, right? You experienced the pain
+	when adding the support for float values.
+  <xfr>
+    De plus, nous pouvons aussi questioner la modularité
+    et l'extensibilité de ce genre de code. Est-ce que
+    la classe 
+    <span class="java-class">BinaryOp</span>
+    doit connaître tout les détails de tous les opérateurs
+    supportés et aussi les détails sur les valeurs supportés?
+    Si c'est le cas, cette classe devra être changer à chaque
+    fois que nous allons introduire un nouvel opérateur ou
+    un nouveau type de valeur. Ce n'est pas vraiment souhaitable.
+  </xfr>  
+</p>
+<p>
+  If we consider extensibility, we would like to have
+  an abstract concept of binary and unary operations.
+  Then, it would be possible to define subclasses for
+  the operations that we want. Adding a subclass would
+  simply add a new operation. So let's say we would
+  like the abstract operation concept to look like
+  this:
+  <xfr>
+    Si nous considérons l'extensibilité, nous aimerions avoir
+    un concept abstrait des opérateurs binaires et unaires.
+    Alors, il serait possible de définir des sous-classes
+    pour les opérateurs qui nous souhaitons avoir. Rajouter
+    une sous-classe serait alors facile pour tout nouveau
+    opérateur. Donc, on voudrait en gros cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public abstract class BinaryOp extends Expression {
+
+  char op;
+  Expression left, right;
+
+  BinaryOp(char op, Expression l, Expression r) {
+    this.op = op;
+    this.left = l;
+    this.right = r;
+  }
+  
+  void print(PrintStream ps) {
+    ps.print('(');
+    left.print(ps);
+    ps.print(' ');
+    ps.print(op);
+    ps.print(' ');
+    right.print(ps);
+    ps.print(')');
+  }
+}
+</pre>
+<pre class="prettyprint lang-java">
+public abstract class UnaryOp extends Expression {
+
+  char op;
+  Expression exp;
+
+  UnaryOp(char op, Expression e) {
+    this.op = op;
+    this.exp = e;
+  }
+
+  @Override
+  public void print(PrintStream ps) {
+    ps.print(op);
+    ps.print('(');
+    exp.print(ps);
+    ps.print(')');
+  }
+}
+</pre>
+<p>
+  Notice that we can keep the printing at this abstract level,
+  which is cool. Notice that we do not repeat the definition
+  of the abstract method
+  <span class="java-method">eval</span> since it is
+  defined as an abstract method on the superclass
+  <span class="java-class">Expression</span>.
+  Of course, this means that we can no longer implement
+  that method on these classes.
+  We will implement the method
+	<span class="java-method">eval</span> 
+	on the subclasses, one subclass per operator.
+  This means the following subclasses:
+  <xfr>
+    Notez que l'on peut garder l'impression de l'expression
+    à ce niveau d'abstraction, ce qui est cool. Notez aussi
+    que l'on a pas besoin de répéter la méthode
+    <span class="java-method">eval</span> puisqu'elle
+    est définie sur la classe abstraite
+    <span class="java-class">Expression</span>. Par contre,
+    il va falloir implémenter cette méthode 
+    <span class="java-method">eval</span> sur toutes les
+    sous classes:
+  </xfr>
+</p>
+<ul>
+  <li>Class <span class="java-class">NegOp</span>
+		extends <span class="java-class">UnaryOp</span>, for unary '-' for example "- ( * 2 3 )" </li>
+  <li>Class <span class="java-class">AddOp</span>
+		extends <span class="java-class">BinaryOp</span>, for binary '+' </li>
+  <li>Class <span class="java-class">SubOp</span>
+		extends <span class="java-class">BinaryOp</span>, for binary '-' </li>
+  <li>Class <span class="java-class">DivOp</span>
+		extends <span class="java-class">BinaryOp</span>, for binary '/' </li>
+  <li>Class <span class="java-class">MulOp</span>
+		extends <span class="java-class">BinaryOp</span>, for binary '*' </li>
+  <li>Class <span class="java-class">AndOp</span>
+		extends <span class="java-class">BinaryOp</span>, for binary '&' </li>
+  <li>Class <span class="java-class">OrOp</span>
+		extends <span class="java-class">BinaryOp</span>, for binary '|' </li>
+  <li>Class <span class="java-class">NotOp</span>
+		extends <span class="java-class">UnaryOp</span>, for unary '!' for example "!( & true false)"</li>
+</ul>
+<p>
+  Now, you can see that these classes are not all about the
+  same kind of operators. Some are about arithmetic operators
+  and some are about logical operators. Logical operators
+  act on boolean values, which is a concept we already
+  have since we have the class
+  <span class="java-class">BoolValue</span>.
+  So let's look at that class.
+  <xfr>
+    Maintenant, vous pouvez voir que certaines de ces classes
+    représentent des opérateurs arithmétiques et d'autres
+    des opérateurs de la logique booléenne. Les opérateurs
+    de la logique booléenne manipulent des valeurs booléennes,
+    ce qui est un concept que nous avons déjà avec la
+    classe 
+    <span class="java-class">BoolValue</span>.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class BoolValue extends Value {
+  boolean val;
+  public BoolValue(boolean v) {
+    super(TypeSystem.Type.BOOL);
+    val = v;
+  }
+  /*
+   * Supported conversions:
+   */
+  @Override
+  public int toInt() throws CastException {
+    throw new CastException(TypeSystem.Type.INT,this);
+  }
+  @Override
+  public boolean toBool() throws CastException {
+    return val;
+  }
+  @Override
+  public float toFloat() throws CastException {
+    throw new CastException(TypeSystem.Type.FLOAT,this);
+  }
+  /*
+   * Supported operators:
+   */
+  public BoolValue and(BoolValue v) throws CastException {
+    return new BoolValue(val && v.toBool());
+  }
+  public BoolValue or(BoolValue v) throws CastException {
+    return new BoolValue(val || v.toBool());
+  }
+  public BoolValue not() throws CastException {
+    return new BoolValue(!val);
+  }
+}
+</pre>
+<p>
+  First, let's discuss conversions with the methods
+  <span class="java-method">toInt</span>,
+  <span class="java-method">toFloat</span>,
+  <span class="java-method">toBool</span>,
+	defined on the class
+	<span class="java-class">Value</span>.
+	These Conversion methods, between our values and Java primitive values,
+	are done if possible, even with loss of information.
+	They only throw a cast exception if the conversion is impossible.
+	In our language, a boolean cannot be converted to
+	an integer or float value. 
+  <xfr>
+    Discutons d'abord les méthodes de conversions:
+    <span class="java-method">toInt</span>,
+    <span class="java-method">toFloat</span>,
+    <span class="java-method">toBool</span>.
+    Une valeur booléenne n'accepte aucune conversion
+    vers des valeurs entières ou réelles. 
+  </xfr>
+</p>
+<p>
+  Second, let's discuss the supported operators:
+  '|', '&', and '!'. The implementations are quite
+  easy to understand, the corresponding operator classes
+  are the class
+  <span class="java-class">AndOp</span>,
+  class 
+  <span class="java-class">OrOp</span>,
+  and the class
+  <span class="java-class">NotOp</span>.
+  Let's consider the class
+  <span class="java-class">AndOp</span>:
+  <xfr>
+    Ensuite, discutons les opérators connus:
+    '|', '&', et '!'. L'implémentation est
+    facile à comprendre. Puis, regardez l'utilisation
+    de ces méthodes depuis les classes suivantes
+    <span class="java-class">AndOp</span>,
+    <span class="java-class">OrOp</span>,
+    <span class="java-class">NotOp</span>.
+    Regardonz par example la classe
+    <span class="java-class">AndOp</span>:    
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class AndOp extends BinaryOp {
+  public AndOp(Expression l, Expression r) throws CastException {
+    super("&", l, r);
+  }
+  @Override
+  public Value eval(Scope scope) throws CalculatorException {
+    BoolValue l, r;
+    l = (BoolValue)left.eval(scope);
+    r = (BoolValue)right.eval(scope);    
+    return l.and(r);
+  }
+}
+</pre>
+<p>
+  The '&' operator is a binary operator, so the class
+  <span class="java-class">AndOp</span> extends
+  the class
+  <span class="java-class">BinaryOp</span>,
+  whose instances are constructed from two expressions.
+  The method
+  <span class="java-method">eval</span> is now
+  quite straightforward.
+	<xfr>
+    L'opérateur '&' est un opérateur binaire,
+    ainsi la classe <span class="java-class">AndOp</span>
+    étends la classe 
+    <span class="java-class">BinaryOp</span>,
+    dont les objets sont construit à partir de
+    deux expressions. 
+    La méthode
+    <span class="java-method">eval</span> est
+    maintenant facile à comprendre.
+	</xfr>
+</p>
+
+<p>
+  Look at the classes
+  <span class="java-class">OrOp</span> and
+  <span class="java-class">NotOp</span>,
+  in order to confirm your understanding
+  of the mecanisms at play.
+  <xfr>
+    Regardez les classes 
+    <span class="java-class">OrOp</span> et
+    <span class="java-class">NotOp</span>,
+    afin de confirmer votre compréhension
+    des méchanismes en jeu.
+  </xfr>
+</p>
+
+<h3>Dealing with Arithmetic Operations</h3>
+
+<p>
+  Now, let's turn to arithmetic values. So far,
+  we had two distinct classes
+  <span class="java-class">IntValue</span> and
+  <span class="java-class">FloatValue</span>.
+  We want to treat arithmetic values in a similar
+  fashion we did boolean values, leveraging
+  late binding. <b>This time, you will code it</b>.
+  <xfr>
+    Maintenant, turnons nous vers les valeurs
+    arithmétiques. Jusqu'ici, nous avions deux
+    classes distinctes:
+    <span class="java-class">IntValue</span> et
+    <span class="java-class">FloatValue</span>.
+    Nous voulons manipuler les valeurs arithmétiques
+    comme nous l'avons fait avec les valeurs
+    booléennes, en s'appuyant sur la liaison
+    tardive. Mais cette fois, c'est vous qui
+    allez le faire.
+  </xfr>
+</p>
+<p>
+  We have introduced the class 
+  <span class="java-class">ArithValue</span>,
+  extended by the two classes
+  <span class="java-class">IntValue</span> and
+  <span class="java-class">FloatValue</span>.
+</p>
+<pre class="prettyprint lang-java">
+public abstract class ArithValue extends Value {
+
+  /*
+   * Is this value the 'zero value'?
+   */
+  abstract public boolean isZero();
+
+  /*
+   * These are the supported arithmetic operations.
+   * Look at the corresponding operator classes
+   * (NegOp, AddOp, SubOp, MulOp, DivOp).
+   * Examples:
+   *        -(3)
+   *        2 + 3
+   *        2 - 3
+   *        2 * 3
+   *        2 / 3
+   */
+  abstract public ArithValue neg(ArithValue v);
+  abstract public ArithValue add(ArithValue v);
+  abstract public ArithValue sub(ArithValue v);
+  abstract public ArithValue mul(ArithValue v);
+  abstract public ArithValue div(ArithValue v);
+}
+
+public class IntValue extends ArithValue {}
+public class FloatValue extends ArithValue {}
+
+</pre>
+<p>
+  Notice the specific behavior for arithmetic values,
+  common to both float and integer values.
+  The method
+  <span class="java-method">isZero</span> tells
+  you if the value represents zero. For integers,
+  the zero value is "0" and for float the zero value
+  is "0.0". The other methods provide the supported
+  arithmetic operators: '+', '-', '*', '/'.
+  <xfr>
+    Notez le comportement des valeurs arithmétiques,
+    commun aux valeurs réelles et entières.
+    La méthode 
+    <span class="java-method">isZero</span> dit
+    si une valeur est la valeur zéro. Pour les entiers,
+    la valeur zéro est l'entier '0'. Pour les réels,
+    la valeur zéro est le réel '0.0'.
+    Les autres méthodes fournissent les opérateurs
+    arithmétiques: '+', '-', '*', '/'.
+  </xfr>
+</p>
+<p>
+  <b>Now you are up:</b>
+</p>
+<ol>
+	<li>
+		Finish the code of the classes 
+		<span class="java-class">IntValue</span>
+		and
+		<span class="java-class">FloatValue</span>,
+		implementing the above methods.
+		<xfr>
+			Finissez le code des classes
+			<span class="java-class">IntValue</span>
+			et
+			<span class="java-class">FloatValue</span>
+			et d'implémenter les méthodes ci-dessus.
+		</xfr>
+	</li>
+	<li>
+		Then, you will implement the method
+		<span class="java-method">eval</span>
+		on the corresponding operator classes
+		<span class="java-class">AddOp</span>,
+		<span class="java-class">SubOp</span>,
+		<span class="java-class">MulOp</span> and
+		<span class="java-class">DivOp</span>.
+		Then, you should be able to try out arithmetic
+		expressions when running the class
+		<span class="java-class">CalcMainV4</span>.
+		<xfr>
+			Puis vous implémenterez la méthode 
+			<span class="java-method">eval</span>
+			sur les classes 
+			<span class="java-class">NegOp</span>,
+			<span class="java-class">AddOp</span>,
+			<span class="java-class">SubOp</span>,
+			<span class="java-class">MulOp</span> et
+			<span class="java-class">DivOp</span>.
+			Un fois cela fait, vous pourrez essayer
+			différentes expressions arithmétiques
+			à la console en lançant la classe
+			<span class="java-class">CalcMainV4</span>.    
+		</xfr>
+	</li>
+</ol>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.calculator"
+   classpath="bin;tests.jar;parser.jar;../object.collections/edu-polytech-ricm-oop-collections.jar"
+   classname="calculator.TestCalcV4_01"> 
+  <banner>
+    Let's check your arithmetic expressions.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check4_01_unfold">
+  </unfold>
+</check>
+<div style="display: none;" name="check4_01_unfold">
+  <p>
+    But let's check something... try the following:
+  </p>
+  <textarea class="terminal" rows="6" width="60%" >
+  > + 2 3.4 ;
+  = 5 
+  > + 3.4 2 ;
+  = 5.4
+  >
+  </textarea>
+  <p>
+    Humm... what is going on? 
+  </p>
+  <quizz name="Quizz1" ntries="1" enumerate="yes" itemize="false" >
+    <question >
+      <p>
+	Do you experience the above strange behavior?
+      </p>
+      <checkboxes>
+	<checkbox>Yes</checkbox>
+	<checkbox>No</checkbox>
+      </checkboxes>
+      <hints>
+      </hints>
+      <answers>
+	<answer checks="C?">
+	  No worries, it was expected. 
+	</answer>
+	<answer checks="?C">
+	  Well done, seems you anticipated the situation.
+	</answer>
+      </answers>
+      <finally>
+      </finally>
+    </question>
+    <question >
+      <p>
+	So can you figure out what is going ont?
+      </p>
+      <checkboxes>
+	<checkbox>Yes</checkbox>
+	<checkbox>No</checkbox>
+      </checkboxes>
+      <hints>
+      </hints>
+      <answers>
+	<answer checks="C?">
+	  Cool. But let's discuss it.
+	</answer>
+	<answer checks="?C">
+	  Alright, let's discuss it then.
+	</answer>
+      </answers>
+      <finally>
+      </finally>
+    </question>
+    <unfold name="quizz4_01_unfold">
+    </unfold>
+  </quizz>
+</div>
+<div style="display: none;" name="quizz4_01_unfold">
+  <p>
+		You might have implemented the methods
+		<span class="java-method">eval</span> with the
+		following coding pattern:
+  </p>
+  <pre class="prettyprint lang-java">
+  public class AddOp extends BinaryOp {
+  @Override
+  public Value eval(Scope scope) throws CalculatorException {
+    ArithValue l, r;
+    l = (ArithValue)left.eval(scope);
+    r = (ArithValue)right.eval(scope);    
+    return l.add(r);
+  }
+}
+  </pre>
+  <p>
+		If it is the case, the left value decides of the result.
+		So if the left value is an integer value, the addition will
+		be done on integers. So, if the right value is a float,
+		there is a loss of data.
+		<b>
+			If this is not clear, single step with the debugger
+			until you understand</b>.
+		Of course,
+		ask questions if you need to.
+		<xfr>
+			Si vous avez implémenté comme ci-dessus la méthode
+			<span class="java-method">eval</span>, c'est la valeur
+			gauche qui décide du résultat. Ainsi, si la valeur gauche
+			est un entier, alors l'addition se fera sur les entiers,
+			même si la valeur droite est un réel.
+		</xfr>
+  </p>
+	<p>
+		Also, notice that if the evaluation of either the left
+		or the right expression	does not produce an arithmetic value,
+		the method
+		<span class="java-method">eval</span> will throw a Java
+		ClassCastException, thrown by the Java runtime. Not
+		great.
+		<xfr>
+			Notez aussi que si l'évaluation de l'expression gauche
+			ou droite ne produit pas une valeur arithmétique,
+			alors l'exécution de la méthode
+			<span class="java-method">eval</span> va lever
+			l'exception Java ClassCastException. Cette exception
+			sera levée par le runtime Java.
+		</xfr>
+	</p>
+  <p>
+		To have the correct behavior, we need types and a type system
+		to type all expressions correctly.
+  </p>	
+</div>
+
+<h3>That's all folks</h3>
+
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint calculator, Task4, Step1 completed"
+  $ git push --all
+</textarea>

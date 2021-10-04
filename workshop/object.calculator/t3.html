@@ -1,0 +1,543 @@
+<vars>
+  sprint=object.calculator
+  task=t3
+</vars>
+
+<p>
+  In the previous version, 
+  we just introduced the
+  ability to parse an expression, read from the standard input,
+  building an object graph representing
+  that expression. That object graph was then used to 
+  print the expression in a more traditional form. It was also
+  used to evaluate the expression,
+  computing the corresponding value. Good job, that V2 was
+	a great evolution	from the V0 and V1 versions.
+  <xfr>
+    Dans la version précédente, nous avions introduit la possibilité
+    de parser une expression, entrée au clavier, et de construire un graphe
+    d'objet représentant cette expression. Ce graphe d'objets était alors
+    utilisé pour imprimer l'expression mais aussi pour l'évaluer.
+    Cela a été une bonne première évolution par rapport aux versions v0 et v1.
+    </xfr>
+</p>
+<p>
+  Let's continue reorganizing and improving our code.
+  But first, let's evaluate our previous version and point
+  out areas for improvements.
+  In the previous version, the class
+  <span class="java-class">Calculator</span> is mixing
+  different concerns: parsing and evaluating.
+  Furthermore, the parsing is very specific, with all
+  the symbols being hard coded. Also, the creation of the
+  expression is hard coded, knowing all the subclasses in advance,
+  where the calculator only needs to know about the
+  class <span class="java-class">Expression</span>
+  and <span class="java-class">Value</span>.
+  <xfr>
+    Continuons de réorganizer et d'améliorer notre code.
+    Mais avant, évaluons l'état de notre code et éclairons
+    les points d'amélioration. Dans la version précédente,
+    la classe Calculator mélange des considérations différentes:
+    parser et évaluer. De plus, le parseur est très spécifique, avec
+    tous les symboles étant en dure dans le source, ce qui implique
+    la connaissance à priori de toutes les sous-classes. Alors
+    que le calculator n'a besoin que de connaître la classe
+    Expression et Value.
+  </xfr>  
+</p>
+<p>
+  Look at the class <span class="java-class">Calculator</span>
+  in the Java package
+  <span class="java-package">ricm3.calculator.v3</span>.
+  See how clean and simple it is? It does what it is supposed
+  to do and nothing else. It reads lines, delegates the parsing
+  to a parser, obtains an expression, and ask that expression
+  to evaluate itself. This is good modular object-oriented
+  programming.
+  <xfr>
+    Regardez la classe Calculator dans le paquet ricm3.calculator.v3.
+    Vous voyez l'élégance du code et sa simplicité? Il fait ce qu'il est
+    censé faire et rien de plus. Il lit une ligne de texte, délègue
+    le <em>parsing</em>, obtient une expression, et demande à cette
+    expression de s'évaluer. C'est une bonne programmation modulaire.
+  </xfr>
+</p>
+<p>
+  To achieve that, we introduced a new class, the class
+  <span class="java-class">Parser</span>. The name
+  of the class says it all, it is about parsing a line
+  and creating an expression. But we want to keep it
+  clean also, so we want to be about parsing
+	polish notation, but not about the specifics of
+  the symbols being used. Even more important, we
+  do not want the parser to know the class hierarchies
+  under the classes 
+  <span class="java-class">Expression</span>
+  and <span class="java-class">Value</span>.
+  <xfr>
+    Pour réussir cela, nous avons introduit une nouvelle classe,
+    la classe Parser. Le nom dit exactement ce que cette classe fait,
+    elle est chargée de parser une ligne de texte en une expression.
+    Mais on veut aussi garder ce parser élégant et simple. Cette
+    classe doit parser une notation polonaise, mais elle
+    ne doit pas dépendre des opérateurs, elle doit être applicable
+    à n'importe quels opérateurs. De plus, nous ne voulons pas que
+    le code du parser dépende de la hiérarchie de sous classes sous
+    les classes Expression et Value.
+  </xfr>
+</p>
+
+<h3>Discussing the parser</h3>
+
+<p>
+  So look at the class <span class="java-class">Parser</span>.
+  See how clean and simple it is, all thanks to the
+  interface <span class="java-class">IFactory</span>.
+  That interface is concerned about the known operators
+  and the ability to create corresponding expressions.
+  <xfr>
+    Regardez la classe Parser. Voyez qu'elle reste élégante et
+    simple, grace à l'interface IFactory. Cette interface fournit
+    la connaissance des opérateurs et la possibilité de crée des
+    expressions qui correspondent.
+  </xfr>
+</p>
+<p>
+  The interface <span class="java-class">IFactory</span>
+  is implemented by the class <span class="java-class">Factory1</span>
+  and the class <span class="java-class">Factory2</span>.
+  We gave you a functional class
+  <span class="java-class">Factory1</span> that
+  corresponds to the very first version of our calculator;
+  the calculator understands only integer values and the related
+  four operators ('+', '-', '*', and '/').
+  So launch the class
+  <span class="java-class">CalcMainV3</span>.
+  in the Java package
+  <span class="java-package">ricm3.calculator.v3</span>:
+  <xfr>
+    L'inteface IFactory est implémenté par la classe Factory1
+    et la classes Factory2. Nous vous avons donné une classe
+    Factory1 fonctionnelle qui corresponds à notre premier
+    calculator (V0): un calculateur qui ne comprends que
+    des valeurs entières et les quatres opérateurs
+    ('+', '-', '*', et '/'). Allez-y, lancez la classe
+    CalcMainV3 dans le paquet ricm3.calculator.v3.
+  </xfr>
+</p>
+<textarea class="terminal" rows="9" width="60%" >
+Welcome.
+> + 2 3
+-> (2 + 3)
+java.lang.RuntimeException: Not Yet Implemented
+    at ricm3.calculator.v3.BinaryOp.eval(BinaryOp.java:18)
+    at ricm3.calculator.v3.Calculator.loop(Calculator.java:35)
+    at ricm3.calculator.v3.CalcMainV3.main(CalcMainV3.java:23)
+>   
+</textarea>
+<p>
+  So the parsing went OK, but the evaluation is not yet implemented.
+  So go ahead, finish the implementation of the class
+  <span class="java-class">BinaryOp</span>,
+  you need to implement the method
+  <span class="java-method">eval</span>, which is
+  similar to what you did in <em>task2</em>.
+  Indeed, you only have to deal with integer values
+  for now since we are using the 
+  class <span class="java-class">Factory1</span>.
+  You should be able to type integer expressions
+  like these:
+  <xfr>
+    Le parser marche mais l'évaluation n'est pas faite.
+    On vous demande de finir l'implémentation des classes
+    <span class="java-class">UnaryOp</span> et
+    <span class="java-class">BinaryOp</span>,
+    en implémentant la méthode
+    <span class="java-method">eval</span>.
+    Pour l'instant, vous n'avez à gérer que les valeurs
+    entières puisque nous utilisons la classe
+    <span class="java-class">Factory1</span>.
+    Vous devriez pouvoir évaluer des expressions
+    comme celles-ci:
+  </xfr>
+</p>
+<textarea class="terminal" rows="8" width="60%" >
+Welcome.
+> + 2 3
+-> (2 + 3)
+= 5
+> * 2 + 3 4
+-> (2 * (3 + 4))
+= 14
+</textarea>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.calculator"
+   classpath="bin;tests.jar"
+   classname="calculator.TestCalcV3_01"> 
+  <banner>
+   Let's check your work.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+
+<h3>Handling both Integer and Boolean Values</h3>
+
+<p>
+  Supporting boolean values is about two evolutions.
+	<xfr>
+    Pouvoir manipuler des valeurs entières et booléennes
+    nécessite deux évolutions.
+	</xfr>
+</p>
+<ol>
+  <li>
+		First, we need to use a factory
+		that can parse and create boolean values,
+		we will use another factory: the
+		class <span class="java-class">Factory2</span>.
+		<xfr>
+			La première évolution est d'avoir une fabrique
+			qui puisse parser les deux types de valeurs.
+			Pour cela, nous allons utiliser la fabrique
+			<span class="java-class">Factory2</span>.
+		</xfr>
+	</li>
+	<li>
+		Second, we need to evolve the classes
+		<span class="java-class">UnaryOp</span> and
+		<span class="java-class">BinaryOp</span>
+		in order to be able to evaluate operators
+		with either integer values
+		or boolean values.
+		<xfr>
+			La seconde évolution concerne les classes
+			<span class="java-class">UnaryOp</span> et
+			<span class="java-class">BinaryOp</span>
+			pour qu'elles puissent évaluer les
+			opérateurs sur les valeurs entières et
+			booléennes.
+    </xfr>
+	</li>
+</ol>
+<p>
+	Note that we gave you already the class to represent
+	boolean values: the class
+	<span class="java-class">BoolValue</span>. Also
+	note that the class 
+	<span class="java-class">Value</span> already
+	defines the corresponding cast operations:
+</p>
+<pre class="prettyprint lang-java">
+  public abstract class Value extends Expression {
+    abstract public int toInt();
+    abstract public boolean toBool();
+  }
+</pre>
+<p>
+	So go ahead, evolve the code.
+	First, modify the class
+	<span class="java-class">CalcMainV3</span>
+	to use this other factory
+	(class <span class="java-class">Factory2</span>).
+	Then, you need to improve the evaluation of
+	both unary and binary operators so that they
+	can operate on expressions that will evaluate
+	to either integer values or boolean values.
+	Once you have done these changes, you
+	should be able to write expressions like these:
+	<xfr>
+		C'est parti, c'est à vous de modifier le code.
+		Tout d'abord, il faut modifier la classe
+		<span class="java-class">CalcMainV3</span>
+		pour qu'elle utilise la nouvelle fabrique
+		(classe <span class="java-class">Factory2</span>).
+		La seconde évolution concerne les classes
+		<span class="java-class">UnaryOp</span> et
+		<span class="java-class">BinaryOp</span>
+		pour qu'elles puissent travailler avec des
+		valeurs entières et	booléennes.
+	</xfr>
+</p>
+
+<textarea class="terminal" rows="10" width="60%" >
+Welcome.
+> + 2 3
+-> (2 + 3)
+= 5
+> & T F
+-> (true & false)
+false
+> ! T
+-> !(true)
+= false
+</textarea>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.calculator"
+   classpath="bin;tests.jar"
+   classname="calculator.TestCalcV3_02"> 
+  <banner>
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<div name="check2_unfold" style="display: none"> 
+  <p>
+    See what cleaner and modular programming will give you?
+    Modularity will give you the
+    ability to divide and conquer, keeping your classes
+    simpler, but also the ability to compose your
+    program freely. With our changes, we can now easily
+    extend our calculator, like incorporating support for
+    real values. Well, that is a great idea! Let's do it.
+    <xfr>
+      Vous voyez ce que vous donne une approche modulaire
+      et élégante de la programmation? La modularité permet
+      de diviser pour reigner, de garder vos classes plus
+      focalisées et donc plus simple. Mais la programmation
+      modulaire permet aussi de composer les fonctionalités
+      plus facilement. Avec nos changements, nous pouvons
+      facilement étendre les fonctionalités de notre calculateur,
+      comme par example rajouter des valeurs réelles.
+      Mais c'est une très bonne idée, faisons le!
+  </p>
+</div>
+						  
+<h3>Adding Float Values</h3>
+
+<p>
+	Let's add the support for float values, to expand our calculator
+	beyond just integer and boolean values.
+  Adding the support for float values is again about three evolutions.
+  <xfr>
+    Rajouter le support pour les valeurs réelles nécessite
+    de nouveau trois évolutions.
+	</xfr>
+</p>
+<ol>
+<li>
+  First, we need to create a class for float values, the class
+	<span class="java-class">FloatValue</span> that extends
+	the class <span class="java-class">Value</span>. 
+	<xfr>
+		La première évolution est la création d'une nouvelle classe
+		<span class="java-class">FloatValue</span> qui étends la classe
+		<span class="java-class">Value</span>. 		
+	</xfr>
+</li>
+<li>
+	Second, we need to use a factory
+  that can parse and create float values as well as integer and
+  boolean values. We will need to evolve our factory for that
+	(the class <span class="java-class">Factory2</span>).
+	<xfr>
+		La seconde est sur la fabrique
+    qui doit pouvoir parser des valeurs réelles, entières,
+    et booléennes. Nous allons évoluer notre seconde fabrique,
+    la classe <span class="java-class">Factory2</span>.
+	</xfr>
+</li>
+<li>
+  Third, we will evolve the class
+  <span class="java-class">BinaryOp</span>
+  in order to be able to evaluate the
+  operators '+', '-', '*', and '/' with both float
+  values or integer values. 
+  <b>Attention</b>, you may have a <em>mix of integer values
+    and float values</em>.
+  <xfr>
+    La troisième évolution va concerner la classe
+    <span class="java-class">BinaryOp</span>
+    pour qu'elle puisse évaluer les opérateurs
+    '+', '-', '*', et '/' avec des valeurs réelles
+    ou entières.
+    Attention, les expressions arithmétiques peuvent mélanger
+    des valeurs entières et réelles.
+  </xfr>
+</li>
+</ol>
+<p>
+	Once you are done, you will be able to type expressions like these ones:
+</p>
+<textarea class="terminal" rows="10" width="60%" >
+  > + 2.1 3.4
+  -> (2.1 + 3.4)
+  = 5.5
+  > * 2 3.5
+  -> (2 * 3.5)
+  = 7.0
+  > * 2 3
+  -> (2 * 3)
+  = 6
+</textarea>
+<p>
+  So go ahead, add a new class
+  <span class="java-class">FloatValue</span>
+  as extending the class
+  <span class="java-class">Value</span>.
+  On the class
+  <span class="java-class">Value</span>,
+  you will need to add a method to get at
+  the float value:
+  <xfr>
+    Nous allons ajouter une classe 
+    <span class="java-class">FloatValue</span>
+    qui étends la classe
+    <span class="java-class">Value</span>.
+    Sur la classe
+    <span class="java-class">Value</span>,
+    nous allons ajouter la méthode pour obtenir
+    une valeur réelle:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public abstract class Value extends Expression {
+    abstract public int toInt();
+    abstract public boolean toBool();
+    abstract public float toFloat();
+  }
+</pre>
+<p>
+  You will need to revisit the class
+  <span class="java-class">BinaryOp</span>
+  so that it can compute arithmetic operators
+  on either integer or float values.
+  Notice that we want to compute integer
+  values from integer values. We
+  also want to computer float values from
+  float values. Finally, if we have
+  mixed float and integer values, we
+  want to compute a float value.
+  Exactly like in Java.
+  <xfr>
+    Vous allez devoir revoir la classe
+    <span class="java-class">BinaryOp</span>
+    pour qu'elle calcule les différents opérateurs
+    pour les valeurs entières et réelles.
+    Prenez note que nous voulons pouvoir
+    combiner des valeurs entières et
+    des valeurs réelles. Le résultat
+    sera alors une valeur réelle.
+  </xfr>
+</p>
+<p>
+  In your coding, you may encounter the need
+  for the following capabilities, how to parse
+  a float and how to get a string representing
+  a float, this is how to do it in Java:
+  <xfr>
+    Lorsque vous allez coder, vous allez sûrement
+    avoir besion de parser des valeurs réelles et de
+    convertir des valeurs réelles en chaîne de caractères.
+    Voici comment en Java:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String digits = "12.34";
+  float val = Float.parseFloat(digits);
+  digits = Float.toString(val);
+</pre>
+
+<!--
+<h3>Running your tests</h3>
+
+<p>
+  If you look at the class
+  <span class="java-class">ricm3.calculator.v3.CalcMainV3</span>,
+  you will its ability to load files, given as arguments.
+  We gave you sample test files in the directory "samples":
+</p>
+<ul>
+  <li>  tests-inverted-polish-int-ops </li>
+  <li>  tests-inverted-polish-float-ops </li>
+  <li>  tests-inverted-polish-bool-ops </li>
+</ul>
+<p>
+  The syntax is really easy to understand, as documented below.
+  The first line gives the normal pattern, with an expression
+  and the expected value computed by this expresion.
+  The second line gives the possibility to write invalid expression,
+  the character '!' indicating an expected exception.
+  <xfr>
+    La syntaxe est facile à comprendre.
+    La première ligne donne le pattern normal, avec une expression
+    et la valeur attendue comme le résultat de l'évaluation
+    de cette expression. La seconde ligne donne la possibilité d'avoir
+    une expression invalide et dont le parsing ou l'évaluation lèvera
+    une exception.
+  </xfr>
+</p>
+<pre>
+  expected-value : expression
+  ! : expression
+</pre>
+<p>
+  Run these tests, passing the file names as arguments.
+  Of course, you do remember that this requires to adapt
+  your Eclipse debug configuration. Also, feel free to add
+  lines to these files with your own tests.
+</p>
+<p>
+  <b>Note:</b> do not try to mix boolean values and
+  arithmetic values, 
+  such as "+ 2 true" or "& true 2.0", this is not supported.
+  You can only mix integer and float values in arithmetic
+  expressions. Boolean
+  values may only be used in logical expressions.
+</p>
+-->
+
+<h3>Running tests</h3>
+
+<p>
+  We encourage you to test your code, with your own tests,
+  before running our tests.
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.calculator"
+   classpath="bin;tests.jar"
+   classname="calculator.TestCalcV3_03"> 
+  <banner>
+    As usual, we provided you with some built-in tests.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check3_unfold">
+  </unfold>
+</check>
+
+<p>
+  That's all folks for this step.
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint calculator, Task3 completed"
+  $ git push --all
+</textarea>

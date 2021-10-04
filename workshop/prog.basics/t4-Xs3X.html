@@ -1,0 +1,234 @@
+<vars>
+  sprint=prog.basics
+  task=t4
+  step=t4-s3
+</vars>
+<p>
+  The TicTacToeGravity game is a slight variation upon the 
+  <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">TicTacToe game</a>,
+  using a vertical grid. This means that you can only pick a column
+  and your token drops by gravity on top of that column.
+  Also, the board is bigger, 5x7 rather than 3x3, that is,
+  5 rows and 7 columns. However, the winning sequence is kept
+  at three, that is, any player that aligns 3 of his symbol,
+  in any direction, wins.
+  <xfr>
+  Le jeu TicTacToeGravity est une variation du jeu
+  <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">TicTacToe game</a>,
+  utilisant une grille verticale.
+  Cela signifie que vous pouvez attrapper une colonne, et vos jetons
+  tombent par gravité au sommet de cette colonne.
+  Par ailleurs, la carte est plus grande, 5x7 plutôt que 3x3,
+  ce qui signifie 5 lignes et 7 colonnes. Toutefois, la séquence
+  gagnante reste à 3, ce qui signifie, tout joueur alignant 3 jetons
+  dans n'importe quelle direction gagne.
+  </xfr>
+</p>
+<textarea class="terminal" rows="18">
+prog.basics$ java -cp ./bin ricm3.oop.games.GameMain
+Hello!
+ 0) Hanged Man
+ 1) Tic Tac Toe (horizontal)
+ 2) Tic Tac-Toe (vertical)
+What do you want to play:
+2
+Let's play vertical TicTacToe then...
+Turn X: col?
+0
+---------
+|       |
+|       |
+|       |
+|       |
+|X      |
+---------
+Turn O: col?
+1
+---------
+|       |
+|       |
+|       |
+|       |
+|XO     |
+---------
+Turn X: col?
+0
+---------
+|       |
+|       |
+|       |
+|X      |
+|XO     |
+---------
+Turn O: col?
+0
+---------
+|       |
+|       |
+|O      |
+|X      |
+|XO     |
+---------
+</textarea>
+
+<p>
+  Let's discuss the code now.
+  We suggest that you start by making a copy of your code for
+  the horizontal TicTacToe game. Indeed, there will be a lot of common code
+  between the two classes 
+  <span class="java-class">HorizontalTicTacToe</span>:
+  and
+  <span class="java-class">VerticalTicTacToe</span>.
+  It will be your first experience in reworking an existing code
+  in order to evolve or change its behavior.
+  Hopefully, you will acquire some insights about the importance
+  of clear and well-structured code.
+  <xfr>
+  Discutons du code maintenant.
+  Nous suggérons que vous démarriez en faisant une copie de votre
+  cide pour le jeu horizontal TicTacToe. En effet, il va y avoir beaucoup
+  de code commun entre les classes 
+   <span class="java-class">HorizontalTicTacToe</span>:
+  and
+  <span class="java-class">VerticalTicTacToe</span>.
+  Cela va être votre première expérience dans le fait de retravailler
+  un code existant. Vous allez ici entrevoir l'importance d'avoir
+  du code bien structuré et clair.
+  </xfr>
+</p>
+<p>
+  Have a look at the class
+  <span class="java-class">GameMain</span> and the
+  method
+  <span class="java-method">main</span>.
+  As you can see, we impose very little on the class
+  <span class="java-class">VerticalTicTacToe</span>:
+  <xfr>
+  Regardez la classe <span class="java-class">GameMain</span> et la 
+  méthode
+  <span class="java-method">main</span>.
+  Comme vous pouvez le voir, nous imposons très peu de choses sur la classe
+  <span class="java-class">VerticalTicTacToe</span>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class VerticalTicTacToe {
+
+  public static void initGame(char first) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+  public static void playGame() throws IOException {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>
+<p>
+  The method
+  <span class="java-method">initGame</span> is expected to initialize
+  a brand new game, with the given player as the first player to play.
+  The given player must be either 'X' or 'O'. If not, your code
+  should throw an IllegalArgumentException.
+  <xfr>
+  La méthode
+  <span class="java-method">initGame</span> doit initialiser
+  un nouveau jeu avec le joueur donné comme le premier jouer.
+  Le joueur donné peut être 'X' ou 'O'. Si ce n'est pas le cas, votre code
+  doit lever une IllegalArgumentException.
+  </xfr>
+</p>
+<p>
+  The method
+  <span class="java-method">playGame</span> plays one game.
+</p>
+
+<h3>Difficulties</h3>
+
+<p>
+  We expect you to experience difficulties with the following points:
+</p>
+<ol>
+  <li>Using a rectangular grid of cells.</li>
+  <li>Determining the winner</li>
+</ol>
+<p>
+  Using a rectangular board should not be more difficult, but chances
+  are that you wrote your code assuming everywhere that the numbers of
+  columns and rows were always the same. So a bit of cleaning up will
+  be in order. 
+  Of course, it is still coded as a grid, typed as
+  <span class="java-keyword">char[][]</span>.
+  But which index is for the rows and which index is for the columns?
+  Looking at how to create it should be sufficient to understand:
+  <xfr>
+  Utiliser une carte verticale ne doit pas être plus difficile pour vous,
+  mais il est probable que vous écriviez du code avec l'hypothèse 
+  que les nombres de colonnes et de lignes sont toujours les mêmes.
+  Donc il va falloir changer cela. 
+  Bien sûr, c'est toujours codé comme une grille, de type
+  <span class="java-keyword">char[][]</span>.
+  Mais quel index est utilisé pour les lignes et quel index pour les
+  colonnes?
+  Regardez comment la grille est créée, cela devrait vous permettre de
+  comprendre:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  char[][] grid = new char[5][7];
+</pre>
+<p>
+  The second delicate point is about determining the winner, if any.
+  You probably did it with brute force when the board was 3x3, but
+  it would be insane to follow the same coding strategy with a board
+  that is 5x7. Just too many cases.
+  <xfr>
+  Le deuxième point délicat est la détermination du gagnant, s'il y en a un.
+  Vous avez probablement fait cela de manière empirique avec la carte 3x3.
+  cela serait insensé de suivre la même stratégie ici, il y a beaucoup 
+  trop de cas possibles à considérer.
+  </xfr>
+</p>
+<p>
+  So you need to be smarter than that and devise a better algorithmic
+  solution. That is, a solution that is smarter, uses less lines of code,
+  but still does the job. It will be harder, we know.
+  Let us give you a piece of advice.
+  Push the keyboard aside, grab a piece of paper and a pen, and think
+  about how you devise a simple task that would parameterized.
+  For example, you could consider that given a known cell, at
+  a row R and a column C, you
+  could consider it the possible center of a winning sequence:
+  <xfr>
+  Donc vous devez réfléchir et trouver un algorithme efficace. 
+  Laissez nous vous donner un conseil. 
+  Laissez tomber l'ordi, prenez un papier et un crayon, et 
+  réfléchissez au problème. Par exemple, vous pouvez considérer
+  qu'étant donné une cellule, à la ligne R et à la colonne C,
+  vous pouvez la considérer comme le centre possible d'une 
+  séquence gagnante:
+  </xfr>
+</p>
+<pre>
+  ???   ???
+  ?X?   ?O?
+  ???   ???
+</pre>
+<p>
+  Indeed, if you know a cell, and you know if a player played it, then
+  you could look around that cell to see if you find a winning three-cell
+  sequence.
+  <xfr>
+  En effet, si vous connaissez une cellule, et que vous savez si un joueur 
+  a joué avec, alors vous pouvez regarder autour de cette cellule pour
+  chercher un trio gagnant.
+  </xfr>
+</p>
+<p>
+  If you know how to do that, you could repeat this test over all cells
+  and you should find if there is a winner. More or less a few details, of
+  course, but where would be the fun of giving you the complete solution...
+   <xfr>
+  Si vous savez comment faire cela, vous pouvez répéter ce test sur
+  toutes les cellules et vous devriez trouver s'il y a un gagnant.
+  Il y a encore des détails à voir, bien sûr, mais cela fait partie
+  du plaisir de trouver une solution complète..
+  </xfr>
+</p>

@@ -1,0 +1,154 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html lang="en-US" >
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Eclipse Guided Tour</title>
+    <meta name="CHANGEDBY" content="Pr. Olivier Gruber">
+    <link rel="stylesheet" href="/style.css" type="text/css" /> 
+    <link rel="stylesheet" href="/prettify.css" type="text/css" rel="stylesheet" />
+    <script src="/prettify.js" type="text/javascript"></script>
+  </head>
+  <body lang="en-US" onload="prettyPrint()">
+    <script src="/progress.js"></script> 
+    <script src="eclipse.js"></script> 
+    
+    <div id="outer-container" >
+      <div id="header" >
+	<div id="logo" >
+	  <img src="/logo_uga.png" height="100" border="0" alt="Polytech" />
+	  <img src="/logo_reseau_polytech.gif" height="80" border="0" alt="Polytech" />
+	</div>
+	<div id="top-links">
+	  <a href="/">Home</a> 
+	  <a href="/about">About</a> 
+	  <a href="/contact">Contact</a>
+	</div>
+      </div>
+      <div id="inner-container" >
+
+	<h1>Eclipse Guided Tour </h1>
+
+	<p>
+	  By default, if you chose the Eclipse for Java Developers, you have the
+	  Java tools installed, but you may wish to install the C/C++ development
+	  tools as well. But no matter the tools or the programming language you
+	  develop in, Eclipse has two core concepts: the
+	  <a href="workspace.html">Workspace</a> and the
+	  <a href="workbench.html">Workbench</a>.
+	</p>
+	<p>
+	  Once you shift to the Eclipse Java Perspective, using the
+	  <em>Perspective Switcher</em> icon (see <a href="workbench.html">Workbench</a>),
+	  you will have the <em>Package Explorer</em> on the left-hand side.
+	</p>
+
+	<h2>Java Package Explorer</h2>
+
+	<p>
+	  The <em>Package Explorer</em> is your Java
+	  browser in some sense. It shows the Eclipse
+	  <a href="workspace.html"><em>Worbench</em></a> from a Java perspective.
+	  You can see the list of your projects in the Workbench. If a project
+	  is a Java project, you can see the source folders and in each source
+	  folders you can seen the Java packages and then the Java classes.
+	  In other words, you see your code.
+	</p>
+	<img src="images/Package-Explorer-Highlighted.png" width="90%" />
+		
+	<h2>Java Project</h2>
+
+	<p>
+	  A Java project usually corresponds to a directory on your file system,
+	  but not always with advanced configurations. In that directory, some
+	  directories will be considered by Eclipse as <em>source folders</em>,
+	  that is, folders containing the sources of Java classes, organized
+	  in Java packages.
+	</p>
+	<p>
+	  You can easily create new project from the title-bar menus or from
+	  the popup menu when right-clicking in the <em>Package Explorer</em>.
+	  But the important part is to configure it right.
+	</p>
+	<img src="images/New-Java-Project.png" width="90%" />
+	<p>
+	  The default location is usually as a sub-directory of your
+	  <em>workspace</em> directory, but it can be elsewhere. Unless you
+	  need to, we suggest that you keep your projects in your
+	  <em>workspace</em> directory. In this workshop, it is mandatory
+	  that you do so.
+	</p>
+	<p>
+	  Choosing a JRE (Java Runtime Environment) is also crucial to a good
+	  setup for a Java Project. You may have to configure the installed
+	  JREs that your Eclipse knows about, see our
+	  <a href="install.html">Eclipse Install Guide</a> for details on how
+	  to do that. Unless you have good reasons, we suggest that you use
+	  the version 1.8 of Java or later. In this workshop, we ask that you
+	  use the version 1.8 and the version 1.8 only.
+	</p>
+	<p>
+	  The last point is choosing a layout. Unless you have good reasons,
+	  we suggest that you use the default layout with folders for sources
+	  and class files (compiled Java sources). By default, Eclipse will
+	  create a <em>src</em> folder for your Java sources and a <em>bin</em>
+	  folder for the Java class files it generates when compiling your
+	  sources.
+	</p>
+		
+	<h2>Java Build Path</h2>
+
+	<p>
+	  Another crucial setup for Java projects: the <em>Java Build Path</em>.
+	  The Java Build Path tells Eclipse everything it needs to know for
+	  building your project, which is essentially compiling your Java
+	  classes. Right-click on a Java project in the <em>Package Explorer</em>
+	  and then select the properties (at the bottom of the popup menu).
+	  Select the <em>Java Build Path</em> in the properties:
+	</p>
+	<img src="images/Java-Build-Path.png" width="90%" />
+	<p>
+	  Notice the <em>edit tabs</em> and the <em>summary tab</em>.
+	  The edit tabs allow you to edit your build path, removing or
+	  adding source folders, adding or removing libraries, or
+	  adding or removing dependencies on other Java projects.
+	</p>
+	<img src="images/Java-Build-Path-Source.png" width="90%" />
+	<p>
+	  The <em>Source</em> allows you to add or remove source folders,
+	  that are sub-folders of your project directory.
+	</p>
+	<p>
+	  The <em>Libraries</em> allows you to add or remove Java libraries,
+	  called Java ARchive files (JAR). It is as easy as browsing and selecting
+	  a JAR file in the file system. If you need to, you can easily Google
+	  about JAR files if you need to know more about them. The tools to
+	  create and manipulate JAR files are part of the JDK1.8 that we asked
+	  you to install.
+	</p>
+	<p>
+	  A last point, projects can depend on each other. This means that you
+	  can develop one application across several projects. If it is the case,
+	  you can tell Eclipse which other projects a given project depends on.
+	  You can even have cyles in the dependency graph, but this requires
+	  a bit more fiddling with advanced options.
+	</p>
+	<img src="images/Java-Build-Path-Projects.png" width="90%" />
+	<p>
+	  Side note: for each project, do not forget to export the source
+	  folders that contain the Java classes that you want to be visible
+	  from other projects.
+	</p>
+	<img src="images/Java-Build-Path-Export.png" width="90%" />
+	
+	<div id="footer" >
+	  &copy; Pr. Olivier Gruber
+	  <div id="bottom-links" style="float: right">
+	    <a href="/">Home</a> 
+	    <a href="/about">About</a> 
+	    <a href="/contact">Contact</a>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </body>
+</html>

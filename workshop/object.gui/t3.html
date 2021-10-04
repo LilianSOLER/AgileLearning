@@ -1,0 +1,330 @@
+<vars>
+  sprint=object.gui
+  task=t3
+</vars>
+<p>
+	It is time to discuss the basics of graphical user interfaces.
+	As you known, a graphical user interface is about a composition
+	of widgets such as buttons, labels, text area with scrollbars, etc.
+	So within a window, a tree of widgets is layed out over the pixel
+	area of the screen where the window is displayed.
+	This task is about learning how this works.
+  <xfr>
+		Il est temps de discuter des bases des interfaces graphiques.
+		Comme vous le savez, une interface graphique est une composition
+		d'éléments, appelés <em>widgets</em>, tels que des boutons,
+		des labels, ou encore des zones de texte. Ainsi, dans une fenêtre,
+		il y a un arbre de widgets qui est disposé graphiquement sur
+		la surface de la fenêtre. Cette tâche explique comme cela
+		est fait.
+  </xfr>
+</p>
+<p>
+	So, a graphical interface is a tree of widgets that are layed out
+	within a window, look at the example below. On the left-hand side,
+	you see the tree of widgets. On the right-hand side, you see the
+	corresponding layout in the window, each widget owning a rectangle
+	of pixels.
+	<xfr>
+		Donc une interface graphique est un arbre d'éléments graphiques
+		qui sont disposés au sein d'une fenêtre, voici un exemple:
+	</xfr>
+</p>
+<table style="width:100%">
+  <tr>
+    <th style="text-align:left;" >
+			<img src="widget-tree.png" width="90%" />
+		</th>
+    <th style="text-align:left;" >
+			<img src="widget-layout.png" width="60%" />
+		</th>
+	</tr>
+</table>
+<p>
+	Notice the corresponding colors, letters, and numbers
+	that tell you how the tree of widgets on the left-hand side
+	is layed out on the right-hand side. Notice these different
+	points:
+	<xfr>
+		Notez la correspondance entre couleurs, lettres, et chiffres,
+		c'est elle qui vous permet de comprendre comment les éléments
+		de l'arbre sont disposés dans la fenêtre. Notez les points
+		suivants:
+	</xfr>
+</p>
+<ul>
+	<li>
+		Notice the <b>root	of the tree corresponds to the entire window</b>,
+		represented using the lighter yellow color on the right-hand side
+		of the figure.
+		<xfr>
+			Notez que la racine de l'arbre s'étends sur toute la surface
+			de la fenêtre.
+		</xfr>		
+	</li>
+	<li>
+		Notice that <b>children nodes in the
+		tree are always layed out on top of their parent node</b>.
+		Look on the right-hand side of the figure and notice
+		how darker surfaces are painted above lighter ones.
+		Now, notice the corresponding colors in the tree, with
+		children having a darker color than their parent.
+		<xfr>
+			Notez que les noeuds enfants sont toujours disposés au dessus
+			de la surface de leur noeud parent.
+		</xfr>
+	</li>
+	<li>
+		Also notice that <b>children nodes are layout within the bounds
+			of their parent node</b>. For instance, notice that the nodes
+		4 and 5 are layed out within the bounds of their parent, the node
+		c, itself layed out within the bounds of its parent, the root node.
+		<xfr>
+			Notez aussi que les surfaces attribuées aux noeuds enfants sont
+			incluses dans la surface attribuée à leur parent.
+		</xfr>
+	</li>
+</ul>
+<p>
+	To represent the tree and its graphical layout on the screen,
+	we will use the two following classes:
+	<xfr>
+		Pour représenter l'arbre des éléments, nous allons utiliser
+		ces deux classes:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Component{
+  Container parent;
+  int x, y ;               // top-left corner location within the parent
+  int width, height ;      // dimension within the parent
+}
+public class Container extends Component {
+  Component children[];    // children of this container
+}
+</pre>
+<p>
+	A leaf in the tree is represented by an instance of the
+	class <span class="java-class">Component</span> while a
+	node in the tree is represented by an instance of the
+	class <span class="java-class">Container</span>.
+	Do not confuse the layout tree and the inheritance tree.
+	The layout tree is an object graph representing how
+	components are layed out on the screen. The inheritance tree
+	is the fact that the class <span class="java-class">Container</span>
+	inherits from the
+	class <span class="java-class">Component</span>.
+	<xfr>
+		Une feuille de l'arbre est représentée par une instance
+		de la classe
+		<span class="java-class">Component</span> alors
+		qu'un noeud de l'arbre est représenté par une instance
+		de la classe
+		<span class="java-class">Container</span>.
+		Ne confondez pas l'arbre qui est un graphe d'objets
+		représentant l'organisation des éléments graphiques
+		et l'arbre des classes avec la classe
+		<span class="java-class">Container</span>
+		qui hérite de la classe
+		<span class="java-class">Component</span>.
+	</xfr>
+</p>
+
+<h3>Steps</h3>
+		
+<steps>
+  <step name="t3-s1" label="Painting Components">
+  </step>
+  <step name="t3-s2" label="Routing Events">
+  </step>
+</steps>
+<!--
+<h3>Widget Layout</h3>
+
+<p>
+	A widget is an element of a user interface, such as a button,
+	a lable, or a text area. Widgets are organized as a tree that is
+	layed out within a window, here is an example:
+</p>
+<table style="width:100%">
+  <tr>
+    <th style="text-align:left;" >
+			<img src="widget-tree.png" width="90%" />
+		</th>
+    <th style="text-align:left;" >
+			<img src="widget-layout.png" width="60%" />
+		</th>
+	</tr>
+</table>
+<p>
+	Notice the corresponding colors, letters, and numbers
+	that tell you how the tree of widgets on the left-hand side
+	is layed out on the right-hand side. Notice these different
+	points:
+</p>
+<ul>
+	<li>
+		Notice the root	of the tree corresponds to the entire window
+		(light yellow	color).
+	</li>
+	<li>
+		Notice that children nodes in the
+		tree are always layed out on top of their parent node.</li>
+	<li>
+		Also notice that children nodes are layout within the surface
+		of their parent node.
+	</li>
+</ul>
+<p>
+	To represent the tree, we will use the two following classes:
+</p>
+<pre class="prettyprint lang-java">
+public class Component{
+  Composite parent;
+  int x, y ;
+  int width, height ;
+}
+public class Container extends Component {
+  Component children[];
+  LayoutManager layoutManager;
+}
+</pre>
+<p>
+	So a parent container does layout its children components. In fact,
+	the layout is delegated to a layout manager
+	(class <span class="java-class">LayoutManager</span>).
+	In the
+	example above, the container 'a' uses a vertical flow layout,
+	laying out its children in a vertical sequence. The container 'b'
+	uses also a flow layout, but an horizontal one.
+</p>
+<img src="flow-layout.png" width="100%">
+<p>
+	The root container uses a border layout of its children components
+	(container 'a', 'b', and 'c'), with the 'c' at the center, the 'b'
+	up north, and 'a' on the west.
+</p>
+<img src="border-layout.png" width="100%">
+
+<h3>Coding -- Step One</h3>
+
+<p>
+	We will ignore the layout managers for now, we first need to code
+	the tree, that is, the classes
+	<span class="java-class">Component</span> and
+	<span class="java-class">Container</span>.
+	The class <span class="java-class">WindowTest</span>
+	creates and layout a simple window for you, it should
+	look like this:
+</p>
+<img src="warmup-window.png">
+<p>
+	You can see the window on the usual Ubuntu purple background.
+	Then you see surfaces of different colors, each surface corresponding
+	to a different component. You can recognize a border-style layout.
+	The center component is dark gray. The north is green and the south
+	is red. The east is magenta and the west is blue. Notice that
+	you see gaps in light gray, so you actually see the background
+	of the parent container showing in between the layout components
+	(north, south, east, west, and center). Also notice that you see
+	a yellow border, in fact, you are seeing the background color
+	of the root component.
+</p>
+
+<h3>Coding -- Step Two</h3>
+
+<p>
+	We will consider the selection of a component at given coordinates.
+	This will be really important in knowing where to route mouse
+	and keyboard events. Without components, any keyboard event
+	or mouse event is simply delivered to the window. This is what
+	we had earlier.
+</p>
+<p>
+	But now, your window contains a layout of components. This means
+	that you will need to route mouse and keyboard events to a
+	component. But which one?
+</p>
+<p>
+	So let's discuss the mouse first. It seems logical to route
+	mouse events to the component that is under the mouse, right?
+	For instance, if you click on something inside a component,
+	it seems logical that the component receives the mouse button
+	events to determine what was clicked.
+</p>
+<p>
+	To do so, we therefore need a way to know which component is
+	<em>under</em> the mouse. This means the component that is on
+	top and that contains the location of the mouse. This is the
+	purpose of the method
+	<span class="java-class">Component</span> 
+	<span class="java-method">select(int x, int y)</span>
+	on the class <span class="java-class">Component</span>.
+</p>
+<p>
+	So go ahead, code that method. When executing the
+	class <span class="java-class">WindowTest</span>,
+	you see a layout of components. It was layed out
+	in such a way that there are gaps in between components.
+	This means as you move the mouse around and select the
+	component under the mouse, you should be able to select
+	any of the component in the layout tree. Neat, right?
+</p>
+<p>
+	So add a mouse listener on the window and whenever the
+	mouse moves, selection the component under the mouse
+	coordinates and print which component it is. Why printing?
+	Because, as you will rapidly discover, debugging a graphical
+	application is not that easy. So printing statements for
+	debugging becomes unfortunately fashionable again.
+</p>
+<p>
+	So we suggest that you add a name to the class
+	<span class="java-class">Component</span> and a method
+	<span class="java-method">toString</span> that prints
+	the name as well as the bounds of the component, probably
+	in global coordinates.
+</p>
+<p>
+	To help you further, we wrote some
+	tests for you. If you pass the tests, you are likely to have
+	a working tree and a working selection.
+	We wrote the tests as JUnit tests, a test framework that is
+	nicely integrated within Eclipse.
+	We coded these tests using the JUnit framework,
+	the <a href="https://junit.org/junit4/">version 4</a>.
+	Have a look
+	at <a href="http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.jdt.doc.user%2FgettingStarted%2Fqs-junit.htm">Eclipse JUnit Gest Started Guide</a>.
+	Then look at the code of our tests, in the Java package
+	<span class="java-package">object.gui.task3.tests</span>,
+	the classes 
+	<span class="java-class">AllTests</span>, 
+	<span class="java-class">TestsA</span>, 
+	<span class="java-class">TestsB</span>, and 
+	<span class="java-class">TestsC</span>. 
+	you will see that writing JUnit tests is really simple
+	and almost self-explanatory.
+</p>
+<p>
+	To launch the tests under Eclipse, nothing easier,
+	just right-click on the package
+	<span class="java-package">object.gui.task3.tests</span>
+	and select <em>"Run As JUnit Test"</em> or
+	<em>"Debug As JUnit Test"</em>. Then you will see
+	a new JUnit pane, in the Eclipse interface, showing
+	you all the tests, if they passed (green) or if they
+	failed (red). For those that failed, you also have
+	the reason. Then, execute the failed test under
+	debugger to understand and fix the problem.
+</p>
+
+-->
+<p>	
+	That's if folks. Please do commit your work.
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.gui, Task3 completed"
+  $ git push --all
+</textarea>
+

@@ -1,0 +1,89 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html lang="en-US" >
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Eclipse Guided Tour</title>
+    <meta name="CHANGEDBY" content="Pr. Olivier Gruber">
+    <link rel="stylesheet" href="/style.css" type="text/css" /> 
+    <link rel="stylesheet" href="/prettify.css" type="text/css" rel="stylesheet" />
+    <script src="/prettify.js" type="text/javascript"></script>
+  </head>
+  <body lang="en-US" onload="prettyPrint()">
+    <script src="/progress.js"></script> 
+    <script src="eclipse.js"></script> 
+    
+    <div id="outer-container" >
+      <div id="header" >
+	<div id="logo" >
+	  <img src="/logo_uga.png" height="100" border="0" alt="Polytech" />
+	  <img src="/logo_reseau_polytech.gif" height="80" border="0" alt="Polytech" />
+	</div>
+	<div id="top-links">
+	  <a href="/">Home</a> 
+	  <a href="/about">About</a> 
+	  <a href="/contact">Contact</a>
+	</div>
+      </div>
+      <div id="inner-container" >
+
+	<h1>Eclipse Guided Tour </h1>
+
+	<h2>Formatter Setup</h2>
+
+	<p>
+	  Eclipse provides a great pretty printing feature. This means
+	  that Eclipse can format your code automatically, rather than
+	  you having to do manually, which is a pain frankly.
+	  Simply hit <b>Ctrl-Shift-F</b> in any Java editor pane within
+	  Eclipse and Eclipse will just make your code look nice.
+	</p>
+	<p>
+	  The great thing is that you can entirely contol how Eclipse
+	  reformats your code. Go back to the <em>Preferences</em> dialog
+	  of Eclipse and find the <em>Formatter</em>:
+	</p>
+	<img src="images/Preferences-Java-Formatter.png" width="80%" >
+	<p>
+	  You can edit the <em>built-in</em> formatter setup, renaming
+	  to whatever you like. In the figure above, we renamed it to
+	  <em>"OG"</em>. So go ahead, edit your formatter configuration,
+	  renaming it to something like your initials. Look below,
+	  we change the indentation to use spaces only, with an indentation
+	  of 2 spaces, which gives a nice compact view of your sources.
+	</p>
+	<img src="images/Preferences-Java-Formatter-Indentation.png" width="100%" >
+	<p>
+	  Whatever you choose, you need to make sure you all agree within
+	  a working group of developers, otherwise, it will be hell when
+	  using git and doing merges. You may not fully understand why
+	  or even what is git or merges, but trust us, you will want to
+	  have the same Formatter configuration within a group of developers
+	  working together on a project. So notice that you can export
+	  your configuration and others can then import it to have the same.
+	</p>
+	<p>
+	  Personally, I also dislike when Eclipse reformats the comments
+	  in my code. However, it is nice to have Eclipse reformat the JavaDoc
+	  comments. But this is only ok if you format your JavaDoc comments
+	  as HTML, so that Eclipse knows how to do reformat them correctly.
+	  Any way, all this is controllable under the <em>comments</em>
+	  tab.
+	</p>
+	<p>
+	  If you need more help, you can also consultthe Eclipse official page
+	  about
+	  <a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.jdt.doc.user%2FgettingStarted%2Fqs-2.htm&cp=1_1_0_0">preparing Eclipse</a>. More help is also available
+	  at <a href="https://help.eclipse.org">Eclipse help page</a>
+	</p>
+	<div id="footer" >
+	  &copy; Pr. Olivier Gruber
+	  <div id="bottom-links" style="float: right">
+	    <a href="/">Home</a> 
+	    <a href="/about">About</a> 
+	    <a href="/contact">Contact</a>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </body>
+</html>

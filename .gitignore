@@ -1,0 +1,6 @@
+/.dashboard/
+/.cursus/
+/*.log
+*~
+.DS_Store
+

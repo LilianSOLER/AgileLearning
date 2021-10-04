@@ -1,0 +1,26 @@
+
+Bienvenue dans l'atelier "Object-Oriented Programming".
+Ce document est là pour vous aidez à vous orienter
+pour suivre cet atelier.
+
+L'atelier est installé entièrement sur votre machine
+personnelle et peut être suivi en local sans aucune
+connexion vers l'Internet. Mais si vous êtes connecté,
+votre progression sera envoyé sur le site web
+"Agile Learning" et sera intégrée dans le "dashboard".
+
+Cet atelier est composé d'une séries de sprints et chaque
+sprint est composé d'une séries de tâche. Les sprints
+et les tâches sont décrits par des pages webs, servies
+localement par un petit serveur web. Pour voir ces
+pages webs, vous devez lancer le serveur web de cette
+façon:
+
+  $ cd ~/2019/workshops/oop
+	$ ./oop.sh
+
+Vous devez ensuite pointer votre web browser vers
+l'URL suivante:
+
+					http://localhost:9090/
+

@@ -1,0 +1,859 @@
+<vars>
+  sprint=object.gui
+  task=t6
+</vars>
+<p>
+	This task is about introducing the concept of timer to
+	generate an timer event, after a given delay, that you
+	can listen to. Look in the source folder <em>"task6"</em>.
+	<xfr>
+		Cette tâche introduit le concept d'un timer pour
+		générer un événement après un délai donné, événement
+		pour lequel vous pouvez fournir un écouteur.
+		Le code est dans le dossier source <em>"task6n7"</em>.
+	</xfr>
+</p>
+
+<h3>Using the Timer</h3>
+
+<p>
+	Look at the code below to understand how to use a timer.
+	You set the timer to a certain value, like 500ms, and when the
+	timer expires, the timer listener is invoked, letting you react
+	to the fact that the timer expired. This is application code,
+	it is using the Toolkit, but this code is not part of the toolkit:
+	<xfr>
+		Regardez le code ci-dessous pour comprendre comment utiliser le
+		timer. Vous pouvez armer le timer avec un certain délai,
+		500ms par exemple, puis lorsque le timer expire, l'écouteur
+		du timer sera invoqué, permettant à votre code de réagir
+		à l'expiration du timer. Ce code est du code applicatif,
+		qui utilise le toolkit mais qui n'en fait pas partie.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+class Listener implements TimerListener {
+  @Override
+  public void expired() {
+    System.out.println("Timer expired!");
+  }
+}
+
+Toolkit tk = Toolkit.getToolkit();
+Listener l = new Listener();
+tk.setTimer(500, l);
+</pre>
+<p>
+	Now let's have a look at the definition of the toolkit behavior
+	that the code above relies on, it looks like this:
+</p>
+<pre class="prettyprint lang-java">
+package object.gui.window;
+public interface TimerListener {
+  public void expired();
+}
+package object.gui;
+public class Toolkit {
+  /**
+   * This method sets a timer to the given delay in milliseconds.
+   * It cancels any pending timer, if there was any.
+   * @param delay, the desired delay. A value of -1 asks to cancel
+   *        any pending timer.
+   * @param listener
+   */
+  public void setTimer(int delay, final TimerListener listener) { ... }
+}
+</pre>
+
+<h3>Timer Implementation</h3>
+
+<p>
+	Now it is time to cross into the implementation of the toolkit
+	and wonder how this timer functionality is implemented. The
+	code below is only relevant to the developers of the toolkit,
+	not the application developers creating graphical user interfaces.
+	<xfr>
+		Maintenant il est temps de plonger dans l'implémentation du
+		notre toolkit et de se demander comment ce timer est
+		implémenté. Le code ci-dessous ne concerne que les développeurs
+		du toolkit, pas les usagers du toolkit qui l'utilise pour construire
+		des interfaces graphiques.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+package object.gui;
+public class Toolkit {
+  /**
+   * This method sets a timer to the given delay in milliseconds.
+   * It cancels any pending timer, if there was any.
+   * @param delay, the desired delay. A value of -1 asks to cancel
+   *        any pending timer.
+   * @param listener
+   */
+  public void setTimer(int delay, final TimerListener listener) {
+    m_win.cancelTimer();
+    if (delay != -1)
+      m_win.setTimer(delay, listener);
+  }
+}
+</pre>
+<p>
+	The code is pretty straightforward, as you can see,
+	the toolkit uses the timer provided by the window:
+	<xfr>
+		Le code est simple à comprendre, comme vous pouvez le voir,
+		le toolkit utilises un timer fournit par la fenêtre.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+package object.gui.window;
+public abstract class Window {
+
+  /**
+   * This method sets the unique timer to the given delay.
+   * Until the timer expires, you may not set another timer,
+   * but you may cancel the current one and set a new one.
+   * @param delay
+   * @param listener
+   * @throws IllegalStateException if you try to set a second timer.
+   */
+  public abstract void setTimer(int delay, final TimerListener listener);
+
+  /**
+   * Cancel the previously-set timer, calling its cancelled 
+   * You may set a new timer after calling this method.
+   * It is safe to call this method even if there is no timer
+   * currently set.
+   */
+  public abstract void cancelTimer();
+}
+</pre>
+<p>
+	Note this is a unique timer, you cam register a single timer
+	to the window.
+	Hence the toolkit code that first cancel any current timer
+	before setting up a new one.
+	<xfr>
+		Notez que ce timer est unique, vous ne pouvez donc enregistrer
+		qu'une seule demande auprès de la fenêtre. D'ou le fait que le
+		toolkit se doive d'annuler tout timer en cours avant
+		de ré-armer le timer.
+	</xfr>
+</p>
+
+<h3>Blinker Widget</h3>
+
+<p>
+	We are going to start with a simple widget that requires
+	a timer: a blinker. As the name suggests, it is a widget
+	that blinks at a circle of different colors and at different
+	rates, depending on its state: green, organge, or red.
+	As you can guess, it is modeled after a warning light. When
+	green, everything is ok and it does not blink. When orange,
+	it blinks every 500ms. When red, it blinks every 250ms.
+	Look at the
+	class <span class="java-class">Blinker</span>
+	in the package
+	<span class="java-package">object.gui.widgets</span>.
+	<xfr>
+		Nous allons commencer par un gadget tout simple
+		et qui à besoin d'un timer: un clignotant. Comme le
+		nom le suggère, le gadget clignote with différentes
+		couleurs et à différentes fréquences. Il a trois
+		états: vert, orange, et rouge. Comme vous l'aurez
+		deviné, notre clignotant est modélisé d'après un
+		signal d'alarme. Lorsqu'il est vert, il ne clignote
+		pas. Lorsqu'il est orange, il clignote
+		toutes les 500ms. Lorsqu'il est rouge, il clignote
+		toutes les 250ms.
+		Regardez la classe
+		<span class="java-class">Blinker</span>
+		dans le paquet
+		<span class="java-package">object.gui.widgets</span>.
+	</xfr>
+</p>
+<p>
+	Once you will have completed the code, you can try it out
+	with our example code, the class
+	<span class="java-class">BlinkerExample</span> in the package
+	<span class="java-package">object.gui.examples</span>.
+	Your window should look like this:
+	<xfr>
+		Une fois que vous aurez complété le code, vous pourrez
+		l'essayer avec notre exemple, voir la classe
+		<span class="java-class">BinderExample</span>
+		dans le paquet 
+		<span class="java-package">object.gui.examples</span>.
+		La fenêtre devrait ressembler à cela:
+	</xfr>
+</p>
+<!-- video controls autoplay -->
+<video controls >
+	<source src="vokoscreen-blinker.mp4" type="video/mp4">
+</video>
+
+<h3>Progress Bar</h3>
+
+<p>
+	We are going to continue with another simple widget: a
+	progress bar. We will use a timer, from the application
+	code, to animate the progress bar.
+	As the name suggests, it is a widget
+	that shows the progress of a process, via a growing or shrinking
+	bar. 
+	Look at the
+	class <span class="java-class">ProgressBar</span>
+	in the package
+	<span class="java-package">object.gui.widgets</span>.
+	The public behavior is the following and pretty much
+	self-explanatory.
+	<xfr>
+		Nous allons continuer avec une autre gadget simple:
+		une bar de progression. Ce gadget n'a pas besoin en soi
+		du timer, mais nous allons l'animer depuis le code
+		applicatif via un timer. Comme le nom du gadget le
+		suggère il s'agit d'un gadget qui montre la progression
+		d'un avancement par le biais d'une barre de progression.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class ProgressBar extends Component {
+
+  public interface ProgressListener {
+    void progressUpdate(ProgressBar bar);
+  }
+  public ProgressBar(Container parent) { }
+
+  public void setListener(ProgressListener l) { }
+
+  public int getProgress() { }
+
+  public void setProgress(int value) { }
+}
+</pre>
+<p>
+	Notice the listener to be able to be informed about
+	changes in the progress value. You are now familiar
+	with the coding pattern.
+	<xfr>
+		Notez l'écouteur qui permets de savoir si la
+		valeur de la progression a été changé. Vous êtes
+		maintenant familier avec ce schéma de programmation.
+	</xfr>
+</p>
+<p>
+	Once you will have completed the code, you can try it out
+	with our example code, the class
+	<span class="java-class">ProgressExample</span> in the package
+	<span class="java-package">object.gui.examples</span>.
+	Your window should look like this:
+	<xfr>
+		Une fois que vous aurez complété le code, vous pourrez
+		l'essayer avec notre exemple, voir la classe
+		<span class="java-class">ProgressExample</span>
+		dans le paquet 
+		<span class="java-package">object.gui.examples</span>.
+		La fenêtre devrait ressembler à cela:
+	</xfr>
+</p>
+<!-- video controls autoplay -->
+<video controls width="40%" >
+	<source src="vokoscreen-progress.mp4" type="video/mp4">
+</video>
+
+<h3>Composing Widgets</h3>
+
+<p>
+	Now that we have two widgets, a progress bar and a blinker,
+	we can compose them, <u>event-oriented style</u>. We have done
+	it the right way, but there is a problem with the current implementation
+	of the toolkit timer...
+	<xfr>
+		Maintenant que nous avons deux gadgets, nous allons faire
+		une interface graphique qui les compose, en suivant un style
+		de programmation orienté-événements. Nous avons bien codé
+		cette composition, mais il y a un bug avec l'implémentation
+		actuelle du timer dans le toolkit...
+	</xfr>
+</p>
+<p>
+	First, let's run our example and the bug manifest itself.
+	You can run our composition example via the class
+	<span class="java-class">ComposerExample</span> in the package
+	<span class="java-package">object.gui.examples</span>.
+	It starts with only the progress bar moving, nothing else
+	happens and everything works fine.
+	<xfr>
+		Avant tout, nous allons lancer l'exécution et voir le bug
+		se manifester. Vous pouvez lancer l'exécution par la classe
+		<span class="java-class">object.gui.examples.ComposerExample</span>
+		qui démarre avec une barre de progression animée et tout semble
+		bien marcher.
+	</xfr>
+</p>
+<p>
+	Now, let's connect the progress bar and the ticker. To do this,
+	click the middle button in the window, the one with the sign "#".
+	The connection is established and the sign becomes "=".
+	The connection will remain established until you click the button
+	again, switching the sign back to "#". When connected, notice that
+	the blinker changes color based on the progress bar.
+	Above 50%, the blinker turns orange. Above 75%, the blinker turns red.
+	<xfr>
+		Maintenant, nous allons connecté la barre de progression avec
+		le clignotant. Pour cela, il suffit de cliquer sur le button
+		du milieu avec le symbole "#". La connection est établie et
+		le bouton affiche maintenant le symbole "=". Maintenant que la
+		connection est établie, le clignotant change de couleur en
+		fonction de la valeur de la barre de progression. En dessous
+		de 50%, il est vert. Entre 50% et 75%, il est orange.
+		Au dessus de 75%, il est rouge. 
+	</xfr>
+</p>
+<p>
+	But already, we can see something is not right, the blinker changes
+	color but it does not blink. Something is weird. Also, when you break
+	the connection, by clicking the button "=",
+	the blinker goes green, which is fine, but everything
+	stops, the progress bar no longer moves. We definitively
+	have a bug. It should behave like this:
+	<xfr>
+		Mais déjà nous pouvons voir que quelque chose ne va pas,
+		le clignotant change de couleur mais il ne clignote pas lorsqu'il
+		est jaune ou rouge, alors qu'il devrait. De plus, si vous cassez
+		la connection entre la barre de progression et le clignotant,
+		en cliquant sur le bouton "=", le bouton change bien vers
+		le symbol "#", le clignotant devient vert, mais plus rien
+		ne bouge. Nous avons un bug, sans aucun doute, car
+		voilà le comportement que nous devrions voir:	
+	</xfr>
+</p>
+<video controls width="60%" >
+	<source src="vokoscreen-composed.mp4" type="video/mp4">
+</video>
+<p>
+	Does your code work? You do not see the bug symptoms
+	we are describing? Really? Possible, but we doubt it,
+	because there is a bug in the way the toolkit handles timer requests.
+	So unless you fixed it already, the code will not work. But it is
+	possible that you see the bug manifest itself differently since
+	you wrote
+	some of the code and you might have coded things differently than
+	we expected you to. But there is a bug in the toolkit, maybe also some
+	other bugs in your code, so let's	go bug hunting together...
+	<xfr>
+		Vous pensez que votre code marche, vous ne voyez pas les symptomes
+		que nous décrivons? Vraiment? Possible mais nous doutons fortement
+		que le code marche puisque le problème est dans le toolkit
+		et sa gestion du timer. Mais il est possible que le bug provoque
+		d'autres symptomes avec votre code. Nous allons faire le debug
+		ensemble...		
+	</xfr>
+</p>
+<p>
+	Bug hunting will be interesting for it will get you to understand two
+	important points about event-oriented programming. The first point is
+	about learning how to compose different parts of your code via a
+	listener pattern. The second point is about the timer management.
+	But we are getting ahead of ourselves	here,
+	let's get started with understanding the code.
+	<xfr>
+		La chasse aux bugs sera intéressante à plus d'un titre. En premier,
+		elle va vous permettre d'apprendre comment composer des gadgets via un
+		pattern d'écouteurs. En second, elle va vous permettre de mieux
+		comprendre les timers. Mais nous sautons les étapes, commençons par
+		comprendre le code.
+	</xfr>
+</p>
+
+<h3>Bug Hunting -- Part I -- Understanding the code</h3>
+
+<p>
+	First thing first, if you have bugs in the blinker or the progress
+	bar, please try to fix those. But there is no bug in the composer.
+	In particular, the way it composes your two widgets is sound. 
+	It is important that you look at our code in the class
+	<span class="java-class">ComposerExample</span> 
+	and that you understand how we use listeners to connect
+	the different widgets. Notice in particular that the ticker
+	sets the progress value, but does not interact with the blinker,
+	not directly. We didn't write the code like this:
+	<xfr>
+		En premier, si vous pensez avoir des bugs dans le code du clignotant
+		ou de la barre de progression, il est temps de les éliminer.
+		En tout cas, il n'y a aucun bug dans le composeur. En particulier,
+		la coopération entre gadgets via des écouteurs est correcte.
+		Il est important que vous regardiez ce code et que vous compreniez
+		comment il fonctionne. Le code est dans la classe
+		<span class="java-class">ComposerExample</span> 
+		En particulier, notez que le "ticker" change la progression de
+		la barre de progression mais il n'intervient pas sur le clignotant.
+		En particulier, notez que nous n'avons pas écrit le code comme
+		ceci:
+	</xfr>
+</p>	
+<pre class="prettyprint lang-java">
+  m_bar.setProgress(progress);
+
+  if (progress &lt; ORANGE_THRESHOLD)
+    m_blinker.setState(Blinker.GREEN);
+  else if (progress &lt; RED_THRESHOLD)
+    m_blinker.setState(Blinker.ORANGE);
+  else
+    m_blinker.setState(Blinker.RED);
+</pre>
+<p>
+	Why? Because the blinker may or may not be wired to the
+	progress bar and this is not the business of the ticker
+	to know, its business is to animate the progress bar.
+	Look at the class
+	<span class="java-class">Composer</span>, it is a button
+	listener connecting or disconnecting the progress bar
+	and the blinker. You need to convince yourself the code
+	is correct. We assure you, not only it is not buggy,
+	but it is the right
+	way to compose the different widgets, via a listener pattern.
+	Make sure you understand the code and to discuss it with
+	other students and the teaching staff. This is important,
+	we are at the heart of event-oriented programming.
+	<xfr>
+		Pourquoi? Parce le clignotant peut être connecté ou pas,
+		et ce n'est pas le problème du ticker qui anime la barre
+		de progression. Regardez la classe
+		<span class="java-class">Composer</span>, c'est un écouteur
+		de bouton donc le rôle est de connecter la barre de progression
+		et le clignotant. Vous devez vous convaincre que le code
+		est correcte. Non seulement le code est correct mais il
+		illustre une bonne façon de connecter différents gadgets
+		au travers d'écouteurs. 
+	</xfr>
+</p>
+
+<h3>Bug Hunting -- Part II -- Questioning the timer</h3>
+
+<p>
+	OK, so the widgets are bug-free and so is our composer code
+	that is composing them together via a listener pattern.
+	So what is going wrong? Let us ask you a couple of
+	questions to help you better understand the problem:
+	<xfr>
+		Donc nos deux gadgets sont sans bugs ainsi que notre
+		composeur. Alors où se trouve le bug? Nous allons commencer
+		par vous poser quelques questions pour vous aidez à mieux
+		comprendre le problème:
+	</xfr>	
+</p>
+<ol>
+	<li>
+		How many timers does the toolkit provides? Only one or more than one?
+		<xfr>
+			Combien de timers le toolkit vous fournit? Un seul ou plusieurs?
+		</xfr>
+	</li>
+	<li>
+		How many timers do you need
+		in this example? One or two?
+		<xfr>
+			De combien de timers avez-vous besoin? Un ou deux?
+		</xfr>
+	</li>
+</ol>
+<p>
+	If you don't know, go look at the code, before reading on...
+	<xfr>
+		Si vous ne savez pas répondre aux questions, aller lire le code
+		avant de continuer de lire le texte ci-dessous.
+	</xfr>
+</p>
+<p>
+	So? Now, do you know? Great! Indeed, you need two timers. One for the
+	ticker that animates the progress bar. Another one for
+	the blinker to make it blink when orange or red.
+	<xfr>
+		Alors? Maintenant vous savez? Super! En effet, vous avez
+		besoin de deux timers, l'un pour animer la barre de progression
+		et l'autre pour faire clignoter le clignotant lorsqu'il est
+		orange ou rouge.
+	</xfr>
+</p>
+<p>
+	Looking at the class
+	<span class="java-class">Toolkit</span>, we hope that you
+	realized that it provides a single timer. So the ticker
+	and the blinker are competing for the timer, continuously
+	canceling each other timers.
+	<xfr>
+		Regardez la classe 	<span class="java-class">Toolkit</span>,
+		nous espérons que vous comprenez qu'il ne fournit qu'un seul
+		timer. Cela veut dire qu'il y a compétition entre deux usages
+		d'un seul timer, ce qui ne peut pas bien marcher.
+	</xfr>
+</p>
+<p>
+	You are up now, you need to change the implementation of the
+	toolkit timer in order to support concurrent timers. In other words,
+	the toolkit needs to manage one delay per listener. 
+	<b>Point important:</b> note 
+	that any new request for a timer, with the same listener, will
+	cancel any pending previous request with the same listener.
+	<xfr>
+		C'est à vous, vous allez changer l'implémentation du toolkit
+		pour prendre en compte plusieurs demandes de timer.
+		En d'autres termes, le toolkit doit gérer plusieurs demandes
+		et donc un délai par écouteur. Cela veut dire qu'une demande
+		de timer avec un écouteur va annuler toute demande existante
+		avec le même écouteur.
+	</xfr>
+</p>
+<p>
+	Let us illustrate this with a real life example first.
+	Let's say that it is 7:00am, and that your have two deadlines
+	this morning, one at 10:00am and the other at 11:30am. Let also
+	suppose that you have only one alarm clock. How would you do it?
+	You would set the alarm	for 10am first. Then, when it goes off
+	at 10:00am, you	would reset it to 11:30am. When it goes off again,
+	at 11:30am, you	would not reset it because you would no longer
+	have any deadlines this morning. Now, let's consider the
+	toolkit version of this behavior...
+	<xfr>
+		Illustrons cela par exemple de la vrai vie.
+		Disons qu'il est 7h du matin et que vous avez deux rendez-vous
+		ce matin, le premier à 10h et le second à 11h30. Disons aussi
+		que vous n'avez qu'un seul réveil et vous ne pouvez donc ne programmer
+		qu'une seule sonnerie à la fois. Vous allez d'abord programmer
+		le réveil pour sonner à 10h. Puis lorsqu'il sonnera, vous le
+		reprogrammerez pour sonner à 11h30. A 11h30, vous ne le
+		reprogrammerez pas puisqu'il vous n'avez plus de rendez-vous
+		ce jour là. Revenons à notre toolkit qui va suivre la même
+		approache.
+	</xfr>
+</p>
+<p>
+	The table below shows you when several timer requests are made
+	with different listeners, along a time line starting at 0ms.
+	At 0ms, a first request is made with a requested delay of 500ms.
+	At 100ms, a second request is made with a requested delay of 250ms.
+	Finally, a third request at 400ms is made with a requested
+	delay of 225ms. The table shows you how the toolkit
+	will manage the single global window timer in response
+	to these requests and when it will invoke the timer listeners
+	corresponding to expired requests.
+	<xfr>
+		La table ci-dessous vous montre une exécution avec plusieurs
+		demandes pour différents écouteurs. A T=0ms, la première demande
+		est faite avec un délai de 500ms. A T=100ms, une seconde
+		demande est faite avec un délai de 250ms. Finalement, à T=400ms,
+		un demande est faite avec un délai de 225ms. La table vous montre
+		comment le toolkit va gérer les demandes et comment il va gérer
+		l'unique timer fournit par la fenêtre.
+	</xfr>
+</p>
+<table border="1" style="text-align:left; border-spacing: 1px; width=60%;font-size: 14px;
+    font-weight: normal; border: 1px solid black; ">
+	<tr style="border: 1px solid black;">
+		<th style="color:black;">Time</th>
+		<th style="color:blue;">
+			Requests
+		</th>
+		<th style="color:red;">
+			Window Timer
+		</th>
+		<th style="color:green;">
+			TimerListener
+		</th>
+	</tr>
+	<tr>
+		<th> </th>
+		<th> </th>
+		<th> </th>
+		<th> </th>
+	</tr>
+	<tr>
+		<th>0ms</th>
+		<th style="color:blue;">A first request, delay of 500ms.</th>
+		<th style="color:red;">Set timer to 500ms.</th>
+		<th> </th>
+	</tr>
+	<tr>
+		<th>100ms</th>
+		<th style="color:blue;">A second request, delay of 250ms.</th>
+		<th style="color:red;">Cancel timer, reset to 250ms.</th>
+		<th> </th>
+	</tr>
+	<tr>
+		<th>350ms</th>
+		<th style="color:blue;"></th>
+		<th style="color:red;">The timer expires, reset it to 150ms.</th>
+		<th style="color:green;">Invoke the listener of the second request.</th>
+	</tr>
+	<tr>
+		<th>400ms</th>
+		<th style="color:blue;">A third request, delay of 225ms.</th>
+		<th style="color:red;"></th>
+		<th> </th>
+	</tr>
+	<tr>
+		<th>500ms</th>
+		<th style="color:blue;"></th>
+		<th style="color:red;">Timer expires, reset it to 125ms.</th>
+		<th style="color:green;">Invoke the listener on first request.</th>
+	</tr>
+	<tr>
+		<th>525ms</th>
+		<th style="color:blue;"></th>
+		<th style="color:red;">Timer expires.</th>
+		<th style="color:green;">Invoke the listener on the third request.</th>
+	</tr>
+</table>
+<p>
+	The figure below shows you the corresponding evolution of the
+	timer request queue and how the window timer is set or reset:
+	<xfr>
+		La figure ci-dessous vous montre l'évolution correspondante de
+		la queue de requêtes de timer et comment le timer de la fenêtre
+		est géré:
+	</xfr>
+</p>
+<img src="timer-queue.svg" />
+<p>
+	The blue squares represent new timer requests.
+	The red squares represent the window timer expiring.
+	Notice the red arrows at
+	the bottom of the figure, they show how the toolkit sets
+	the window timer, when the timer expires or as new event
+	with a shorted ETA come in.
+	The timer is first set to 500ms, then 
+	reset to 250ms at 100ms in. When it expires at 350ms,
+	it is set 150ms. When it expires, at 500ms in, it is set to 25ms.
+	When it expires at 525ms in, there is no more pending timer
+	requests.
+	<xfr>
+		Le carrés bleus repésentent les nouvelles requêtes qui
+		arrivent. Les carrés rouges représentent les moments
+		où le timer de la fenêtre expire. Notez les flèches
+		rougent au bas de la figure, elles vous montrent comment
+		le timer de la fenêtre est armé au cours du temps. Le
+		timer est armé pour 500ms en premier. Puis, il est
+		re-armé pour 250ms at T=100ms. Lorsqu'il expire
+		à T=350ms, il est re-armé pour 150ms. Lorsqu'il expire
+		à T=500ms, il est re-armé pour 25ms. 
+	</xfr>
+</p>
+<p>
+	We suggest that you start the designing  and coding process, so
+	that you get your mind around what you are supposed to do. Once
+	you feel confortable with a design and some code, we suggest that
+	you come back here and read on. Why? Because there
+	is a technical difficulty lurking in the dark. It is likely that
+	you will understand it better once you have thought over a design
+	and started an implementation.
+	<xfr>
+		Nous vous conseillons de commencer la conception et le codage
+		de votre solution. L'idée est que vous allez mieux comprendre
+		ce qu'il faut faire au fur et à mesure que vous allez concevoir
+		votre solution et l'implémenter. Puis, nous vous demandons de
+		revenir lire la suite de cette tâche. Pourquoi? Parce qu'il
+		y a une difficulté technique qui n'est pas évidente et dont
+		nous allons parlé dans les sections qui suivent. Pour nous,
+		il est clair que vous les comprendrez mieux si vous avez
+		déjà réfléchi au problème.
+	</xfr>
+</p>
+
+<h3>The Bug Lurking In the Dark Corner</h3>
+
+<p>
+	Let's step back and think about how the toolkit is used
+	by our code, focusing on the timer. Most of the time,
+	the code sets a timer and when it expires, a new timer
+	is set. In other words, one or more timer requests
+	may happen during the execution of the timer callback,
+	that is, the execution of the method
+	<span class="java-class">expired</span> from the interface
+	<span class="java-class">TimerListener</span>.
+	Here is an example:
+	<xfr>
+		Prenons un peu de recul et réfléchissons à comment le
+		code de notre exemple utilise le toolkit et les timers.
+		La plupart du temps, il ré-arme un timer lorsque le
+		précédent à expiré. Cela veut dire qu'une ou plusieurs
+		requêtes pour de nouveaux timers peuvent être faite
+		durant les rappels de la méthode
+		<span class="java-class">expired</span> de l'interface
+		<span class="java-class">TimerListener</span>.
+		Voici une illustration de cela:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public interface TimerListener {
+  void expired();
+}
+</pre>
+<p>
+	A perfect example would be the blinker widget, with
+	the way it manages its timer for blinking, something
+	like this:
+</p>
+<pre class="prettyprint lang-java">
+  class Ticker implements TimerListener {
+
+    @Override
+    public void expired() {
+      m_darker = !m_darker;
+      repaint();
+      Toolkit tk = Toolkit.getToolkit();
+      switch (m_state) {
+      case GREEN:
+        m_darker = false;
+        tk.setTimer(-1, null);
+        break;
+      case ORANGE:
+        tk.setTimer(500, this);
+        break;
+      case RED:
+        tk.setTimer(100, this);
+        break;
+      }
+    }
+  }
+</pre>
+<p>
+	Now, a question for you, how is your design and implementation
+	coping with this situation?
+	<xfr>
+		Maintenant, nous avons une question importante pour vous,
+		comment votre implémentation résiste-t-elle à ce pattern
+		d'exécution?
+	</xfr>
+</p>
+<p>
+	Think about it for yourself before reading on. Look at
+	your code with that execution pattern in mind. Does it work?
+	<xfr>
+		Réflichissez par vous-même avant de continuer à lire.
+		Regardez votre code et demandez vous si il marche avec
+		ce pattern d'exécution. Alors, est-ce qu'il marche?
+	</xfr>
+</p>
+<p>
+	We will assume that it does not. We will assume
+	that your code manages a list of the
+	different requests, right? When the window timer
+	expires, your code goes through that list to find
+	out all the timer requests that have expired, calling
+	the corresponding listeners, and removing the expired
+	requests from the list. If invoked listeners are
+	making new requests, the toolkit will add them
+	to the same list. Do you feel a big problem coming?
+	<xfr>
+		Nous allons faire l'hypothèse qu'il ne marche pas.
+		Nous allons faire l'hypothèse que votre code
+		gère les demandes de timer dans une liste.
+		Lorsque le timer de la fenêtre expire, votre
+		code va parcourir cette liste pour trouver toutes
+		les demandes qui sont satisfaites, qui doivent être
+		enlevées de la liste, et dont l'écouteur
+		doit être appelé. Si les écouteurs font de nouvelles
+		demandes de timers, elles seront rajoutées dans
+		la liste, la même liste que vous êtes déjà en train
+		de parcourir et de mofier. Vous présentez un gros
+		problème?
+	</xfr>
+</p>
+<p>
+	See, the problem comes from managing the same list
+	from two different methodes in the toolkit, both
+	iterating over the list and changing it. 
+	<u>Without proper care, this is really
+		unlikely to work</u>. It may work partially, sometimes
+	for quite a while, until it fails. There is no miracle there,
+	this requires careful planning.
+	<xfr>
+		Cela veut dire qu'alors que le code de votre
+		toolkit gère la liste des requêtes depuis deux méthodes
+		dont les invocations peuvent s'interlacer. Sans prendre
+		de précautions, c'est le désastre assuré à plus ou moins
+		courte échéance. 
+	</xfr>
+</p>
+<p>
+	The solution is simple. When the window timer expires,
+	first scan the list and find the expired requests,
+	removing them from the list of pending requests
+	and building a temporary list of expired requests.
+  Then, once you have processed the entire list of
+	pending requests, and only then, you can start
+	iterating over the list of expired requests,
+	invoking the corresponding listeners. This way,
+	if listeners are requesting new timers, it will
+	work just fine.
+	<xfr>
+		La solution est simple. Lorsque le timer de
+		la fenêtre exprire, il faut faire le travail en deux
+		étapes. La première, il faut parcourir la liste
+		pour trouver toutes les requêtes satisfaites. Il faut
+		les	enlever de cette liste et les rajouter à une liste
+		temporaire pour s'en souvenir. Puis, dans la deuxième
+		étape, on peut parcourir la liste temporaire et
+		invoquer les écouteurs. 
+	</xfr>
+</p>
+<p>
+	This property is called <b>reentrancy</b>, it says that
+	your toolkit can be safely invoked while it is
+	already executing some method. In this case, the toolkit
+	is executing the method <span class="java-method">expired</span>
+	from the interface <span class="java-class">WindowListener</span>
+	and its method <span class="java-method">setTimer</span>
+	may be invoked from any implementation of the method
+	<span class="java-method">expired</span>
+	of the interface <span class="java-class">TimerListener</span>.
+	<xfr>
+		Cette propriété est appelé la ré-entrance, elle dit que le
+		toolkit permet d'être invoqué en toute sécurité depuis les
+		écouteurs de timer que le toolkit invoque. Le pattern
+		d'exécution est celui-ci: 
+		le toolkit exécute la méthode
+		<span class="java-method">expired</span>
+		de l'interface  <span class="java-class">WindowListener</span>
+		et il  invoque les écouteurs via la méthode
+		<span class="java-method">expired</span>
+	  de l'interface <span class="java-class">TimerListener</span>
+		et cette exécution peut revenir sur le toolkit et
+		invoquer la méthode <span class="java-method">setTimer</span>.		
+	</xfr>
+</p>
+<p>
+	Do you feel a bit lost, all this feels too abstract to you?
+	Really? Yet you know about reentrancy in real life. How many times
+	did you say: "not now, I am in the middle of something" when
+	someone asked you to do something? See, you were not
+	reentrant at that time. But at other times, you were doing
+	something and interrupted yourself to do something else
+	temporarily. This is reentrancy. Well, now you see why we
+	always insist on thinking in terms of cooperating objects.
+	<xfr>
+		Vous avez l'impression d'être perdu et que tout cela est
+		un peu abstrait? Vraiment? Pourtant vous connaissez cela
+		dans la vrai vie. N'avez-vous jamais dit alors que quelqu'un
+		vous demande un service: "Pas maintenant,
+		je suis en plein milieu de quelque chose". Vous voyez,
+		vous n'étiez pas capable de ré-entrance à ce moment là.
+		Mais à d'autres moments vous avez pu vous interompre.
+		Voilà, vous savez ce qu'est la ré-entrance. Et
+		vous comprenez pourquoi on insiste toujours pour que
+		vous perceviez vos objets comme des individus en pleine
+		coopération.
+	</xfr>
+</p>
+
+<h3>That's it folks</h3>
+
+<p>
+	Please do commit your work.
+</p>
+<textarea class="terminal" rows="4" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.gui, Task6 completed"
+  $ git push --all
+</textarea>

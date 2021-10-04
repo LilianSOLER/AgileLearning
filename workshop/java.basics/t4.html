@@ -1,0 +1,134 @@
+<vars>
+  sprint=java.basics
+  task=t4
+</vars>
+<p>
+  After the temptation of the <em>Dark Side</em>,
+  with static fields and methods, we are pleased
+  to be back on the right path, towards <em>good
+    object-oriented programming</em>.
+  On that path, constructors are an important step.
+  Discovering constructors will change forever
+  the way you write code, guaranteed!
+  <xfr>
+    Après avoir discuté de la tentation que peuvent
+    exercer les méthodes et les champs statiques,
+    il est bon de revenir sur le droit chemin de
+    la programmation objet. Sur ce chemin, le
+    concept de constructeur est une étape importante.
+  </xfr>
+</p>
+<p>
+  But before we actually tell you what construtors are,
+  let us show you the problem of not using constructors.
+  If you have classes, you can easily create objects,
+  just like this:
+  <xfr>
+    Mais avant de vous montrer ce que sont les
+    constructeurs, regardons le problème que
+    pose leur absence. Si vous avez des classes,
+    vous pouvez créer des objects comme cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Point p = new Point();
+  Line l = new Line();
+</pre>
+<p>
+  But you are left with initializing them,
+  because, as we have seen, new objects have all
+  their fields initialized to zero for primitive
+  fields or <span class="java-keyword">null</span>
+  for reference fields.
+  <xfr>
+    Mais vous devez les initialiser puisque
+    les objets nouvellement crées sont initialisés
+    avec la valeur binaire zéro dans tous leurs
+    champs.
+  </xfr>
+</p>
+<p>
+  But how should they be initialized? True,
+  it is not that hard to guess how to
+  initialize points or lines.
+  May be something like this:
+  <xfr>
+    Mais comment faire? C'est souvent simple,
+    quelques valeurs assignées dans les champs
+    et c'est fait. Vrai. Peut-être quelque chose
+    comme ceci:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Point p = new Point();
+  Line l = new Line();
+  p.x = 12; p.y = 5;
+  l.start = p;
+  l.end = new Point();
+  l.end.x = 5; l.end.y = 5;
+</pre>
+<p>
+  But you need to do it every time, over and
+  over, every where you create a new object.
+  This is definitively annoying and the coding
+  gets murky. It would be so much easier if
+  we could write:
+  <xfr>
+    Mais vous avez à le
+    faire à chaque fois que vous créez un objet.
+    Ce n'est pas cool et pas super clair comme
+    codage. Cela serait tellement mieux si on
+    pouvait écrire:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Point p = new Point(12,5);
+  Line l = new Line(p,new Point(5,5));
+</pre>
+<p>
+  Furthermore, constructors make it easier to evolve
+  code. Without constructors, field names end up being
+  used all over the code, as illustrated above,
+  so changing field names could be a hassle.
+  Furthermore, imagine that you are not just
+  changing the name of a field, but what it contains.
+  For instance, if you have a class to describe
+  persons, they may have a field that holds their
+  age. But you may change this later on for a field
+  with their birth date. Now it is even more complicated.
+  <xfr>
+    De plus, avoir des constructeurs facilite l'évolution
+    de votre code.
+    Imaginez que vous vouliez changer
+    le nom d'un champ dans une classe. Il faut
+    parcourir tout votre code et changer le nom
+    partout. 
+    De plus, imaginez que vous ne vouliez pas
+    que changer le nom mais aussi ce qu'il contient.
+    Par exemple, si vous avez une classe qui décrit
+    une personne, il est probable que vous avez un
+    champ pour l'age de cette personne. Mais si vous
+    souhaitez change le champ age et le remplacer
+    par la date de naissance, pensant calculer l'age,
+    et bien, c'est encore plus compliqué.
+  </xfr>
+</p>
+<steps>
+  <step name="t4-s1" label="Introducing Constructors">
+    So what are constructors and how can they help you
+    be more efficient?
+  </step>
+  <step name="t4-s2" label="Coding with Constructors">
+    So let's write some code using constructors.
+  </step>
+</steps>
+<p>
+  That's all folks for this task.
+  Please make sure that you commit and push your work to our server.
+  Let us remind you how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -a -m "Sprint java.basics, task4 completed"
+  $ git push --all
+</textarea>

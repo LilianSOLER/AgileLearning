@@ -1,0 +1,552 @@
+<vars>
+  sprint=ricm3.ovm
+  task=t5
+</vars>
+
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+table#t01 {
+    width: 100%;    
+    background-color: #f1f1c1;
+}
+</style>
+
+<p>
+  As we said earlier, you use types every day when coding, but why?
+  Some programming languages do not use typed variables, such as
+  JavaScript. A variable may hold any value, at any time. So why
+  use types in some programming languages and not in others?
+  The main difference is how soon a misunderstanding is detected?
+</p>
+<p>
+  Remember, types are helping you express what you want and they
+  are also helping the interpreter understand what you want. Sometimes,
+  what you express is not correct and types will help figure that
+  you made a mistake. Right? As we discussed earlier, you can write:
+</p>
+<pre class="prettyprint lang-java">
+  int x = 2;
+  int[] array = new int[3];
+  array[0] = x + 3;
+</pre>
+<p>
+  But you cannot write:
+</p>
+<pre class="prettyprint lang-java">
+  float x = 2.5;
+  int[] array = new int[3];
+  array[0] = x + 3.1;
+</pre>
+<p>
+  Now, the type system will catch the mistake, the question is how
+  soon in the development process. With untyped programming languages,
+  the mistake will be discovered when executing statements. With typed
+  programming languages, the mistake will be when compiling the source.
+  See, this is why the Java compiler is so good at given you so many
+  red crosses in Eclipse, indicating mistakes as you are writing the
+  code in the editor. In JavaScript, you would have to finish the code
+  and then run it in order to discover that you made a mistake.
+  We are not saying one is better than the other, we are just pointing
+  a difference.
+</p>
+<p>
+  With our interpreter, we decided to adopt types, pretty much like
+  TypeScript, a typed version of JavaScript. The idea is therefore
+  to discover type-related mistakes during the parsing of the source.
+  In our case, this is quite important since we do not have a debugger
+  for our language yet. Therefore, discovering type-related bugs at
+  parse time would help developers using our language.
+</p>
+<p>
+  So types will be used by the parser in order to discover mistakes as
+  early as possible, before any statement is interpreted by the interpreter.
+  This means we want the do the following:
+</p>
+<ol>
+  <li>All expressions will be typed as they are parsed.</li>
+  <li>Assignments, when parsed, will check type compatibility.</li>
+</ol>
+<p>
+  This mainly impacts the following classes:
+</p>
+<ol>
+  <li>Class <span class="java-class">Statement</span></li>
+  <li>Class <span class="java-class">Expression</span></li>
+  <li>Class <span class="java-class">Assignment</span></li>
+  <li>Class <span class="java-class">Symbol</span></li>
+</ol>
+<p>
+  This classes are all part of the implementation
+  of the Abstract Syntax Tree (AST) and used by the parser
+  to build a tree when parsing a statement:
+</p>
+<pre class="prettyprint lang-java">
+  > 2 + 3 ;
+  -> 5
+  > x = 2 + 3 ;
+  >
+</pre>
+<p>
+  A statement can be an expression, like "2+3".
+  A statement can also be an assignment, like "x = 2+3".
+  As you can see, an assignment involves a symbol on the left-hand
+  side and an expression on the right-hand side.
+</p>
+<p>
+  A symbol is naming a variable and in fact can be used on
+  the left-hand side of an assignment, but it can also be used
+  anywhere in an expression:
+</p>
+<pre class="prettyprint lang-java">
+  > x = 2 + y ;
+</pre>
+<p>
+  When on the left-hand
+  side, the named variable is written with the value resulting
+  from the expression on the right-hand side. When used on
+  the right-hand side, the value of the name variable is read
+  to be used to evaluate the expression.
+</p>
+<p>
+  Go have a look at these classes... Start getting familiar
+  with their constructor, their methods, especially the
+  constructors that are used by the parser to build the
+  abstract syntax tree. You will see that types are used
+  quite intensively, to type expressions and to verify
+  assignments.
+</p>
+<p>
+  So let's start with typing expressions. It all starts
+  with typing values, with the primitive types.
+  Then, since variables are typed, symbols are typed as well.
+  This means that we can type expressions if we can type the resulting
+  values from applying operators. For example, if we know the
+  types of the variable "x" and "y", we can type the
+  following expression
+</p>
+<pre class="prettyprint lang-java">
+  > x + y ;
+</pre>
+<p>
+  Of course, we have to consider all the operators of the language:
+</p>
+<ol>
+  <li>'+' for the addition</li>
+  <li>'-' for the substraction</li>
+  <li>'*' for the multiplication</li>
+  <li>'/' for the division</li>
+  <li>'&&' for the logical and</li>
+  <li>'||' for the logical or</li>
+  <li>'!' for the logical not/li>
+</ol>
+<p>
+  For the last three, the arguments are boolean values and the
+  resulting value is a boolean. We also have comparison operators
+  that can be typed as producing boolean values:
+</p>
+<ol>
+  <li>'==' for equality</li>
+  <li>'!=' for equality</li>
+  <li>'&lt;' for equality</li>
+  <li>'&lt;=' for equality</li>
+  <li>'&gt;' for equality</li>
+  <li>'&gt;=' for equality</li>
+</ol>
+<p>
+  But what about the first operators, the arithmetic operators:
+  '+', '-', '*', and '/'. What is the type of the resulting value
+  when evaluated? Well, it depends on the types of the values the
+  operator works on. Right?
+</p>
+<ul>
+  <li>
+    A '+' between 
+    <span class="java-keyword">int</span> values will produce an
+    <span class="java-keyword">int</span> value.
+  </li>
+  <li>
+    A '+' between
+    <span class="java-keyword">float</span> values will produce a
+    <span class="java-keyword">float</span> value.
+  </li>
+  <li>
+    What about a '+' between an
+    <span class="java-keyword">int</span> value and
+    <span class="java-keyword">float</span> value?
+  </li>    
+</ul>
+<p>
+  And this is where it gets interesting because it requires
+  a decision to be made.
+</p>
+<ul>
+  <li>
+    Should the operation happen on
+    <span class="java-keyword">int</span> values?
+  </li>
+  <li>
+    Should the operation happen on
+    <span class="java-keyword">float</span> values?
+  </li>
+</ul>
+<p>
+  Choosing <span class="java-keyword">int</span> values
+  would require to convert the float value to a int value,
+  which is not right since we would loose information.
+  Choosing <span class="java-keyword">float</span> values
+  seems better since converting an int value to a float value
+  is quite alright.
+</p>
+<p>
+  At first, this seems to indicate that we will several
+  versions of each arithmetic operator, one per type.
+  Fortunately, we can do better than that.
+  Look at the class
+  <span class="java-class">AddOp</span> and more precisely
+  at the method
+  <span class="java-method">eval</span>:
+</p>
+<pre class="prettyprint lang-java">
+  @Override
+  protected Value eval(Value left, Value right) {
+    ArithValue l = (ArithValue)left;
+    ArithValue r = (ArithValue)right;
+    return l.add(r);
+  }
+</pre>
+<p>
+  See how the operator delegates to the values.
+  This is polymorphic code at the rescue since
+  it works with all
+  arithmetic values. So if we have float values,
+  the method <span class="java-method">ArithValue.add</span>
+  will compute the addition of two float values.
+  If we have integer values,
+  the method <span class="java-method">ArithValue.add</span>
+  will compute the addition of two integer values.
+</p>
+<p>
+  Go look at the code and understand how the overriding
+  of methods is used to achieve just that. Look how
+  abstract methods on the class
+  <span class="java-class">ArithValue</span>
+  are overridden by the subclasses
+  <span class="java-class">IntValue</span>
+  and
+  <span class="java-class">FloatValue</span>.
+  For instance:
+</p>
+<pre class="prettyprint lang-java">
+public class IntValue extends ArithValue {
+  @Override
+  public ArithValue add(ArithValue right) {
+    return new IntValue(m_value+right.toInt());
+  }
+}
+</pre>
+<p>
+  But wait a second, how are we sure that
+  both values are of the same type? In the code
+  above, what happens
+  if the right value is not an integer? Let's
+  suppose that we have a float value.
+  The float value will be converted to an integer
+  value by the method
+  <span class="java-method">FloatValue.toInt</span>.
+  Sounds fine, right?
+</p>
+<p>
+  Well, not really, if you understood what we said
+  earlier. Indeed, we just said that the evaluation of
+  a '+' between an integer value and a float value
+  would work just fine. But we said earlier that
+  this may induce of a loss of information. Something
+  that should be avoided. And this is where types
+  are used during parsing, when building the AST,
+  to prevent such expressions to be built.
+  So if you type the following expression:
+</p>
+<pre class="prettyprint lang-java">
+  > float f = 2.3;
+  > int x = 2 + f;
+</pre>
+<p>
+  The parser could build an expression with
+  the '+ operator and a left expression being
+  the value '2' and the right expression being
+  the symbol "f" corresponding to a float variable.
+  This would be an erroneous
+  expression, as we just explained, since the
+  left and right expressions do not have the same
+  type. The left is an
+  <span class="java-keyword">int</span>
+  while the right is a 
+  <span class="java-keyword">float</span>.
+</p>
+<p>
+  So we want the parser to complain and tell
+  you that there is a missing cast operation.
+  Indeed, if you really want to write the above
+  assignment, you really need to write it with
+  an explicit cast:
+</p>
+<pre class="prettyprint lang-java">
+  > float f = 2.3;
+  > int x = 2 + (int)f;
+</pre>
+<p>
+  The explicit cast operation expresses that you
+  know what you are doing and that you want to round
+  the value of the variable "f" to an integer value.
+</p>
+<p>
+  See types are used all the time, both by you and the
+  interpreter. You use types to express what you
+  want. The interpreter uses types to interpret what you typed.
+  So the type system is central to the dialog between you
+  and the interpreter.
+  When you develop in Java, a different
+  type system is there, but it plays the same role and help
+  Eclipse show you the red crosses when you type Java code
+  that is not quite correct.
+</p>
+
+<h3>Parsing versus Interpreting</h3>
+
+<p>
+  We cannot insist enough between what happens during parsing and
+  what happens during interpreting. It is crucial that you keep
+  these two "executions" in your mind at all time. There is first
+  a phase where a statement typed on the keyboard is parsed into
+  an abstract syntax tree. And then there is the second phase
+  when the abstract syntax tree is interpreted.
+</p>
+<p>
+  In the previous task, we look at what happens when interpreting,
+  regarding types and the potential casting of values.
+  In this task, we are concerned with what happens during parsing,
+  also regarding types. This is all about validating the
+  abstract syntax tree, before it is interpreted.
+  So what do we want to validate?
+</p>
+<ul>
+  <li> Validate expressions. </li>
+  <li> Validate assignments. </li>
+</ul>
+<p>
+  For that, let's turn our attention to the class
+  <span class="java-class">TypeSystem</span> and
+  the following methods:
+</p>
+<pre class="prettyprint lang-java">
+public class TypeSystem {
+  public static Type lift(Type left, Type right);
+  public static void assignable(Type t1, Type t2) throws CastException;
+}
+</pre>
+<p>
+  The first one is used to type-check expressions,
+  the second is used to type-check assignments.
+  You can use Eclipse to help you understand how these
+  two methods are invoked. Remember that you can select
+  in Eclipse any element of the Java language and hit
+  <b>Ctrl-Shift-G</b> to search for all the locations
+  where that language element is used.
+  This is one of the best features of Eclipse, it helps you
+  navigate code quickly, especially code that you did not write.
+  So let's do this together.
+</p>  
+
+<h3>Validating Expressions</h3>
+
+<p>
+  So go ahead and select the method
+  <span class="java-method">lift</span> and hit
+  <b>Ctrl-Shift-G</b>. Where did it find this method
+  invoked? Only from the constructor of the class
+  <span class="java-class">BinaryOp</span>. Not really
+  surprising afterall, right?
+</p>
+<p>
+  First, the constructor is invoked at parsing time,
+  since the elements of an abstrac syntax tree are
+  constructed when constructing the tree, which happens
+  when the builder is invoked by the parser.
+  So this is consistent with what we said earlier,
+  we are concerned with what happens when parsing.
+</p>
+<p>
+  Second, only binary operators are concerned with wondering
+  how two types can be used to together, as we discussed earlier.
+  The concern here is really two fold. On the one hand, the
+  concern is about the ability to use the two types together.
+  In other words, can the two types be used together by
+  any operator? On the other hand, the concern is about the
+  resulting type of the operator.
+</p>
+<p>
+  Remember, operators are polymorphic operators, so they really
+  do not know what values they operate on. This means they do not
+  know what types these values have. So operators cannot make
+  any decisions regarding the above concerns. Each value or
+  their type cannot make any decision either, it is a decision
+  across two types, requiring the knowledge of those two types.
+  This is why the method
+  <span class="java-method">lift</span> is available
+  on the class
+  <span class="java-class">TypeSystem</span>, an impartial
+  intermediary if you will.
+</p>
+<p>
+  The table below gives you the rules:
+</p>
+<table style="border: 1px solid black">
+  <tr>
+    <th>&nearr;</th>
+    <th>int</th>
+    <th>float</th>
+    <th>boolean</th>
+    <th>char</th>
+    <th>void</th>
+    <th>any</th>
+  </tr>
+  <tr>
+    <th>int</th>
+    <th>int</th>
+    <th>float</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th>int</th>
+  </tr>
+  <tr>
+    <th>float</th>
+    <th>float</th>
+    <th>float</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th>float</th>
+  </tr>
+  <tr>
+    <th>boolean</th>
+    <th></th>
+    <th></th>
+    <th>boolean</th>
+    <th></th>
+    <th></th>
+    <th>boolean</th>
+  </tr>
+  <tr>
+    <th>char</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th>char</th>
+    <th></th>
+    <th>char</th>
+  </tr>
+  <tr>
+    <th>void</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr>
+    <th>any</th>
+    <th>int</th>
+    <th>float</th>
+    <th>boolean</th>
+    <th>char</th>
+    <th></th>
+    <th>any</th>
+  </tr>
+</table>
+
+<p>
+  So go ahead, 
+  implement the method
+  <span class="java-method">lift</span> 
+  on the class
+  <span class="java-class">TypeSystem</span>.
+  Notice that all types have a number, in our
+  implementation of the class
+  <span class="java-class">Type</span>.
+</p>
+<pre class="prettyprint lang-java">
+public abstract class Type {
+
+  private int m_tno;
+  private String m_name;
+
+  protected Type(String name) {
+    m_tno = -1;
+    m_name = name;
+    TypeSystem.add(this);
+  }
+
+  protected Type(String name, int tno) {
+    m_tno = tno;
+    m_name = name;
+    TypeSystem.add(this);
+  }
+</pre>
+<p>
+  The primitive types have the first
+  numbers, see the method
+  <span class="java-method">init</span> 
+  on the class
+  <span class="java-class">TypeSystem</span>.
+</p>
+<pre class="prettyprint lang-java">
+public class TypeSystem {
+  public static void init() {
+    
+    types = new HashTable();
+    
+    new IntType(0);
+    new FloatType(1);
+    new BooleanType(2);
+    new CharType(3);
+    new VoidType(4);
+    new AnyType(5);
+
+    ArrayType.init();
+  }
+}
+</pre>
+<p>
+  But also notice that other types do not have
+  a number (in fact they have the number -1).
+  So what are these types? How can you know?
+  Well, again, you have a specific constructor,
+  so look where it is invoked from... using
+  Eclipse and the <b>Ctrl-Shift-G</b> feature.
+  So? Well, it is invoked from the constructor
+  of arrays. So these types are array types,
+  such as
+  <span class="java-keyword">int[]</span>,
+  <span class="java-keyword">char[]</span>,
+  <span class="java-keyword">float[]</span>, and so on.
+</p>
+
+<h3>Validating Assignments</h3>
+
+
+<h3>Testing the implementation</h3>
+
+<p>
+  <b>
+    MUST ADD CHECK HERE
+  </b>
+</p>

@@ -1,0 +1,876 @@
+<vars>
+  sprint=object.collections
+  task=t2
+</vars>
+
+<p>
+  The concept of a vector is also called dynamic array,
+  in the sense that it is an array that can grow or shrink.
+  Here, the class <span class="java-class">Vector</span>
+  will essentially encapsulate a Java array and allows
+  it to grow or shrink as needed.
+  <xfr>
+    Le concept de vecteur est aussi appelé tableau dynamique,
+    dynamique dans le sens que le tableau peut grandir ou
+    rétrécir. Ici, la classe <span class="java-class">Vector</span>
+    va essentiellement encapsuler un tableau et lui permettre de
+    grandir et de rétrécir.
+  </xfr>
+</p>
+<p>
+  We already encountered the need to have dynamic arrays
+  before, remember? When we worked with polygons, using
+  an array of points. We also used a dynamic array when
+  keeping the vocabulary of a text in the class
+  <span class="java-class">Vocabulary</span>.
+  In fact, some programming
+  languages have the construct built-in, like JavaScript or Python.
+  But in Java, arrays have a fixed length, they cannot
+  grow or shrink, so we need to wrap Java array into
+  a class, we will call it the
+  class <span class="java-class">Vector</span>.
+  <xfr>
+    Nous avons déjà rencontré le besoin d'avoir des tableaux
+    dynamiques, vous vous rappelez? Lorsque nous avons travaillé
+    sur les polygones, avec leur tableau de points. Nous avons
+    aussi utilisé des tableaux dynamiques avec notre classe
+    <span class="java-class">Vocabulary</span>. En fait,
+    certains langages ont même un support spécifique pour les
+    tableaux dynamiques, comme JavaScript. Mais en Java,
+    les tableaux sont de taille fixe. Il nous faut donc
+    implémenter la fonctionalité dans une classe
+    <span class="java-class">Vector</span>.
+  </xfr>
+</p>
+<p>
+  Look in the
+  Java package <span class="java-package">object.collections.step1</span>,
+  there is a class <span class="java-class">Vector</span>, with all
+	the right methods, but these methods are not yet implemented.
+  You will have no problem coding these methods since you already written
+  similar code in earlier sprints. The goal here is to introduce you on
+  the overall process we will follow to code our collections, using an
+  easy to implement one.
+	<xfr>
+		Regardez le paquet <span class="java-package">object.collections.step1</span>,
+		il y a la classe <span class="java-class">Vector</span>, avec les
+		méthodes déjà déclarées, mais sans implémentation. Vous n'aurez pas
+    de mal à coder cette collection puisque nous avons déjà codé quelque
+    chose de similaire dans des sprints précédent. Le but ici est de vous
+    familiariser avec le processus de développement que nous allons suivre
+    pour nos collections, en démarrant sur une collection facile à coder.
+	</xfr>
+</p>
+<p>
+	We will guide you below through the implementation of these methods.
+	We strongly suggest that you follow our guidance and that you test
+	the code you write incrementally. This means writing your own code
+	to do small tests.
+	<xfr>
+		Nous allons vous
+		guider dans cette tâche pour implémenter incrémentalement ces
+		méthodes. Nous vous suggérons de suivre notre approche. Nous
+		vous suggérons en particulier de coder et de tester incrémentalement,
+		en écrivant vos tests.
+	</xfr>
+</p>
+<p>
+	Why write your own tests while we gave you fairly complete tests?
+	Well, there are several reasons. First, our tests are complex, so
+	if the test fails, you have to understand the test before you can
+	fix your bug. This is not efficient, especially when learning concepts.
+	If you write your own test, you will understand the test, so debugging
+	will be easier and <b>faster</b>. Also, writing a test will require
+	you to think about how to use the code you wrote, helping you
+	better understand what it is supposed to do, ultimately understanding
+	better what we are trying to teach you.
+	<xfr>
+		Pourquoi écrire vos tests alors que nous vous avons fourni plein
+		de tests? Et bien, il y a plusieurs raisons à cela. Premièrement,
+		nos tests sont complexes, aussi, si un test échoue, il vous faut
+		comprendre d'abord le test avant de pouvoir comprendre le bug et
+		le corriger. Ce n'est pas efficace. Si vous écrivez vos propres
+		tests, petits et simples, alors vous serez plus efficace pour
+		trouver et corriger les bugs dans votre code. Deuxièment,
+		écrire vos tests va vous obliger à réfléchir à l'usage du code
+		que vous avez écrit et cela va vous aider à mieux comprendre
+		ce qu'il doit faire et donc mieux apprendre in fine.
+	</xfr>
+</p>
+<p>
+	So please, get into the habit of incrementally testing the code you
+	write, with small and easy-to-write tests. Then, and only then, you
+	can use our own testing. In other words, you should be convinced that
+	your code will pass our tests/checks before trying. You will see,
+	sometimes you will succeed, your code will pass the tests, but sometimes,
+	even though you were convinced it was working, you will fail our tests.
+	You will see, it will be interesting.
+  <xfr>
+		Pour vous, écoutez nos conseils et apprenez à tester incrementalement
+		le code que vous écrivez, avec des petits tests simples à écrire.
+		Une fois que ceux-ci passent, et seulement après, vous pouvez essayer
+		de passer nos tests. En d'autres termes, vous ne devriez essayer de
+		passer nos tests qu'une fois que vous pensez que votre code marche.
+		Vous verrez, dès fois, il passera nos tests, mais aussi parfois il
+		ne les passera pas. Vous verrez, cela sera intéressant.
+  </xfr>
+</p>
+<p>
+  Finally, this sprint will be about the rigor that is necessary to be a
+  good software engineer. For some of you, being rigorous comes easy but
+  for others, it is a struggle. Well, because we run extensive tests, you
+  have to follow our specification of what the collections should do. If
+  you try to wing it, your code will never pass our tests and you will not
+  really learn what we are trying to teach you.
+  <xfr>
+    Finalement, ce sprint est un test de votre rigueur en tant qu'ingénieur
+    logiciel. Pour certain, être rigougeux vient facilement alors que pour
+    d'autres cela s'avère plus difficile. Mais dans ce sprint, puisque nous
+    tournons des tests très complets, vos collections devront respecter notre
+    spéficiation. Si vous essayez de gagner du temps un manquant de rigueur lors
+    de la lecture des spécifications ou lors du codage, votre code ne passera pas
+    nos tests et vous n'apprendrez pas vraiment ce que l'on essaie de vous apprendre.
+  </xfr>
+</p>
+
+<h3>Constructors</h3>
+
+<p>
+  We have the usual suspects for the
+  class <span class="java-class">Vector</span>.
+</p>
+<pre class="prettyprint lang-java">
+  class Vector {
+    Vector();
+    Vector(Vector v);
+    Vector(Object[] elements);
+    Object[] elements();
+  }
+</pre>
+<p>
+  Notice the last method, which is obviously not a
+  constructor. But since we may construct vectors
+  from arrays, it seems only logical to be able
+  to convert a vector back to an array.
+	<xfr>
+		Notez la dernière méthode, qui n'est pas un constructeur.
+		Mais si on construit un vecteur depuis un tableau d'éléments,
+		il semble logique de pouvoir récupérer un tableau d'éléments
+		depuis un vecteur.
+	</xfr>
+</p>
+<p>
+	Of course, <b>avoid any unwanted aliasing here</b> on arrays.
+	When constructing a vector from an array of elements, you do not
+	want to alias the array, but you do want to alias the elements.
+	This means that you will make a copy of the given array
+	but not of the elements referenced by the array.
+	Indeed, you do not want to copy the elements, you want to
+	reference them. Also, when returning an array of elements,
+	in the method <span class="java-method">elements</span>,
+	you will make sure to create a new array as well, as to make
+	sure that no one can alias your internal array.
+	<xfr>
+		Bien sûr, <b>nous voulons éviter tout aliasing indésirable</b>
+		sur les tableaux. Le constructeur d'un vecteur prenant un
+		tableau d'éléments doit faire une copie de ce tableau mais
+		les éléments ne seront pas copiés, ils seront référencés par
+		la copie du tableau. De la même manière, il faudra créer
+		un nouveau tableau dans la méthode
+		<span class="java-method">elements</span>.
+	</xfr>
+</p>
+
+<h3>Array-like Behavior</h3>
+
+<p>
+  The class <span class="java-class">Vector</span>
+  should provide methods that are similar to the
+  <em>"[]"</em> operator on arrays. It seems also
+  logical that one can ask a vector its length, like
+  we do with arrays.
+</p>
+<pre class="prettyprint lang-java">
+  class Vector {
+    int length();
+    Object elementAt(int index);
+    Object updateAt(int index, Object elem); 
+  }
+</pre>
+<ul>
+  <li>
+    Method <span class="java-method">elementAt</span>
+    allows you to access the element at the given index,
+    starting at zero.
+  </li>
+  <li>
+    Method <span class="java-method">updateAt</span>
+    allows you to change the element at the given index.
+    The method returns the element that was replaced
+    at the given index, also starting at zero.
+  </li>
+</ul>
+<p>
+  Both methods will throw an exception if the index
+  is out of bounds, that is, if the index is smaller than zero or
+  greater or equal to the length of the vector.
+  Since Java arrays have similar bound checks at
+  runtime, there is already an exception defines in
+  Java for that purpose:
+  <span class="java-class">
+    ArrayIndexOutOfBoundsException
+  </span>.
+</p>
+<p>
+	<b>Nota Bene</b>: ignore the inner class
+	<span class="java-class">Iterator</span>.
+	Do not implement it for now.
+</p>
+
+<h3>Time to Test</h3>
+
+<p>
+	It is time for you to test your code:
+	<xfr>
+		Il est temps de tester votre code:
+	</xfr>
+</p>
+<ul>
+	<li>Test creating vectors.</li>
+	<li>Test reading and writing to your vector.</li>
+	<li>Make sure that you are testing growing a vector.</li>
+</ul>
+
+<h3>Extended Behavior</h3>
+
+<p>
+  This is about the dynamic behavior of the
+  class <span class="java-class">Vector</span>.
+</p>
+<pre class="prettyprint lang-java">
+  class Vector {
+    void   insertAt(int index, Object elem);
+    Object removeAt(int index);
+    boolean remove(Object elem);
+    boolean contains(Object elem);
+  }
+</pre>
+<ul>
+  <li>
+    Method <span class="java-method">insertAt</span>
+    allows you to insert an element at the given index,
+    sliding the elements from the given index one
+    position up to make room for the new element.
+    <br>
+    <b>Nota Bene:</b> the vector is grown, always.
+    This means that we can insert past the end of
+    the vector. The "undefined" entries, if any,
+    are filled with <span class="java-keyword">null</span>.
+  </li>
+  <li>
+    Method <span class="java-method">removeAt</span>
+    allows you to remove an element at the given index,
+    sliding the elements past the given index one
+    position down to void an empty entry
+    in the vector. The method returns the removed
+    element.
+  </li>
+  <li>
+    Method <span class="java-method">remove</span>
+    allows you to remove an element, without knowing
+    its index. The method returns true if the element
+    was found and removed. It returns false if the
+    element was not found.
+  </li>
+  <li>
+    Method <span class="java-method">contains</span>
+    returns true if the given element is found in
+    the vector, false otherwise.
+  </li>
+</ul>
+<p>
+  Both methods will throw an exception if the index
+  is out of bounds, again using the class
+  <span class="java-class">
+    ArrayIndexOutOfBoundsException
+  </span>.
+</p>
+<p>
+	<b>Nota Bene</b>: ignore the inner class
+	<span class="java-class">Iterator</span>.
+	Do not implement it.
+</p>
+
+<h3>Time to Test</h3>
+
+<p>
+	It is time for you to test your new code:
+	<xfr>
+		Il est temps de tester votre nouveau code:
+	</xfr>
+</p>
+<ul>
+	<li>
+		First, write code to test the methods
+    <span class="java-method">insertAt</span> and 
+    <span class="java-method">removeAt</span> first,
+		they are the simpler ones.
+	</li>
+	<li>
+		Then, write code to test the methods
+    <span class="java-method">remove</span> and 
+    <span class="java-method">contains</span>.
+	</li>
+</ul>
+<p>
+	Are you done implementing the class 
+  class <span class="java-class">Vector</span>,
+	leaving the class
+	class <span class="java-class">Iterator</span>
+	unimplemented?
+	<br>
+	Yes? Good.
+  <xfr>
+		Avez-vous implémenté la classe
+    <span class="java-class">Vector</span>,
+		sans implémenter la classe
+		<span class="java-class">Iterator</span>?
+		Oui? C'est bien.
+	</xfr>
+</p>
+<p>
+	Have you tested your code and do you believe that
+	it works?
+	<br>
+	Yes? Great!
+	<xfr>
+		Avez-vous testé votre code et pensez-vous qu'il fonctionne?
+		Oui? C'est parfait. 
+  </xfr>
+</p>	
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.collections"
+   classpath="bin;tests.jar"
+   classname="object.collections.step1.TestVector"> 
+  <banner>
+		Let's see if it passes our tests then...
+		<xfr>
+			Voyons si il passe nos tests.
+		</xfr>
+  </banner>
+  <hint>
+    Not quite right.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+
+<div name="xxcheck1_unfold" style="xdisplay:none" >
+</div for="id_check1_passed" >
+
+<h3>Iterators</h3>
+
+<p>
+	Let's discuss the concept of iteration of a collection
+	of items. One obvious example is iterating over the elements
+	of an array. Since 
+  Java arrays have no concept of iterators, developers use
+  <span class="java-keyword">for</span> or
+  <span class="java-keyword">while</span> loops on the
+  array index. Just like this:
+	<xfr>
+		Discutons maintenant le concept d'itérer sur les éléments
+		d'une collection. Un example immédiat est d'itérer sur
+		les éléments d'un tablau. Puisque Java n'a pas d'itérateur
+		sur les tableaus, les développeurs vont utiliser des boucles
+		<span class="java-keyword">for</span> ou
+		<span class="java-keyword">while</span>, comme ceci:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Object array[];
+  for (int i=0; i &lt; array.length; i++) {
+    Object o = array[i];
+    ...
+  }
+</pre>
+<p>
+  For a vector, you could write something similar:
+</p>
+<pre class="prettyprint lang-java">
+  Vector array;
+  for (int i=0; i &lt; array.length(); i++) {
+    Object o = array.elementAt(i);
+    ...
+  }
+</pre>
+<p>
+  While this is an acceptable pattern for a vector, it might
+  not be so good for other collections, for instance a linked list.
+  With a linked list, a scan is necessary to get at a certain element,
+  which means that the above code would be equivalent to two nested
+  loops, not efficient at all. To permet efficient iterations,
+  using the same coding style for any collections,
+  it is traditional for collections to offer iterators,
+  something we will do for our vector collection.
+  <xfr>
+    Alors que cette façon d'écrire le code fonctionne pour un vecteur,
+    cela ne serait pas adapté pour d'autres formes de collections,
+    comme une liste chaînée par exemple. Avec une liste, le code
+    ci-dessus serait en fait deux boucles imbriquées puisque pour
+    atteindre un élément dans une liste, il faut la parcourir jusqu'à
+    cet élément. Pour permettre une itération efficace et un codage
+    uniform sur différentes collections, les collections offrent le
+    concept d'itérateur, c'est ce que nous allons définir pour notre
+    vecteur.
+  </xfr>
+</p>
+<p>
+  With iterators, the pattern is a little different.
+  The iterator is an object, created by a collection,
+  that allows to iterate over the elements of a collection.
+  Typically, an iterator has two methods:
+  <xfr>
+    Avec un itérateur, le parcours de la collection est un peu
+    différent. L'itérateur est crée par la collection qu'il
+    servira à parcourir grace aux deux méthodes suivantes:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Iterator {
+    boolean hasNext();
+    Object  next();
+  }
+</pre>
+<p>
+  With the above behavior, an iterator is classically used
+  in the following way:
+</p>
+<pre class="prettyprint lang-java">
+  Vector v = new Vector();
+  Iterator iter = v.getIterator();
+  while (iter.hasNext())  {
+    Object o = iter.next();
+    ...
+  }
+</pre>
+<p>
+	<b>Nota Bene</b>: an iterator is something provided to developers
+	using  vectors. The iterator is not used internally to implement
+	any of the methods of the class <span class="java-class">Vector</span>.
+	This is why we implemented the class <span class="java-class">Vector</span>
+	first and we are only	discussing the class
+	<span class="java-class">Vector.Iterator</span> now.
+	<xfr>
+		<b>Nota Bene</b>: l'itérateur est fournit pour l'utilisateur
+		d'un vecteur. Il n'est pas utilisé dans l'implémentation des
+		méthodes de la classe <span class="java-class">Vector</span>.
+		C'est pour cela que nous les avons implémenté en premier
+		pour discuter de l'itérateur ensuite.
+	</xfr>
+</p>
+<p>
+	<b>Nota Bene</b>: look at the code above, it shows you the
+	usage of iterators. Make sure you understand that code,
+	therefore understanding how the methods
+	<span class="java-method">hasNext</span> and
+	<span class="java-method">next</span> work.
+	Ask questions if this is not clear, before implementing.
+  <span style="color:red">
+	Every year, many of the students rush implementing the
+	iterator with their own understanding of what these
+	methods should do, rather than having understood what
+	they are expected to do.<span>
+	<xfr>
+		<b>Nota Bene</b>: regardez le code ci-dessus, il vous
+		montre l'usage d'un itérateur sur un vecteur. Soyez
+		sûr de comprendre le code et donc de comprendre
+		ce que doivent faire les méthodes 
+		<span class="java-method">hasNext</span> et
+		<span class="java-method">next</span>.
+		Demandez si ce n'est pas clair, avant de les coder.
+		Chaque année, de nombreux étudiants se précipitent
+		pour implémenter ces méthodes, avec leur propre conception
+		de ce qu'elles sont censées faire, au lieu d'avoir
+		pris le temps de comprendre ce qu'elles sont censées faire.
+	</xfr>
+<p>	
+  Now that you understand how these methods are to be used,
+	let's create an iterator class for our vector collection.
+  To do this, we will introduce the concept of inner classes,
+  that is, classes that are defined within another class. This way,
+  each collection can have its own Iterator class, in the same
+  package. In principle, it would look like this:
+  <xfr>
+    C'est parti, maitenant que vous avez compris comment ces méthodes
+		seront utilisées, nous allons implémenter l'itérateur pour notre
+    classe <span class="java-class">Vector</span>. Pour faire cela,
+    nous allons introduire le concept de <em>inner class</em>.
+    C'est la meilleur manière de faire pour que chaque collection
+    puisse avoir son itérateur. Pour définir une inner classe, cela
+    ressemble à cela.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  package object.collections;
+  public class Vector {
+    public static class Iterator {
+      Vector owner;
+      Iterator(Vector v) { owner = v; }
+      ...	
+    }
+    public Iterator iterator() {
+      return new Iterator();
+    }
+  }
+</pre>
+<p>
+	We used a <span class="java-keyword">public static</span>
+	<span style="color:red">inner</span> class. 
+	It is defined
+	<span class="java-keyword">public</span> because it is
+	part of the public behavior of the class
+	<span class="java-class">Vector</span>, indeed,
+	the method
+	<span class="java-method">Iterator iterator()</span>
+	returns an object as an instance of the class
+	<span class="java-class">Iterator</span>.
+	<xfr>
+		Nous avons utilisé une classe
+		<span style="color:red">interne</span>
+		qui soit 
+		<span class="java-keyword">public static</span>.
+		Elle est <span class="java-keyword">public</span>
+		parce qu'elle fait partie de l'interface publique
+		de la classe 
+		<span class="java-class">Vector</span>. En effet,
+		la méthode 
+		<span class="java-method">Iterator iterator()</span>
+		retourn un objet qui est une instance de la classe
+		<span class="java-class">Iterator</span>.		
+	</xfr>
+</p>
+<p>
+	<span style="color:red" style="bold">Nota Bene</span>: we used
+	a <span class="java-keyword">static</span> definition for
+	our inner class <span class="java-class">Iterator</span>.
+	This is important, because both static and non-static inner
+	classes do exist in	Java, but they behave quite differently
+	and we felt the <span class="java-keyword">static</span> design
+	was simpler to understand for beginners.
+	For advanced students, you may want to look up the
+	differences and come discuss with the teaching staff
+	about them.
+	<xfr>
+		<span style="color:red" style="bold">Nota Bene</span>: nous
+		avons choisi une définition 
+		<span class="java-keyword">static</span> de notre classe
+		interne <span class="java-class">Iterator</span>.
+		C'est un point de conception important car une classe
+		interne peut soit être déclarée en static, soit en non-static.
+		Mais attention, la différence est de taille et nous avons
+		pensez que le choix classe interne
+		<span class="java-keyword">static</span> était plus
+		facile à comprendre pour des débutants. Pour les étudiants
+		avancés, n'hésitez pas à vous renseigner sur les deux
+		patterns et de venir en discuter avec vos enseignants.
+	</xfr>
+</p>
+<p>
+	We used an inner class because it is the right coding pattern
+	in this situation. Indeed, an inner class exists as part of
+	the outer class, it does not exist independently. Well, isn't
+	this the case for our iterator? Of course, this is the iterator
+	for the class <span class="java-class">Vector</span>, so
+	it only makes sense within the context of the class
+	<span class="java-class">Vector</span>, hence its definition
+	as an inner class.
+	<xfr>
+		Nous avons utilisé une classe interne parce que c'est le bon
+		pattern de conception pour notre situation. En effet,
+		une classe interne n'exist qu'en tant qu'une partie de la
+		classe qui la définie. N'est-ce pas le cas pour notre
+		itérateur? C'est bien l'itérateur pour la classe
+		<span class="java-class">Vector</span>, il est donc
+		logique qu'elle soit définie comme une classe interne.
+	</xfr>
+</p>
+<p>
+	Note the constructor with a given owner object. We are pretty
+	sure you understand the Java code, but do you understand why it
+	is there?
+	<xfr>
+		Notez le constructeur avec un paramêtre: le proppriétaire.
+		Nous sommes sur que vous savez lire et comprendre le code
+		Java, mais comprenez vous pourquoi nous faisons comme cela?
+	</xfr>
+</p>
+<ul>
+	<li>
+		Do you understand what is that concept of owner?
+		<xfr>
+			Comprenez vous le concept de propriétaire?
+		</xfr>
+	</li>
+	<li>
+		Why is the constructor not public?
+		<xfr>
+			Pourquoi le constructeur n'est pas public?
+		</xfr>
+	</li>
+</ul>
+<p>
+	Let's start with the fact that the constructor of the
+	class <span class="java-class">Iterator</span> does not
+	need to be public. Where are iterator objects instantiated?
+	Since an iterator is created for a vector, asking a	vector
+	object via the method <span class="java-method">iterator()</span>,
+	the constructor should not be public. This is a pattern
+	of ownership, meaning a vector object creates an iterator
+	object that it owns. Understand the contrast: the class
+  is public but constructor is not. So the creation of the objects
+  is a private matter, but using such objects is not. Clear?
+  It is a subtle but really important notion.
+	<xfr>
+		Discutons en premier le fait que le constructeur de la
+		classe <span class="java-class">Iterator</span> n'est pas public.
+		Posez vous la question suivante: où sont créés les objets
+		de la classe <span class="java-class">Iterator</span>?
+		Ils sont créés par un vecteur, via la méthode
+		<span class="java-method">iterator()</span>. D'où,
+		le constructor ne doit pas être public. C'est un pattern
+		de propriété, ce qui veut dire que l'objet vecteur crée
+		un objet itérateur et il en est le propriétaire.
+    Comprenez-vous le contrast: la classe est publique mais
+    le constructeur lui ne l'est pas. Autrement dit, la
+    création de l'objet est une affaire privée, mais l'objet
+    crée est utilisé publiquement. La distinction est subtile
+    mais il est important de la comprendre.
+	</xfr>	
+</p>
+<p>
+	Ownership here means this iterator is created for a vector and works
+	only with that vector. Hence the fact that an iterator is bound when created
+	to its owner, hence the constructor with a given vector object.
+	You will see why when implementing the methods of the class
+	<span class="java-class">Iterator</span> because the iterator
+	object will need to interact with its owner object.
+	<xfr>
+		La notion de propriété ici veut dire que l'itérateur est crée par un vecteur
+		et ne travaillera qu'avec ce vecteur, son "propriétaire".
+		D'où le fait d'associer l'objet itérateur avec son object
+		propriétaire dès la construction. Vous allez comprendre pourquoi
+		lorsque vous allez implémenter les méthodes de la classe
+		<span class="java-class">Iterator</span> car l'objet itérateur
+		devra intéragir avec son objet propriétaire.
+	</xfr>
+</p>
+
+<h3>Time to Test</h3>
+
+<p>
+	You have finished coding the class
+	<span class="java-class">Iterator</span> and you did some testing
+	to make sure it works. Great.
+	<xfr>
+		Vous avez fini de coder la classe
+		<span class="java-class">Iterator</span> et vous avez testé
+		qu'elle fonctionne. Super. 
+	</xfr>
+</p>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.collections"
+   classpath="bin;tests.jar"
+   classname="object.collections.step1.TestVectorIterator"> 
+  <banner>
+		Let's check if your code passes our tests.
+		<xfr>
+			Voyons si votre code passe nos tests.
+		</xfr>
+  </banner>
+  <hint>
+    Not quite right.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<!--
+<div name="check2_unfold" style="display: none" >
+
+    <h3>Discussing the implementation</h3>
+
+    <p>
+      First of all, let us congratulate you, you did it, you implemented
+      the class 
+      <span class="java-class">Vector</span>.
+      with its inner class
+      <span class="java-class">Vector.Iterator</span>.
+      That's cool.
+    </p>
+    <p>
+      Now, let's discuss the two possible designs, using an array
+      of objects. The key design point is the following:
+      if you have N elements in your vector,
+      do we have an array of length N or possibly larger than N?
+      Remember, we discussed this with polygons.
+      <xfr>
+	Discutons un peu les deux conceptions possible en utilisant
+	un tableau d'objet. La question centrale de cette conception
+	est la suivante: si vous avez N éléments dans le vecteur,
+	avez vous un tableau d'un taille N ou plus?
+      </xfr>
+    </p>
+    <p>
+      Keeping the array of elements always at the minimum size is
+      a good design, saving memory. But the cost is that you need to
+      allocate a new array each time you will insert or remove
+      an element in the vector. If you use a larger
+      array, insertions and removals are cheaper, but the array has
+      entries that are not used. 
+      <xfr>
+	Garder le tableau à la taille minimum est une bonne conception
+	qui préserve la mémoire. Mais le coût est que vous allez
+	devoir allouer un tableau à chaque insertion ou suppression.
+	Si vous utilisez un tableau plus large, l'insertion et la suppression
+	ne nécessite pas l'allocation d'un nouveau tableau, mais le
+	tableau contiendra des entrées non utilisées.
+      </xfr>
+    </p>
+    <p>
+      Most developers will consider using the smallest possible
+      array as their first design. So let's discuss the other
+      design. So look at the following code. See the constructor,
+      it allocates an array of 4 elements, although there are no
+      elements in the vector. But that it is OK since the count
+      of elements (nelems) is zero. So the first four insertions
+      will not grow the array.
+      <xfr>
+	La plupart des développeurs vont naturellement vers la
+	conception avec un tableau de taille minimum. Nous allons
+	discuté l'autre conception. Regardez le code ci-dessous,
+	nous allouons un tableau de
+	quatre entrées mais elles sont vides puiqu'il n'y a encore
+	aucun élément dans le tableau. Les premières insertions
+	ne vont pas grossir le tableau et se feront à un coup
+	minimal.
+      </xfr>
+    </p>
+    <pre class="prettyprint lang-java">
+  package object.collections;
+    public class Vector {
+    Object elems[];
+    int nelems; // the count of elements
+
+    public Vector() {
+      elems = new Object[4];
+    }
+
+    /*
+     * Make sure the array is larger than the given size.
+     */
+    private void grow(int size) {
+      if (size &gt;= elems.length) { 
+        Object tmp[] = new Object[size+(size/2)];
+        System.arraycopy(elems, 0, tmp, 0, nelems);
+        elems = tmp;
+      }
+    }
+    public void insertAt(int index, Object elem) {
+      if (index &lt; nelems) {
+        // make sure the array is large enough
+        grow(nelems+1);
+        // shif elements up one position
+        for (int i = nelems; i &gt;= index; i--)
+          elems[i] = elems[i - 1];
+        // insert the new element
+        elems[index] = elem;
+        nelems++;
+      } else {
+        // make sure the array is large enough
+        grow(index+1);
+        // insert the new element
+        elems[index] = elem;
+        nelems = index+1;
+      }
+    }
+
+    public Object removeAt(int index) {
+      check(index);
+      Object old = elems[index];
+      // shift elements left one position
+      for (int i = index + 1; i &lt; nelems; i++)
+        elems[i - 1] = elems[i];
+      // set last element to null so that
+      // "undefined" entries are always null
+      elems[nelems-1] = null;
+      nelems--;
+      return old;
+    }
+  }
+    </pre>
+    <p>
+      Notice that when we grow the array, we grow it with always
+      some extra space and we use an efficient copying method
+      provided by the Java Platform:
+      <xfr>
+	Notez que lorsque nous grossissons le tableau, nous le
+	faisons avec une marge, de manière à avoir de nouveau
+	plusieurs entrées libres. Nous utilisons la fonction de
+	la plateforme Java pour copier les tableaux efficacements:
+      </xfr>
+    </p>
+    <pre class="prettyprint lang-java">
+  Object tmp[] = new Object[limit+(limit&gt;&gt;2)];
+  System.arraycopy(elems, 0, tmp, 0, nelems);
+    </pre>
+    <p>
+      Remember that we discussed these design options when we discussed
+      the class <span class="java-class">Polygon</span> and its management
+      of the array of points. We measured the performance and discovered
+      that keeping a tight array could be costly.
+      Of course, nothing is free. The challenge here is to know what to
+      do if the array ends up large and the vector small?
+      We will let you ponder about this.
+      After, writing code is all about desing choices and our point
+      here is to make you realize exactly that.
+      <xfr>
+	Rappelez vous, nous en avions discuté lors de la discussion de la
+	classe <span class="java-class">Polygon</span> et de sa gestion
+	de son tableau interne de points. Nous avions fait des mesures et
+	avions établi que garder un tableau à la juste taille pouvait être
+	couteux en temps. Mais rien n'est gratuit et le défi est de savoir
+	quoi faire lorsque le tableau finit par être grand alors que le
+	vecteur lui est petit. On vous laisse y réfléchir.
+	Après tout, écrire du code est faire des choix de conception et
+	le point de cette discussion est exactement de vous en faire prendre
+	conscience.
+      </xfr>
+    </p>
+    <p>
+    </p>
+    <p>
+      That's all folks for this task. But before we move on,
+      please make sure
+      that you commit and push your work to our server.
+      This is how:
+    </p>
+    <textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.collections, Task2 completed"
+  $ git push --all
+    </textarea>
+  </div id="id_check2_passed">
+-->

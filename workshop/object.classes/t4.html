@@ -1,0 +1,728 @@
+<vars>
+  sprint=object.classes
+  task=t4
+</vars>
+
+<p>
+  In this task, we will continue to leverage polymorphic programming,
+  to further enhance our design and coding patterns. The goal is always
+  to help reduce redundant coding and to help with future code evolution.
+  <xfr>
+    Dans cette nouvelle tâche, nous allons continuer à exploiter
+    le polymorphisme pour améliorer notre conception et nos
+    schémas de programmation. Le but est toujours d'éliminer
+    le code redondant et avoir une structure de code plus
+    claire et plus simple à faire évoluer.
+  </xfr>
+</p>
+<p>
+	This task is not hard from a coding perspective, since it will be
+	about reorganizing the code you already wrote in the previous task.
+	But it will ask you to think and plan this reorganization, understanding
+	more complex object-oriented mechanisms. The classes to look at
+	are in the source folder <em>"task4"</em>.
+	<xfr>
+		Cette tâche ne sera pas dure d'un point de vue du l'écriture de code,
+		puisque il s'agira de reorganiser du code existant, celui que vous avez
+		écrit lors de la tâche précédente. Par contre, cette tâche va vous
+		demander de réfléchir et de planifier cette reorganisatiom, en
+		mettant en place des mécanismes avancés de programmation orientée-objet.
+		Les nouvelles classes à regarder son dans le dossier source <em>"task4"</em>.
+	</xfr>
+</p>
+<p>
+	Why reorganize the code since we had a good design with one good
+	implementation in the previous task? True, but let's think about having
+	multiple implementations. How would that look? For each new implementation,
+	we would have	to start all over again, from the original
+  interfaces. This works, but this requires a lot of recoding.
+  Polymorphic programming and inheritance between classes
+	offer a more interesting alternative,
+	exploiting the power of object-oriented programming.
+  <xfr>
+		Mais pourquoi réorganiser le code puisque nous avions une bonne
+		conception et une bonne implémentation? Cela est vrai, mais que
+		se passera-t-il pour d'autres implémentations? 
+    Bien sûr, une nouvelle implémentation pourrait repartir des
+    interfaces, recodant tout depuis le début. Possible, mais
+    pas très efficace car beaucoup de code serait probablement
+    commun aux deux implémentations. La programmation polymorphic
+		et l'héritage entre classes offre une autre alternative plus interessante, exploitant
+		la puissance de la programmation orientée-objet.
+  </xfr>
+</p>
+<p>
+  So go look into the source folder <em>"task4"</em>
+  and in the
+  package <span class="java-package">oop.filesys</span>.
+	You can see pretty much the same classes as before, in
+	the previous <em>task3</em>. But these classes are now abstract classes
+	that are designed to be extended by concrete classes.
+	Remember, abstract classes cannot be instantiated, in contrast,
+	concrete classes are regular classes and thus can be instantiated.
+	The goal of these abstract classes is to gather the most code that
+	will be common to most implementations, provided by concrete
+	classes extending the abstract ones. 
+  <xfr>
+    Regardez dans le dossier source <em>"task4"</em> puis
+    dans le paquet
+    <span class="java-package">oop.filesys.task4</span>.
+    Ces classes sont très proches de ce que nous avions
+    fait dans la tâche précédente, mais les classes
+    sont abstraites. Rappelez-vous, les classes abstraites ne
+		peuvent être instanciées, alors que les classes concrêtes
+		sont vos classes habituelles et peuvent donc être instanciées.
+		Les classes abstraites sont là pour regrouper le code
+    commun aux diverses implémentations qui seront fournis par
+		des classes concrêtes étendant les classes abstraites.
+  </xfr>
+</p>
+<ul>
+	<li>
+    <span class="java-package">oop.filesys.task4</span>:
+		<ul>
+			<li>class  <span class="java-class">Directory</span></li>
+			<li>class  <span class="java-class">File</span></li>
+			<li>class  <span class="java-class">Node</span></li>
+			<li>class  <span class="java-class">FileSystem</span></li>
+		</ul>
+	</li>	
+	<li>
+    <span class="java-package">oop.filesys.task4.ramfs</span>:
+		<ul>
+			<li>class  <span class="java-class">Directory</span></li>
+			<li>class  <span class="java-class">File</span></li>
+			<li>class  <span class="java-class">Factory</span></li>
+		</ul>
+	</li>
+</ul>
+<p>
+	Look first at the abstract classes
+  <span class="java-class">Directory</span> and
+  <span class="java-class">File</span> in the
+  package <span class="java-package">oop.filesys.task4</span>.
+  Then, have a look at the concrete subclasses 
+  <span class="java-class">RamDirectory</span> and
+  <span class="java-class">RamFile</span> in the
+  package <span class="java-package">oop.filesys.task4.ramfs</span>.
+	The overall goal is to reorganize the code we wrote
+	in the previous task,
+	in the package <span class="java-package">oop.filesys.task3</span>,
+	across these new classes.
+	<xfr>
+		Regardez d'abord les classes
+		<span class="java-class">Directory</span> et
+		<span class="java-class">File</span> dans le paquet
+		<span class="java-package">oop.filesys.task4</span>.
+		Puis, regardez les sous-classes concretes 
+		<span class="java-class">RamDirectory</span> et
+		<span class="java-class">RamFile</span> dans le paquet
+		<span class="java-package">oop.filesys.task4.ramfs</span>.
+		Le but global est de reorganiser, sur ces classes le code que vous aviez écrit
+		lors de la tâche précédente, dans le paquet
+		<span class="java-package">oop.filesys.task3</span>.
+	</xfr>
+</p>
+<p>
+	The first challenge is to finish the class
+	<span class="java-class">RamFile</span>, the easiest of
+	the two classes 
+  <span class="java-class">RamDirectory</span> and
+  <span class="java-class">RamFile</span>. You will of course
+	copy and paste your code from the previous class 
+	<span class="java-class">oop.filesys.task3.File</span>. 		
+	<xfr>
+		Le premier défi est de finir l'implémentation de la classe
+		<span class="java-class">RamFile</span>, c'est la plus
+		facile des deux classes
+		<span class="java-class">RamDirectory</span> et
+		<span class="java-class">RamFile</span>. Vous allez
+		copier votre code de la classe 
+		<span class="java-class">oop.filesys.task3.File</span>. 		
+	</xfr>
+</p>
+<p>
+  Then the second challenge will be to implement the class
+	<span class="java-class">Directory</span>. But you need to
+	be careful here, you will need to decide which methods
+  from the interface <span class="java-class">IDirectory</span>
+  may/should be implemented at the level of this class
+  <span class="java-class">Directory</span> and which
+  ones may/should be implemented on the subclass
+	<span class="java-class">RamDirectory</span>.
+  Think about it before starting to copy and paste your
+	code from the previous task (task-3). We advise you to
+	plan what you want to do before starting to code.
+	To do that, we also advise you to keep reading this page...
+  <xfr>
+    La question est donc de décider où implémenter les méthodes
+    de l'interface <span class="java-class">IDirectory</span>?
+    Au niveau de la classe 
+    <span class="java-class">Directory</span> ou au niveau
+    de la sous-classe
+    <span class="java-class">RamDirectory</span> dans le paquet
+    <span class="java-package">oop.filesys.task4.ramfs</span>?
+		Vous devez y penser et planifier avant de vous lancer dans
+		le codage. Et pour y arriver, on vous conseille de
+		continuer à lire cette page...
+	</xfr>
+</p>
+
+<h3>Help and Hints</h3>
+
+<p>
+	Ready to code? Great, but before you do, let us give you some hints.
+</p>
+
+<h4>Which methods where?</h4>
+
+<p>
+	To help you decide where each method should be implemented,
+	we added to the class <span class="java-class">RamDirectory</span>
+	all the methods
+	from the interface <span class="java-class">IDirectory</span>,
+	but with a question inviting to think about where some of these
+	methods must be implemented? So go have a look and start thinking
+	about what you should do.
+	<xfr>
+		Pour vous aidez, 
+    nous avons mis toutes les méthodes de l'interface
+    <span class="java-class">IDirectory</span> sur la classe
+		<span class="java-class">RamDirectory</span>,
+		mais avec un commentaire sur certaines vous demandant de décider
+		où elle devrait être? Allez voir et commencer à planifier ce que
+		vous voulez faire. 
+  </xfr>
+</p>
+
+<h4>Dealing with the ICollection of nodes</h4>
+
+<p>
+	To help you with your compilation errors, let's make sure you do not
+	start in the wrong direction when copying and pasting code in the
+	classes   <span class="java-class">Directory</span> 
+	and   <span class="java-class">RamDirectory</span>. Of course,
+	you will get plenty of compilation errors, nothing unexpected,
+	and one of the main reasons will be because the collection of nodes
+	in the class  <span class="java-class">Directory</span> 
+  is now a generic collection
+  (<span class="java-class">ICollection</span>) and
+	no longer a linked list (<span class="java-class">LinkedList</span>).
+  What should you do then?
+  <xfr>
+		Pour vous aidez avec les erreurs de compilation qui seront inévitables,
+		assurons nous que vous partez dans le bon sens. Lorsque vous allez
+		copier et coller votre code, vous allez avoir plein d'erreurs de
+		compilation, ce qui est normal. 
+    Une des raisons va être le fait que la collection de noeuds
+    dans la classe   <span class="java-class">Directory</span> 
+    est maintenant une collection 
+		(<span class="java-class">ICollection</span>) et non plus
+		une liste (<span class="java-class">LinkedList</span>).
+  </xfr>
+</p>
+<p>
+  Well, <span style="color:red"><b>DO NOT</b></span>
+	change the type of the collection of nodes, leave it
+  to <span class="java-class">ICollection</span>. We know, changing
+  it to a specific collection is
+  your first thought, but it is the <u>wrong one</u> here. Remember,
+  we want to keep the code generic, so that different subclasses
+  may use different implementations of the collection of nodes.
+  So we want the abstract concept of a directory to use an
+  abstract concept of a collection.
+	<xfr>
+		Ne changez pas le type de la collection de noeuds,
+		conservez le type <span class="java-class">ICollection</span>.
+		Nous savons que changer le type est votre première solution,
+		mais c'est la mauvaise solution dans ce cas. Rappelez-vous,
+		nous voulons conserver la partie générique du code.
+		Nous voulons donc qu'un dossier abstraite utilise une
+		collection abstraite.
+	</xfr>
+</p>
+<p>
+	So, how should we fix the compilation errors then?
+	The code in the methods on the class
+	<span class="java-class">Directory</span> need to
+	do certain things with the collection of nodes
+	for which there is no methods on the interface
+	<span class="java-class">ICollection</span>.
+  Well, look at the following abstract methods of the 
+  class <span class="java-class">Directory</span>:
+	<xfr>
+		Et bien comment allez-vous faire? Surtout que
+		vous avez besoin de manipulater la collection
+		de noeuds de certaines façons mais qu'il n'y a
+		pas de méthodes sur cette interface pour le faire.
+		Et bien regardez les méthodes abstraites suivantes
+		sur la classe
+		<span class="java-class">Directory</span>:
+	</xfr>
+</p>
+<p>
+</p>
+<pre class="prettyprint lang-java">
+  /**
+   * Adds the given node as a child of this directory.
+   */
+  abstract protected void add(Node node) throws FSException;
+  
+  /**
+   * Removes the given node from the children of this directory.
+   */
+  abstract protected void remove(Node node) throws FSException;
+</pre>
+<p>
+  What are they? They are the <em>contract</em> between the abstract
+	class <span class="java-class">Directory</span> and its sub-classes,
+	in our case, it is the class
+	class <span class="java-class">RamDirectory</span>.
+	These methods will be implemented by the sub-class to provide
+	the required features for you to be able to write the methods
+	on the super-class. They are implemented by the sub-classes
+	because only the subclasses know which collection of nodes they opted
+	for. These three methods should be sufficient
+  to implement all necessary methods
+  on the class <span class="java-class">Directory</span>.
+  <xfr>
+    Que sont ces méthodes? Elles sont le contract que les sous-classes
+    doivent implémenter pour manipulater la collection des nodes.
+    Cela veut dire que toutes les méthodes que vous devrez implémenter
+    sur la classe
+    <span class="java-class">Directory</span>
+    peuvent et doivent être implémenter en appelant ces méthodes
+    abstraites.
+  </xfr>
+</p>
+<p>
+	<b>Important</b>: make sure you undestand what is going here, it is
+	a very interesting coding pattern between a super-class and its sub-classes.
+	Make sure you discuss this pattern with other students and the teaching
+	staff. This will be especially necessary during the next task when you
+	will write another implementation.
+</p>
+
+<p>
+  <b>Nota Bene:</b> depending on how you wrote your code in the previous task,
+  the reorganization of the code may be easy or difficult, with a few small
+  changes or more substantial changes. If you have substantial
+  changes, you probably didn't write such clean code in the
+  first place. So take this opportunity to reflect on your
+  coding style.
+  <xfr>
+    Note: en fonction de la manière dont vous avez écris votre
+    code à la tâche précédente, l'adapter à ces méthodes
+    abstraites peut être immédiat ou bien demander une grosse
+    restructuration. Si c'est le cas, il est probable que votre
+    implémentation laissait à désirer et c'est l'opportunité pour
+    vous de réfléchir sur l'esthétique du code que vous écrivez.
+    </xfr>
+</p>
+
+<h4>File and Directory Factory</h4>
+
+<p>
+  <b>Still missing something?</b> Most probably. You are probably
+  wondering how you will create directories and files, since
+  the classes are abstract now. This is a perfectly valid point.
+  At the level of the class <span class="java-class">Directory</span>,
+  in the methods <span class="java-method">mkdir</span>,
+  and <span class="java-class">touch</span>, you do not know
+  how to create a directory or file since you do not know
+  which implementation is used. Even worse, we do not even
+  have an implementation yet. So what should you do?
+  <xfr>
+    Il vous manque toujours quelque chose pour finir votre code?
+    C'est probable, il vous manque la possibilité de créer des
+    dossiers et des fichiers, puisque les classes sont abstraites.
+    Dans la classe <span class="java-class">Directory</span>,
+    les méthodes <span class="java-method">mkdir</span> et
+    <span class="java-class">touch</span> doivent créer
+    des dossiers et des fichiers, comment faire puisque
+    vous ne connaissez pas les classes d'implémentation?
+    Pire encore, vous n'avez même pas encore une seule
+    implémentation, alors comment finir le code?
+  </xfr>    
+</p>
+<p>
+  Well, look at the class <span class="java-class">FileSystem</span>
+  and the new concept of a factory. Look at the methods
+  <span class="java-method">newFile</span> and
+  <span class="java-method">newDirectory</span>.
+  They provide what you need, a way to create a new file or a
+  new directory. So use these methods from your class
+  class <span class="java-class">Directory</span>,
+  in the methods <span class="java-method">mkdir</span>,
+  and <span class="java-class">touch</span>.
+  <xfr>
+    Et bien regardez la classe 
+    <span class="java-class">FileSystem</span>
+    et le nouveau concept de <em>fabrique</em>.
+    Regardez les méthodes 
+    <span class="java-method">newFile</span> and
+    <span class="java-method">newDirectory</span>.
+    Elles fournissent ce dont vous avez besoin, une façon
+    de créer un fichier ou un dossier.
+    Et bien utilisez ces méthodes dans les méthodes
+    <span class="java-method">mkdir</span>,
+    et <span class="java-class">touch</span>
+    de la classe 
+    <span class="java-class">Directory</span>.
+  </xfr>
+</p>
+<p>
+  This coding pattern is called <b>delegation</b>. This is like real life
+  delegation. For instance, if one of your pipes in your house leaks,
+  you may not know
+  how to repair it, but you may delegate the repair task to a plumber. This is the
+  same idea. A directory object does not know which implementation is used,
+  so it delegates to its file system. The file system does not know
+  either, but it is given an object, a factory object that knows how to create
+  files and directories. Pretty darn cool, right?
+  <xfr>
+    Ce schéma de programmation est appelé <b>délégation</b>. C'est
+    tout à fait comme dans la vrai vie, où vous pouvez déléguer à quelqu'un
+    une tâche, comme de faire appel à un plombier. En programmation objet,
+    un objet peut déléguer à un autre objet de faire quelque chose.
+    Ici, le code d'une méthode sur la classe abstraite
+    <span class="java-class">Directory</span> va déléguer à la fabrique
+    cette création d'objets, d'où le terme de fabrique.
+  </xfr>
+</p>
+<!--p>
+  There is indeed a cool pattern here, especially with polymorphic code.
+  We used delegation to subclasses via abstract methods.
+  We also used delegation to other objects, via the factory.
+  Using a delegation pattern provides us with a win-win
+  situation here. We have a lot of common polymorphic methods on
+  the abstract class <span class="java-class">Directory</span>,
+  for only a few and very simple methods on all subclasses.
+  <xfr>
+    Ce schéma de délégation est puissant, tout spécialement avec une
+    programmation polymorphique. Nous avons vu la délégation vers
+    les sous classes au travers de méthodes abstraites. Nous avons
+    aussi vu la délégation vers d'autres objets au travers de la
+    fabrique. Utiliser la délégation et le polymorphisme nous
+    donne une situation ou tout le monde est gagnant:
+    nous avons du code partagé au niveau de la classe abstraite
+    <span class="java-class">Directory</span>, pour seulement quelques
+    nouvelles méthodes simples sur les différentes sous-classes.
+  </xfr>
+</p>
+
+<h4>The Abstract Class <span class="java-class">File</span></h4>
+
+<p>
+  Now let's turn our attention to the
+  class <span class="java-class">File</span>, also
+  an abstract class. Notice that the class
+  <span class="java-class">File</span>
+  does not implement any of the methods
+  from the interface
+  <span class="java-class">IFile</span> that
+  it implements. This is because there are 
+  no methods that can be provided at the level of
+  the abstract concept of a file. Oh well, sometimes, polymorphic
+  programming helps with sharing methods across subclasses,
+  some other times, it is not the case.
+  <xfr>
+    Regardons maintenant la classe
+    <span class="java-class">File</span>
+    qui est aussi une classe abstraite. Notez qu'elle
+    n'implémente aucune des méthodes de l'interface
+    <span class="java-class">IFile</span> qu'elle
+    implémente pourtant.
+    Toutes les méthodes sont en effet dépendentes
+    de l'implémentation. Il n'y a pas de méthodes génériques
+    qui puissent être exprimées au niveau de la classe
+    abstraite 
+    <span class="java-class">File</span>.
+    Il n'est pas toujours possible de partager du code
+    au niveau d'une classe abstraite, cela arrive.
+  </xfr>
+</p>
+
+<h3>Concrete Implementations</h3>
+
+<p>
+  Now it is time to turn our attention to the actual implementations
+	that will be about extending the abstract classes
+  <span class="java-class">Directory</span>
+	and
+	<span class="java-class">File</span> discussed above.	
+  We will do two implementations, one in this task and one in the
+	next task. The two implementations will be very different:
+	<xfr>
+		Il est temps de se tourner vers nos implémentations qui vont
+		étendre les classes
+		<span class="java-class">Directory</span>
+		and
+		<span class="java-class">File</span>.
+		Nous allons faire deux implémentations très différentes
+		l'une de l'autre:
+	</xfr>
+</p>
+<ul>
+	<li>
+		One implementation will be a <em>"ramfs"</em> implementation,
+		using a linked list in directories for keeping track of nodes.
+		<xfr>
+			Une implémentation sera sur la base de notre <em>ramfs</em>
+			et utilisant une "linked list" dans les dossiers pour maintenir
+			la liste des noeuds.
+		</xfr>		
+	</li>
+	<li>
+		The other implementation will be a <em>loop-back</em> implementation,
+		that is, a file system using a file as its mass storage. More about
+		this in the next task.
+		<xfr>
+			L'autre implémentation sera une implémentation d'un <em>loop-back</em>,
+			c'est à dire un système de fichier dans un fichier. Vous en saurez plus
+			dans la tâche suivante.
+		</xfr>
+	</li>
+</ul>
+<p>
+	The reason to redo yet another <em>"ramfs"</em> implementation
+	is to keep it simpler in terms of coding, focusing on how to
+	reorganize the code you already have across the implementation
+	classes that you are about to complete and the abstract classes
+  <span class="java-class">Directory</span>
+	and
+	<span class="java-class">File</span> we discussed above.
+	This is a very important exercice, helping you practice with
+	a hierarchy of classes and the design choices of where to
+	put what implementation.
+	<xfr>
+		La raison de refaire encore une fois un <em>"ramfs"</em>
+		est de rester simple en terme de codage, afin de pouvoir
+		se focaliser sur l'organisation du code entre les classes
+		d'implémentation que vous allez finir et celles abstraites
+		que nous avons discuté ci-dessus
+		(<span class="java-class">Directory</span> et
+		<span class="java-class">File</span>).
+		Cet exercice est important car il va vous permettre de mieux
+		comprendre comment répartir le code sur une hiérarchie de
+		classes.
+	</xfr>
+</p>
+<p>
+	Look in the source folder "task4" and in the Java packave
+	<span class="java-package">ricm3.filesys.oop.ramfs</span>.
+  We gave you a skeleton implementation to get you started.
+  Look at the classes
+	<span class="java-class">RamDirectory</span> and
+	<span class="java-class">RamFile</span>, you will see that
+	a lot of methods are defined but you are asked where they
+	should be: on the implementation classes
+	<span class="java-class">RamDirectory</span> and
+	<span class="java-class">RamFile</span>, 
+	or moved up to the abstract classes
+	<span class="java-class">Directory</span> and
+	<span class="java-class">File</span>.
+	<xfr>
+		Regardez dans le dossier source "task4" et dans le
+		paquet Java 
+		<span class="java-package">ricm3.filesys.oop.ramfs</span>.
+		Nous vous avons donné une première implémentation incomplète
+		pour vous aidez à démarrer.
+		Regardez les classes 
+		<span class="java-class">RamDirectory</span> et
+		<span class="java-class">RamFile</span>, vous verrez
+		que beaucoup de méthodes sont définies mais que l'on vous
+		demande de décider ou elles doivent définies en réalité,
+		sur les classes concretes
+		<span class="java-class">RamDirectory</span> et
+		<span class="java-class">RamFile</span>, ou bien
+		sur les classes abstraites
+		<span class="java-class">Directory</span> et
+		<span class="java-class">File</span>?
+	</xfr>
+</p>
+-->
+<p>
+	<b>Hint:</b>
+	more generally, how should you decide where a method goes
+	between the abstract super-class and a concrete sub-class?
+	Well, any method that you can code
+	at the level of the abstract classes
+	<span class="java-class">Directory</span> and
+	<span class="java-class">File</span> will be inherited
+	by all implementations, avoiding to code and recode
+	the same methods for each different implementation.
+	<xfr>
+		Comment décider? Et bien, si une méthode peut-être
+		implémenter sur une classe abstraite, elle sera
+		héritée par toutes les sous-classes et donc toutes
+		les différentes implémentations du notre système
+		de fichier. Toute méthode qui ne sera pas sur les
+		classes abstraites devra être ré-implémentée par
+		chaque nouvelle implémentation.
+	</xfr>
+</p>
+<p>
+	The answer will not be obvious all the time. You will get
+	compilation errors when pasting your code from <em>task3</em>
+	in the abstract classes, 
+	but that does not always mean the implementation should not
+	go there. The code of most of the methods will have to be
+	adapted before it can compile in this new hierarchy of classes.
+	You will have to be smart.
+  <xfr>
+		La réponse ne va pas être évidente tout le temps. Vous
+		allez avoir des erreurs de compilation lorsque vous allez
+		essayer de coller votre code, en particulier dans les classes
+		abstraites. Mais cela ne veut dire que ce n'est pas là que
+		le code doit aller. Il va falloir adapter votre code.
+  </xfr>
+</p>
+
+<h3>Testing</h3>
+
+<p>
+  Once you are done with coding and compiling, it is time to test your code. 
+  You can have a look in the Java package 
+  <span class="java-package">ricm3.filesys.oop.ramfs</span>
+  and the class <span class="java-class">RamShell</span>.
+	Then, when you have tested with the shell you new implementation,
+	you can try out our automated tests below.
+	<xfr>
+		Une fois que vous avez fini, il est temps de tester
+		votre code. Vous pouvez regarder le paquet Java
+		<span class="java-package">ricm3.filesys.oop.ramfs</span>
+		et la classe <span class="java-class">RamShell</span>.
+		Une fois que vous aurez testé votre nouvelle implémentation
+		au travers du shell, vous pourrez essayer de passer nos
+		tests.
+	</xfr>
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.classes"
+   classpath="bin;tests.jar;../object.collections/edu-polytech-oop-collections.jar"
+   classname="object.classes.tests.Task4Tests"> 
+  <banner>
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+
+<!--
+<h4>Map-based Implementation</h4>
+
+<p>
+  When your linked-list implementation works, it is time
+  to start looking at our alternate implementation using a
+  map (hash table). Look at the class 
+  <span class="java-class">RamMapDirectory</span>,
+  still in the Java package
+  <span class="java-package">ricm3.filesys.oop.ramfs</span>.
+  So go ahead, complete the implementation
+  using a <span class="java-class">HashTable</span>
+  instead of a <span class="java-class">LinkedList</span>.
+  <xfr>
+    Lorsque votre première implémentation à base de liste
+    chaînée marche, il est temps de se tourner vers la
+    deuxième implémentation qui utilise une table de
+    hachage. Regardez la classe
+    <span class="java-class">RamMapDirectory</span>,
+    toujours dans le paquet
+    <span class="java-package">ricm3.filesys.oop.ramfs</span>.
+    Complétez l'implémentation, en utilisant la classe
+    <span class="java-class">HashTable</span>
+    en lieu et place de la classe
+    <span class="java-class">LinkedList</span>.
+  </xfr>
+</p>
+<p>
+  Notice that there are several inherited methods that may be
+  optimized, when using a hash table instead of a linked list.
+  This very point is one of the great features of object-oriented programming.
+  You may use inherited methods, available on super-classes,
+  saving coding time. Or you may override some of these
+  inherited implementations if you know how to improve them.
+  The best of both worlds. You may avoid recoding a lot at first
+  and then recode only the few methods for which a better performance
+  really matters.
+	<xfr>
+		Remarquez que vous avez plusieurs méthodes héritées que
+		vous pouvez optimiser. C'est un des points intéressants
+		de l'approche orientée-objets, il est possible d'utiliser
+		les méthodes héritées et ainsi avoir moins à coder ou bien
+		il est possible de surcharger certaines des méthodes héritées
+		par des versions plus optimisées. Vous pouvez faire les
+		optimisations incrémentalement, au fur et à mesure des besoins.
+	</xfr>
+</p>
+<p>
+  So which inherited methods can we improve here? The super-class
+  <span class="java-class">Directory</span> uses an iterator
+  to iterate over the collection in order to search for a given
+  name. Since we have a hash table and we have used the name
+  of nodes as the key, we have available a much faster lookup
+  based on names. So go ahead, optimize these methods, leveraging
+  the methods <span class="java-method">get</span> and
+  <span class="java-method">put</span> on the
+  class <span class="java-class">HashTable</span>.
+  You may use the shell to debug your code,
+  but remember to use a factory that creates the map-based
+  implementation, not the linked-list one.
+	<xfr>
+		Quelles sont les méthodes que l'on peut optimiser?
+		La super-classe
+		<span class="java-class">Directory</span> utilise un itérateur
+		pour itérer sur la collection de noeuds, afin de chercher
+		par nom. Puisque nous avons une table de hachage sur le nom,
+		nous pouvons faire la recherche sur nom de manière bien plus
+		efficace en utilisant les méthodes
+		<span class="java-method">get</span> et
+		<span class="java-method">put</span> sur la classe
+		<span class="java-class">HashTable</span>.
+		Vous pouvez utiliser le shell pour mettre au point votre
+		code, sous debugger. Mais rappelez vous de configurer votre
+		fabrique pour qu'elle crée des dossiers utilisant une
+		table de hachage (map) et non pas une liste chaînée.
+	</xfr>
+</p>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.classes"
+   classpath="bin;tests.jar;../object.collections/edu-polytech-oop-collections.jar"
+   classname="object.classes.tests.Task4MapTests"> 
+  <banner>
+    Let's run our checks.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+-->
+
+<h3>That's all folks</h3>
+<p>
+  Please make sure to commit and push your work to our server:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.classes, Task4 completed"
+  $ git push --all
+</textarea>
+

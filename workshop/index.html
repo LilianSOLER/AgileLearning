@@ -1,0 +1,178 @@
+<vars>
+  <!-- This is a cursus, the root of all html pages.
+       This is indicated by setting no names at all,
+       not for a sprint, a task, or a step.
+       The title is the title for the web browser tab 
+       holding that page.
+    -->
+  title=Object-Oriented Programming
+</vars>
+<h1> Object-Oriented Programming </h1>
+
+<p>
+  We are happy to have you as a new student and
+  we hope that you will find this cursus
+  interesting and motivating, but also challenging.
+  The goal is to teach you object-oriented programming,
+  using the Java programming language and tools.
+  <xfr>
+    Nous sommes très heureux de vous compter parmi nos étudiants
+    et nous espérons que vous trouverez cet atelier intéressant
+    et motivant, mais aussi vous permettant de progresser.
+    Le but est de vous apprendre la programmation orientée-objet,
+    via le langage Java et les outils associés.
+  </xfr>
+</p>
+<p>
+  This course is structured following the principles of 
+  <a href="alearning.html">Agile Learning</a>. 
+  Agile learning is a team effort, a team that encompasses
+  the students as well as the teaching staff. 
+  Please read about these principles before proceeding.
+  <xfr>
+    Ce cursus est organisé en suivant les principes de  
+    l'<a href="alearning.html">Apprentissage Agile</a>.
+    L'Apprentissage Agile est un apprentissage en équipe,
+    un équipe qui inclue les étudiants mais aussi l'équipe
+    enseignante. Veuillez lire les principes de cet apprentissage
+    avant de vous lancer.
+  </xfr>
+</p>
+<p>
+  This workshop is organized in sprints and each sprint is composed
+  of tasks. There is a progression to respect, so sprints have to be
+  done in order and so are the tasks in each sprint. As you complete
+  a task, the next task will be unlocked. As you complete all the tasks
+  in a sprint, the next sprint will be unlocked.
+  <xfr>
+    Cet atelier est organisé en sprints et chaque sprint est composé
+    de tâches. Il y a donc une progression à respecter. Lorsque vous
+    finirez une tâche, la suivante sera déverrouillée. De même,
+    lorsque vous finirez un sprint, le suivant se déverrouillé.
+  </xfr>
+</p>
+<p>
+  <b>Nota Bene:</b>
+  if you have finished a task or a sprint and you do not see the
+  next one unlocked... do not panic and do not call for help.
+  Just reload the page in your browser (hit Ctrl-R in most browsers)
+  and the next task or sprint should now appear unlocked. If not,
+  it means that you have not finished the previous task or sprint.
+  <xfr>
+    <b>Nota Bene:</b> vous avez fini une tâche et la tâche suivante
+    est toujours verrouillée? Où alors c'est le sprint suivant
+    qui n'est pas déverrouillé? Pas de panique. Rechargez la page (avec
+    la combinaison de touche Ctrl-R dans la plupart des browsers).
+    La tâche ou le sprint suivant apparaîtra déverrouillée.
+    Si ce n'est pas le cas, c'est que vous n'avez pas réellement fini
+    la tâche ou le sprint en question.
+  </xfr>
+</p>
+<p>
+  Since you are reading this, you have already git-cloned this workshop
+  and launch the local web server, via the shell script <em>workshop.sh</em>.
+  You did all this from the directory <em>~/2018/workshops/oop</em>, 
+  called the <b>Workshop</b> directory. Remember this, we will mention
+  the <b>Workshop</b> directory throughout these pages.
+  <xfr>
+    Puisque vous lisez ceci, vous avez déjà cloner via git cet atelier
+    et lancer le server web local, en exécutant le script
+    shell <em>workshop.sh</em>. Vous avez cela depuis le dossier
+    <em>~/2018/workshops/oop</em>, appelé le dossier de l'<b>Atelier</b>.
+    Rappelez vous en car nous y ferrons référence souvent dans les pages
+    qui suivent.
+  </xfr>
+</p>
+
+<h2>Using Shells</h2>
+
+<p>
+  During this workshop, you will use shell terminals, as needed. Please,
+  do not forget to setup properly the needed environment in each of these
+  terminal. To do so, you
+  <span style="color: red;">
+    need to source the file <em>setenv.sh</em>
+    in each new terminal window.
+  </span>
+  <xfr>
+    Durant cet atelier, vous allez utiliser des terminaux en ligne de commande.
+    <span style="color: red;">
+      Rappelez vous de faire un <em>"source"</em> de <em>setenv.sh</em>,
+      dans chaque nouveau terminal que vous allez utiliser pour cet atelier.
+      </span>
+  </xfr>
+</p>
+<pre class="terminal" style="color: white;">
+  $ cd ~/AgileLearning/workshops/oop	  
+  $ source setenv.sh
+</pre>
+
+<h2> Dashboard </h2>
+
+<p>
+  Please consult the dashboard to see if you can help someone
+  who is struggling or check who has validated a sprint that
+  you are struggling with. Assuming you established a tunnel
+	from local port 8080 to the port 80 on the machine "vteacher",
+	you can just follow this URL:
+	<br>
+  <a href="https://localhost:8080/agile-learning/servlets/dashboard?ws=oop">
+    https://localhost:8080/agile-learning/servlets/dashboard?ws=oop
+	</a>
+  <br>
+  but only if you established your tunnel to vteacher via the local port 8080,
+  like this:
+  <xfr>
+    N'hésitez pas à consulter le dashboard pour voir si vous
+    pouvez aider quelqu'un ou trouver quelqu'un qui a déjà
+    validé un sprint sur lequel vous peinez. Si vous avez
+		établi un tunnel du port local 8080 vers le port 80
+		sur la machine "vteacher", vous pouvez suivre cette URL:
+  </xfr>
+</p>
+<textarea class="terminal" rows="2" cols="69" wrap='off' width="60%" >
+  $ ssh -o ServerAliveInterval=120 -N -L 8080:im2ag-vteacher.univ-grenoble.fr:80 mandelbrot
+</textarea>
+
+<h2>Eclipse Help</h2>
+
+<p>
+  We provided you with a summary of what you must know about Eclipse in these
+  <a href="eclipse/eclipse.htm">pages</a>. Warning, these pages are not meant
+  to be browsed on your first day. They are meant to be a reference
+  documentation that you will come back to when in doubt, throughout the year.
+  The first sprint below will introduce you gently to the use of Eclipse.
+  <xfr>
+    On vous fournit un résumé de ce qu'il faut savoir pour utiliser Eclipse
+    dans ces <a href="eclipse/eclipse.htm">pages</a>. Attention, ces pages
+    ne sont pas là pour être parcouru le premier jour. Elles sont là comme
+    une référence vers laquelle vous reviendrez régulièrement au cours de
+    l'année. Le premier sprint ci-dessous va vous présenter l'utilisation
+    d'Eclipse de façon progressive.
+  </xfr>
+</p>
+
+<h2>Sprints</h2>
+
+<cursus>
+  <sprint name="prog.basics" label="Programming Basics">
+  </sprint>
+  <sprint name="java.basics" label="Java Basics">
+  </sprint>
+  <sprint name="hanoi.tower" label="Hanoi Tower Puzzle">
+  </sprint>
+  <sprint name="word.count" label="Word Count">
+  </sprint>
+  <sprint name="object.collections" label="Object Collections">
+  </sprint>
+  <sprint name="object.classes" label="Object Classes">
+  </sprint>
+  <sprint name="object.calculator" label="Object Calculator">
+  </sprint>
+  <sprint name="object.gui" label="Graphical User Interfaces">
+  </sprint>
+	<!--	
+  <sprint name="ricm3.ovm" label="RiCM3 OVM">
+  </sprint>
+-->
+</cursus>

@@ -1,0 +1,157 @@
+<vars>
+  sprint=hanoi.tower
+</vars>
+
+<p>
+  This sprint is about the famous Hanoi tower problem.
+  See its
+  <a href="https://en.wikipedia.org/wiki/Tower_of_Hanoi">description</a>
+  on Wikipedia. To paraphrase:
+  <xfr>
+	  	Ce sprint concerne le fameux problème des tours de Hanoi, dont
+	  	vous pouvez voir la description sur 
+	  	<a href="https://en.wikipedia.org/wiki/Tower_of_Hanoi">description</a>
+	  	Wikipedia. Pour paraphraser:
+  </xfr>
+</p>
+<em>
+  <p style="margin-left: .3in;">
+    The Tower of Hanoi is a mathematical game or puzzle.
+    It consists of three rods, and a number of disks of different sizes
+    which can slide onto any rod. The puzzle starts with the disks in a neat stack
+    in ascending order of size on one rod,
+    the smallest at the top, thus making a conical shape.
+    The objective of the puzzle is to move the entire stack to another rod,
+    obeying the following simple rules:
+    <xfr>
+	  	Les tours de Hanoi sont un jeu mathématique. Il consiste en trois 
+	  	piliers, et un nombre de disques de différentes tailles
+	  	qui peuvent s'enfiler sur les piliers. Le jeu commence avec 
+	  	les disques empilés dans l'ordre ascendant de leur taille sur l'un 
+	  	des piliers. Le plus petit disque au sommet, le plus
+	  	grand en bas, formant donc un cône.
+	  	L'objectif du jeu est de déplacer la pile de disque vers 
+	  	un autre pilier, en respectant les règles suivantes:
+    </xfr>
+  </p>
+  <ol style="margin-left: .3in;">
+    <li>
+      Only one disk can be moved at a time.
+      <xfr>
+        Un seul disk peut être déplacer à chaque coup.
+      </xfr>
+    </li>
+    <li>
+      Each move consists of taking the upper disk from one of the stacks
+      and placing it on top of another stack i.e. a disk can only be moved
+      if it is the uppermost disk on a stack.
+      <xfr>
+        Chaque coup déplace un disk au sommet d'une pile vers le sommet
+        d'une autre pile.
+      </xfr>
+    </li>
+    <li>
+      No disk may be placed on top of a smaller disk.
+      <xfr>
+        Un disk ne peut être placé au dessus d'un disk plus petit.
+      </xfr>
+    </li>
+  </ol>
+  <p style="margin-left: .3in;">
+    With three disks, the puzzle can be solved in seven moves.
+    The minimum number of moves required to solve a Tower of Hanoi puzzle
+    is 2n – 1, where n is the number of disks.
+  </p>
+</em>
+<p>
+  We will use this fun puzzle as a background to practice object-oriented
+  design and coding. This time, we will guide you through the steps of
+  design classes, coding them, and testing them. This sprint
+  will happen in the <em>hanoi.tower</em> directory in your
+  Eclipse workspace.
+  Hence, please import the existing <em>hanoi.tower</em>
+  project in your Eclipse workspace.
+  <xfr>
+	  	Vous allez utiliser ce jeu sympathique pour mettre en 
+	  	pratique vos compétences de programmation. Cette fois nous allons
+	  	vous guider dans la conception des classes, dans leur codage et
+	  	leur test. Ce sprint prend place dans le répertoire <em>hanoi.tower</em>
+	  	de votre workspace Eclipse. Veuillez importer le projet
+      <em>hanoi.tower</em> dans votre workspace Eclipse.
+   </xfr>
+</p>
+
+
+<h3>Hanoir Tower Overview</h3>
+
+<p>
+  So, what entities do we have in this puzzle and how can
+  they be grouped in classes? Let's read again the Wikipedia
+  description:
+  <xfr>
+	Comme expliqué précédemment, les objets sont utilisés pour
+	représenter les entités et les classes pour représenter les classes
+	d'entités. Donc, quelles entités avons nous dans ce jeu et comment
+	les regrouper en classes? Lisons à nouveau la description 
+	Wikipedia:
+ </xfr>
+</p>
+<em>
+  <p style="margin-left: .3in;">
+    The Tower of Hanoi is a mathematical game or puzzle.
+    It consists of three pegs, and a number of disks of different sizes
+    which can slide onto any peg. The puzzle starts with the disks in a neat stack
+    in ascending order of size on one rod, the smallest at the top,
+    thus making a conical shape.
+    <xfr>
+	 	Les tours de Hanoi sont un jeu mathématique. Il consiste en trois 
+	  	piliers, et un nombre de disques de différentes tailles
+	  	qui peuvent s'enfiler sur les piliers. Le jeu commence avec 
+	  	les disques empilés dans l'ordre ascendant de leur taille sur l'un 
+	  	des piliers. Le plus petit disque au sommet, le plus
+	  	grand en bas, formant donc un cône.
+   </xfr>
+  </p>
+</em>
+<img src="images/450px-Tower_of_Hanoi.jpeg"/>
+<p>
+  Made by <a href="https://en.wikipedia.org/wiki/User:Evanherk">Evanherk</a>.
+  <a hre="https://en.wikipedia.org/wiki/en:GNU_Free_Documentation_License">
+    GNU Free Documentation License</a>
+</p>
+<p>
+  So it seems that we have <em>disks</em>, <em>pegs</em>, and a <em>puzzle</em>
+  to solve.
+  So it seems logical to have the following classes:
+</p>
+<ul>
+  <li>
+    class <span class="java-class">Disk</span>
+  </li>
+  <li>
+    class <span class="java-class">Peg</span>
+  </li>
+  <li>
+    class <span class="java-class">Solver</span>
+  </li>
+</ul>
+<p>
+  With these three concepts, look at the animation below to see how it is solved.
+  This animation is licensed under the
+  <a href="https://en.wikipedia.org/wiki/en:Creative_Commons">Creative Commons</a>
+  and
+  <a href="https://creativecommons.org/licenses/by-sa/2.5/deed.en">Attribution-Share
+    Alike 2.5</a> generic license.	
+  Author <a href="https://commons.wikimedia.org/wiki/User:Aka">Aka</a>.
+</p>
+<img src="images/Tower_of_Hanoi_4.gif" widht="80%" />
+
+<h3>Tasks</h3>
+<tasks>
+  <task name="t1" label="The class Disk" >
+  </task>
+  <task name="t2" label="The class Peg" >
+  </task>
+  <task name="t3" label="The class Solver" >
+  </task>
+</tasks>

@@ -1,0 +1,854 @@
+<vars>
+  sprint=object.classes
+  task=t1
+</vars>
+
+<p>
+  This task is about the class hierarchy, where a class may extend
+  another, inheriting its fields and methods. This capability
+  will help you write your code, once mastered. It helps
+  with modularity and clarity. It also helps with evolving
+  your code, adapting it to new features. Before, we were
+  focused on object graphs, here we are focusing on advanced
+  coding techniques for classes.
+  <xfr>
+    Cette tâche est sur la hiérarchie des classes, où une classe
+    peut en étendre une autre, héritant de ces champs et de ses
+    méthodes. Cette capacité d'héritage vous aidera à écrire votre
+    code, une fois maîtrisée. Elle améliorera la modularité et la
+    clarté de votre code. Elle aidera aussi lors des évolutions de
+    votre code, soit pour corriger des bugs soit pour intégrer de
+    nouvelles fonctionalités. Dans les sprints précédents, nous nous
+    focalisions sur le graphe d'objets, dans ce qui suit nous allons
+    nous focalisez sur la conception des classes et les mécanismes
+    avancés de Java.
+  </xfr>
+</p>
+<p>
+  Regarding object graphs, we stayed pretty much with standard imperative
+  programming. We introduced classes,
+  objects, with fields and methods. We introduced a bit about
+  new visibility (private,public). We introduced overloading
+  of methods (same name, but different signatures). But
+  there is much more to designing classes. 
+  So let's discover together these advanced features that
+  will help you manage larger and more complex programming
+  projects.
+  <xfr>
+    En ce qui concerne le graphe d'objets, nous sommes resté assez
+    proche d'une programmation impérative classique. Nous avons
+    utilisé des classes et des objets, avec des champs et des
+    méthodes. Nous avons un peu discuter la visibilité des champs
+    et des méthodes. Nous avons discuter la surcharge des méthodes
+    (même nom, différentes signatures). Mais il y a bien plus de
+    mécanismes en Java pour aider à la conception de classes.
+    Ce sont ces mécanismes que nous allons découvrir.
+  </xfr>
+</p>
+<p>
+  Look in the source folder <em>task1</em> and
+  in the Java packages 
+  <span class="java-package">object.classes.ex1</span> and
+  <span class="java-package">object.classes.ex2</span>.
+  First thing first, look at the three classes:
+  <xfr>
+    Regardez dans le dossier source <em>task1</em> pour
+    trouver les paquets 
+    <span class="java-package">object.classes.ex1</span> et
+    <span class="java-package">object.classes.ex2</span>.
+		En premier, regardez les classes suivantes:
+  </xfr>
+</p>
+<ol>
+  <li>class <span class="java-class">Foo</span>.</li>
+  <li>class <span class="java-class">Bar</span>.</li>
+  <li>class <span class="java-class">Zorg</span>.</li>
+</ol>
+<p>
+  None of these classes do something interesting in
+  term of functionality. There are ultra simple so
+  to illustrate object-oriented capabilities, without
+  the complexities of an application domain.
+  So take them as what they are, an illustration
+  of powerful mechanisms, mechanisms that you must learn and
+  master in order to improve your coding skills.
+  <xfr>
+    Aucune de ces classes ne fait quelque chose d'intéressant
+    en termes de fonctionalités. Elles sont ultra simple
+    pour pouvoir se focaliser sur les mécanismes, sans
+    avoir à comprendre un domain métier. Prenez les
+    comme des illustrations de points techniques
+    que vous devez comprendre et maîtriser pour améliorer
+    votre qualités de codeur.
+  </xfr>
+</p>
+  
+<h3>class <span class="java-class">Foo</span></h3>
+
+<p>
+  The class <span class="java-class">Foo</span> is
+  the starting point. It defines two fields,
+  two constructors, and two methods.
+  Nothing especially interesting, but we need to
+  pay attention to the details here, before we
+  can move on to the other two classes.
+  <xfr>
+    La classe <span class="java-class">Foo</span> est le
+    point de départ. Elle définie deux champs, deux
+    constructeurs, et deux méthodes.
+    Rien de super intéressant, sauf les détails du
+    codage. Parlons en...
+  </xfr>
+</p>
+<p>
+  First, notice that the 
+  class <span class="java-class">Foo</span>
+  extends the 
+  class <span class="java-class">Object</span>,
+  from the
+  package <span class="java-package">java.lang</span>.
+  In fact, all classes extends the 
+  class <span class="java-class">Object</span>
+  directly or indirectly.
+  So the following:
+  <xfr>
+    En premier, notons que la classe
+    <span class="java-class">Foo</span>
+    étends la classe
+    <span class="java-class">Object</span>,
+    qui vient du paquet 
+    <span class="java-package">java.lang</span>.
+    En effet, toutes les classes étendent la classe 
+    <span class="java-class">Object</span>
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Foo {
+    ...
+  }
+</pre>
+<p>
+  is totally equivalent to:
+</p>
+<pre class="prettyprint lang-java">
+  import java.lang.Object;
+  class Foo extends Object {
+    ...
+  }
+</pre>
+<p>
+  This means that any class inherits the methods and fields
+  defined by the
+  class <span class="java-class">Object</span>.
+  We have used this already when using the 
+  method <span class="java-method">toString</span>.
+  Look at the 
+  class <span class="java-class">Foo</span>
+  and the 
+  method <span class="java-method">toString</span>.
+  <xfr>
+    Cela veut dire que toute classe hérite des méthodes et des champs
+    définie par la classe 
+    <span class="java-class">Object</span>.
+    Nous avons déjà utilisé cela avec la méthode
+    <span class="java-method">toString</span>.
+    Regardez la classe
+    <span class="java-class">Foo</span> et la méthode
+    <span class="java-method">toString</span>.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  @Override
+  public String toString() {
+    return "Foo"+b+a;
+  }
+</pre>
+<p>
+  A few points are interesting. Notice that the signature
+  is the same as the 
+  method <span class="java-method">toString</span>
+  defined on the 
+  class <span class="java-class">Object</span>.
+  Remember, you can navigate to any class using
+  <b>Ctrl-Shift-T</b> in Eclipse.
+  This is a case of <em>overriding</em>, where
+  the signatures of the two methods are the same.
+  <xfr>
+    Quelques points sont intéressants. Notez que la signature
+    est la même que la méthode
+    <span class="java-method">toString</span>
+    définie sur la classe
+    <span class="java-class">Object</span>.
+    Rappelez vous que vous pouvez naviguer vers n'importe
+    quelle classe en utilisant le racourci 
+    <b>Ctrl-Shift-T</b> sous Eclipse.
+    Nous avons donc ici un cas de redéfinition (<em>overriding</em>)
+    puisque les deux signatures sont identiques.
+  </xfr>
+</p>
+<p>
+  Notice the annotation <em>@Override</em> that tells
+  the compiler to verify that the method
+  <span class="java-method">toString</span>
+  indeed overrides
+  a method in a super class. If the compiler does not
+  find the exact same signature in a super class, it
+  signals a compilation error. Try it, change the
+  definition of the
+  method <span class="java-method">toString</span>
+  and see the compiler complaining.
+  You may change it like this for example:
+  <xfr>
+    Notez l'annotation <em>@Override</em> qui indique
+    au compilateur Java de vérifier que la méthode
+    <span class="java-method">toString</span> sur la classe
+    <span class="java-class">Foo</span> redéfinie bien
+    une méthode identique définie sur une super classe,
+    c'est à dire une classe étendue directement ou
+    indirectement par la classe 
+    <span class="java-class">Foo</span>.
+    Essayez de changer la définition de la méthode
+    <span class="java-method">toString</span> comme ceci:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  @Override
+  public String toString(int x) {
+    return "Foo"+b+x;
+  }
+</pre>
+<p>
+  See the compilation error? Good.
+  Remove the <em>@Override</em>, see the compilation
+  error goes away. But is it correct?
+  Well, it depends. You have to realize that
+  your 
+  class <span class="java-class">Foo</span>
+  now has two methods
+  <span class="java-method">toString</span>,
+  one inherited from the class
+  <span class="java-class">Object</span>:
+  <xfr>
+    Vous voyez l'erreur de compilation? Bien.
+    Enlevez l'annotation <em>@Override</em>,
+    vous voyez que cela résouds le problème de
+    compilation. Mais est-ce correct?
+    Et bien cela dépends. Il faut bien comprendre
+    that la classe
+    <span class="java-class">Foo</span> a maintenant
+    deux méthodes 
+    <span class="java-method">toString</span>.
+    L'une est héritée de la classe
+    <span class="java-class">Object</span>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Object {
+    ...
+    public String toString() { ... }
+  }
+</pre>
+<p>
+  And one defined by the class
+  <span class="java-class">Foo</span>:
+  <xfr>
+    Et l'autre est définie par la classe
+    <span class="java-class">Foo</span>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Foo extends Object {
+    ...
+    public String toString(int x) { ... }
+  }
+</pre>
+<p>
+  This means that you can write the following code:
+</p>
+<pre class="prettyprint lang-java">
+  Foo f = new Foo(0,' ');
+  String s = f.toString();
+  s = f.toString(3);
+</pre>
+<p>
+  Execute it under the control of the debugger to see which
+  method is executed when. This will confirm that there are
+  two methods, both named <span class="java-method">toString</span>,
+  both available in the behavior of the 
+  class <span class="java-class">Foo</span>.
+  This may be what you want, just an overloading of the
+  method <span class="java-method">toString</span>,
+  but if you want to override that method, you need to
+  always use the annotation <em>@Override</em>. Indeed, the
+  annotation forces the compiler to check that the method signature
+  actually overrides an inherited method.
+  This will save you a lot of headaches and frustrating debugging.
+  <xfr>
+    Exécutez ce code sous le contrôle du debugger pour voir ce
+    qui se passe. Vous allez confirmer qu'il y a bien deux
+    méthodes, toutes deux nommées <span class="java-method">toString</span>,
+    toutes deux disponibles dans le comportement de la classe
+    <span class="java-class">Foo</span>. Si vous souhaitez
+    surcharger la méthode
+    <span class="java-method">toString</span>, alors c'est ce que
+    vous voulez. Si vous souhaitez
+    redéfinir la méthode <span class="java-method">toString</span>,
+    alors nous vous conseillons de toujours utiliser l'annotation
+    <em>@Override</em>. En effet, cette annotation force le compilateur
+    Java de vérifier que la signature est bien la même que celle
+    d'une méthode héritée. Cela va vous aider et vous éviter de nombreuses
+    de debug inutile pour une simple faute de frappe.
+  </xfr>
+</p>
+<p>
+  What about the rest of the 
+  class <span class="java-class">Foo</span>?
+  There are other interesting points about the
+  class <span class="java-class">Foo</span>
+  but they are better discussed in the context
+  of the two subclasses
+  <span class="java-class">Bar</span>
+  and
+  <span class="java-class">Zorg</span>.
+  <xfr>
+    Qu'en est-il du reste de la classe 
+    <span class="java-class">Foo</span>?
+    Il y a d'autres points d'intérets mais ils
+    sont mieux discutés dans le contexte des deux
+    sous-classes
+    <span class="java-class">Bar</span>
+    et
+    <span class="java-class">Zorg</span>.
+  </xfr>
+</p>
+
+<h3>class <span class="java-class">Bar</span></h3>
+
+<p>
+  Let's start with the class
+  <span class="java-class">Bar</span>; it
+  is a subclass of the class
+  <span class="java-class">Foo</span>
+  since the class
+  <span class="java-class">Bar</span>
+  extends the class
+  <span class="java-class">Foo</span>.
+  Does the class
+  <span class="java-class">Bar</span>
+  extends the class
+  <span class="java-class">Object</span>?
+  Of course, it does so, but indirectly,
+  since the class
+  <span class="java-class">Bar</span>
+  extends the class
+  <span class="java-class">Foo</span>
+  that extends the class
+  <span class="java-class">Object</span>.
+  <xfr>
+    Commencons par la classe
+    <span class="java-class">Bar</span>;
+    c'est une sous-classe de la classe
+    <span class="java-class">Foo</span>
+    puisque la classe 
+    <span class="java-class">Bar</span>
+    étends la classe 
+    <span class="java-class">Foo</span>.
+    Est-ce que la classe
+    <span class="java-class">Bar</span>
+    étends la classe 
+    <span class="java-class">Object</span>?
+    Oui bien sûr, mais indirectement puisque la classe
+    <span class="java-class">Bar</span>
+    étends la classe 
+    <span class="java-class">Foo</span>
+    qui étends la classe 
+    <span class="java-class">Object</span>.
+  </xfr>
+</p>
+<p>
+  So remember this: <b>classes are organized in a
+  tree and the root of the tree is always the class
+		<span class="java-class">Object</span></b>.
+	<xfr>
+    Rappelez vous de ceci:
+    <b>
+      les classes sont organizées
+      comme un arbre et  la racine de l'arbre est toujours
+      la classe
+      <span class="java-class">Object</span>
+    </b>.
+	</xfr>
+</p>
+<p>
+  Look at the class
+  <span class="java-class">Zorg</span>,
+  it extends the class
+  <span class="java-class">Foo</span>
+  as well, so we indeed have a tree.
+  We have a tree and not a general acyclic graph because 
+  <b>a class always extends only one class, never more than one</b>.
+  The only exception to this rule is the class 
+  <span class="java-class">Object</span> that is the root
+  of the tree and therefore does not extend any other class.
+  <xfr>
+    Regardez la classe 
+    <span class="java-class">Zorg</span>,
+    elle étends aussi la classe
+    <span class="java-class">Foo</span>, nous avons donc
+    bien un arbre. Nous avons un arbre et non pas un
+    graphe acyclique quelconque car une classe ne peut
+    étendre qu'une seule autre classe. La seule exception
+    est la classe <span class="java-class">Object</span>
+    qui n'étends aucune autre classe.
+  </xfr>
+</p>
+<p>
+  <b>Note:</b> remember that, in contrast, <b>interfaces can extend multiple
+  interfaces</b>. So the hierarchy of interfaces is a
+  directed acyclic graph, not a tree.
+  <xfr>
+    Note: rappelez vous que pour les interfaces, l'héritage multiple
+    est possible. En effet, une interface peut étendre une ou plusieurs
+    autres interfaces. Donc la hiérarchies des interfaces est un graphe dirigé
+    acyclique et non pas un arbre.
+  </xfr>
+</p>
+<p>
+  <b>Note:</b> a class can only extend one other class but it can
+  implements one or more interfaces. 
+  <xfr>
+    Note: rappelez vous qu'une classe peut implémenter une ou plusieurs
+    interfaces.
+  </xfr>
+</p>
+<p>
+  The first point to notice is how constructors
+  work in this context. So far, we have been concerned about
+  one class and one constructor, invoked whenever a new
+  object was instantiated. But what should happen when
+  a class extends another class and both are defining a
+  constructor?
+  <xfr>
+    Le premier point à noter est comment les constructeurs
+    fonctionnent dans ce context. Jusqu'ici, nous avons
+    toujours une classe et un constructeur, invoqué à chaque
+    fois qu'une nouvelle instance est crée. Mais que doit-il
+    se passer si la classe instanciée étends une autre classe,
+    chaque classe définissant un constructeur?
+  </xfr>
+</p>
+<p>
+  Object-oriented programmers
+  are calling this <em>constructor chaining</em>.
+  When constructing an instance of a class, a constructor for
+  each of the super classes is called.
+  Remember that even when you do not define a constructor,
+  the Java compiler adds one default construtor for
+  you; the default constructor initializes all the
+  fields to default values for each primitive type
+	and <em>"null"</em> for references.
+  <xfr>
+    Dans la programmation orientée-objet, cela s'appelle
+    le chaînage des constructeurs. Lorsque Java construit
+    une instance d'une classe, il invokque automatiquement
+    les constructeurs des super-classes. Rappelez vous
+    que même si vous ne définissez pas de constructeur,
+    Java crée un constructeur par défault.
+  </xfr>
+</p>
+<p>
+  Look at the class
+  <span class="java-class">Bar</span> and
+  its two constructors:
+</p>
+<pre class="prettyprint lang-java">
+  Bar(int a, int b) {
+    super(-1, 'b');
+    this.a = (float) a;
+    this.b = b;
+  }
+
+  Bar(float a, int b) {
+    super.b = 'b';
+    this.a = a;
+    this.b = b;
+  }
+</pre>
+<p>
+  Look at the first constructor, it invokes explicitly
+  a constructor of the superclass
+  <span class="java-class">Foo</span>.
+  The invoked <em>super</em>-constructor will depend
+  on matching the types of the given arguments and
+  the signature of the available constructors. 
+  In this case, the argument types match the
+  signature <span class="java-method">Foo(int,char)</span>.
+  <xfr>
+    Regardez le premier constructeur, il invoque explicitement
+    le constructeur de la super-classe 
+    <span class="java-class">Foo</span>.
+    Le <em>super</em>-constructeur invoqué va dépendre
+    de la correspondance entre les types des arguments donnés
+    et la signature des constructeurs définis.
+    Dans ce cas précis, les types des arguments correspondent
+    à la signature <span class="java-method">Foo(int,char)</span>.
+  </xfr>
+</p>
+<p>
+	<b>Remember:</b> in object-oriented programming, when you are
+	writing code to invoke a
+	method, you do not invoke a particular method, you are
+	expressing a request to invoke a method with a compatible
+	signature. The signature is composed of the method name
+	but also the number, the order, and the types of the arguments.
+	<xfr>
+		Rappelez vous qu'en programmation orientée-objet, lorsque
+		vous écrivez du code pour invoquer une méthode, vous faites
+		une demande d'invocation pour une méthode qui a une signature
+		équivalente, la signature étant le nom mais aussi le nombre,
+		l'ordre et le type des arguments.
+	</xfr>
+</p>
+<p>
+  The second constructor does not invoke explicitly
+  a constructor of the superclass
+  <span class="java-class">Foo</span>.
+  But the constructor with no arguments will be invoked
+  anyhow.
+  <xfr>
+    Le second constructeur n'appelle aucun super-constructeur
+    explicitement. Mais le constructeur sans argument de la
+    classe <span class="java-class">Foo</span> sera
+    quand même invoqué. 
+  </xfr>
+</p>
+<p>
+  But the question becomes the following: in what order
+  are the constructors invoked? <b>The constructor of a
+  super class is always invoked first, recursively so</b>.
+  With our example,
+  the constructors of the superclass
+  <span class="java-class">Foo</span> are always
+  invoked before the constructors of the subclass
+  <span class="java-class">Bar</span>.
+  <xfr>
+    Mais la question devient la suite suivante: dans quel
+    ordre les constructeurs sont-ils invoqués?
+    Le constructeur d'une super-classe est toujours invoqué
+    avant le constructeur d'une sous-classe. Avec notre
+    exemple, le constructeur de la super-classe
+    <span class="java-class">Foo</span> est toujours
+    invoqué avant le constructeur de la sous-classe
+    <span class="java-class">Bar</span>.
+  </xfr>
+</p>
+<p>
+	<u>We ask that you follow the execution of the class
+	<span class="java-class">MainEx1</span>, using the
+	debugger</u>. Pay special attention to the construction
+	of objects and the execution of the constructors,
+	single stepping through the execution using <b>F5</b>.
+	Ask questions if you are not understanding the execution
+	in any aspect, even small details. 
+	<xfr>
+    Utilisez le debuger pour suivre l'exécution et vérifier
+    comment s'opère la construction des objets.
+	</xfr>
+</p>
+<p>
+  Now a word about accessing the fields of a superclass.
+  In the second constructor, you can see that the super-field
+  <span class="java-field"a>b</span> of the class
+  <span class="java-class">Foo</span> is accessed,
+  using the keyword <span class="java-keyword">super</span>,
+  while accessing the field 
+  <span class="java-field">b</span> of the class
+  <span class="java-class">Bar</span> is accessed
+  with the  keyword <span class="java-keyword">this</span>:
+  <xfr>
+    Maintenant un mot sur la visibilité des champs d'une
+    super-classe. Dans le second constructeur, vous pouvez voir
+    que le super-champ
+    <span class="java-field">b</span> de la classe
+    <span class="java-class">Foo</span> est accédé,
+    en utilisant le mot-clé <span class="java-keyword">super</span>,
+    alors que l'accès au champ 
+    <span class="java-field">b</span> de la classe
+    <span class="java-class">Bar</span> est accédé
+    avec le mot-clé <span class="java-keyword">this</span>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Bar(float a, int b) {
+    super.b = 'b';
+    this.a = a;
+    this.b = b;
+  }
+</pre>
+<p>
+  The class <span class="java-class">Bar</span> can access
+  the field <span class="java-field">b</span> of the class
+  <span class="java-class">Foo</span> because it is declared
+  protected. In contrast, the field
+  <span class="java-field">a</span> of the class
+  <span class="java-class">Foo</span> is declared private
+  and therefore not visible to the subclass
+  <span class="java-class">Bar</span>. Try it, you
+  will see that the compiler will complain about the code
+  of a method on the subclass
+  <span class="java-class">Bar</span> trying to access
+  a private field of a superclass
+  <span class="java-class">Foo</span>.
+  <xfr>
+    La classe <span class="java-class">Bar</span> peut accéder
+    le champ <span class="java-field">b</span> de la classe
+    <span class="java-class">Foo</span> car il est déclaré
+    <span class="java-keyword">protected</span>. Par contre,
+    le champ 
+    <span class="java-field">a</span> de la classe
+    <span class="java-class">Foo</span> est déclaré
+    <span class="java-keyword">private</span> et donc
+    non-visible depuis la sous-classe 
+    <span class="java-class">Bar</span>. Essayez,
+    vous verrez que le compilateur Java va se plaindre
+    que le code de la méthode sur la sous-classe
+    <span class="java-class">Bar</span> n'a pas le droit
+    d'accéder à un champ privé de la super-classe
+    <span class="java-class">Foo</span>.
+  </xfr>
+</p>
+<p>
+  For any given class <span class="java-class">A</span>,
+  please find below a summary of the visibility rule
+  for fields, methods,  and constructors:
+</p>
+<ol>
+  <li>
+    <span class="java-keyword">private</span>:
+    only visible to the code in the defining class
+    <span class="java-class">A</span>
+  </li>
+  <li>
+    <span class="java-keyword">public</span>:
+    visible to any code of any class
+  </li>
+  <li>
+    <span class="java-keyword">protected</span>:
+    visible to any code on any class extending the
+    class <span class="java-class">A</span>
+  </li>
+  <li>
+    <em>none</em>:
+    visible to any code of any class in the same package.
+  </li>
+</ol>
+<p>
+  Take charge of your learning, check these visibilities
+  across the class
+  <span class="java-class">Foo</span>, the class
+  <span class="java-class">Bar</span>
+  and the class
+  <span class="java-class">Zorg</span>,
+  writing small snippets of code and understanding
+	the compiler errors that you get.
+</p>
+
+<h3>class <span class="java-class">Zorg</span></h3>
+
+<p>
+  Let's look at the class <span class="java-class">Zorg</span>.
+  It extends the class
+  <span class="java-class">Foo</span>, but across a
+  package boundary. Indeed, any class can extend a public class from
+  any package.
+</p>
+<p>
+  Since the class <span class="java-class">Zorg</span>
+  is in a different package, the private fields and methods
+  of the superclass
+  <span class="java-class">Foo</span> are <em>invisible</em>.
+  As a consequence, see how the class
+  <span class="java-class">Zorg</span>
+  can redefine a method
+  <span class="java-method">init</span>
+  but it is <b>not</b> overriding the 
+  method <span class="java-method">init</span>
+  of the
+  class <span class="java-class">Foo</span>,
+  since it is invisible.
+  Try adding an annotation <em>@Override</em>
+  and the compiler will complain.
+  <xfr>
+    Puisque la classe <span class="java-class">Zorg</span>
+    est dans un paquet différent, les champs et les méthodes
+    privés de la super-classe
+    <span class="java-class">Foo</span> sont <em>invisible</em>.
+    En conséquence, remarquez que la classe
+    <span class="java-class">Zorg</span>
+    peut redéfinir la méthode 
+    <span class="java-method">init</span>
+    mais il ne redéfinit pas la méthode 
+    <span class="java-method">init</span>
+    de la classe 
+    <span class="java-class">Foo</span>,
+    puisque celle-ci est invisible.
+    Essayez d'indiquer la redéfinition avec l'annotation 
+    <em>@Override</em>, le compilateur ne va pas l'accepter.
+  </xfr>
+</p>
+<p>
+  So what does that mean? It means that late binding
+  does not apply here. Any code defined on the
+  class <span class="java-class">Zorg</span> and
+  invoking the signature <em>init</em>
+  will invoke the
+  method <span class="java-method">init</span>
+  on the 
+  class <span class="java-class">Zorg</span>.
+  In contrast, any code defined on the
+  class <span class="java-class">Foo</span> and
+  invoking the signature <em>init</em>
+  will invoke the
+  method <span class="java-method">init</span>
+  on the 
+  class <span class="java-class">Foo</span>.
+  <xfr>
+    Mais qu'est-ce cela veut dire? Cela veut dire
+    que la liason tardive ne s'applique pas ici.
+    Tout code sur la classe 
+    <span class="java-class">Zorg</span> qui invoque
+    la signature <em>init</em> va invoquer la méthode
+    <span class="java-method">init</span> sur la classe
+    <span class="java-class">Zorg</span>.
+    Par contre, tout code défini sur la classe
+    <span class="java-class">Foo</span> et qui invoque la
+    signature <em>init</em> va invoquer la méthode 
+    <span class="java-method">init</span> de la classe
+    <span class="java-class">Foo</span>.
+  </xfr>
+</p>
+
+<h3>Late Binding</h3>
+
+<p>
+  Last, but not the least, we will cover late binding, which happens
+  when an overriden method is invoked. Well, what does it mean really?
+  Look at the code below:
+  <xfr>
+    En dernier, nous allons discuter la liaison tardive, un mécanisme
+    qui entre en jeu lorsque l'on invoque une méthode qui a été redéfinie.
+    Regardons le code ci-dessous:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Foo f = new Zorg(2,3);
+  s = f.toString();
+</pre>
+<p>
+  Can you tell which code will be executed at the second line?
+  Statically, the compiler sees that the variable
+  <span class="java-lvar">f</span> is typed as a
+  <span class="java-class">Foo</span>. Without late binding,
+  the compiler would generate code that would therefore
+  invoke the method
+  <span class="java-method">Foo:toString</span>.
+  But this would be wrong if the class
+  <span class="java-class">Zorg</span> has overriden the
+  method
+  <span class="java-method">toString</span>. Right?
+  Not clear, ask question because you have missed something.
+  <xfr>
+    Pouvez vous dire quelle méthode sera exécuté à la deuxième ligne?
+    Statiquement, le compilateur sait que la variable
+    <span class="java-lvar">f</span> est typée comme un 
+    <span class="java-class">Foo</span>. Sans la liaison tardive,
+    comme dans le language C, le compilateur va générer du code pour
+    invoquer la méthode 
+    <span class="java-method">Foo:toString</span>.
+    Mais cela est incorrecte si la classe
+    <span class="java-class">Zorg</span> a redéfinie la méthode
+    <span class="java-method">toString</span>. N'est-ce pas?
+    Si ce n'est pas clair, retourner lire le 
+    <a href="/CheckTwo.pdf">cours</a>.
+  </xfr>
+</p>
+<p>
+	<b>As we said earlier:</b> in object-oriented programming, when you are
+	writing code to invoke a
+	method, you do not invoke a particular method, you are
+	expressing a request to invoke a method with a compatible
+	signature. The signature is composed of the method name
+	but also the number, the order, and the types of the arguments.
+	<xfr>
+		Rappelez vous qu'en programmation orientée-objet, lorsque
+		vous écrivez du code pour invoquer une méthode, vous faites
+		une demande d'invocation pour une méthode qui a une signature
+		équivalente, la signature étant le nom mais aussi le nombre,
+		l'ordre et le type des arguments.
+	</xfr>
+</p>
+
+<p>
+  Let's look at late binding using the debugger.
+  So go ahead, look at the code
+  in the class
+  <span class="java-class">object.classes.ex1.MainEx1</span>.
+  Try to figure out which methods will execute and then execute
+  under the control of the debugger, single stepping through the
+  execution and verifying that what you thought would happen did
+  happen.
+  <xfr>
+    Regardez la liaison tardive en action sous debugger.
+    Lancez la classe 
+    <span class="java-class">object.classes.ex1.MainEx1</span>.
+    Essayez de deviner les méthodes qui vont s'exécuter au moment
+    de l'appel et puis vérifiez vos réponses en exécutant pas à pas
+    sous debugger.
+  </xfr>
+</p>
+
+<h3>Take charge of your learning</h3>
+
+<p>
+  You need to take charge of your learning here.
+  We introduced several mechanisms, be curious, ask questions,
+  imagine ways to use these mechanisms, and write
+  code snippets to try out ideas.
+  <xfr>
+    Il faut prendre en charge votre apprentissage sur ces
+    différents mécanismes, soyez curieux, posez des questions,
+    et imaginez des usages de ces mécanismes et testez
+    ces usages.
+  </xfr>
+</p>
+<p>
+  It is paramount that you understand late binding,
+  overriding, and overloading. It is also importnat that you
+	understand how these concepts interact with the visibility
+	rules (public, protected, and private). These
+  concepts are corner stones of polymorphic programming
+  and the foundation to using object-oriented programming
+  effectively. 
+  So take charge of your learning and go back, experiment,
+  and ask questions until you are familiar with the concepts.
+  <xfr>
+    Il est très important que vous compreniez la liaison tardive,
+    la redéfinition, et la surcharge. Il est aussi important
+		de comprendre comment ces mécanismes interagissent avec
+		les différentes visibilités (public, protected, private).
+    Ces mécanismes sont les fondations de la programmation
+    orientée-objet. Vous devez prendre en charge votre apprentissage
+    par l'expérimentation jusqu'à ce que ces mécanismes vous soient
+    vraiment familiés.
+  </xfr>
+</p>
+<h3>That's it folks</h3>
+<p>
+  When done, before you move on, please make sure
+  that you commit and push your work to our server:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.classes, Task1 completed"
+  $ git push --all
+</textarea>

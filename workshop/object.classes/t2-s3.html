@@ -1,0 +1,498 @@
+<vars>
+  sprint=object.classes
+  task=t2
+  step=t2-s3
+</vars>
+
+<p>
+  In this step, we will continue to leverage polymorphic programming,
+  to further enhance our design and coding patterns. The goal is always
+  to help reduce redundant coding and to help with code evolution.
+</p>
+
+<h3>Abstracting the implementation</h3>
+
+<p>
+  So far, we have a good design with one good implementation.
+  But how could we have different implementations?
+  Of course, we could start all over again, from the original
+  interfaces. But this would require a lot of recoding.
+  Polymorphic programming offers an alternative.
+</p>
+<p>
+  So go look into the source folder <em>"task3"</em>
+  and in the
+  package <span class="java-package">oop.filesys.task3</span>.  
+  It is pretty much a copy of the previous step, but with
+  abstract classes for directories and files. The goal of these
+  abstract classes is to gather the most code that will be
+  common to most implementations. Some methods will be
+  abstract and overriden by subclasses.
+</p>
+<p>
+  So let's start with those common methods, reusing
+  as much code as possible from step2. This is what
+  we mean by not wanting to restart our coding from scratch.
+  We will be able to reuse a lot of code.
+  So let's carry over the implementation
+  from the previous step.
+</p>
+
+<h4>The Class Directory</h4>
+
+<p>
+  Let's start with the class
+  <span class="java-class">Directory</span> in the
+  package <span class="java-package">ricm3.filesys.oop</span>
+  where you
+  will methods that throw an NotYetImplemented
+  exception.
+  These are the methods that are common to all implementations,
+  for which you can carry code from the previous step.
+  So go ahead, for each of those methods, just copy and
+  paste the code you wrote and tested in the previous step.
+</p>
+<p>
+  When cutting and pasting your code, you will see that some
+  parts will no longer compile since the collection of nodes
+  is now a generic collection
+  (<span class="java-class">ICollection</span>).
+  What should you do then?
+</p>
+<p>
+  Well, <b>DO NOT</b> change the type of the collection of nodes, leave it
+  to <span class="java-class">ICollection</span>. We know, it is
+  your first thought, but it is the wrong one here. Remember,
+  we want to keep the code generic, so that different subclasses
+  may use different implementations of the collection of nodes.
+  So we want the abstract concept of a directory to use an
+  abstract concept of a collection.
+  So, how should we fix the compilation errors then?
+</p>
+<p>
+  Well, look at the abstract methods of the 
+  class <span class="java-class">Directory</span>:
+</p>
+<pre class="prettyprint lang-java">
+  /**
+   * Adds the given node as a child of this directory.
+   * MUST call Node.added(Directory)
+   */
+  abstract protected void add(Node node) throws IOException;
+  
+  /**
+   * Removes the given node from the children of this directory.
+   * MUST call Node.removed()
+   */
+  abstract protected void remove(Node node) throws IOException;
+
+  /**
+   * Gives an iterator on the nodes in this directory
+   * @return
+   */
+  abstract protected Iterator iterator();
+</pre>
+<p>
+  What are they? They are the contract asked from subclasses
+  in order to be able write the common methods at the level
+  of the abstract class <span class="java-class">Directory</span>.
+  So fix your code using these methods.
+  Depending on how you wrote your code, this may mean little
+  changes or more substantial changes. If you have substantial
+  changes, you probably didn't write such clean code in the
+  first place. So take this opportunity to improve your
+  coding style.
+</p>
+<p>
+  Still missing something? Most probably. You are probably
+  wondering how you will create directories and files, since
+  the classes are abstract now. This is a perfectly valid point.
+  At the level of the class <span class="java-class">Directory</span>,
+  in the methods <span class="java-method">mkdir</span>,
+  and <span class="java-class">touch</span>, you do not know
+  how to create a directory or file since you do not know
+  which implementation is used. Even worse, we do not even
+  have an implementation yet. So what should you do?
+</p>
+<p>
+  Well, look at the class <span class="java-class">FileSystem</span>
+  and the new concept of a factory. Look at the methods
+  <span class="java-method">newFile</span> and
+  <span class="java-method">newDirectory</span>.
+  They provide what you need, a way to create a new file or a
+  new directory. So use these methods from your class
+  class <span class="java-class">Directory</span>,
+  in the methods <span class="java-method">mkdir</span>,
+  and <span class="java-class">touch</span>.
+</p>
+<p>
+  This coding pattern is called <b>delegation</b>. This is like real life
+  delegation. For instance, if one of your pipes leak, you may not know
+  how to repair it, but you may delegate the repair task to a plumber. This is the
+  same idea. A directory object does not know which implementation is used,
+  so it delegates to its file system. The file system does not know
+  either, but it is given an object, a factory object that knows how to create
+  files and directories. Pretty darn cool, right?
+</p>
+<p>
+  There is indeed a cool pattern here. We write polymorphic methods at
+  the level of the abstract class
+  <span class="java-class">Directory</span>.
+  But the code reqires that the subclasses provide some methods,
+  through overridden abstract methods. These methods will be
+  specific to each implementation. We have a win-win
+  situation here. We have a lot of common polymorphic methods on
+  the abstract class <span class="java-class">Directory</span>, methods that
+  are fairly complex, for only a few and very simple methods on all
+  subclasses.
+</p>
+
+<h4>The Class File</h4>
+
+<p>
+  Now let's turn our attention to the
+  class <span class="java-class">File</span>, also
+  an abstract class. Well, as one might have expected, the class
+  is entirely abstract, meaning that all methods are dependent on the
+  implementation of a file. Hence, there are 
+  no common methods that can be provided at the level of
+  the abstract concept of a file. Oh well, sometimes, polymorphic
+  programming helps with sharing common methods, some other times,
+  it is not the case.
+</p>
+
+<h3>Concrete Implementations</h3>
+
+<p>
+  Now it is time to turn our attention to the actual implementations.
+  We will do two implementations, trying to reuse again a lot of code,
+  whenever possible. The main difference will be choosing a different
+  implementation for the collection of nodes in a directory.
+  One implementation will use a linked list
+  while the other will use a hash table. The two implementations
+  will be in the Java package
+  <span class="java-class">ricm3.filesys.oop.ramfs</span>.
+</p>
+
+<h4>Linked-list Implementation</h4>
+
+<p>
+  Let's turn our attention to our first implementation.
+  Of course, we will reuse the one we already did in the
+  previous step. So turn your attention to the
+  package <span class="java-package">ricm3.filesys.oop.ramfs</span>.
+  It is named after the idea that we are implementing a file
+  system in memory, since we are only using Java objects
+  and we are not using any real storage device such as a USB
+  key or a disk drive.
+</p>
+<p>
+  Let's start with the classes
+  <span class="java-class">RamDirectory</span>
+  and
+  <span class="java-class">RamFile</span>.
+  As you can see in the constructor, the suggested implementation
+  for the class <span class="java-class">RamDirectory</span>
+  is by using a linked list, from our available collections.
+  This is the implemenation choice we did before, in step2. 
+  For the class
+  <span class="java-class">RamFile</span>, we 
+  also reuse the previous implementation from step2,
+  using an array of bytes.
+</p>
+<p>
+  So go ahead, complete the implementation of these two classes
+  <span class="java-class">RamDirectory</span>
+  and
+  <span class="java-class">RamFile</span>.
+  Once you are done, you have a new complete implementation.
+  Just have a look at the factory, the
+  class <span class="java-class">ricm3.filesys.oop.ramfs.Factory</span>.
+  See how it can be used to create either implementation of our
+  file system: using a map (using hash table)
+  or not (using a linked list).
+</p>
+<p>
+  Cool. So go ahead, do some testing of your new implementation.
+  You can have a look in the Java package 
+  <span class="java-package">ricm3.filesys.oop.ramfs</span>,
+  for either the 
+  class <span class="java-class">ShellMain</span>
+  or the 
+  class <span class="java-class">TestStep3</span>,
+  as example of how to setup a file system and then starting to
+  use it.
+</p>
+<p>
+  So go ahead, take charge of your learning, experiment with
+  our tests and our shell.
+</p>
+
+<h4>Map-based Implementation</h4>
+
+<p>
+  When your linked-list implementation works, it is time
+  to start looking at our alternate implementation using a
+  map (hash table). Look at the class 
+  <span class="java-class">RamMapDirectory</span>,
+  still in the Java package
+  <span class="java-package">ricm3.filesys.oop.ramfs</span>.
+  So go ahead, complete the implementation
+  using a <span class="java-class">HashTable</span>
+  instead of a <span class="java-class">LinkedList</span>.
+</p>
+<p>
+  Notice that there are several inherited methods that may be
+  optimized, when using a hash table instead of a linked list.
+  This very point is one of the great features of object-oriented programming.
+  You may use inherited methods, available on super-classes,
+  saving coding time. Or you may override some of these
+  inherited implementations if you know how to improve them.
+  The best of both worlds. You may avoid recoding a lot at first
+  and then recode only the few methods for which a better performance
+  really matters.
+</p>
+<p>
+  So which inherited methods can we improve here? The super-class
+  <span class="java-class">Directory</span> uses an iterator
+  to iterate over the collection in order to search for a given
+  name. Since we have a hash table and we have used the name
+  of nodes as the key, we have available a much faster lookup
+  based on names. So go ahead, optimize these methods, leveraging
+  the methods <span class="java-method">get</span> and
+  <span class="java-method">put</span> on the
+  class <span class="java-class">HashTable</span>.
+  You may use the shell to debug your code,
+  but remember to use a factory that creates the map-based
+  implementation, not the linked-list one.
+</p>
+
+<h4>Passing our tests</h4>
+
+<p>
+  Ultimately, you need to pass our tests on both the
+  linked-list and the map-based implementations.
+  Look at the class
+  <span class="java-class">TestStep3</span>
+  in the Java package
+  <span class="java-class">ricm3.filesys.oop.ramfs</span>.
+  Before you can pass those tests, you have to implement
+  both the class 
+  <span class="java-class">RamDirectory</span>
+  and
+  <span class="java-class">RamMapDirectory</span>.
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.classes"
+   classpath="bin;tests.jar;../object.collections/edu-polytech-ricm-oop-collections.jar"
+   classname="ricm3.filesys.oop.ramfs.TestStep3"> 
+  <banner>
+    Let's run our checks.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+
+
+<h3>Wrapping the Linux File System</h3>
+
+<p>
+  To further illustrate the power of object-oriented programming,
+  we will do another implementation: safe wrapping of the Linux file system.
+  The idea is simple. Linux has a file system, composed of directories
+  and files. Since we modeled our file system interfaces on the linux
+  file system, it seems possible to wrap the Linux file system with
+  our file system.
+</p>
+<p>
+  We will do a safe read-only wrapping. This means that we will be able
+  to see the directory tree and read files, but will not be able to
+  damage the underlying file system. This is really important, we do
+  not want a bug in your code to damage the machine you use to work
+  everyday, do we? Of course not.
+  Therefore, the wrapping will done as follows.
+</p>
+<p>
+  For directories, we will start from a root directory, in the
+  Linux file system. This Linux directory will be wrapped as the root
+  of our file system. For every Linux subdirectory, we will create a
+  directory object, instance of the class
+  <span class="java-class">WrapDirectory</span>. So we will create
+  a hiearchy of directory objects that is identical to the hierarchy of
+  directories in your Linux file system, starting at the chosen
+  root directory. But of course, any removal of a directory will
+  only have effect in the Java world, not in the Linux file system.
+</p>
+<p>
+  Then for the files in those directories,
+  we will wrap them as well, creating for each Linux file
+  a corresponding file object, instance of
+  the class <span class="java-class">WrapFile</span>.
+  For safety, we will load files but we will never write any
+  modification back. Of course, any removal of a file will only
+  take effect in the Java world, not in the Linux file system.
+</p>
+<p>
+  We have a delicate point to discuss: saving memory. Indeed, we
+  do not want to load all the files from your Linux file system
+  into memory, as Java files and byte arrays. To improve performance
+  and save memory, we do not want to load
+  any Linux file contents in memory, unless we have to.
+  So we will implement lazy loading.
+</p>
+<p>
+  Lazy loading means that when creating a file wrapper object
+  (<span class="java-class">WrapFile</span>), we do not load the
+  contents of the wrapped file. But if the file wrapper object is
+  used to read bytes or write bytes, we will load the Linux file contents
+  only at that time in a byte array. All reads and writes will then
+  be performed on this byte array. 
+</p>
+<p>
+  <b>IMPORTANT</b>: remember, you must not alter the underlying file
+  system in anyway, for safety reasons. Otherwise, a bug in your code
+  might damage your file system and you may no longer be able to use
+  your machine. Therefore, you must
+  <b>never</b> write back any data from a wrapper file to the underlying
+  Linux file. Also, you must <b>never</b> progagate any change from a
+  wrapper directory to the underlying directory. This means that you
+  do not rename, remove, or create files in the Linux file
+  system. This also means that you
+  do not rename, remove, or make new directories in the Linux file
+  system.
+</p>
+
+<h4>Class <span class="java-class">WrapDirectory</span></h4>
+
+<p>
+  Let's discuss the class <span class="java-class">WrapDirectory</span>
+  in more details. Look at the constructors, see how they load
+  the contents of the corresponding Linux directory, creating
+  Java objects to represent each directory and each file.
+  Notice the recursion through the constructor,
+  since constructing a wrapper directory loads its contents, which
+  constructs more wrapper directories that load their contents, 
+  and so on.
+</p>
+<p>
+  And this is pretty much it. Once a wrapper directory has loaded
+  the contents of its corresponding Linux directory, it behaves as
+  a ramfs directory, that is, as its super-class, the class
+  <span class="java-class">RamDirectory</span>.
+</p>
+
+<h4>Class <span class="java-class">WrapFile</span></h4>
+
+<p>
+  Let's discuss the class <span class="java-class">WrapFile</span>
+  in more details. It is interesting because it is quite different
+  from the details on the class
+  <span class="java-class">WrapDirectory</span>.
+  First of all, most of the methods of the class
+  <span class="java-class">WrapFile</span>
+  are not implemented, so you need to precisely understand what
+  we are trying to achieve here.
+</p>
+<p>
+  As we just saw with the class
+  <span class="java-class">WrapDirectory</span>, a wrapper file
+  is created for a corresponding Linux file. This can be easily
+  confirmed by looking at the constructor.
+  But the interesting difference is that the constructor does not
+  load the contents of the Linux file.
+  So the first question is why?
+</p>
+<p>
+  Can you answer it? Well? Lazy loading? Yes, that was the purpose
+  of the above discussion about lazy loading and saving memory.
+  This is where it applies. When wrapping a linux file, the constructor
+  does not load the file contents into a byte array. We are
+  smart, we will wait to load the file contents until
+  we are sure we need it. So let's
+  consider the different methods on a file:
+</p>
+<pre class="prettyprint lang-java">
+  public int size();
+  public int available();
+  public byte read() throws IOException, EOFException;
+  public void write(byte val) throws IOException;
+  public void seek(int offset) throws IOException;
+</pre>
+<p>
+  For the first two, we do not need to load the contents, since
+  a Linux file (java.io.File) knows its length. Beware though that
+  once you loaded the file, into a byte array, that byte array is
+  telling you the size and the available number of bytes. Indeed,
+  once the file is loaded, the byte array might be modified and
+  may no longer correspond to the original file. So, until the
+  file is loaded, the file tells you the size and the available
+  number of bytes, but not once you loaded the file contents in
+  memory.
+</p>
+<p>
+  For the other methods of a file, the contents of the file must be
+  first loaded. Look at the method
+  <span class="java-method">load</span> that loads the Linux file
+  contents into a byte array, if it was not already loaded.
+  Look at the code, you will see how to read from a Linux file in Java,
+  using a random acces file. Notice that the byte array referenced
+  from the inherited fields from the super-class
+  <span class="java-class">RamFile</span>.
+</P>
+<p>
+  Notice the use of a <span class="java-keyword">try-finally</span>
+  statement in order to make sure that the random access file is always
+  closed, no matter what happens. A <span class="java-keyword">try-finally</span>
+  statement always executes the <span class="java-keyword">finally</span> block,
+  that the execution flow returns or throws an exception.
+  So in this case, even if the <span class="java-keyword">try</span> block
+  throws an IOException because of an error during the reading of the contents
+  of the file, the the <span class="java-keyword">finally</span> block will
+  be executed.
+</p>
+<P>
+  Once the bytes are loaded, the wrapper file should behave exactly as
+  a regular ramfs file (the class <span class="java-class">RamFile</span>).
+  Remember that you can use the keyword <span class="java-keyword">super</span>
+  to invoke the super-class implementation of overriden methods.
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.classes"
+   classpath="bin;tests.jar;../object.collections/edu-polytech-ricm-oop-collections.jar"
+   classname="ricm3.filesys.oop.wrapfs.TestStep3"> 
+  <banner>
+    Let's run our checks.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Well done. 
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<div name="check2_unfold" style="display:none;">
+  <p>
+    That's all folks for this step.
+    But before we move on, please make sure
+    that you commit and push your work to our server:
+  </p>
+  <textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.classes, Task2, Step3 completed"
+  $ git push --all
+  </textarea>
+</div>

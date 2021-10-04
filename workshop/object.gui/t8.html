@@ -1,0 +1,1269 @@
+<vars>
+  sprint=object.gui
+  task=t8
+</vars>
+<div>
+	<style type="text/css">
+		ol {
+		counter-reset: item
+		}
+		li {
+		display: block
+		}
+		li:before {
+		content: counters(item, ".") " ";
+		counter-increment: item
+		}		
+	</style>
+<div style="overflow:auto;">
+	<nav role="navigation" class="table-of-contents">
+	<p style="padding: 0;margin: 0 0 0.25em 0;font-size: 1.6em;">Table of Contents:</p>
+	<ol>
+		<li><a href="#object.gui.t8.how-to-play">How to play</a>.</li>
+		<li><a href="#object.gui.t8.software-architecture">Software architecture</a>.</li>
+		<li><a href="#object.gui.t8.model-view-controller">Model-View-Controller</a>.</li>
+		<li><a href="#object.gui.t8.help-and-hints">Help and Hints</a>.</li>
+		<ol>
+		<li><a href="#object.gui.t8.objects-in-motion">Objects in motion</a>.</li>
+		<li><a href="#object.gui.t8.drawing-objects">Drawing objects</a>.</li>
+		<li><a href="#object.gui.t8.detecting-hits">Detecting hits</a>.</li>
+		<li><a href="#object.gui.t8.animations">Animations</a>.</li>
+		</ol>
+		<li><a href="#object.gui.t8.network">Bonus: Network play</a>.</li>
+	</ol>
+</nav>
+	<div>
+		<p>
+			This task is a the grand finale, it is about coding
+			a game, a duel between two space ships, vintage style.
+			<xfr>
+				Cette tâche est la grand final, vous allez coder
+				un jeu: un duel dans l'espace entre deux vaisseaux,
+				à la façon des premiers jeux sur ordinateur. 
+			</xfr>
+		</p>
+		<video controls autoplay height="280">
+			<source src="vokoscreen-2019-12-06_11-18-30.mp4" type="video/mp4">
+		</video>
+	</div>
+</div>
+</div>
+
+<h3 id="object.gui.t8.how-to-play">How to play</h3>
+<p>
+	The two ships can be controlled using
+	the keyboard. The yellow ship is controlled by the arrows.
+	The left and 
+	right arrows turn the ship left or right. The up arrow fires
+	the ship engine, applying a constant thrust in the current orientation
+	of the ship. The engine keeps apply the thrust as long as the up
+	arrow is pressed, it stops when the up arrow is released.
+	The down arrow or the space bar allows to fire. For
+	the blue ship, the keys are 'w' for thrust, 'a' and 'd' for left
+	and right, and 's' or 'q' to fire.
+	<xfr>
+		Les deux vaisseaux peuvent être controller depuis le clavier.
+		Pour le vaisseau jaune, ce sont les flèches, la glèche gauche et la
+		droite pour la rotation, la flèche vers le haut pour la propulsion,
+		et celle vers le bas pour le tir (ou la barre d'espace).
+		Pour le vaisseau bleu, ce sont les touches 'a' et 'd' pour la rotation,
+		la touche 'w' pour la propulsion, et la touche 's' ou 'q' pour
+		tirer.
+	</xfr>
+</p>
+<p>
+	Note that a ship is bouncing from the edge of the universe.
+	Also note that a ship has a maximum speed, even if the engine
+	thrust is continuously applied. Finally, note that both ships
+	explode if they collide with each other. When shot, a ship takes
+	damages; when the shield of a ship goes to zero (green or blue bar
+	on the left-hand side), it explodes in the vast emptiness of space.
+	<xfr>
+		Remarquez que les vaisseaux rebondissent sur les bords de l'univers.
+		Notez aussi qu'un vaisseau a une vitesse maximale, même lorsque
+		la propulsion est appliquée sans arrêt. Finalement, notez que
+		les vaisseaux explosent si ils se percutent. Les tirs affaiblissent
+		les écrans de protection, lorsque l'écran de protection d'un
+		vaisseau tombe à zéro, le vaisseau explose.
+	</xfr>
+</p>
+	
+<h3 id="object.gui.t8.software-architecture">Software Architecture</h3>
+
+<p>
+	We gave you an overall architecture to start with and we will propose
+	in this task an incremental path, with the intent to help you code
+	step by step the	different features needed in this game.
+	We strongly suggest that you follow our guidance.
+	<img src="/emoticons/smile.png" height="16"/>
+	But it is your game, your code, your adventure! So feel free to be
+	bold... or wreckless...
+	<xfr>
+		Nous vous avons donné l'architecture logicielle avec laquelle
+		démarré et nous allons vous proposer un chemin à suivre
+		pour développer les différentes facettes du jeu. Nous vous
+		conseillons de suivre nos conseils, mais il s'agit de votre
+		jeu, de votre code, c'est donc votre aventure. Vous pouvez
+		donc vous sentir pousser des ailes... avec le desting d'Icare
+		ou pas.
+	</xfr>
+</p>
+<p>
+	So first thing first, you need to go look at the code
+	and draw on paper the overall class hierarchy and the object
+	graph to undertsand the overall software architecture.
+	The Java package
+	is <span class="java-package">object.gui.spaceduel</span>
+	in the source folder <em>"task8"</em>. Look rapidly at the
+	following classes and get a first sense of how they
+	relate:
+	<xfr>
+		En premier, vous devez aller voir le code et tracer sur
+		papier la hiérarchie de classes et le graphe d'objets,
+		vous pourrez ainsi comprendre l'architecture logicielle.
+		Le code est dans le paquet 
+		<span class="java-package">object.gui.spaceduel</span>
+		qui se trouve dans le dossier source <em>"task8"</em>.
+		Voici un survol de l'organisation:
+	</xfr>
+</p>
+<ul>
+	<li>
+		<b>Entry point:</b>
+		Class <span class="java-class">SpaceDuel</span>.
+	</li>
+	<li>
+		<b>Model-related classes:</b>
+		class <span class="java-class">Model</span>,
+		class <span class="java-class">Ship</span>, and
+		class <span class="java-class">Shot</span>.
+	</li>
+	<li>
+		<b>View-related classes:</b>
+		class <span class="java-class">View</span>,
+		class <span class="java-class">Canvas</span>, and
+		the new widget class <span class="java-class">Meter</span>.
+	</li>
+	<li>
+		<b>Animation-related	classes:</b>
+		class <span class="java-class">Animation</span> and
+		class <span class="java-class">Explosion</span>.		
+	</li>
+	<li>
+		<b>Utility classes:</b>
+		class <span class="java-class">Rectangle</span> and
+		class <span class="java-class">Polygon</span>.
+	</li>
+</ul>
+<p>
+	<b>Important:</b> use Eclipse well to navigate around
+	a larger set of classes.<br>To locate a class, use
+	<b><em>Ctrl-Shift-T</em></b>. To locate a method,
+	use <b><em>Ctrl-o</em></b> or use the <em>"Outline"</em> view.
+	Also, remember to use the Eclipse shotcut to know all the call sites
+	from where a method is invoked from: select with your mouse a method
+	name and then hit <b><em>Ctrl-Shift-G</em></b>.
+	Eclipse will list all the call sitesfor that method and you will be
+	able to navigate efficiently. Also use <b>F4</b> after selecting
+	a class to see the class extending the selected class.
+</p>
+
+<h4 id="object.gui.t8.model-view-controller">Model-View-Controller Design</h4>
+
+<p>
+	Let's begin with a classical design
+	for a graphical user interface: the design pattern called
+	the <em>"Model-View-Controller"</em> pattern.
+	<xfr>
+		Nous allons démarrer avec la conception classique d'une
+		interface graphique: le patron de conception appelé
+		<em>"Model-View-Controller"</em> (Modèle-Vue-Contrôleur).
+	</xfr>
+</p>
+<p>
+	The <u>model</u> represents the data that is displayed by the view.
+	In our universe, we need to model ships and the shots
+	they fired. What do we need to know about those?
+	<xfr>
+		Le modèle représente les données qui seront affichées par la vue.
+		Dans notre univers, nous devons modéliser les vaisseaux et les
+		tirs en cours. Mais que devons-nous savoir à leur propos?
+	</xfr>
+</p>
+<ul>
+	<li>
+		Ship: we need the location of the ship, as its (x,y) coordinates.
+		We also need its speed so that we can update its location
+		as time passes. Also, a ship has an orientation, that is,
+		the direction it faces. Notice that a ship may move in
+		one direction but face another.
+		<xfr>
+			Vaisseau: nous avons besoin de la position d'un vaisseau,
+			c'est à dire ses coordonnées. Nous allons aussi avoir besoin
+			de sa vitesse afin que l'on puisse calculer son déplacement
+			au cours du temps. Un vaisseau a aussi une orientation.
+			Attention: l'orientation et la direction de déplacement
+			peuvent être différentes.
+		</xfr>			 
+	</li>
+	<li>
+		Shot: we need pretty much the same information including the		
+		location (x,y), the speed, and orientation.
+		<xfr>
+			Tir: nous avons besoin d'a peu près les mêmes informations
+			incluant la position (x,y), la vitesse, et l'orientation.
+		</xfr>
+	</li>
+</ul>
+<p>
+	The <u>view</u> (class <span class="java-class">View</span>)
+	is about what is displayed in the window.
+	On the left-hand-side, the display of the
+	two meters that indicate the health of the ship shields.
+	On the right-hand-side, the display of the canvas representing the dark
+	cold universe where the duel takes place. A simple combination
+	of a border	layout and a flow layout will allow you to structure
+	the view, using the class
+	<span class="java-class">Meter</span> and the
+	class <span class="java-class">Canvas</span>.
+	The canvas will be repainted at 24 frame per second (24fps).
+	<xfr>
+		La <u>vue</u> (class <span class="java-class">View</span>)
+		est ce qui affiche dans la fenêtre. Sur la gauche, il y
+		a les deux indicateurs de l'état de écran de protection
+		des vaisseaux. Sur la droite, il y à notre représentation
+		de l'espace intersidéral où va avoir lieu le duel de nos
+		deux vaisseaux. Pour structurer votre fenêtre, une simple
+		utilisation d'un FlowLayout et d'un BorderLayout vont
+		être suffisant. Pour afficher l'état d'avancement d'un
+		écran de protection, vous pourrez utiliser le gadget
+		<span class="java-class">Meter</span>. Pour l'espace,
+		le gadget <span class="java-class">Canvas</span>.
+		qui sera repeint 24 fois par seconde.
+	</xfr>
+</p>
+<p>
+	The <u>controller</u> (class <span class="java-class">Controller</span>)
+	is about the handling the end-user interaction, essentially
+	the interaction with the keyboard. The controller is given,
+	fully functional. Just look at how it is coded, it is completely
+	straightforward code that calls onto methods of the model.
+	In other words, end-user interactions impact the ships
+	in our model, which is reflected on the display at the
+	next repaint.
+	<xfr>
+		Le <u>contrôler</u> (class <span class="java-class">Controller</span>)
+		quant à lui s'occupe de la gestion de l'interaction avec
+		les joueurs. Ici, il s'agit principalement de contrôler
+		le clavier. On vous a donné un contrôleur entièrement
+		fonctionnel. Allez voir le code, il est trivial et
+		appelle des méthodes sur le modèle. Les interationcs
+		des joueurs impactent donc le modèle dont les changements
+		seront affichés au prochain raffraichissement de la vue.		
+	</xfr>
+</p>
+<p>
+	Note the asynchronous behavior. The end user interacts
+	with the keyboard, which generates an event on the keyboard
+	listener, which is the controller. The controller then acts
+	on the model. Later, a repaint happens as another event,
+	due to the periodic repaint of the canvas. The repaint
+	will cause our canvas	to redraw the model, including
+	any changes that the controller has made to the model
+	since the last repaint.
+	<xfr>
+		Faites attention à la nature asynchrone de ces interactions.
+		Le jouer agit sur le clavier. Cela génère un événement clavier
+		qui appelle le bon listener sur le gadget qui a le focus. Ici,
+		c'est notre contrôleur qui va agir sur le modèle. Plus tard,
+		lors du raffraichissement périodique du canevas, les changements
+		apparaîtront sur l'écran. 
+	</xfr>
+</p>
+
+<h4>Proposed Steps</h4>
+
+<p>
+	We are going to propose to approach coding this game
+	through a series of steps. The idea is to have small
+	steps, easy to code and easy to check. If you are trying
+	to code everything before you can run and test anything,
+	you are going to struggle big time. Always aim at small steps
+	that you can code easily and then tests rapidly.
+	<xfr>
+		Il est temps de penser au codage, voici les pas que nous
+		vous proposons. L'idée est d'avoir des pas assez simples
+		et faciles à coder et à tester. Si vous essayez de tout
+		coder d'un coup avant de pouvoir exécuter et tester quoi
+		que ce soit, vous allez inutilement rendre le codage
+		plus dure et plus long.
+	</xfr>
+</p>
+<p>
+	<b>Step-1:</b> we suggest that you start with getting the canvas
+	to repaint at 24fps, using a timer with a period
+	of 40ms. Each time the timer expires, you invoke
+	repaint on the canvas and reset the timer. Easy.
+	<xfr>
+		<b>Step-1:</b> nous vous suggérons de commencer par la
+		partie canevas qui doit être repeinte 24 fois par seconde,
+		en utilisant un timer d'une période de 40ms. Chaque fois
+		que le timer expire, vous allez demander un repaint au
+		canevas et réarmer le timer. 
+	</xfr>
+</p>
+<p>
+	<b>Step-2:</b> 
+	it is time that you can get something to paint, like the two
+	ships. Think of using a simple shape, but a shape
+	that shows you the orientation of the ships, like
+	triangles. Remember that a triangle can be represented
+	by a polygon with only 3 points.
+	<xfr>
+		<b>Step-2:</b> 
+		il est temps d'avoir quelque chose à peindre, comme
+		avoir les deux vaisseaux. Pensez à utiliser une forme
+		simple au début, mais une forme qui vous montre l'orientation,
+		donc un triangle par exemple et non pas un carré.
+	</xfr>
+</p>
+<p>
+	<b>Step-3:</b>
+	now that you see your ships in the view canvas, let's try to rotate
+	the ships. First, look at the controller, making
+	sure you understand how the controller controls
+	the rotation of ships. Notice that it does so
+	through a start and end command. This means
+	the ship needs to keep rotating while the
+	corresponding key is kept pressed by the player.
+	<xfr>
+		<b>Step-2:</b> 
+		maintenant que vous affichez les vaisseaux, essayez
+		de les faire tourner sur eux-mêmes. En premier,
+		regardez le contrôleur, afin de vous assurer
+		que vous comprenez comment il contrôle la rotation
+		des vaisseaux. Notez qu'il le fait via un début et
+		une fin de rotation, ce qui veut dire que le vaisseau
+		tourne en continue entre ces deux notifications.
+	</xfr>
+</p>
+<p>
+	This requires to add a notion of passing time to the
+	model. This means adding a ticker, a periodic timer
+	that ticks as time passes, like a tick every 10ms or 20ms
+	for example. Be careful, you asked for a delay of 20ms,
+	but you may get called back later than 20ms, so you must
+	compute the actual time that elapsed since the last tick.
+	Once you have the elapsed time, you can call the model
+	method <span class="java-method">tick(long elapsed)</span>
+	on the model.
+	<xfr>
+		Cela nécessite d'ajouter la notion du temps qui passe
+		à votre modèle. Cela veut dire rajouter le tick d'une
+		horloge, comme par exemple toutes les 10ms ou 20ms. Mais attention,
+		le temps écoulé entre deux ticks n'est pas constant, il faut
+		calculer le temps écoulé. Une fois que vous avez le temps
+		écoulé, vous pouvez appelé la méthode
+		<span class="java-method">tick(long elapsed)</span>
+		sur le modèle.
+	</xfr>
+</p>
+<p>
+	In that method <span class="java-method">tick(long elapsed)</span>,
+	you need to update your model of your universe,
+	given the time that elapsed since the last time you updated
+	your universe. For instance, this means rotating ships if the
+	controller has started a rotation but not ended it yet.
+	As you update your universe as time passes by, the periodic
+	repaints will actually draw the changes and you will see
+	your ships rotate.
+	<xfr>
+		Dans cette méthode
+		<span class="java-method">tick(long elapsed)</span>,
+		vous devez mettre à jour tout le modèle en fonction du
+		temps écoulé. Cela veut dire faire tourner les vaisseaux en
+		rotation. Les effets se veront lors du prochain affichage.
+	</xfr>
+</p>
+<p>
+	<b>Step-4:</b>
+	it is now time to add some thrust so that your ships can
+	move around. Again, look at the controller to see how it
+	controls the thrust. As you will see, the thrust is also
+	turned on and then later turned off. So again, it is something
+	that you will need to simulate in the method
+	<span class="java-method">tick(long elapsed)</span> on
+	your model.
+	<xfr>
+		<b>Step-4:</b>
+		il est temps d'ajouter la propulsion à nos vaisseaux
+		pour qu'ils puissent se déplacer. Regardez le contrôleur
+		pour voir comment il contrôle l'application de la
+		propulsion: par allumage et extinction. Il faudra donc
+		en tenir compte dans la méthode
+		<span class="java-method">tick(long elapsed)</span>
+		sur le modèle.
+	</xfr>
+</p>
+<p>
+	You should see your ship rotate and accelerate or deccelerate.
+	Look further down this page if you feel unsure about the
+	corresponding physics of it. We remind you of the necessary
+	Newtonian formula about acceleration, speed, and distance.
+	<xfr>
+		Vous devriez maintenant pouvoir faire tourner et accélérer
+		vos vaisseaux. Si vous n'êtes pas sûr des formules de physique
+		nécessaires, voyez plus loin vers le bas de cette page pour
+		les rappels nécessaires.
+	</xfr>
+</p>
+<p>
+	<b>Step-5:</b> it is probably time to create the proper shape for your
+	ships, rather than a simple triangle. You can create an
+	original shape and then rotate and translate it. Just
+  pay attention to the center of rotation, which needs
+	to be the middle of the ship.
+	<xfr>
+		<b>Step-5:</b> il est temps de créer la bonne apparence pour
+		les vaisseaux, avec la bonne forme. Pensez bien au centre de
+		rotation qui doit être au milieu de la forme.
+	</xfr>
+</p>
+<p>
+	Now that the ships have the right shape and they can move,
+	you need to keep them within the universe, bouncing from the
+	edges of the universe. 
+	Look further down this page if you feel unsure about how
+	to bounce an object off an edge. Here, we only have to bounce
+	from vertical or horizontal edges, which is much simpler than
+	the general case.
+	<xfr>
+		Maintenant que vos vaisseaux ont la bonne apparence, qu'ils
+		peuvent tourner et accélérer, il est important de les conserver
+		dans l'univers du duel, il faut qu'ils rebondissent sur les bords
+		de l'univers. Plus bas sur cette page vous trouverez les formules
+		nécessaires pour cela.
+	</xfr>
+</p>
+<p>
+	<b>Step-6:</b>
+	Now that you ships can move around and bounce off the edges of
+	the universe, it is time to detect if your ships collide.
+	When colliding, the two ships are destroyed. So try it out
+	and make sure your ships are destroyed and disappear from
+	the screen. Look at the
+	class <span class="java-class">Polygon</span> that can
+	tell if it contains a point at (x,y). With that, you can
+	easily detect if ships are colliding.
+	<xfr>
+		<b>Step-6:</b>
+		maintenant que les vaisseaux peuvent se déplacer et qu'ils
+		rebondissent sur les bords de l'univers, il est temps de
+		s'occuper de la détection de la collision entre vaisseaux.
+		En cas de collision, il faut détruire les deux
+		vaisseaux. Regardez la classe <span class="java-class">Polygon</span>,
+		elle peut vous dire si un point est inclu dans le polygone,
+		ce qui est la base pour calculer si vos vaisseaux entre
+		en collision.
+	</xfr>
+</p>
+<p>
+	<b>Step-7:</b>
+  Now it is a good time to try to use some animation, making
+	our ships explode. The ship has now three states: OK, exploding,
+	and destroyed. It is exploding while you are running the animation
+	of an explosion. Look at the class
+	<span class="java-class">Animation</span> and
+	<span class="java-class">Explosion</span>. Finish up the
+	the implementation of the class
+	<span class="java-class">Explosion</span>, using
+	the provided sprite for an explosion.
+	Look below in this page for more information on sprites
+	and animations.
+	<xfr>
+		<b>Step-7:</b>
+		Il est temps d'ajouter une animation, l'explosion des
+		vaisseaux. Chaque vaisseau a donc trois états:
+		OK, explosion, et détruit. Il est dans l'état
+		"explosion" pendant que se déroule l'animation de
+		l'explosion. Regardez les classes 
+		<span class="java-class">Animation</span> et
+		<span class="java-class">Explosion</span>. Finissez le code
+		de la classe <span class="java-class">Explosion</span>, en
+		utilisant le "sprite" fourni pour l'explosion.
+		Les infos nécéssaires sur les sprites sont plus bas
+		dans cette page.
+	</xfr>
+</p>
+<p>
+	<b>Step-8:</b>
+	Great, you ships rotate, thrust, bounce from the edge
+	of the universe and explode if they collide. It is time
+	to allow to fire shots. Look at the controller to see
+	how it controls the ship firing. Shots belong to the
+	ship that fired them. A ship can only fire a small number
+	of shots, like 4 or 6. Shots are supposed to explode at
+	the edge of the universe if they did not hit a ship.
+	Of course, a shot cannot hit the ship that fired it.
+	A shot explodes when it hits a ship and takes 20%
+	of its shield integrity. If the shield integrity drops
+	below 0%, the ship explodes.
+	<xfr>
+		<b>Step-8:</b>
+		super, vous avez bien avancer dans le codage. Vos
+		vaisseaux peuvent se déplacer et entrer en collision,
+		il est temps d'ajouter les tirs. Encore une fois,
+		commencez par regarder le contrôleur. Il faut
+		rajouter les tirs aux modèles. Un tir appartient
+		au vaisseau qu'il l'a créé. Chaque vaisseau ne
+		peut tirer qu'un nombre maximum de tirs, comme 4
+		ou 6 tirs maximum. Les tirs explosent sur les bords
+		de l'univers, si ils n'ont touché aucun vaisseau.
+		Il faut vous assurez qu'un tir d'un vaisseau ne peut
+		pas exploser sur ce vaisseau. Lors qu'un tir touche
+		un vaisseau, il lui fait perdre 20% de son écran
+		de protection. Si l'écran passe en dessous de 0%,
+		le vaisseau explose.
+	</xfr>
+</p>
+<p>
+	<b>Step-9:</b>
+	Now the fun part, you have coded enough that you can 
+	play your game, you need to play it for
+	a while with your game to see if it behaves
+	properly. You need to check if the ships are easily
+	controlled by players. You need to check that shots
+	actually hit ships and that ships sustain damages
+	leading to their explosion and destruction.
+	Show meters on the left-hand side of the view so that
+	players know about the health of shields.
+	<xfr>
+		<b>Step-9:</b>
+		Maintenant la partie amusante, vous avez codé suffisament
+		pour pouvoir jouer votre jeu. Il faut le jouer un
+		moment pour voir si il fonctionne proprement. Vous
+		devez vérifier que les vaisseaux sont facilement
+		contrôlable par les joueurs. Vous devez vérifier que
+		les tirs fonctionnent et peuvent toucher les vaisseaux
+		et provoquer des dégats qui change l'affichage de l'état
+		des écrans sur la gauche de la fenêtre.
+	</xfr>
+</p>
+<p>
+	<b>Step-10:</b>
+	Now, you need to detect that the game is over, when
+	there is less than one ship standing or that both
+	died trying like heroes. You need to
+	display the provided image "Game Over". You need to
+	stop all timers: the repaint timer for the canvas
+	and the ticker timer for the model. Indeed, there
+	is no need to repaint the canvas at 24fps and there is
+	no need to simulate the universe every 20ms.
+	<xfr>
+		<b>Step-10:</b>
+		La touche finale, il faut détecter la fin du jeu,
+		lorsqu'il n'y a plus qu'un seul vaisseau en vie
+		ou que les deux ont explosés à la fin d'un duel
+		héroique. Vous afficherez l'image fournie "Game Over".
+		Il faut arrêter tous les timers en cours. 			
+	</xfr>
+</p>
+
+<h3 id="object.gui.t8.help-and-hints">Help and Hints</h3>
+
+<h5 id="object.gui.t8.objects-in-motion">Objects in Motion</h5>
+
+<p>
+	In this game, both ships and their fired shots are in motion.
+	You will have to use a tick timer on the model in order to move
+	these objects periodically, for example every 10ms or 20ms. Why 10ms
+	or 20ms?
+	Because it provides for a smooth motion at 24 Frame-Per-Second (fps).
+	Indeed, every 20ms, the position is updates, which is twice the
+	repaint frequency (a frame every 1000/24=41ms). You can play
+	with slower frequencies if you have a really slow machine or
+	faster if the overall performace of your code allows for it.
+	<xfr>
+		Dans ce jeu, les deux vaisseaux et les tirs sont en
+		déplacement. Il faudra utiliser un tick d'horloge sur le modèle
+		pour cela, par exemple toutes les 10ms ou 20ms. Pourquoi 10ms
+		ou 20m? Parce que cela fournit une simulation de mouvement
+		assez fluide avec un raffraîchissement 24 fois par seconde.
+		Essayez moins ou plus.
+	</xfr>
+</p>
+<p>
+	So at every tick, you need to move both the ships and shots.
+	The related related Newton laws are given below:
+	<xfr>
+		A chaque tick d'horloge, vous allez devoir déplacer
+		les vaisseaux et les tirs. Pour cela, voici les formules
+		de Newton correspondante:
+	</xfr>
+</p>
+<pre>
+	distance = speed * time
+</pre>
+<p>
+	So, with a elapsed time interval <em>"dt"</em>, we can update the
+	position (x,y) of an object given its speed vector
+	(speedx,speedy):
+	<xfr>
+		Ainsi, si le temps écoulé est <em>"dt"</em>, nous pouvons
+		calculer la nouvelle position d'un objet si on a son vecteur
+		vitesse (speeds, speedy):
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  x = x + speedx * dt;
+  y = y + speedy * dt;
+</pre>
+<p>
+	The speed of a shot is constant in this game, but the speed
+	of a ship can vary. It can vary because a ship has an engine
+	that can apply a certain constant thrust, in the direction
+	the ship is facing. We remind you of the formula for how
+	speed evolve when a constant acceleration is applied during
+	a time interval (dt):
+	<xfr>
+		La vitesse d'un tir est constante dans ce jeu, mais la
+		vitesse d'un vaisseau varie au cours du temps, à cause
+		de la propulsion du moteur, qui s'applique à tout intstant
+		dans le sens de l'orientation du vaisseau. Voici la formule
+		pour faire varier la vitesse d'un objet en fonction de
+		l'accélération qu'il subit pendant un interval de temps "dt":
+	</xfr>
+</p>
+<pre>
+    speed = speed + .5 * thrust * dt * dt
+</pre>
+<p>
+	So this means you can easily understand that your code will
+	look like this, assuming that the speed vector is (speedx,speedy)
+	and assuming the thrust happens in the direction of the
+	ship orientation:
+	<xfr>
+		Voilà à ce que cela ressemble en prenant en compte l'orientation
+		du vaisseau:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  d  = .5 * thrust * dt * dt
+  speedx = speedx + d * cos(m_orientation)
+  speedy = speedy + d * sin(m_orientation)
+</pre>
+<p>
+	<b>Nota Bene:</b> to maintain playability, you need to
+	maintain the speed of your ships below a maximum speed,
+	otherwise, the ships will become uncontrollable. This
+	means a ship will not accelerate over the maximum speed,
+	even if the engine thrust is continuously applied.
+	Note however
+	that limiting the magnitude of the speed vector without
+	distinguishing between the X and Y axis will not work.
+	<xfr>
+		<b>Nota Bene:</b> pour maintenir le contrôle du vaisseau
+		par le joueur, il faut limiter la vitesse maximale d'un vaisseau.
+		Cela veut dire que la propulsion ne devra pas pouvoir
+		faire que la vitesse d'un vaisseau dépasse la valeur
+		maximale pour celle-ci. Mais attention, limiter la
+		longeur du vecteur de la vitesse ne marchera pas.
+	</xfr>
+</p>
+<p>
+	The problem will be that once a ship is at full speed, the player
+	will not be able to steer anymore because any forward sideway thrust
+	actions will be ignored because they will increase the speed. The only
+	option would be then to turn the ship around and slow down first.
+	A much smoother approach is to limit the maximum speed independently
+	of the X and Y axis. So you need something like this:
+	<xfr>
+		Le problème sera qu'une fois que votre vaisseau est à vitesse maximale,
+		le joueur ne pourra plus faire tourner son vaisseau, car toute accéleration
+		sur le coté n'aura plus d'effet une fois la vitesse maximale atteinte. La
+		seule solution sera d'abord de ralentir en renversant le vaisseau, puis de
+		demander une propulsion latérale après rotation du vaisseau. Ce n'est
+		pas idéal pour jouer, on peut faire bien mieux:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  d  = .5 * thrust * dt * dt
+  sx = speedx + d * cos(m_orientation)
+  sy = speedy + d * sin(m_orientation)
+  if (sx * sx &lt; 0.04) // note: sx*sx &gt= 0
+    m_speedx = sx;
+  if (sy * sy &lt; 0.04) // note: sy*sy &gt= 0
+    m_speedy = sy;
+</pre>
+<p>
+	The problem will still happen on a pure diagonal, but it is a
+	rare situation that the player will probably not notice. Try
+	both approach, you will see a clear difference at full speed.
+	<xfr>
+		Le problème est toujours sur les diagonales, mais cela est
+		moins notable pour le joueur. Essayez les deux approches,
+		vous verrez un vrai différence à pleine vitesse.
+	</xfr>
+<p>
+	The moving ships are not allowed to move beyond the boundaries
+	of the universe, they must stay within the displayed canvas.
+	When reaching an edge, a ship will bounce off that edge.
+	To bounce ships from horizontal or vertical edges, the formula is
+	pretty straightforward:
+	<xfr>
+		Les vaisseaux doivent rebondir sur les bords de l'univers, restant
+		ainsi dans l'espace du duel. Voici les formules correspondantes:
+	</xfr>
+</p>
+<pre>
+Bouncing against a vertical edge:
+  speedx = -speedx;
+	
+Bouncing against a horizontal edge:
+  speedy = -speedy;
+</pre>
+
+<h5 id="object.gui.t8.drawing-objects">Drawing Objects</h5>
+
+<p>
+	Objects must be displayed on the canvas.
+	We have to draw ships and shots.
+</p>
+<p>
+	A shot is displayed as a small line. So
+	we need to maintain a start and end points.
+	<xfr>
+		Un tir est affiché par une petite ligne,
+		il faudra donc en connaître le début et la fin.
+	</xfr>
+</p>
+<p>
+	A ship is displayed as a square and two triangles.
+	The square is the main body and the triangles are
+	two wings. We can therefore use a corresponding polygon
+	to draw a ship. The length of the	square sides
+	is 20 pixels. For the triangles, the two equal
+	sides have the same length.
+	<xfr>
+		Un vaisseau est affiché par un carré et deux triangles.
+		Vous pouvez donc utiliser un polygone pour l'affichage.
+		La longeur des cotés du carré est de 20 pixels,
+		ainsi que les deux cotés égaux des triangles.
+	</xfr>
+</p>
+<p>
+	You will create one polygon shape that represents a
+	ship with an orientation of 0 degrees. To
+	display a ship, you will rotate the ship shape
+	by the ship orientation. 
+	Note the rotation point of your ship must be
+	its center, so the shape must be constructed
+	with the coordinate origin at the center of the
+	shape.
+	<xfr>
+		Vous allez créer un polygone correspondant à
+		la forme du vaisseau avec une rotation de
+		zéro degré. Pour afficher votre vaisseau,
+		vous allez appliquer une rotation avant l'affichage,
+		mais attention le centre de rotation se doit
+		d'être le centre du vaisseau. 
+	</xfr>
+</p>
+
+<h5 id="object.gui.t8.detecting-hits">Detecting Hits</h5>
+
+<p>
+	Detecting hits is a central task for a shooters' game.
+	In our case, we need to detect if a shot hit a ship,
+	another ship than the ship that fired that shot.
+	This means detecting if a shot is going through a ship,
+	which comes down to detecting if points are contained
+	within a polygon.
+	<xfr>
+		Détecter la frappe des tirs est au centre d'un jeu
+		tel que le nôtre. Pour cela, il faut tester si un tir
+		traverse un vaisseau. Cela revient à tester si des
+		points sont contenu dans un polygone.
+	</xfr>
+</p>
+<p>
+	Unfortunately, detecting if a point is contained
+	in a polygon is a difficult algorithm.
+	Fortunately, we gave you
+	the class <span class="java-class">Polygon</span>,
+	which already contains a method for that.
+	So the question becomes which points should you
+	test for?
+	<xfr>
+		Malheureusement, l'algorithme pour calculer
+		si un point est inclu dans un polygone est
+		assez difficile. Heureusement, nous vous l'avons
+		donné sur la classe
+		<span class="java-class">Polygon</span>.
+		Ainsi, la seule question est quels points
+		faut-il tester? Les points de début et de fin
+		d'un tir? Oui, mais est-ce assez?
+	</xfr>		 
+</p>
+<p>
+	It works, try it. But if you play for some time,
+	you will see that at some angles, the shot will
+	just pass through a ship coming with enough speed
+	towards the shot. What is going on? Well, let us
+	ask you a question: does the shot go through all
+	positions in space?
+	<xfr>
+		Cela marche, essayez le. Mais si vous jouez assez
+		longtemps, vous allez voir qu'a certains angles
+		et certaines vitesses, les tirs passent au travers
+		des vaisseaux sans exploser. Quel est le problème?
+		Et bien, laissez nous vous poser une question:
+		est-ce que vos tirs et vos vaisseaux passent par
+		tous les points de leur trajectoire dans l'espace?		
+	</xfr>
+</p>
+<p>
+	They do not, right? Indeed, your tick is like 20ms,
+	so both the shots and the ships are jumping from
+	their previous position to their new position. The
+	hit computation only happens at these discrete positions,
+	right? You can either reduce the elapsed tick, but
+	it will decrease the overall performance of the game,
+	but it may work well. You may also improve your
+	hit algorithm to take into account that jumping
+	behavior of both shots and ships.
+	<xfr>
+		Bien sûr que non puisque vous avez une simulation
+		de leur déplacement en temps discret, toutes les
+		10ms ou 20ms. Puisque les tests de frappe ne se
+		font qu'aux positions calculées tout les 10ms ou 20ms,
+		il est possible qu'un tir passe au travers d'un vaisseau
+		car en temps discret, ils ne détectent pas une frappe.
+		Vous pouvez réduire la période du tick d'horloge, cela
+		va marcher mieux mais cela va réduire les performances
+		de votre jeu. A essayer. Vous pouvez aussi améliorer
+		la détection de frappe en prenant en compte le fait
+		que votre simulation ne fournit que des
+		positions discrètes.
+	</xfr>
+</p>
+<!--
+<p>
+	Given a shot is a represented as a line, but should
+	be something like a bullet or a missile, the first
+	thought is to test one point: where the shot is at.
+	This would suggest to test for the end point of the
+	line representing a shot. This works, so try it.
+</p>
+<p>
+  You will see that depending on the angles between
+	the shot and ship orientations and also the relative
+	speeds, you may see shots go right through ships,
+	without hitting the ship. So what is happening?
+</p>
+<p>
+	Well, remember, we are running a simulation of the
+	world, we are not the real world. In the real world,
+	the shot would have hit the ship. But in the simulation,
+	we simulate the movement of objects through discrete
+	positions, computed periodically. It is therefore possible
+	that a shot has not yet hit the ship at some time and
+	at the next period it has missed the ship.
+</p>
+<p>
+	This means we need to test more points, from the last
+	position of a shot to the new position of a shot. We could
+	event simulate every position of the ship and the shot
+	throughout the period to be extra-precise, but it would be
+	extra-costly. So experiment with that.
+</p>
+-->
+
+<h5 id="object.gui.t8.animations">Animations</h5>
+
+<p>
+	Animations are great for games, they improve the
+	look and feel of the game.
+	We have only one animation here: explosions. So what is
+	an animation exactly? Look at the
+	class	<span class="java-class">Animation</span>, as you
+	can see, it is something that evolves periodically
+	through a method <span class="java-method">animate</span>,
+	called when a timer expires periodically.
+	<xfr>
+		Les animations sont super pour les jeux, elles améliorent
+		l'apparence et le ressenti du jeu. Nous avons qu'une seule
+		animation dans notre jeu: l'explosion. Mais qu'est-ce
+		qu'une animation? Regardez la classe
+		<span class="java-class">Animation</span>, comme vous
+		pouvez le voir, elle évolue périodiquement au travers
+		de la méthode <span class="java-method">animate</span>,
+		appelez à chaque fois que le timer expire.
+	</xfr>
+</p>
+<p>
+	An animation is also something that can be painted
+	as part of the canvas repaint	process at a given location
+	and at a given scale. Look at the methods
+	<span class="java-method">setPosition</span>
+	and
+	<span class="java-method">paint</span>. In our case,
+	an explosion will be the explosion of a ship or of a
+	shot. A shot explodes at the boundaries of space,
+	without moving any further. However, a ship that explodes
+	is still moving, hence the position of the animation needs to follow the
+	position of the ship that is exploding. The scale will
+	represent the importance of the explosion, smaller for a
+	shot, larger for a ship.
+	<xfr>
+		Une animation est aussi quelque chose qui peut être
+		peint sur un canevas à une certaine position et
+		à une certaine échelle. Regardez les méthodes
+		<span class="java-method">setPosition</span>
+		et <span class="java-method">paint</span>. Dans notre
+		jeu, l'explosion sera celle d'un tir ou d'un vaisseau.
+		Le tir explose aux bords de l'univers, sans bouger.
+		Par contre, un vaisseau qui explose se déplace,
+		donc la position de l'explosion doit donc suivre la position
+		du vaisseau qui explose.
+		La taille de l'explosion sera plus petite pour les tirs
+		que pour les vaisseaux.
+	</xfr>
+</p>
+<p>
+	You are asked to create a concrete
+	subclass <span class="java-class">Explosion</span>
+	that extends the abstract
+	class <span class="java-class">Animation</span>.
+	The explosion will be a sequence of images, from
+	a sprite, which is a new concept.
+	<xfr>
+		On vous demande donc d'écrire une classe concrète
+		<span class="java-class">Explosion</span> qui étends
+		la classe abstraite
+		<span class="java-class">Animation</span>.
+		L'explosion est une séquence d'images, obtenue
+		d'un sprite, ce qui est un nouveau concept pour
+		vous:
+	</xfr>
+</p>
+<p>
+	A sprite is a sequence of images, stored into a
+	single file. Look below, this is the sprint file
+	for our explosion. Notice that it is composed
+	of a sequence of small images, here each small
+	image is 64x64 pixels.
+	<xfr>
+		Un sprite est une séquence d'images, sauvegardée
+		dans un fichier. Regardez ci-dessous, c'est le sprite
+		de notre explosion. Notez que c'est une séquence
+		de petites images, toutes de la même taille
+		(64x64 pixels).
+	</xfr>
+</p>
+<img src="explosion01_set_64.png" width="60%" />
+<p>
+	The class <span class="java-class">Sprite</span>
+	will read in such a file and split into as many
+	small images as necessary, each image representing
+	a step of the animation. Exactly as it is done
+	with animated cartoons, if you draw a sequence of
+	images, you will get an animation.
+	<xfr>
+		La classe
+		<span class="java-class">Sprite</span>
+		va lire un tel fichier et va extraire les petites
+		images. Chaque image sera donc une étape de
+		l'animation, exactement comme les différents
+		dessins d'un animation dans une bande dessinée.
+	</xfr>
+</p>
+<p>
+	Where is the sprite file for the explosion?
+	Look in the folder "task7/sprites".
+</p>
+<p>
+	How do you load that sprite? 
+	Look at the class <span class="java-class">Window</span>
+	and the method <span class="java-method">loadSprite</span>.
+	Remember that you can get to the window object using
+	the static method <span class="java-method">Window.getWindow()</span>.
+</p>
+
+<h3 id="object.gui.t8.network">Bonus: Network Play</h3>
+
+<p>
+	This is a bonus for extra fun! Good news, no coding, nothing to do!
+	Just the ability to play with two players, each player confortable
+	setup on his or her own computer.
+	So far, you have played the game standalone, on a single machine,
+	but it is possible to play the game across two computers if they
+	are connected to the same network. 
+	To play with two computers, you will need to launch the
+	game twice, with different arguments, on the two computers.
+	<xfr>
+		Ceci est un bonus, pour plus de fun. Bonne nouvelle, il
+		ne s'agit pas de nouvelles fonctionalités qu'il faudrait
+		coder. L'idée est de vous offrir la possibilité de jouer
+		en réseau. Pour  cela, vous allez lancer le jeu deux fois,
+		sur deux machines différentes.
+	</xfr>
+</p>
+<p>
+	First, you will need the name of your computer.
+</p>
+<pre class="terminal" rows="5" >
+$ hostname
+Zorg-the-Destroyer
+</pre>
+<p>
+  <img src="/emoticons/ohoh.png" height="16"/>
+	So your machine is called "Zorg-the-Destroyer", really?
+	Of course not! This is just an example. 
+	<img src="/emoticons/smile.png" height="16"/>
+	Remember the name of your machine.
+	Now launch the first instance of your game:
+	<xfr>
+		Le nom de votre machine est "Zorg-the-Destroyer", vraiment?
+		Bien sûr que non, c'est un exemple!
+		Rappelez vous du nom de votre machine.
+		Maintenant, lancez le jeu pour la première fois sur
+		votre machine, comme ceci:
+	</xfr>
+</p>
+<pre class="terminal" rows="5" >
+$ cd AgileLearning/workshops/oop
+$ source setenv.sh
+$ cd workspace/object.gui
+$ java -cp bin object.gui.spaceduel.SpaceDuel -a
+</pre>
+<p>
+	On your machine, you will see the normal full window, your computer is
+	running the game. But it is suspended until the other
+	game is launched and connects. Now get to another
+	machine and launch the game for the second time, 
+	using the following shell command:
+	<xfr>
+		Vous allez voir la fenêtre habituelle apparaître sur votre machine,
+		le jeu va tourner sur votre machine. Pour l'instant, le jeu est
+		en pause en attendant que vous lanciez le jeu sur la deuxième
+		machine, comme ceci:
+	</xfr>
+</p>
+<pre class="terminal" rows="5" >
+$ cd AgileLearning/workshops/oop
+$ source setenv.sh
+$ cd workspace/object.gui
+$ java -cp bin object.gui.spaceduel.SpaceDuel -c "Zorg-the-Destroyer"
+</pre>
+<p>
+	Of course, you will replace the name "Zorg-the-Destroyer" by the
+	actual name of the other machine. You will see a small gray window pop-up.
+	By clicking in that window, the player on that machine will be able
+	to control the blue ship using the arrows and the space bar
+	to control the blue ship.
+	<xfr>
+		Bien sûr n'oubliez pas de remplacer le nom "Zorg-the-Destroyer" par
+		le nom de votre machine. Vous allez voir une petite fenêtre grise
+		apparaître, sur laquelle vous allez cliquez avec votre souris,
+		au centre de la fenêtre. Le joueur sur cette machine contrôle le
+		vaisseau bleu. Vous contrôler le vaisseau jaune sur votre machine.
+	</xfr>
+</p>
+<p>
+	If it works, great. If it does not work and the connection is not
+	established, there may be a couple of issues to look at.
+  May be your machine is not know by name on the network.
+	Try connecting with the IP address of your machine instead
+	of its name.
+  To know the IP/inet address of your machine,
+	just use the following command:
+	<xfr>
+		Si cela marche, super. Si cela ne marche pas, la connection
+		n'est pas établie. Il y a plusieurs problèmes possibles.
+		Peut-être que votre machine n'est pas connu sur le réseau par
+		son nom, réessayer avec son adresse IP:
+	</xfr>
+</p>
+<pre class="terminal" rows="5" >
+$ ifconfig
+...
+wlp3s0    Link encap:Ethernet  HWaddr e8:b1:fc:c5:af:71  
+          inet addr:192.168.1.39  Bcast:192.168.1.255  Mask:255.255.255.0
+...
+</pre>
+<p>
+	Your IP/inet address would be 192.168.1.39 in the output above.
+	So try it with the IP/inet address in place of the machine name:
+</p>
+<pre class="terminal" rows="5" >
+$ cd AgileLearning/workshops/oop
+$ source setenv.sh
+$ cd workspace/object.gui
+$ java -cp bin object.gui.spaceduel.SpaceDuel -c 192.168.1.39
+</pre>
+<p>
+	If it does not work, make sure that you are on the same network.
+	If you are, it may be that you have a firewall turned on
+	that is blocking the connection. So you may want to enable the port
+	6666 or turn-off your firewall temporarily. Of course, keeping your
+	firewall running and just enabling the port
+	is a much better idea. On Ubuntu and Debian, the default firewall
+	is called the Uncomplicated FireWall (UFW). To know
+	if the firewall is active on Ubuntu or Debian:
+	<xfr>
+		Si cela ne marche toujours pas, vérifiez bien que vous êtes
+		sur le même réseau. Si vous l'êtes, il est possible que vous
+		ayez un pare-feu qui bloque la connection. Il faut autoriser
+		le port 6666 ou même mettre votre pare-feu en pose temporairement.
+		Autoriser le port 6666 seulement est bien mieux que de mettre
+		votre pare-feu en pause. Sur Ubuntu et Debian, le pare-feu
+		s'appelle Uncomplicated Firewall (UFW). Pour savoir si il
+		est actif:
+	</xfr>
+</p>
+<pre class="terminal" rows="3" >
+$ sudo ufw status
+active
+</pre>
+<p>
+  To allow a given port (6666 in our case):
+</p>
+<pre class="terminal" rows="2" >
+$ sudo ufw allow 6666/tcp
+</pre>
+<p>
+	To deny later any access to the port 6666, just issue
+	the following command:
+</p>
+<pre class="terminal" rows="2" >
+$ sudo ufw deny 6666/tcp
+</pre>
+<p>
+	Or you may decide to turn off your firewall temporarily
+</p>
+<pre class="terminal" rows="2" >
+$ sudo ufw disable
+</pre>
+<p>
+	But don't forget to re-enable it later if it was on.
+</p>
+<pre class="terminal" rows="2" >
+$ sudo ufw enable
+</pre>
+
+<h3>That's it folks</h3>
+
+<p>
+	Please do commit your work.
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.gui, Task8 completed"
+  $ git push --all
+</textarea>
+
+
+
+<!--
+
+T7: game
+
+Border Layout
+North: Game title
+West: buttons (play, quit)
+Center: canvas
+
+a) ship(color) with life points
+b) rotate
+c) thrust
+d) limit to screen -> damages/stop the ship
+e) fire missiles
+f) hit boxes
+
+---------------------------------------------------------------
+Step-0
+---------------------------------------------------------------
+
+overall: View(Canvas)-Controller-Model
+t7
+Controller:
+  wire the arrows on the first ship.
+  wire the mouse on the second ship.
+
+  left/right
+  thrust
+  fire
+
+View:
+ repaint timer -> 40ms -> 25fps
+call paint on the model
+
+Model
+ships, positioned face-to-face mid-y, 1/4x, 3/4x
+bounds -> given by the view when resized.
+-> inPlay(x,y)
+
+Simple ship:
+  location on screen
+  paint ship as simple rounds
+
+---------------------------------------------------------------
+Step-1:
+---------------------------------------------------------------
+
+simulation for ships
+ - handle rotation/thrust
+ - oriented painting
+
+ship angle, ship speed
+ -> timer -> 20ms -> twice the repaint frequency
+ -> only move while ship is in play...
+    when goes not in play=speed=0
+
+now paint a shape that show the direction
+ -> rotation formula
+https://en.wikipedia.org/wiki/Rotation_matrix
+
+bouncing from edges, off vertical or horizontal "walls"
+   http://www.3dkingdoms.com/weekly/weekly.php?a=2
+For 3D:
+public static Vector3 Reflect(Vector3 vector, Vector3 normal)
+{
+    return vector - 2 * Vector3.Dot(vector, normal) * normal;
+}
+Or 2D
+public static Vector2 Reflect(Vector2 vector, Vector2 normal)
+{
+    return vector - 2 * Vector2.Dot(vector, normal) * normal;
+}
+
+Normal?
+
+
+---------------------------------------------------------------
+Step-2:
+---------------------------------------------------------------
+animated explosion
+use an abstract class
+introduce sprites
+shots explode when reaching the screen limit
+
+---------------------------------------------------------------
+Step-3:
+---------------------------------------------------------------
+ hit test and bounding box: give them the polygon class
+ship life points
+
+warning: explosion of a moving ship must follow the moving ship
+         or set the speed to 0 (chose this)
+
+what about exploding shots? I guess the explosion could not follow
+but it looks a bit weird
+
+ship collision: both ships explode, speed at 0.
+
+
+WARNING: flashing display!!!!
+Notion of occluded containers...
+-->

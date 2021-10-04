@@ -1,0 +1,527 @@
+<vars>
+  sprint=word.count
+  task=t1
+</vars>
+<p>
+  A stream is a core concept when programming; it is the concept of
+  a flow of items, a sequence if you prefer. The concept of a stream
+  is used in many places. For example, a file is a stream of bytes.
+  It can also be used to represent
+  a communication channel between machines plugged on a network, 
+  such as supporting the HTTP protocol between your web browser
+  and web sites. Streams
+	are also used to provide the standard input and output streams,
+	two communication channels that any process is given upon startup,
+  allowing programs to read characters that are typed on the keyboard
+  and to print characters on the screen.   
+  <xfr>
+    Un flux (stream) est un concept fondamental en programmation,
+    un flux produit une séquence d'éléments. Ce concept de flux
+    est utilisé dans de nombreux contextes, tout particulièrement
+    lors de la lecture et l'écriture de fichier. Les flux sont
+    aussi utiliser pour les cannaux de communication, comme ceux par
+		lesquels passe le protocol HTTP entre votre browser et les sites web.
+		Les flux sont aussi utilisé pour l'entrée et la sortie standard, deux canaux
+    de communication que tout process obtient à son lancement.
+  </xfr>
+</p>
+<p>
+	In this task, we will unveil the secrets of streams.
+	There is quite some knowledge to learn about streams, so this will
+	require quite some reading. You will learn about what streams
+	do and how to use them. Then, we will dive in coding for helping
+	you understand the following core concepts:
+	<xfr>
+		Dans cette tâche, nous allons révéler les secrets des flux.
+		Il y a beaucoup à apprendre à propos des flux, vous allez devoir
+		lire beaucoup sur ce que sont les flux et comment les utiliser.
+		Puis une fois que l'utilité et l'usage des flux a été compris,
+		nous passerons à comment on code des flux comme ceux-ci:
+	</xfr>
+</p>
+<ol>
+	<li>Byte-oriented streams</li>
+	<li>Character streams</li>
+	<li>Files and streams</li>
+	<li>Wrapping objects</li>
+</ol>
+<p>
+	This task will be difficult, but it is unavoidable since streams
+	are one of the fundamental building blocks of computer science. Understanding
+	streams also requires understanding wrapping, a coding pattern also widely
+	used in object-oriented programming, a concept you must understand.
+	<xfr>
+		Nous savons que cette tâche sera difficile pour vous, mais elle est
+		inévitable car les flux sont une brique de base de la programmation.
+		Comprendre les flux demande de comprendre le pattern d'emballage (wrapping),
+    un pattern qui est très utilisé dans la programmation orientée-objets.
+	</xfr>
+</p>
+<steps>
+  <step name="t1-s1" label="About streams and files">
+    What streams are and how they are used.
+  </step>
+  <step name="t1-s2" label="Stream basics">
+    Coding basic streams.
+  </step>
+  <step name="t1-s3" label="File basics">
+    Coding basic files and their streams.
+  </step>
+</steps>
+
+<!--
+<h3>Wrapping Streams</h3>
+
+<p>
+  Most often, however, streams are used to encode larger values over
+  multiple bytes. This usually means that a stream is encapsulated by another
+  object providing a more practical behavior. For instance, one could
+  define two classes to read or write any of the Java primitive types:
+  <xfr>
+    Bien souvent, les flux d'octets sont utilisés faire transiter des
+    valeurs qui ne tiennent pas sur un octet mais qui doivent être encodées
+    sur plusieurs octets. Par exemple, on pourrait vouloir faire passer
+    toutes les valeurs primitives de Java au travers d'un flux.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class DataInputStream {
+    DataInputStream(InputStream s);
+    char readChar();
+    byte readByte();
+    short readShort();
+    int readInt();
+    float readFloat();
+    long readLong();
+    double readDouble();
+  }
+  class DataOutputStream {
+    DataOutputStream(OutputStream s);
+    void writeChar(char value);
+    void writeByte(byte value);
+    void writeShort(short value);
+    void writeInt(int value);
+    void writeLong(long value);
+    void writeFloat(float value);
+    void writeDouble(double value);
+  }
+</pre>
+<p>
+  Let's take the example of a short value, which is encoded
+  over 16 bits in memory. A short can therefore be written
+  to an output stream by writting two bytes. So for instance,
+  the value 4660 can be expressed as 0x1234 in hexadecimal,
+  showing the hexadecimal values of the two bytes: 0x12 and
+  0x34. This means that the value 4660 can be written as
+  the two bytes: 0x12 and then 0x34. Look at the code
+  below and try it out under debugger, you will see.
+  <xfr>
+    Prenons l'exemple d'une valeur entière courte (short),
+    qui est encodée sur 16 bits, soit deux octets. Un short
+    peut donc être passé au travers d'un flux via deux octets.
+    Par exemple, la valeur 4660 en décimal s'exprime pas 0x1234
+    en hexadécimal, montrant la valeur des deux octets: 0x12
+    et 0x34. Regardez le code suivant sous debugger pour
+    comprendre:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  OutputStream os;
+  int value = 4660;                // value = 0x1234
+  byte b1 = (value >> 8) & 0xFF;   // b1    = 0x12
+  byte b2 = value & 0xFF;          // b2    = 0x34
+  os.write(b1);
+  os.write(b2);
+</pre>
+<p>
+  Notice the <em>left-shift</em> operator <em>"&gt;&gt;"</em>,
+  a right shift of the binary value
+  by a given number of position. There is of course
+  a <em>left-shift</em> operator noted <em>"&lt;&lt;"</em>.
+  Look at <a href="https://en.wikipedia.org/wiki/Arithmetic_shift">
+    Arithmetic Shift</a> on Wikipedia if you need to.
+  You may also look at
+  <a href="https://en.wikipedia.org/wiki/Bitwise_operation">
+    bitwise operations</a>, also on Wikipedia.
+</p>
+<p>
+  So by shifting left, we get the top 8 bits of our value
+  (value=4660). By masking with 0xFF, we make sure that
+  we only have 8 bits in the variable
+  <span class="java-lvar">b1</span>.
+  To keep only the lowest 8 bits, we do not need to shift,
+  we only have to mask with 0xFF.
+</p>
+<p>
+  Of course, you need to read the bytes in the same order
+  if you want to reconstruct the proper value. This means
+  that both classes
+  <span class="java-class">DataInputStream</span> and
+  <span class="java-class">DataOutputStream</span> must
+  be designed together, agreeing in the order of bytes.
+  Look at the code below to read the value again, reading
+  the two bytes and recomposing them together:
+  <xfr>
+    Bien sûr, vous devez lire les octets dans le même ordre
+    pour reconstituer la bonne valeur. Cela veut dire
+    que les classes
+    <span class="java-class">DataInputStream</span> et
+    <span class="java-class">DataOutputStream</span> doivent
+    être conçues ensemble, en étant d'accord sur l'ordre
+    des octets lus et écrits. 
+    Executer le code ci-dessous sous debugger pour
+    mieux comprendre:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  InputStream is;
+  byte b1 = is.read();
+  byte b2 = is.read();
+  int val;
+  if (b1 &lt; 0)
+    val = ((256+b1)&lt;&lt;8);
+  else 
+    val = (b1&lt;&lt;8);
+  if (b2&lt;0)
+    val += (256+b2);
+  else 
+    val += b2;
+</pre>
+<p>
+  Pay attention to the trick of transforming a negative byte value
+  on its corresponding positive integer value. Indeed, the value
+  0xFF can be seen as -1 if it is a signed byte encoded on 8 bits
+  or the value 255 if it is a signed integer encoded on 32 bits.
+  If you do not master these conversions, sorry for the bad news,
+  but you need to learn them.
+</p>
+<p>
+  To help you, know that you can ask Eclipse to show you the hexadecimal
+  value as well as the decimal values for variables. Go to the
+  <em>Variables</em> view in the <em>Debug</em> perspective,
+  see the drop down menu
+  <img src="images/java-layout-drop-down.png">
+  on the right-hand side of the view?
+  Drop it down, select <em>Java</em> and then <em>Java Preferences</em>,
+  then <em>Primitive Java Options</em>, finally select to display
+  hexadecimal values. Then you will enjoy to look at your variables
+  like this:
+</p>
+<img src="images/java-layout.png" width="60%" >
+<p>
+  In fact, the image of the <em>Variables</em> view above
+  corresponds to the execution of the code below.
+  You can single step through it under the debugger,
+  you will see how the values are converted by Java:
+</p>
+<pre class="prettyprint lang-java">
+  int val1 = 255;
+  byte b = (byte)val1;
+  int val2 = b;
+  int val3 = (256+b);
+</pre>
+<p>
+  With all these details about manipulating integer values,
+  you have what you need to write both the classes
+  <span class="java-class">DataInputStream</span> and
+  <span class="java-class">DataOutputStream</span>.
+</p>
+<p>
+  <b>ToDo</b>: go ahead and implement these two classes
+  in a Java package
+  <span class="java-package">streams.step3</span>,
+  still in the source folder <em>streams</em>,
+  but you will limit yourself to implementing
+  the following methods:
+</p>
+<pre class="prettyprint lang-java">
+  class DataInputStream {
+    DataInputStream(InputStream s);
+    char readChar();
+    byte readByte();
+    short readShort();
+  }
+  class DataOutputStream {
+    DataOutputStream(OutputStream s);
+    void writeChar(char value);
+    void writeByte(byte value);
+    void writeShort(short value);
+  }
+</pre>
+<p>
+  For information, a <span class="java-keyword">char</span> in
+  Java is encoded on two bytes, that means you can cast a
+  character to a short and a short to a character. Also,
+  just for your information, a Java <span class="java-keyword">long</span>
+  is a 64bit value. A Java <span class="java-keyword">double</span>
+  is also a 64bit value while a Java <span class="java-keyword">float</span>
+  is a 32bit value. You can translate
+  <span class="java-keyword">float</span> and
+  <span class="java-keyword">double</span> back and forth from
+  integer values using the following methods:
+  <xfr>
+    Pour votre information, les caratères
+    (<span class="java-keyword">char</span>) in Java
+    sont encodés sur deux octets, ce qui vous permet de projeter
+    un caractère sur un short et de faire l'inverse.
+    Pour votre information, sachez qu'un <span class="java-keyword">long</span>
+    en Java est sur 64 bits, tout comme un <span class="java-keyword">double</span>.
+    Un <span class="java-keyword">float</span> est sur 32 bits.
+    Vous obtenir les bits correspondant d'un
+    <span class="java-keyword">float</span> et
+    <span class="java-keyword">double</span>,
+    vous pouvez utiliser les méthodes suivantes:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Float {
+    public static int floatToIntBits(float value);
+    public static native float intBitsToFloat(int bits);
+  }
+  class Double {
+    public static long doubleToLongBits(float value);
+    public static native double longBitsToFloat(long bits);
+  }
+</pre>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="streams.step3.TestStream">
+  <banner>
+    When done with the implementation, check what you did.
+  </banner>
+  <hint>
+    Not quite. Try again.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<div name="check2_unfold" style="display:none;" >
+</div>  
+
+<h3>Standard Input and Output</h3>
+
+<p>
+  Each process is given two streams when it is created: one to read characters
+  typed on the keyboard (the standard input) and the other to print characters
+  on the terminal (Eclipse console or Linux shell). They are represented
+  in Java with two objects, available from the class
+  <span class="java-class">System</span>, as static fields: 
+  <xfr>
+	 Chaque processus prend en entrée deux flots quand il est créé: l'un
+	 pour lire les caractères tapés au clavier (standard input) et l'autre pour
+	 afficher des caractères sur le terminal (Eclipse console or Linux shell).
+	 Ils sont représentés en Java avec deux objets, accessibles au travers
+	 de champs statiques depuis
+	 la classe <span class="java-class">System</span>.
+  </xfr>
+</p>
+<ul>
+  <li> <span class="java-field">System.in</span> </li>
+  <li> <span class="java-field">System.out</span> </li>
+</ul>
+<p>
+  You already have encountered both streams earlier in this
+  workshop. 
+  The <span class="java-field">System.out</span> is a
+  <span class="java-class">PrintStream</span>,
+  an object that wraps the output stream to help you
+  with printing.
+  Looking at the behavior of the
+  <span class="java-class">PrintStream</span>, you can see
+  all the easy-to-use methods such as
+  the methods named <span class="java-method">println</span>
+  or the methods named <span class="java-method">printf</span>.
+  They allow you to print all sorts of values (characters, integers,
+  floats, etc.) but ultimately these values are transformed into a
+  stream a bytes.
+  <xfr>
+	Vous avez déjà manipulé les flots plus tôt dans ce workshop.
+	<span class="java-field">System.out</span> est un
+  	<span class="java-class">PrintStream</span>,
+  	un objet qui encapsule le flot de sortie pour vous faciliter l'affichage.
+  	Regardez le comportement de la classe
+  	<span class="java-class">PrintStream</span>, vous pouvez voir
+  	toutes les méthodes utiles comme
+  	<span class="java-method">println</span>
+  	<span class="java-method">printf</span>.
+  	Elles vous permettent d'afficher toutes sortes de valeurs (characters, integers,
+  	floats, etc.) mais au final, ces valeurs sont transformées en 
+  	flot d'octets.
+  </xfr>
+</p>
+<p>
+  The <span class="java-field">System.in</span> is an instance
+  of the class <span class="java-class">InputStream</span>, it is
+  a raw input stream of bytes. As explained above, if you want to
+  read characters, you need to wrap that byte stream into a character
+  stream. Fortunately, the standard Java libraries provide you with
+  all you need.
+  <xfr>
+    Le flux de l'entrée standard (<span class="java-field">System.in</span>)
+    est une instance de la classe
+    <span class="java-class">InputStream</span>,
+    c'est un flux d'octets. Comme nous venons de le voir,
+    si vous voulez lire des caractères, il va falloir <em>emballer</em>
+    ce flux d'octets en un flux de caractères. Heureusement,
+    les libraries Java vous fournissent ce dont vous avez besoin.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  InputStream is;
+  InputStreamReader isr;
+  is = System.in;
+  isr = new InputStreamReader(is);
+  char c = (char)isr.read();
+</pre>
+<p>
+  This will create a reader, which is an object with the appropriate
+  methods to read the stream one character at a time:
+</p>
+<pre class="prettyprint lang-java">
+  public int read() throws IOException;
+</pre>
+<p>
+  The method reads a single character.
+  <b>
+    Note that this method will block until a character is
+    available, an I/O error occurs, or the end of the stream is reached.
+  </b>
+  So this means that if you invoke that method on a stream and there is
+  no character to read, the method will block.
+  Do you remember that you experienced that when you debugged your games?
+  Do you remember the debugger freezing upon waiting for you to type
+  something at the keyboard? Yep, that is it, that is blocking.
+   <xfr>
+  	La méthode lit un simple caractère
+  	<b>
+    Notez que cette méthode va bloquer jusqu'à ce qu'un
+    caractère soit disponible, ou bien qu'une IO erreur apparaisse, ou enfin que
+    la fin du flot soit atteinte.
+  	</b>
+ 	Donc cela signifie que si vous invoquez cette méthode sur un flot
+ 	et qu'il n'y a aucun caractère à lire, la méthode va bloquer.
+ 	Rappelez-vous, vous avez vu cela quand vous avez debuggé vos jeux,
+ 	le debugger se bloquant en attendant que vous tapiez quelque chose au clavier.
+   </xfr>
+</p>
+<p>
+  <b>
+    Note also that the character is returned as an integer,
+    in the range 0 to 65535 (<tt>0x00-0xffff</tt>).
+  </b>
+  This means that you will need to cast it, as shown above.
+  But why not returning a character then?
+  Well, this is an old habit from C programmers,
+  returning an integer that is either a valid value
+  or an error code.
+  So the method returns -1 if the end of the stream has
+  been reached. What is even weirder is that this method
+  may also throw an IOException if an I/O error occurs.
+  <xfr>
+   	<b>
+    Notez aussi que le caractère est retourné comme un entier,
+    entre 0 et 65535 (<tt>0x00-0xffff</tt>).
+  	</b>
+  	Cela signifie que vous allez devoir le caster, comme montré
+  	précédemment.
+  	Mais pourquoi ne pas retourner un caractère alors?
+  	Bien, c'est une vieille habitude des programmeurs C,
+  	returner une valeur entière qui est soit une valeur valide,
+  	ou un code d'erreur.
+  	Donc la méthode retourne -1 si la fin du flot a été atteinte.
+  	Ce qui reste bizarre est que cette méthode
+  	peut aussi émettre une IO exception si une I/O erreur arrive.
+  </xfr>
+</p>
+<p>
+  It would have been cleaner to return a character and throw
+  two exceptions: IOException EndOfStreamException. But you will
+  see this often, poorly designed libraries because of historical
+  bad habits. That's life.
+  <xfr>
+   	Il aurait été plus propre de retourner un caractère et lever
+   	deux exceptions: IOException EndOfStreamException. Mais vous
+   	allez voir cela souvent, des librairies pas toujours bien
+   	conçues en raison de mauvaises habitudes de programmation,
+   	il faut faire avec.
+  </xfr>
+</p>
+<p>
+  But we move on, do you remember that we actually wrapped
+  the standard input even more when we used it for reading
+  the keyboard in your games?
+ <xfr>
+   Avançons.. Vous rappelez-vous que nous avons encapsulé
+   stdin pour lire les caractères tapés au clavier dans vos
+   jeux?
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  InputStream is;
+  InputStreamReader isr;
+  is = System.in;
+  isr = new InputStreamReader(is);
+  char c = (char)isr.read();
+
+  BufferedReader br;
+  br = new BufferedReader(isr);
+  String line = br.readLine();
+</pre>
+<p>
+  See, it was another wrapping intended to provide the ability
+  to read entire lines of characters. But what if we wanted to read or
+	write something else than characters? Well, it is also possible
+  to wrap streams to read and write any of the Java primitive types,
+  like these standard classes in Java:
+  <xfr>
+		Il est donc possible d'emballer un flux d'entrée de caractères pour pouvoir
+		le lire	ligne par ligne au lieu de caractère à caractère.
+		Mais comment faire si on voulait lire ou écrire autre chose	que du texte? 
+    Bien souvent, les flux d'octets sont utilisés pour lire et écrire
+    les types primitifs de Java, comme par example au travers de ces
+    classes standards de Java:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  package java.io;
+  class DataInputStream {
+    DataInputStream(InputStream s);
+    char readChar();
+    byte readByte();
+    short readShort();
+    int readInt();
+    float readFloat();
+    long readLong();
+    double readDouble();
+  }
+  class DataOutputStream {
+    DataOutputStream(OutputStream s);
+    void writeChar(char value);
+    void writeByte(byte value);
+    void writeShort(short value);
+    void writeInt(int value);
+    void writeLong(long value);
+    void writeFloat(float value);
+    void writeDouble(double value);
+  }
+</pre>
+-->
+
+<p>
+  That's all folks for this task. 
+  Please make sure that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint word.count, Task1 completed"
+  $ git push --all
+</textarea>
+

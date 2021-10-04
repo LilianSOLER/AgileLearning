@@ -1,0 +1,338 @@
+<vars>
+  sprint=java.basics
+  task=t7
+  step=t7-s3
+</vars>
+
+<p>
+  Instrumenting a code to get numbers is the easy part,
+  understanding the numbers in order to envision possible
+  improvements is the hard part. We will guide you through
+  this first experience. If you instrumented properly
+  the code, your numbers should look like the numbers
+  below. Of course, your elapsed times will be different
+  since a program runs faster or slower on different machines:
+  <xfr>
+	 	Instrumenter du code pour récupérer des nombres est la partie
+	 	facile, comprendre les nombres pour dessiner des ameliorations
+	 	potentielles est la partie difficile. Nous allons vous guider
+	 	au travers de cette expérience. Si vous avez instrumenté 
+	 	correctement votre code, vos nombres devraient ressembler à
+	 	ceux ci-dessous. Bien sûr, le temps écoulé sera différent 
+	 	puisqu'un programme s'exécute plus rapidement ou plus lentement
+	 	en fonction des machines:
+  </xfr>
+</p>
+<!--
+    With draw lines.
+    polygons points = points+4.
+    NSMOOTHS=8 -> up to 512 points per circle
+  -->
+<pre style="margin-left: .3in;">
+  nPoints=4097
+  nLines=4084
+  nPolygons=4
+  nPointArrays=1024
+  nCircles=4
+
+  nCircleDraws=33
+  elapsed=28489us
+  nPolygonDraws=66
+  nLineDraws=4084
+  elapsed=0us
+
+  nCircleSmooths=32
+  elapsed=17458us
+</pre>
+
+<p>
+  Always start with the most obvious characteristics.
+  So what would you look at first? 
+</p>
+<ul>
+  <li>Too slow.</li>
+  <li>Too many points.</li>
+  <li>Too many lines.</li>
+  <li>Too many polygons.</li>
+  <li>Too many array of points.</li>
+</ul>
+<p>
+  Let's discuss these points together.
+</p>
+<ul>
+  <li>
+    <b>Too slow:</b> is it too slow? How can we tell?	You really have no way
+    to evaluate if the elapsed times are good or if they are
+    off and by how much.
+  </li>
+  <li>
+	  <b>Too many points:</b> how can you tell how many points should be allocated?
+  </li>
+  <li>
+    <b>Too many lines:</b> since no lines are needed to represent a circle or a polygon,
+	  you could wonder why so many lines are allocated. This is our first suspect.
+  </li>
+  <li>
+	  <b>Too many polygons:</b> not really, only 4 polygons.
+  </li>		  
+  <li>
+    <b>Too many array of points:</b> with that many arrays to represent only 4 polygons,
+	  it seems that we have our second suspect.
+  </li>
+</ul>
+
+<!--
+<quizz name="java.basics.t7.q2" >
+  <question >
+    <p>
+      Always start with the most obvious characteristics.
+      So what would you look at first? Pick two out of the
+      following choices:
+    </p>
+    <checkboxes>
+      <checkbox>Too slow.</checkbox>
+      <checkbox>Too many points.</checkbox>
+      <checkbox>Too many lines.</checkbox>
+      <checkbox>Too many polygons.</checkbox>
+      <checkbox>Too many array of points.</checkbox>
+    </checkboxes>
+    <hints>
+      <hint checks="C????">
+	Too slow? How can you tell?
+	You really have no way to say right now if the elapsed times
+	are good or if they are off and by how much.
+      </hint>
+      <hint checks="?C???">
+	Too many points? Really?
+	How can you tell how many points should be allocated?
+      </hint>		  
+      <hint checks="??U??">
+	With that many lines, you cannot tell something is wrong here? Really?
+	Since no lines are needed to represent a circle or a polygon,
+	you could wonder why so many lines are allocated...
+      </hint>		  
+      <hint checks="???C?">
+	Four polygons is too many! Be serious now.
+      </hint>		  
+      <hint checks="????U">
+	With that many arrays to represent only 4 polygons,
+	you cannot tell that there is something questionable here?
+      </hint>		  
+    </hints>
+    <answers>
+      <answer checks="UUCUC">
+	Indeed.
+      </answer>
+    </answers>
+    <finally>
+      OK, so it is not really clear for you.
+      You were supposed to pick too many lines and too many
+      array of points.
+    </finally>
+  </question>
+  <unfold name="quizz2_next" >
+  </unfold>
+</quizz>
+<div name="quizz2_next" style="display: none">
+  -->
+  <p>
+    Ok, so we have <b>too many lines allocated</b>. Why is that?
+    Well, think in terms of the objects that are stable, long lived,
+    in the program. We have a circle. The circle has a polygon. A polygon
+    has one array of points and then we have the points.
+    Nothing else. So where are the 10204 lines coming from?
+    Let's see where lines are constructed, go in the class
+    <span class="java-class">Line</span>, select the constructor (with your mouse),
+    and search for all invoke sites.
+    <xfr>
+	 	Ok, donc nous avons <b>trop de lignes allouées</b>.
+	 	Que signifie cela? Pensez en termes des lignes qui sont
+	 	stables, perennes dans le programme. Nous avons un cercle.
+	 	Le cercle a un polygone. Le polygone a un tableau de points
+	 	et donc nous avons les points. Rien d'autre. Donc d'où viennent
+	 	les 1024 lignes créées?
+	 	Regardons où les lignes sont construites. Allez dans la classe
+	 	 <span class="java-class">Line</span>, sélectionnez le constructeur
+	 	 (avec votre souris) et cherchez les sources d'invocation.
+   </xfr>
+  </p>
+  <p>
+    You do not remember how to do this? Well, you should.
+    Go back to our <a href="/eclipse/eclipse.htm">Eclipse Guided Tour</a>
+    to review the most commonly used shortcuts. Here, the shortcut
+    is <b>Ctrl-Shift-G</b>. Remember it this time, it will save you
+    a lot of time in the coming years. If you do not understand fully
+    what that does, just ask.
+    <xfr>
+	 	Vous ne vous souvenez pas comment faire? Vous devriez..
+	 	Retournez à notre <a href="/eclipse/eclipse.htm">Tour Guidé d'Eclipse</a>
+	 	pour revoir les principaux raccourcis Eclipse.
+	 	Ici le raccourci est <b>Ctrl-Shift-G</b>. Rappelez-vous en cette
+	 	fois, cela vous permettra de sauver beaucoup de temps. Si vous ne comprenez
+    pas bien ce que cela fait, demandez.
+   </xfr>
+  </p>
+  <p>
+    So what do you see? Lines are created when drawing polygons.
+    They are created just to be able to invoke draw, and then they
+    are forgotten. They are called temporary objects, created to be
+    used and then forgotten. As we mentioned earlier, creating an object
+    is not a free operation, so maybe, we have a possible optimization.
+    We could add a method on the class <span class="java-class">Polygon</span>
+    that draws a line from a point p1 to a point p2. That way, we would
+    avoid creating lines entirely. Look at the code below:
+    <xfr>
+	 	Alors que voyez vous? Des lignes sont crées quand on trace
+	 	des polygones. Elles sont créées juste pour pouvoir invoquer draw,
+	 	et ensuite elles sont oubliées. Comme mentionné précédemment, créer 
+	 	un objet n'est pas gratuit, donc nous avons ici une 
+	 	optimisation potentielle. 
+	 	Nous pourrions ajouter une méthode sur la classe 
+	 	<span class="java-class">Polygon</span> qui dessine une ligne
+	 	depuis un point p1 vers un point p2. Cela éviterait d'avoir à créer
+	 	des lignes. Regardez le code ci-après:
+    </xfr>
+  </p>
+  <pre class="prettyprint lang-java">
+  /*
+   * Draw this line on the screen through the Graphics object,
+   * applying a translation to the given origin.
+   */
+  private void draw(Point p1, Point p2, Graphics g, Point origin) {
+    int x1, y1, x2, y2;
+    x1 = (int) (p1.x + origin.x);
+    y1 = (int) (p1.y + origin.y);
+    x2 = (int) (p2.x + origin.x);
+    y2 = (int) (p2.y + origin.y);
+    g.drawLine(x1, y1, x2, y2);
+    return;
+  }
+	</pre>
+  <!-- img style="border: 1px solid black;" src="images/polygon-draw-line.png" /-->
+  <!-- img style="border: 1px solid black;" src="images/optim-polygon-draw.png" /-->
+  <p>
+    <b>TODO</b>: incorporate the code above in the
+    class <span class="java-class">Polygon</span> so that you
+    do not allocate any lines during execution. We just discuss a case of simplicity
+    versus performance. It was easy to use lines, but it was inefficient. Sometimes,
+    writing code in the simplest ways is not always compatible with better performance.
+    As a developer, you need to find the right balance.
+    <xfr>
+      A FAIRE: incorporer le code ci-dessus dans la classe
+      <span class="java-class">Polygon</span> afin de ne plus avoir besoin d'allouer
+      des lignes. Nous venons de discuter un cas où la simplicité d'écriture du code
+      s'oppose à la performance. En tant que développeur, c'est à vous de trouver
+      le bon équilibre.
+    </xfr>
+  </p>
+  <p>
+    Regarding the <b>number of arrays of points</b>. We said we have one polygon
+    and yet we create 2560 arrays of points. Where could that happen and
+    why? Look at the class <span class="java-class">Polygon</span> and
+    the method <span class="java-method">grow</span>. When adding
+    points to a polygon, a new array is created every 4 add operations.
+    What do you think about this in this context?
+    <xfr>
+	    Regardez le <b>nombre de tableaux de points</b>. Nous avons un
+	    polygone et ici nous créons 2560 tableaux de points. Où cela peut-il
+	    avoir lieu? Regardez la classe <span class="java-class">Polygon</span> et
+      la méthode <span class="java-method">grow</span>. Pour ajouter
+      des points à un polygone, un nouveau tableau est créé tous les
+      4 opérations add. Qu'en pensez vous dans ce contexte?
+    </xfr>
+  </p>
+  <p>    
+    This is a lot, right? We discussed already how to grow an array of elements.
+    We discussed growing it by one every time or by more than one. Here, we grow it
+    by 4, but since we add a lot of points, we still create a lot of arrays.
+    So maybe, we have a possible optimization:
+    <xfr>
+      Cela engendre beaucoup de créations de tableaux, non? Nous avions déjà discuté
+      de comment grandir un tableau, soit par un élément à la fois, soit en rajoutant
+      plusieurs éléments. Ici, nous grossissons le tableau par 4 éléments, mais nous
+      ajoutons beaucoup de points dans le tableau et donc cela provoque beaucoup de
+      création de tableaux. Il semble que nous ayons une optimisation possible:
+    </xfr>
+  </p>
+  <pre style="margin-left: .3in;" class="prettyprint lang-java">
+  void grow() {
+    Point tmp[];
+    tmp = new Point[2 * npoints];
+    System.arraycopy(points, 0, tmp, 0, npoints);
+    points = tmp;
+    Counters.nPointArrays++;
+  }
+  </pre>
+  <p>
+    <b>TODO</b>:
+    Understand and use the code above to replace
+    the method <span class="java-method">grow</span>
+    on the class <span class="java-class">Polygon</span>.
+  </p>
+  <check
+     silent="false"
+     blocking="false"
+     lang="java"
+     cwd="workspace/java.basics"
+     classpath="bin;tests.jar"
+     classname="basics.step7.TestPerf3">
+    <banner>
+      Let's check all that.
+    </banner>
+    <hint>
+      You need to prevent any aliasing... this means that you
+      need to make sure the array is not aliased but you also
+      need to make sure that the points are not aliased.
+    </hint>
+    <success>
+      Cool, right?
+    </success>
+    <unfold name="check2_unfold">
+    </unfold>
+  </check>
+  <div name="check2_unfold" style="display:none;" >
+    <p>
+      Great. With the improvements in place, your performance numbers
+      should look like the ones below. Of course, the numbers of about
+      elapsed time will not be the same, since you have a different
+      machine than the one that was used to get those numbers.
+      The overall tendencies should be the same though.
+     <xfr>
+	  	Bien. Avec les améliorations en place, vos performances devraient
+	  	ressembler aux suivantes. Bien sûr, le temps écoulé ne sera pas
+	  	le même puisque nos machines diffèrent. 
+    </xfr>
+    </p>
+    <!--
+	No draw lines.
+	polygons double points.
+	NSMOOTHS=8 -> up to 512 points per circle
+      -->
+    <pre style="margin-left: .3in;">
+      nPoints=4097
+      nLines=0             No lines created. Great!
+      nPolygons=4
+      nPointArrays=36      Small number of arrays. Super. 
+      nCircles=4
+      
+      nCircleDraws=33
+      elapsed=24977us    We gained a little 3.5us  
+      nPolygonDraws=66
+      nLineDraws=0         None, fantastic. 
+      elapsed=0us
+      
+      nCircleSmooths=32
+      elapsed=13206us    We gained a little also 4us.
+    </pre>
+    <p>
+      What do these numbers tell us?
+    </p>
+    <ol>
+      <li>They tell us that you did real good so far.</li>
+      <li>You fixed a number of flaws,
+				improving greatly the quality of the code we gave you.</li>
+			<li>You avoided creating a lot of unnecessary objects, using
+				smarter coding techniques. </li>
+      <li>Doing so, you even gained a bit in terms of elapsed time performance.</li>
+    </ol>
+  </div>

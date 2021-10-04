@@ -1,0 +1,173 @@
+<vars>
+  sprint=object.classes
+  task=t2
+  step=t2-s2
+</vars>
+
+<p>
+  Our previous implementation of our file system works, which is already a good
+  thing. However, the design of our code may be improved. The design was an
+  object-oriented design, since we used classes and objects, but we were not
+  using the more advanced features of object-oriented programming,
+  features that we are learning in this sprint.
+</p>
+
+<h3>Polymorphic programming</h3>
+
+<p>
+  Let's discuss if we could use polymorphic programming and improve
+  the design of our code. We have a directory that contains both files
+  and directories. In our previous design, we used two different lists,
+  one for files and one for directories. There is an opportunity for
+  polymorphism here, we may consider that a parent directory
+  has a list of children nodes, a node being either
+  a file or a directory. Let's pursue this idea.
+</p>
+<p>
+  Look in the source folder <em>step2</em> and in the package
+  <span class="java-package">step2.filesys.oop</span>.
+  Look at the class <span class="java-class">Node</span>
+  and its two subclasses
+  <span class="java-class">Directory</span>
+  and
+  <span class="java-class">File</span>.
+  Notice the following points:
+</p>
+<ul>
+  <li>
+    Some methods can be written once, on the class
+    <span class="java-class">Node</span>, rather than
+    duplicated on the classes
+    <span class="java-class">Directory</span>
+    and
+    <span class="java-class">File</span>
+  </li>
+  <li>
+    A directory can maintain a single list of nodes,
+    rather than two separate lists, one for directories
+    and one for files.
+  </li>
+</ul>
+<p>
+  This is looking good, we should be able to use polymorphic programming
+  and it should help our design.
+</p>
+
+<h3>Implementation and Testing</h3>
+<p>
+  So go ahead,
+  carry over your previous implementation done in the
+  previous step. You will need to adapt it, of course. The biggest
+  adaptation will be to use a single list of nodes as opposed
+  to two lists, one for files and one for directories.
+  Once you have tested your new implemenation, using your own test
+  code, you may use our shell. Look for the 
+  class <span class="java-class">step2.filesys.oop.ShellMain</span>
+  as a way to launch our shell with your new implementation of the
+  file system.
+</p>
+
+<h3>Introducing Symbolic links</h3>
+
+<p>
+  To illustrate that our current design is superior, we will introduce
+  the concept of symbolic links. If you do not remember what they are in
+  a Linux file system, please read about them on the Web.
+  The Linux shell command is <em>"ln -s path1 path2"</em>.
+</p>
+<p>
+  Why are we introducing symbolic links? Because they provide a great
+  illustration of the power of polymorphic programming. We gave you
+  the code, but we suggest that you reflect first on how you would do
+  it. How would you design classes that implement the concept of
+  symbolic links? You may even give try your own design before looking
+  at ours.
+</p>
+<p>
+  After you reflected on how you would do it, it will be much more
+  interesting for you to compare your approach with ours.
+  Look at the
+  class <span class="java-class">SymLink</span>
+  and its two subclasses
+  class <span class="java-class">FileLink</span>
+  and
+  class <span class="java-class">DirLink</span>.
+  Also look at the 
+  class <span class="java-class">FileSystem</span> and
+  its methods <span class="java-method">link</span>,
+  they show you how links are created.
+  Finally, you can try symbolic links from our shell,
+  using the command <em>ln</em>.
+</p>
+<p>
+  We used polymorphic programming to our advantage. We introduced
+  a new concept: a link. But a link takes two forms, one
+  as a link to a file and the other as a link to a directory.
+  So we have three classes. The class
+  class <span class="java-class">SymLink</span>
+  represents the abstract concept of a link.
+  The class
+  class <span class="java-class">FileLink</span> represents
+  the link to a file and the class
+  class <span class="java-class">DirLink</span> represents
+  a link to a directory.
+</p>
+<p>
+  Notice how little was necessary to add the concept of links,
+  in fact, we were able to do it without touching the implementation  
+  of our classes
+  <span class="java-class">Directory</span>
+  and
+  <span class="java-class">File</span>.
+  This was possible because we used polymorphic programming
+  for the class 
+  class <span class="java-class">Directory</span>.
+  Indeed, a directory contains a list of nodes, whatever a node is. Originally,
+  a node was only a file or a directory. Now, it can also be a link.
+</p>
+<p>
+  This is the power of polymorphic programming. You write code to handle
+  one class of objects, but in fact, it will work with any sub-class,
+  without modifications.
+</p>
+
+<h3>Running our Tests</h3>
+
+<p>
+  Once you have tested your code and played around with the shell,
+  including symbolic links,
+  it is time to run our tests. Remember, these tests are not complete,
+  they are given as a common basic test suite, shared by all students.
+  The tests are in the 
+  class <span class="java-class">step2.filesys.oop.TestStep2</span>.
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.classes"
+   classpath="bin;tests.jar;../object.collections/edu-polytech-oop-collections.jar"
+   classname="object.classes.tests.TestStep2"> 
+  <banner>
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Nicely done.
+  </success>
+  <unfold name="check_unfold">
+  </unfold>
+</check>
+<div name="check_unfold" style="display:none;">  
+  <p>
+    That's all folks for this step.
+    But before we move on, please make sure
+    that you commit and push your work to our server:
+  </p>
+  <textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.classes, Task2, Step2 completed"
+  $ git push --all
+  </textarea>
+</div>

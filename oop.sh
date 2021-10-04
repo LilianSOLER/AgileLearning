@@ -1,0 +1,1 @@
+../cursus/scripts/workshop.sh

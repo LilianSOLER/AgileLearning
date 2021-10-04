@@ -1,0 +1,665 @@
+<vars>
+  sprint=prog.basics
+  task=t2
+  step=t2-s4
+</vars>
+
+<p>
+  If you write code, you will need to write code to test it.
+  Sometimes, for really simple code, you may just debug it
+  launching its execution. But as the code grows more complex,
+  you will want to write core to tests it. You will want
+  to write small tests that test small functionalities.
+  Why? Because it is much easier to break down testing and
+  test functionalities incrementally. 
+  <xfr>
+	  Si vous écrivez du code, vous allez devoir écrire du
+	  code additionnel pour tester ce code. Parfois, pour du code 
+	  très simple, vous pouvez simplement le débugger.
+	  Mais en général, vous allez devoir écrire des tests pour valider
+	  le code que vous avez écrit.
+	  Vous aurez à écrire des tests ciblés, qui valident chacun
+	  une fonctionnalité particulière de votre programme.
+	  Modulariser les tests est en effet un moyen de les simplifier.
+  </xfr>
+</p>
+<p>
+  Maybe, it is not at all clear to you. So let's illustrate
+  all this on a simple evolution of our
+  class <span class="java-class">Greetings</span>,
+  copied earlier in the package
+  <span class="java-package">greetings</span>,
+  still in the project <em>"prog.basics"</em>.
+  We will create a new class 
+  class <span class="java-class">HalGreetings</span>,
+  in the same package
+  <span class="java-package">greetings</span>.
+  Then, we will discuss writing tests.
+  Then, we will inject bugs in the code and use our tests to find
+  them.
+    <xfr>
+  	Peut être que ceci n'est pas très clair. Prenons un exemple,
+  	considérons une évolution élémentaire de notre
+  	classe <span class="java-class">Greetings</span>,
+  	copiée précédemment dans le package
+  	<span class="java-package">greetings</span>,
+  	dans le projet <em>"prog.basics"</em>.
+  	Nous allons créer une nouvelle classe 
+  	<span class="java-class">HalGreetings</span>,
+  	dans le même package
+  	<span class="java-package">greetings</span>.
+  	Puis, nous allons discuter des tests.
+  	Enfin nous allons injecter des bugs et utiliser nos
+	tests pour les trouver
+  </xfr>
+</p>
+<p>
+  Creating the class <span class="java-class">HalGreetings</span>.
+  Nothing easier in Eclipse. In the <em>Package Explorer</em> view,
+  right-click on the package 
+  <span class="java-package">greetings</span>, then select
+  <em>"New"</em>, then <em>"Class"</em>, and in the dialog
+  window that pops up, fill in the name of the class: HalGreetings.
+  <xfr>
+	 Créez la classe <span class="java-class">HalGreetings</span>.
+  	Rien de plus simple avec Eclipse. In theDans la vue <em>Package Explorer</em>,
+  	faites un clic droit sur le package 
+  	<span class="java-package">greetings</span>, puis sélectionnez
+  	<em>"New"</em>, puis <em>"Class"</em>, et remplissez le nom
+  	de la classe dans le popup dialog: HalGreetings.
+  </xfr>
+</p>  
+
+<check
+   silent="onSuccess"
+   blocking="false"
+   lang="java"
+   cwd="workspace/prog.basics"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task2.Check2">
+  <banner>
+    This check will succeed if you have created the right class
+    in the right package.
+  </banner>
+  <hint>
+    Something is not quite right, check your <em>prog.basics</em> project
+    in the <em>workspace</em> directory:
+    <ol>
+      <li>
+	Make sure that you have a file called <em>HalGreetings.java</em> in
+	the <em>src/greetings</em> directory.
+      </li>
+      <li>
+	Make sure that you have a file called <em>HalGreetings.class</em> in
+	the <em>bin/greetings</em> directory.
+      </li>
+    </ol>
+    Ask for help if you need to.
+  </hint>
+  <success>
+    Cool, nicely done.
+  </success>
+  <unfold></unfold>
+</check>
+
+<h4>Extented Greetings from Hal</h4>
+
+<p>
+  We will improve the interactiveness of our program, making it
+  appear a bit more human-like. Let's suppose we would like an
+  interaction that would go like this:
+  <xfr>
+	 Nous allons améliorer l'interactivité de notre programme,
+	 le rendant plus "human-like". Supposons que nous souhaitons
+	 une interaction comme suit:
+  </xfr>
+</p>
+<pre>
+  Hello, I am Hal, and you are?
+</pre>
+<p>
+  After the program introduced itself, it would then wait for the user to enter
+  his or her name. Just like this:
+</p>
+<pre>
+  Hello, I am Hal, and you are?
+  Albert Einstein
+</pre>
+<p>
+  And finally, the program would greet the user by name:
+<pre>
+  Hello, I am Hal, and you are?
+  Albert Einstein
+  Greetings Albert Einstein!
+</pre>
+<p>
+  So how would we go about coding this?
+  Since the code is growing, we will use more methods
+  than just the method
+  <span class="java-method">main(String[])</span>.
+  So look at the skeleton of code below:
+  <xfr>
+	Comment coder cela? Puisque le code grossit, nous allons
+	utiliser plus de méthodes que seulement la méthode 
+	<span class="java-method">main(String[])</span>.
+	Regardez le squelette du code ci-après:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+package greetings;
+public class HalGreetings {
+  public static void main(String[] args) {
+    String[] fullname;
+    System.out.println("Hello, I am Hal, and you are?");
+    fullname = readFullName();
+    echoGreetings(fullname);
+  }
+  public static String[] readFullName() {
+    ...
+  }
+  public static void echoGreetings(String[] names) {
+    ...
+  }
+}
+</pre>
+<p>
+  Look at how we use methods to divide the problem at hand.
+  One method will be about reading the full name.
+  The other will be about echoing on the screen a greeting.
+  That way, the method
+  <span class="java-method">main(String[])</span> remains
+  small and easy to read. With adequate method names, it
+  is easy to understand what the overall flow is.
+  Now let's tackle the two methods
+  <span class="java-method">readFullName</span>
+  and
+  <span class="java-method">echoGreetings</span>.
+    <xfr>
+	Regardez comment nous utilisons les méthodes pour diviser
+	le problème. Une méthode pour lire le nom complet,
+	une autre pour afficher ce nom. 
+	De cette manière, la méthode
+  	<span class="java-method">main(String[])</span> reste
+  	petite et facile à lire. Avec des noms de méthodes adéquats, 
+ 	 il est facile de comprendre le flot global de l'exécution.
+  	Maintenant considérons les méthodes
+  	<span class="java-method">readFullName</span>
+  	et
+  	<span class="java-method">echoGreetings</span>.
+  </xfr>
+</p>
+
+<h4> Compiling the code </h4>
+
+<p>
+  Please copy the code above into your class
+  <span class="java-class">HalGreetings</span>.
+</p>
+<p>
+  Are you getting any red crosses?
+</p>
+<p>
+  Pretty sure you are. Red crosses mean that Eclipse is
+  unhappy with what you typed. To be more precise in this
+  case, the Java compiler embedded in Eclipse is unhappy
+  because your source contains text that it does not recognize
+  as legal Java syntax. 
+  <xfr>
+	Probablement. Les croix rouges indiquent qu'Eclipse
+	n'est pas satisfait avec ce que vous avez tapé.
+	Plus précisément,
+	le compilateur embarqué dans Eclipse identifie des
+	erreurs de syntaxe dans votre code.
+  </xfr>
+</p>
+<p>
+  What should you do? Well, read about problems, understand
+  the problems, and then fix the problems.
+  <xfr>
+    Que devriez-vous faire? Et bien, lisez la description des
+    problèmes, comprenez ce qu'il faut changer, et faites le.
+  </xfr>
+</p>
+<p>
+  How do you read about the problems?
+  Hover your mouse over the red cross or even click on it,
+  you will see an error message telling you what is wrong.
+  You can also see the compilation problems in the
+  <em>Problems</em> view at the bottom of the Eclipse
+  window. Remember, if you do not see that view, you can
+  also open it via the menus: <em>Windows &rarr; Show View</em>.
+  <xfr>
+	Comment traitez-vous le problème?
+	Passez votre souris sur la croix rouge et cliquez dessus même,
+	vous verrez un message d'erreur vous disant ce qui ne va pas.
+	Vous pouvez aussi voir la description du problème dans la vue
+	<em>Problems</em> au bas de la fenêtre Eclipse.
+	Si vous ne voyez pas cette vue, rappelez-vous,
+	vous pouvez l'ouvrir via: <em>Windows &rarr; Show View</em>.
+  </xfr>
+</p>
+<p>
+  How do you understand the problems? Eclipse error
+  messages are pretty good when it comes to error messages.
+  So most of the time, the description is detailed enough
+  that you will understand what the problem is and how to
+  fix it.
+   <xfr>
+	   Les messages d'erreur d'Eclipse sont plutôt biens.
+	   Donc la plupart du temps, la description est assez détaillée
+	   pour comprendre le problème.
+  </xfr>
+</p>
+<p>
+  We know that many of you do not like to read error messages,
+  especially if they are in english or if they are a bit complicated.
+  You just want to click the problems away, asking Eclipse to fix them
+  and never really bother to understand what they were about.
+  This is just the <b>wrong attitude here</b>,
+  even if it has been the right attitude since you were two years
+  old. Indeed, you clicked your way through life, clicking away
+  any dialog that would pop up, on the TV screen,
+  the Game Console, your parent's computer,
+  or your smart phone. We all do it, clicking away those pesty
+  dialog boxes, clicking them away.
+  <xfr>
+	  Nous savons, beaucoup d'entre vous n'aimez pas les messages d'erreur.
+    Vous voulez	juste cliquer et demander à Eclipse de les corriger
+    automatiquement et ne plus en entendre parler.
+	  Mais ce n'est pas la bonne attitude ici, même si c'est celle
+	  que vous avez adopté jusqu'ici au cours de votre vie,
+    en particulier avec la TV, la Game console, le mobile, etc.
+    Nous le faisons tous, on clique "OK" sans comprendre sur tous ces
+    popups qui apparaissent tout le temps sans raison valable.
+  </xfr>
+</p>
+<p>
+  <em>So why shouldn't you keep doing it if it worked all your life?</em>
+</p>
+<p>
+  Because problems and error messages are an integral part of programming.
+  The sooner you learn how to read error messages and
+  the sooner you develop the skills to fix them,
+  the faster you will improve as a developer.
+  Trust us, you need to change your attitude. Stop clicking
+  on everything and anything without understanding.
+  <xfr>
+	  En effet, les erreurs, et la lecture des messages associés,
+	  sont partie intégrante de l'activité de programmation.
+	  Le plus vite vous prendrez l'habitude de lire ces messages,
+	  le plus vite vous deviendrez bon en programmation.
+	  Faites nous confiance, sur ce point, il vous faut
+	  changer d'habitudes.
+  </xfr>
+</p>
+<p>
+  <b>You are learning your future craft here, you need to understand
+    what you are doing, in details.</b>
+  Let us help you for this first one.
+</p>
+
+<h4> Method <span class="java-method">readFullName</span></h4>
+
+<p>
+  If you did what we asked, you copied "..." in the body of the method
+  <span class="java-method">readFullName</span>
+  which is not part of the Java language.
+  Remove the dots. Then another error appears,
+  in the method
+  <span class="java-method">readFullName</span>,
+  one that says that the method should return
+  a result of type String[].
+</p>
+<p>
+  Well, this compiler is pretty smart after all.
+  Let's look at the signature of the method
+  <span class="java-method">readFullName</span>.
+  What does it tell us?
+</p>
+<pre class="prettyprint lang-java">
+  public static String[] readFullName() {
+  }
+</pre>
+<p>
+  It tells us that the method takes no arguments and
+  returns an array of strings. Look how it is called
+  from the method
+  <span class="java-method">main</span>.
+</p>
+<pre class="prettyprint lang-java">
+  String[] fullname;
+  fullname = readFullName();
+</pre>
+<p>
+  Indeed, it is invoked without arguments, see there is
+  nothing in between the "()". And indeed it returns
+  an array of strings since we assign the return array
+  to the variable
+  <span class="java-lvar">fullname</span>.
+  Not too clear, it will get better when we will execute
+  the code in just a few minutes.
+  <xfr>
+	En effet, elle est invoquée sans arguments (il n'y a 
+	rien entre "()"). Et en effet, elle retourne
+	un tableau de strings puisque nous affectons le tableau
+	retourné à la variable <span class="java-lvar">fullname</span>.
+	Pas très clair? cela va le devenir en exécutant le code..
+  </xfr>
+</p>
+<p>
+  How should we fix this? For now, you do not know how.
+  More importantly, you don't know how to read the full name
+  from the user. So are we stuck? Not really. See we divided
+  the problem to conquer it, so let's admit partial defeat here
+  and try to see if you could conquer the rest of the task at
+  hand.
+  <xfr>
+	Comment résoudre ce problème? Pour l'instant, vous ne savez pas.
+	Plus important, vous ne savez pas comment lire le nom
+	complet de l'utilisateur. Voyons comment résoudre cela.
+  </xfr>
+</p>
+<p>
+  We will add the code below that creates a new array
+  of strings, with a length of two. Then, we initialize
+  the array with the two strings "Albert" and "Einstein".
+  And finally we return the array, that is, the identity
+  of the array of course.
+  <xfr>
+	Nous allons ajouter le code ci-après qui crée un nouveau
+	tableau de chaines, avec une longueur de deux éléments. 
+	Puis nous initialisons le tableau avec deux chaines, 
+	"Albert" et "Einstein". Enfin, nous retournons ce 
+	tableau, c'est à dire son identité.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+package greetings;
+public class HalGreetings {
+  public static String[] readFullName() {
+    String[] names = new String[2];
+    names[0] = "Albert";
+    names[1] = "Einstein";
+    return names;
+  }
+}
+</pre>
+
+<h4> First execution</h4>
+
+<p>
+  Let's try out our code. It is incomplete you say? Sure.
+  And what about it? Go ahead try it, execute the code under
+  debugger and look at what happens.
+  Use the debugger commands you know.
+  Set a breakpoint in the method
+  <span class="java-method">main</span>.
+  Then use <b>F6</b> to single step through the code.
+  Go ahead...
+  <xfr>
+	Essayez notre code. Il est incomplet? oui.
+	Exécutez ce code sous debugger et regardez ce qui se
+	passe. Placez un breakpoint dans la méthode 
+	<span class="java-method">main</span>. Puis utilisez <b>F6</b> 
+	pour avancer en pas à pas dans le code.
+  </xfr>
+</p>
+<p>
+  So what happened? The program executed until the end, without an error.
+  You were able to see that the variable
+  <span class="java-lvar">fullname</span> got assigned the identity
+  of an array of strings after the invocation of the method
+  <span class="java-method">readFullName</span>,
+  at the line:
+  <xfr>
+	Donc que se passe t-il? Le programme s'est exécuté jusqu'au bout,
+	sans erreur. Vous avez pu voir que la variable
+	 <span class="java-lvar">fullname</span> a été assignée
+  	le tableau de chaine retourné par l'invocation de la méthode
+  	<span class="java-method">readFullName</span>,
+  	voir la ligne:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  fullname = readFullName();
+</pre>
+<p>
+  In the <em>Variables</em> view, you can open the array, see the
+  different strings. Cool. If not, execute it again under
+  the control of the debugger and look at all the variables
+  and their values this time.
+  <xfr>
+	Dans la vue <em>Variables</em>, vous pouvez ouvrir le tableau
+	et voir les chaines qu'il contient. Si ce n'est pas le cas, 
+	exécutez sous debug et regardez les variables.
+  </xfr>
+</p>
+<p>
+  Let's go a bit further in our debugging. We would want to
+  see what happens in the method
+  <span class="java-method">readFullName</span>, right?
+  How can we do this. Two ways.
+</p>
+<p>
+  First, you can set a breakpoint at any line in the method
+  <span class="java-method">readFullName</span>.
+  So go ahead, set the breakpoint by clicking on the left-hand
+  edge of the source editor or by right-clicking the line
+  and toggling the breakpoint there. You have set your breakpoint,
+  well, go for it, debug again. 
+  <xfr>
+	Premièrement, vous pouvez placer un breakpoint à n'importe
+	quelle ligne dans cette méthode. Donc allez-y. Placez un
+	breakpoint en cliquant sur le coté gauche du source ou en 
+	cliquant la ligne et en positionnant un breakpoint.
+	Une fois cela fait, allez-y, debuggez. 
+  </xfr>
+</p>
+<p>
+  Oh, hello, you are back! How was that debugging of yours?
+  Learned new stuff? Great! That is fantastic to hear.
+  <xfr>
+  	Vous êtes de retour! Comment s'est passée cette exploration? 
+  	Intense? Super..
+  </xfr>
+</p>
+<p>
+  Now the second way to see the execution of
+  the method
+  <span class="java-method">readFullName</span> will shed light
+  on the important concept of the <b>invoking methods</b>.
+  Launch the execution again, after you added a breakpoint
+  in the method <span class="java-method">main</span> at the
+  <em>invocation site</em> for the method
+  <span class="java-method">readFullName</span>.
+  The <em>invocation site</em> is the location in the source where
+  the method is invoked, in this case, this is the line:
+  <xfr>
+  	Maintenant le deuxième moyen de voir l'exécution de la méthode 
+  	<span class="java-method">readFullName</span> va mettre en lumière
+  	l'<b>invocation de méthodes</b>. Lancez l'exécution à nouveau,
+    sous debugger, mais après avoir positionné un point d'arrêt
+    sur le site d'appel de la méthode. Qu'est-ce que le site d'appel?
+    Et bien c'est l'endroit dans le source où la méthode est appelée,
+    ici, c'est à la ligne suivante: 
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  fullname = readFullName();
+</pre>
+<p>
+  The execution is stopped at that line? OK, to continue, you have two options:
+  hit <b>F6</b> or hit <b>F5</b>. If you would hit <b>F6</b>, the debugger
+  would step over the execution of the method
+  <span class="java-method">readFullName</span>.
+  This means the method will be invoked and executed, but you will not
+  see it happening. Here, you will hit hit <b>F5</b> instead.
+  See, <b>F6</b> is for step over and <b>F5</b> is for step in.
+  What is the difference? Well try it... See,
+  step over (<b>F6</b>) will execute the invoked method,
+  but it will not show you the details of the execution.
+  With step in (<b>F5</b>), the debugger takes you down
+  in the invocation of the method and allows you to single
+  step that code as well. Fantastic, right?
+  <xfr>
+    L'exécution est arrêtée sur la ligne? OK, pour continuer, vous
+    pouvez utiliser <b>F5</b> or <b>F6</b>. 
+  	<b>F6</b> réalise "un pas au dessus (step over)" et <b>F5</b> réalise 
+  	"un pas au dedans (step in)".
+  	Quelle est la différence?... Essayez et voyez,
+  	Avec <b>F6</b>, le debugger va exécuter la méthode invoquée,
+  	sans vous montrer les détails de l'invocation.
+  	<b>F5</b>, le debugger vous emmene dans
+	  l'invocation de la méthode et vous permet d'aller en pas à pas dans 
+	  cette méthode. Fantastique, non?
+  </xfr>
+</p>
+<p>
+  Go ahead, experiment. While you are doing this, have a look
+  at the <em>Debug</em> view in the debug perspective. Look
+  at how it changes. See? It shows the <em>invocation stack</em>,
+  also called the <em>call stack</em>:
+  <xfr>
+    Allez-y, expérimentez. Pensez à regarder le panneau <em>"Debug"</em>
+    dans la perspective <em>"Debug"</em>. Regardez comment le contenu
+    change lorsque vous utilisez <b>F5</b> ou <b>F6</b>. Cette vue montre
+    la <em>pile des invocations</em>, aussi appelée la <em>pile des appels</em>.
+  </xfr>
+</p>
+<img width="100%" src="images/eclipse-debug-halgreetings-callstack.png"/>
+<p>
+  In the above screen capture, the execution is stopped in
+  the method
+  <span class="java-method">readFullName</span> at the line 15.
+  But it is also stopped in the method
+  <span class="java-method">main</span> at the line 8.
+  Click on the various lines of the call stack and watch Eclipse
+  automatically navigating to the correct line in the correct source
+  file:
+  <xfr>
+    Dans la capture d'écran ci-dessus, l'exécution est stoppée dans
+  	la méthode
+  	<span class="java-method">readFullName</span> à la ligne 15.
+  	Mais elle est aussi stoppée dans la méthode
+  	<span class="java-method">main</span> à la ligne 8.
+  	Cliquez sur les différentes lignes de la pile d'appels 
+  	et regardez Eclipse naviguer automatiquement à la ligne associée dans
+  	le code source:
+  </xfr>
+</p>
+<img width="100%" src="images/eclipse-debug-halgreetings-callstack-up.png"/>
+<p>
+  Look at the <em>Variables</em> view and see how it also changes
+  in order to always show you the variables of the selected method
+  in the <em>Debug</em> view. Again, explore, be curious, and ask
+  questions around if you need to.
+  Start building your knowledge base about programming
+  and the tools that will help you code faster,
+  almost effortlessly.
+  <xfr>
+	Regardez la vue <em>Variables</em> et voyez qu'elle
+	change pour vous montrer les variables de la méthode
+	sélectionnées dans la vue <em>Debug</em>.
+	A nouveau, explorez, soyez curieux et posez des
+	questions si vous en avez.
+	Commencez à assoir vos connaissances sur la programmation
+	et les outils pour pouvoir coder efficacement.
+  </xfr>
+</p>
+
+<h4>Method <span class="java-method">echoGreetings</span></h4>
+
+<p>
+  Now it is time to complete the method
+  <span class="java-method">echoGreetings</span>, especially since
+  you already know the code:
+</p>
+<pre class="prettyprint lang-java">
+  public static void echoGreetings(String[] names) {
+    int i;
+    System.out.print("Greetings");
+    while (i &lt; names.length) {
+      String s = names[i];
+      System.out.print(" " + s);
+      i = i + 1;
+    }
+    System.out.println("!");
+  }
+</pre>
+<p>
+  Getting compilation errors? Just a few... the error message tells you that
+  the variable <span class="java-lvar">i</span> has not been
+  initialized. Well, think about the problem in order to understand it
+  and then fix it; you should know how by now. If not, ask for help.
+</p>
+<p>
+  Your class
+  <span class="java-class">HalGreetings</span>
+  should now compile without errors, showing no red cross in the Eclipse editor.
+  Well, go ahead, execute under the debugger, setting breakpoints, single
+  stepping with <b>F5</b> and <b>F6</b>. The final output in the <em>Console</em>
+  should be almost as we wanted it:
+  <xfr>
+	  Votre classe <span class="java-class">HalGreetings</span>
+    doit maintenant compiler sans erreurs, ne montrant aucune croix
+    rouge dans l'éditeur Eclipse.
+  	Exécutez sous debug, en plaçant des breakpoints, et en allant
+  	en pas à pas avec <b>F5</b> et <b>F6</b>.
+    Le résultat final dans la <em>Console</em>
+  	doit être globalement comme suit:
+  </xfr>
+</p>
+<pre>
+  Hello, I am Hal, and you are?
+  Albert Einstein
+  Greetings Albert Einstein!
+</pre>
+
+<check
+   silent="onSuccess"
+   blocking="false"
+   lang="java"
+   cwd="workspace/prog.basics"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task2.Check3a">
+  <banner>
+    Let us check that class
+    <span class="java-class">HalGreetings</span>.
+    This is a simple test that checks the class exists,
+    it can execute, and prints something that starts with "Greetings" and
+    ends with "!".
+  </banner>
+  <hint>
+    Something is not quite right. Recheck your code, the output in the
+    console should be like the one given above, if the user enters "Albert Einstein".
+  </hint>
+  <success>
+    Cool, nicely done.
+  </success>
+  <unfold></unfold>
+</check>
+
+<h4>Useful Tip</h4>
+
+<p>
+  Does you code look ugly? Not pretty as the code examples
+  we give you in those html pages?
+  Do not worry and do not waste time formatting your source
+  by hand. Eclipse has a built-in pretty printer: hit
+  <b>Ctrl-Shift-F</b> once you clicked in the editor view
+  anywhere in your source and look at the magic happening.
+  Isn't your code easier to read when it is nicely indented?
+  Of course it is.
+  <xfr>
+	  Est-ce que votre code est moche? pas aussi esthétique que les
+	  exemples que nous vous avons donné dans ces pages?
+	  Ne vous inquiétez pas et ne perdez pas de temps à formatter votre
+	  code à la main. Eclipse offre une fonction pour ce faire:
+	  sélectionnez <b>Ctrl-Shift-F</b> une fois que vous avez cliqué
+	  dans la vue Editeur. Vous verrez, c'est magique..
+  </xfr>
+</p>
+<p>
+  <b>So from now on, keep it easy, keep it
+  pretty</b>, use <b>Ctrl-Shift-F</b> before you save with <b>Ctrl-S</b>.
+</p>

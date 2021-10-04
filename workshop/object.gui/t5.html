@@ -1,0 +1,668 @@
+<vars>
+  sprint=object.gui
+  task=t5
+</vars>
+
+<p>
+	So let's continue building up our own toolkit.
+	We have covered most of the basic mechanisms,
+	with the classes <span class="java-class">Component</span>,
+	<span class="java-class">Container</span>, and
+	<span class="java-class">LayoutManager</span>, implementing
+  the core mechanisms for layouts, repaints, and event listeners (mouse
+	and keyboard). But we are missing actual widgets such as buttons
+	or labels.
+	But what is a widget exactly? Widgets are essentially subclasses
+	of the classes
+	<span class="java-class">Component</span> or
+	<span class="java-class">Container</span>.
+	<xfr>
+		Continuons à construire notre toolkit.
+		Nous avons couvert les principaux mécanismes, avec les
+		<span class="java-class">Component</span>,
+		<span class="java-class">Container</span>, et
+		<span class="java-class">LayoutManager</span>.
+		Mais nous n'avons pas vraiment de <em>"widget"</em>
+		utiles tels qu'un bouton ou encore un label.
+		Mais qu'est-ce qu'un <em>"widget"</em>? C'est tout
+		simplement une sous-classe des classes 
+		<span class="java-class">Component</span> ou
+		<span class="java-class">Container</span>.		
+	</xfr>
+</p>
+<p>
+	It is important to understand the polymorphic nature
+	of the layout tree that stems from using widgets.
+	The layout tree is an object graph,
+	organized as tree with nodes and leaves. The nodes are objects
+	that are instances of the class
+	<span class="java-class">Container</span> or <u>any subclass extending
+	the class <span class="java-class">Container</span></u>.
+	The leaves are instances of the class
+	<span class="java-class">Component</span> or <u>any subclass
+	extending the class <span class="java-class">Component</span></u>,
+	but not extending the class <span class="java-class">Container</span>.
+	<xfr>
+		Il est important de comprendre la nature polymorphe de notre
+		arbre de composants qui en découle. L'arbre est
+		un graphe d'objets, organisé comme un arbre avec des noeuds
+		et des feuilles. Les noeuds sont des objets qui sont des instances
+		de la classe 
+		<span class="java-class">Container</span> ou d'une classe
+		étendant la classe <span class="java-class">Container</span>.
+		Les feuilles sont des instances de la classe
+		<span class="java-class">Component</span> ou d'une classe
+		étendant la classe <span class="java-class">Component</span>,
+		mais n'étendant pas la classe <span class="java-class">Container</span>.
+	</xfr>
+</p>		
+<table style="width:100%">
+  <tr>
+    <th style="text-align:left;" >
+			<img src="widget-tree.png" width="90%" />
+		</th>
+    <th style="text-align:left;" >
+			<img src="widget-layout.png" width="60%" />
+		</th>
+	</tr>
+</table>
+<p>
+</p>
+<p>
+	So far, we have no widgets, we have no classes extending
+	either the class
+	<span class="java-class">Component</span> or
+	<span class="java-class">Container</span>.
+	It is time we fix this,	implementing a few classical widgets.
+	<xfr>
+		Jusqu'à présent, nous n'avons pas de widgets
+		puisque nous n'avons pas de classes étendant les classes
+		<span class="java-class">Component</span> ou
+		<span class="java-class">Container</span>. Il est temps
+		de remédier à cette situation.
+		</xfr>
+</p>
+
+<h3>Label Widget</h3>
+
+<p>
+	A label widget is a component that displays a string of characters,
+	using a given font.
+	The label widget automatically calculate
+	is preferred size from the given string and the font. If no specific
+	font is set up, then a default font is automatically selected.
+	<xfr>
+		Un label est un widget qui affiche une chaîne de caractères,
+		en utilisant une fonte donnée. Le label va calculer sa taille
+		préférée en fonction de la chaîne de caractères et de la taille
+		de la fonte. 
+	</xfr>
+</p>
+<p>
+	You can look in the Java package
+	<span class="java-class">object.gui.widgets</span> for the class
+	<span class="java-class">Label</span>. We gave you the full code
+	since it is your first widget. Pay attention to the following
+	points:
+	<xfr>
+		Regardez la classe <span class="java-class">Label</span> dans le
+		paquet <span class="java-class">object.gui.widgets</span>, nous
+		vous avons donné tout le code puisque c'est votre premier
+		widget. Faites attention aux points suivants:
+	</xfr>
+</p>
+<ul>
+	<li>
+		How the default font is acquired in the constructor.
+		<xfr>
+			Comment la fonte par défault est obtenue dans le constructeur.
+		</xfr>
+	</li>
+	<li>
+		How and when the widget computes its preferred size.
+		<xfr>
+			Comment le label calcule sa taille préférée.
+		</xfr>
+	</li>
+	<li>
+		How the widget paints itself and draws the text.
+		<xfr>
+			Comment le label se peint et en particulier comment il
+			affiche son texte.
+		</xfr>
+	</li>
+</ul>
+<p>
+	If something is not clear, ask for help since you are
+	about to implement your own widget: a button.
+</p>
+
+<h3>Button Widget</h3>
+
+<p>
+	Now it is your turn to code your widget: a button. In its
+	most simple form, a button widget is a component that displays
+	some text over a solid-color background. Like for example,
+	a button "OK" over a gray background. This is obviously
+	a very simple button,	but let's start with that.
+	Look again in the Java package
+	<span class="java-class">object.gui.widgets</span> for the class
+	<span class="java-class">Button</span>.
+	<xfr>
+		Vous allez maintenant coder votre propre widet: un bouton.
+		Dans sa forme la plus simple, un bouton est un composant
+		qui affiche un text sur un fond de couleur. Par exemple,
+		comme le bouton "OK" sur un fond gris. C'est de toute
+		évidence un bouton très simple, c'est donc parfait pour
+		commencer.
+	</xfr>
+</p>
+<p>
+	So go ahead, finish the implementation.
+	You can use our test class
+	<span class="java-class">TextButtonExample</span> in the 
+	Java package 	<span class="java-package">object.gui.examples</span>.
+	It displays a <em>"OK"</em> button and a text label. It should look
+	like this:
+	<xfr>
+		Rien d'extraodinaire dans le code ci-dessus, donc c'est à vous,
+		finissez l'implémentation. Vous pouvez tester votre code avec
+		notre classe 
+		<span class="java-class">TextButtonExample</span>
+		dans le paquet
+		<span class="java-package">object.gui.examples</span>.
+		Cela devrait afficher un bouton comme cela:
+	</xfr>
+</p>
+<img src="button-ok-released.png" width="40%"/>
+<p>
+	Wondering about how to get the shadows giving the impression
+	that the button is raised up above the surrounding gray surface? 
+	To get this nice visual shadow effect, you may use the method
+	<span class="java-method">paintRaisedComponentShadow</span>
+	and
+	<span class="java-method">paintDepressedComponentShadow</span> 
+	defined on the class
+	<span class="java-class">object.gui.widgets.Util</span>. Look at
+	the class <span class="java-class">Label</span>
+	to see how to do it. It is a nice visual effect,
+	isn't it? Good graphic design is full of those
+	small details.
+	<xfr>
+		Vous vous demandez comment avoir l'impression de relief?
+		Pour cela, utilisez les méthodes
+		<span class="java-method">paintRaisedComponentShadow</span>
+		et
+		<span class="java-method">paintDepressedComponentShadow</span> 
+		définies sur la classe
+		<span class="java-class">object.gui.widgets.Util</span>.
+		Pour comprendre commment les utiliser, regardez la classe
+		<span class="java-class">Label</span>.
+	</xfr>
+</p>
+
+<h3>Clicking and Visual Cue</h3>
+
+<p>
+	Obviously, you would like to be able to click on a button,
+	wouldn't you? Of course you would. And when you do, you would
+	like to see a visual cue that the button is pressed and then released
+	as you click it.
+	Indeed, providing a <span style="color:red;">visual cue</span>
+	is an important part of the quality
+	of graphical user interface, otherwise the end user is always
+	wondering if his or her actions were ignored or taken into account.
+	Let's consider a visual cue like this one for our button:
+	<xfr>
+		Vous avez envie de cliquer sur votre bouton, n'est-ce pas?
+		Bien sûr, c'est normal. Et lorsque vous cliquez dessus, vous
+		voudriez voir le bouton s'enfoncer et revenir alors que vous
+		cliquez dessus.
+	</xfr>
+</p>
+<table style="width:100%">
+  <tr>
+    <th style="text-align:left;" >
+			<img src="button-ok-released.png" width="80%" />
+		</th>
+    <th style="text-align:left;" >
+			<img src="button-ok-pressed.png" width="80%" />
+		</th>
+	</tr>
+</table>
+<p>
+	See, on the left-hand side, the button seems like raised above
+	its surrounding. When the end user presses the left button on the mouse,
+	the button appears as depressed like in the right-hand-side figure.
+	So let's implement that functionality. What do we need?
+	<xfr>
+		Vous voyez sur le coté gauche de la figure ci-dessus,
+		le bouton apparaît comme légèrement
+		sur-élevé au dessus du méplat qui l'entoure. Quand l'utilisateur
+		enfonce le bouton gauche de la souris, le bouton semble enfoncé
+		sous le niveau du méplat qui l'entoure, comme le montre le coté droit
+		de la figure ci-dessus. Nous allons implémenter cela.
+		De quoi avons nous besoin?
+	</xfr>
+</p>
+<ul>
+	<li>A way to paint a button as <em>"raised"</em> or <em>"depressed"</em>.</li>		
+	<li>The button must listen to mouse events routed by the toolkit.</li>
+</ul>
+<p>
+	Regarding the first feature, the visual cue is easily implemented
+	using the following methods.
+	You may use the methods
+	<span class="java-method">paintRaisedComponentShadow</span>
+	and
+	<span class="java-method">paintDepressedComponentShadow</span> 
+	defined on the class
+	<span class="java-class">object.gui.widgets.Util</span>.
+	You may also use the methods 
+	<span class="java-method">Color.darker()</span> and
+	<span class="java-method">Color.brighter()</span> to
+	darken the button background color when pressed and brighten it when
+	released.
+	<xfr>
+		Pour le premier point, vous pouvez utiliser les méthodes
+		<span class="java-method">paintRaisedComponentShadow</span>
+		et
+		<span class="java-method">paintDepressedComponentShadow</span> 
+		définies sur la classe
+		<span class="java-class">object.gui.widgets.Util</span>.
+		Vous pouvez aussi utiliser les méthodes
+		<span class="java-method">Color.darker()</span> et
+		<span class="java-method">Color.brighter()</span> pour
+		fonçer ou éclaircir la couleur du fond du bouton lorsqu'il
+		est enfoncée ou relachée. 
+	</xfr>
+</p>
+<p>
+	Regarding the second feature, our button needs to register a
+	mouse listener. Just like this, using an inner class:
+	<xfr>
+		Pour le deuxième point, le bouton doit enregistrer un
+		écouteur pour la souris, comme ceci:
+	</xfr>
+</p>	
+<pre class="prettyprint lang-java">
+public class Button extends Component {
+  boolean m_pressed;	
+  public Button(Container parent) {
+    super(parent);
+    ...
+    Listener l = new Listener(this);
+    setMouseListener(l);
+  }
+
+  private static class Listener implements MouseListener {
+    Button m_button;
+    Listener(Button b) {
+      m_button = b;
+    }
+    @Override
+    public void mouseMoved(Component c, int x, int y) {
+      ...
+    }
+    @Override
+    public void mousePressed(Component c, int x, int y, int buttons) {
+      m_button.m_pressed = true;
+      m_button.repaint();
+    }
+    @Override
+    public void mouseReleased(Component c, int x, int y, int buttons) {
+      m_button.m_pressed = false;
+      m_button.repaint();
+    }
+    @Override
+    public void mouseEntered(Component c, int x, int y) {
+    }
+    @Override
+    public void mouseExited(Component c) {
+    }
+  }
+}
+</pre>
+<p>
+	So go ahead, implement this functionality.
+	You can try your code with our example: the class
+	<span class="java-class">TextButtonExample</span>.
+	It should look like this below. On the left-hand side,
+	the button is released. On the right-hand side,
+	the button is pressed.
+	<xfr>
+		C'est à vous, implémentez cette fonctionalité.
+		Essayez votre code avec notre exemple, la classe
+		<span class="java-class">TextButtonExample</span>.
+		Cela devrait donner ceci:
+	</xfr>
+</p>
+<table style="width:100%">
+  <tr>
+    <th style="text-align:left;" >
+			<img src="button-ok-released.png" width="80%" />
+		</th>
+    <th style="text-align:left;" >
+			<img src="button-ok-pressed.png" width="80%" />
+		</th>
+	</tr>
+</table>
+
+<p>
+	<span style="color:red;">
+		Make sure that you understand
+		the execution flow happening here.
+	</span>
+	Especially, understand the execution when pressing the button
+	on your mouse and then releasing it. Understand the callbacks
+	on the mouse listener, the repaint requests, and the asynchronous
+	repaints that provide the visual cue. See how fast it is to ask
+	for a repaint... We have two asynchronous repaints, one
+	when the button is pressed and the other when the button is
+	released. Remember, many things happen asynchronously in the
+	world of graphics.
+	<u>
+		Most developers struggle with this very point,
+		so make	sure you are discussing it with others
+	</u>.
+	<xfr>
+		Soyez sûr de comprendre le flot d'exécution lorsque vous
+		appuyez puis relâchez le bouton de la souris. Vous devez
+		comprendre les rappels de l'écouteur de souris, les
+		demandes d'affichage asynchrones, et les ré-affichages.
+		Vous voyez à quelle point nos machines sont rapides. Nous
+		avons deux ré-affichages complets, l'un lorsque vous enfoncez
+	  le bouton et un autre lorsque vous le relâchez. Rappelez vous,
+		tout est asynchrone dans le mode du graphique.
+		<u>
+			La plupart des développeurs ont du mal avec ce dernier point,
+			soyez donc sûr d'en discuter entre vous et avec vos enseignants.
+		</u>
+	</xfr>
+</p>
+
+<h3>Button with images</h3>
+
+<p>
+	Let's improve our button. 
+	Everybody loves a button with images, just like depicted below.
+	On the left-hand side, the button is released. On the right-hand side,
+	the button is pressed.
+	<xfr>
+		Nous allons améliorer notre bouton, avec la possibilité d'utiliser
+		deux images, l'une lorsque le bouton est en position relachée et l'autre
+		lorsqu'il est en position enfoncée.
+	</xfr>
+</p>
+<table style="width:100%">
+  <tr>
+    <th style="text-align:left;" >
+			<img src="button-raspberry-released.png" width="80%" />
+		</th>
+    <th style="text-align:left;" >
+			<img src="button-raspberry-pressed.png" width="80%" />
+		</th>
+	</tr>
+</table>
+<p>
+	Look at the class
+	<span class="java-class">IconButtonExample</span> to see
+	how a button with a background image is created. 
+	What you need to do is to modify the class
+	<span class="java-class">Button</span> so that it
+	paints the image and also that it computes its
+	preferred size based on the size of the image.
+	<xfr>
+		Regardez la classe
+		<span class="java-class">IconButtonExample</span>
+		pour voir comment un bouton avec des images
+		est créé. Vous devez alors modifier la classe
+		<span class="java-class">Button</span> pour
+		qu'il affiche les images et qu'il calcule
+		sa taille préférée à partir des images.		
+	</xfr>
+</p>
+<p>
+	Wondering how could you know the size of an image? Well,
+	look at	the methods on the class
+	<span class="java-class">object.gui.window.Image</span>.
+	Wondering how to draw an image on the screen? Well,
+	look at	the methods on the class
+	<span class="java-class">object.gui.window.Graphics</span>.
+	But we are sure that you already knew how to find out
+	what you needed, right?
+	<xfr>
+		Vous vous demandez comment connaître la taille d'une image?
+		Et bien, regardez les méthodes qui sont définies sur la
+		classe 	<span class="java-class">object.gui.window.Image</span>.
+		Vous vous demandez comment afficher une image?
+		Et bien regardez les méthoes sur la classe 
+		<span class="java-class">object.gui.window.Graphics</span>.
+		Vous devriez avoir ces réflexes désormais.
+	</xfr>
+</p>	
+<p>
+	So go ahead, finish the implementation.
+	You can use our test class
+	<span class="java-class">IconButtonExample</span> in the 
+	Java package 	<span class="java-package">object.gui.examples</span>.
+	When you are done, it should display a raspberry button and a text label,
+	as depicted
+	above.
+	<xfr>
+		C'est à vous, finissez l'implémentation. Vous pouvez tester votre
+		code avec notre classe
+		<span class="java-class">IconButtonExample</span>
+		dans le paquet
+		<span class="java-package">object.gui.examples</span>.
+		Lorsque tout marche, il devrait afficher un bouton avec une framboise
+		et un label, comme ci-dessus.
+	</xfr>
+</p>
+	
+<h3>Button Listener</h3>
+
+<p>
+	Now, forget a second that you are implementing a button,
+	meaning forget that you are writing the code for the class
+	<span class="java-class">Button</span>. Instead, please
+	adopt the perspective of a developer that is designing a
+	graphical user interface and wanting to put a button on the screen.
+	If you want a button to be part of your graphical interface, then you probably
+	want that the end user to be able to click on it. Therefore, you need a way in your
+	code to know if the end user has clicked on that button.
+	You may also want to know	if the button is currently pressed or released.
+	What you need is the ability
+	to attach a listener to your button. The listener interface would look
+	like this:
+	<xfr>
+		Nous allons vous demander de changer de perspective temporairement.
+		Vous allez oublier que vous êtes en train d'écrire le code pour la
+		classe <span class="java-class">Button</span>. Vous allez vous placer
+		dans la peau du développeur d'interface graphique qui veut mettre
+		un bouton à l'écran. Si il y a un bouton à l'écran, c'est que l'utilisateur
+		pourra cliquer dessus. Ainsi, le code de votre interface graphique va
+		vouloir pouvoir savoir si l'utilisateur clique sur le bouton. Probablement
+	  aussi savoir si le bouton est enfoncé ou relâcher. Il vous faut un
+		écouteur qui implémente cette interface:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public interface ButtonListener {
+  void clicked(Button b);
+  void pressed(Button b);
+  void released(Button b);
+}
+</pre>
+<p>
+	And the code to create a button and attach a listener
+	would look like this:
+	<xfr>
+		Et le code pour créer un bouton et attaché un écouteur
+		ressemblerait à ceci:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+Button b = new Button();
+ButtonListener l = new ButtonListener(b);
+b.setListener(l);
+</pre>
+<p>
+	Cool. So we want this feature, but our current
+	class <span class="java-class">Button</span> does not
+	support this feature, so we need to design and code it.
+	First, please note that the interface
+	<span class="java-class">ButtonListener</span>
+	is given to you in the same Java package as the class
+	<span class="java-class">Button</span>.
+	Then, our button needs to
+	listen to mouse events and
+	tranlsate those events into events on its button
+	listener, if it has one.
+	<xfr>
+		Donc il semble que nous voulions cette fonctionalité
+		pour notre classe
+		<span class="java-class">Button</span>. Nous devons
+		donc la concevoir et l'implémenter.
+		En premier lieu, notez que l'interface
+		<span class="java-class">ButtonListener</span>
+		vous ai donné
+		dans le même paquet Java que la classe
+		<span class="java-class">Button</span>.
+		Ensuite, il faut
+		que notre bouton écoute les événements souris et
+		il faut donc qu'il tranduise ces événements en
+		rappels sur son propre écouteur, si il en a un.
+	</xfr>
+</p>
+<p>
+	Your button is already listening to mouse
+	events and it already tracks if the button is pressed or
+	released. This was necessary to provide the corresponding
+	visual cue, using shadows. So invoking the methods
+	<span class="java-method">pressed</span> and
+	<span class="java-method">released</span> on the 
+	button listener
+	when pressed or released should be rather easy.
+	<xfr>
+		Votre bouton écoute déjà les événements souris pour savoir
+		si il est en position enfoncé ou relâché. Cela était nécessaire
+		pour donner un retour visuel sur la position du bouton
+		(enfoncé ou relâché). Ainsi, invoquer les méthodes
+		<span class="java-method">pressed</span> et
+		<span class="java-method">released</span> 
+		sur l'interface <span class="java-class">ButtonListener</span>
+		sera facile.
+	</xfr>
+</p>
+<p>
+	What about calling the listener method
+	<span class="java-method">clicked</span> when the button is clicked?
+	Well, we already implemented a click detector in an earlier
+	task, remember? So, let's do it again here. Piece of cake!
+	When you detect that the button has been clicked, you will
+	invoke the method <span class="java-method">clicked</span> 
+	on the button listener, if there is one.
+	<xfr>
+		Et pour l'appel de la méthode
+		<span class="java-method">clicked</span> si un click
+		est détecté? Et bien, n'avez vous pas déjà implémenté
+		un détecteur de click dans une tâche précédente?
+		Il suffit donc de le refaire, c'est super facile!
+		Lorsque vous avez détecter un clique, il suffira
+		d'invoquer la méthode <span class="java-method">clicked</span>
+		sur l'écouteur de votre bouton, si il y en a un.
+	</xfr>
+</p>
+<p>
+	Let's not forget also to add the possibility to attach a button
+	listener to a button:
+	<xfr>
+		Il ne faut pas oublier non plus la possibilité d'attaché un
+		écouteur à un bouton:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Button extends Component {
+  ButtonListener m_bl;
+  public void setListener(ButtonListener al) {
+    m_bl = al;
+  }
+}
+</pre>
+<p>
+	To test your code, you can use our test class
+	<span class="java-class">IconButtonExample</span> in the 
+	Java package 	<span class="java-package">object.gui.examples</span>.
+	It already registers an button listener onto the rapsberry button,
+	once you have the right automaton, you should see something printed
+	in the console when clicking the button.
+	<xfr>
+		Pour tester votre code, vous pouvez utiliser la classe
+		<span class="java-class">IconButtonExample</span> dans le
+		paquet <span class="java-package">object.gui.examples</span>.
+    Cette classe utilise déjà un écouteur sur le bouton qu'elle
+		crée et si votre code marche, vous devriez avoir une sortie
+		intélligible dans la console.
+	</xfr>
+</p>
+<p>
+	<span style="color:red;">What is important here?</span>.
+</p>
+<p>
+	Congratulations if it works! But the fact that
+	it works is <b>not</b> what is the most important here.
+	What is the most important is your understanding and learning:
+	<xfr>
+		Félicitations si votre code marche! Mais le fait que cela
+		marche n'est pas le plus important, le plus important est
+		votre compréhension et votre apprentissage:
+	</xfr>
+</p>
+<ol>
+	<li>
+		Did you understand what we are designing and coding here?
+	</li>
+	<li>
+		Do you understand why we need an button listener?
+	</li>
+	<li>
+		Do you understand the resulting execution?
+	</li>
+	<li>
+		Do you understand	how to use button listeners?
+	</li>
+</ol>
+<p>
+	You understood all these points? Yes? That's great. Congratulations.
+	But if it is not the case, you know what we are going to say, right?
+	Ask questions until you do.
+	<xfr>
+		Vous avez compris tous les points énoncés ci-dessus? Sûr? Super!
+		Félicitations. Comme d'habitude, si ce n'est pas le cas, posez
+		des questions et discutez en avec les autres.
+	</xfr>
+</p>
+<p>
+	See, once you start with event-oriented
+	programming, your code is mostly organized around listening and
+	reacting. <u>Make sure that you discuss this programming paradigm
+		among students and with the teaching staff</u>.
+	<xfr>
+		Vous voyez, une fois que l'on commence avec une programmation
+		orientée-événement, le code s'organise naturellement autour d'une
+		succession de rappels d'écouteurs. <u>Assurez vous de bien
+			comprendre se paradigme de programmation et discutez en
+			entre vous et avec vos enseignants</u>.
+	</xfr>
+</p>
+<h3>That's it folks</h3>
+<p>	
+	Please do commit your work.
+</p>
+<textarea class="terminal" rows="4" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.gui, Task5 completed"
+  $ git push --all
+</textarea>
+

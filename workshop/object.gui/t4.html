@@ -1,0 +1,1074 @@
+<vars>
+  sprint=object.gui
+  task=t4
+</vars>
+<p>
+	In this task, we will introduce layout managers for containers,
+	but before that, it is time to start organizing the final version
+	of our classes, something that will help us in the coming tasks.
+	<xfr>
+		Dans cette nouvelle tâche, nous allons introduire le
+		concept de gestionnaire de la disposition des composants
+		fils d'un container au sein de la surface de ce container
+		père. Vu que c'est une définition interminable en français,
+		nous utiliserons donc le terme anglo-saxons: le gestionaire
+		du layout. Mais avant de se lancer, il faut réorganiser nos
+		classes dans une nouvelle organisation qui va nous aider
+		à poursuivre notre apprentissage.
+	</xfr>
+</p>
+<p>
+	<b>Important:</b> we ask that you copy all the classes from your
+	package <span class="java-package">object.gui.task3</span>
+	from the previous	source folder <em>"task3"</em>
+	to the package
+	<span class="java-package">object.gui</span>
+	in the source folder <em>"task4"</em>.
+	Yes, we are asking to replace all the existing classes
+	in the package 
+	<span class="java-package">object.gui</span>.
+	There were mock-classes, just there to make sure
+	you didn't have many compilation errors when you started
+	this sprint.
+	This new package is the beginning of the final version
+	of our graphical toolkit, congratulations, this is a
+	major milestone.
+	<xfr>
+		Nous vous demandons de copier toutes vos classes du paquet
+		<span class="java-package">object.gui.task3</span>
+		du dossier source <em>"task3"</em>
+		vers le paquet 
+		<span class="java-package">object.gui</span>
+		dans le dossier source <em>"task4"</em>.
+		Vous allez <b>remplacer</b> les classes
+		déjà existantes dans le paquet
+		<span class="java-package">object.gui</span>,
+		elles n'étaient là que pour éviter des erreurs de
+		compilation en attendant que vous fassiez la
+		copie de vos classes. Ce paquet avec vos classes
+		est le début de la version finale de notre toolkit,
+		félicitations, c'est une première étape importante
+		réussie.
+	</xfr>
+</p>
+<p>
+	<b>Reminder:</b> make sure that Eclipse did not mix
+	your imports. Make sure that none of the classes
+	in the package
+	<span class="java-package">object.gui</span>
+	imports any class from the package
+	<span class="java-package">object.gui.task3</span>.
+	<xfr>
+		Rappelez vous de vérifier qu'Eclipse n'a pas mélanger
+		les classes entre les paquets. Assurez qu'aucune
+		des classes dans le paquet 
+		<span class="java-package">object.gui</span>
+		n'importent de classe du paquet
+		<span class="java-package">object.gui.task3</span>.
+</p>
+<p>
+	<b>Important:</b> to prepare your code for this task, you have to add
+	some fields and methods to the classes that you just
+	copied to the package
+	<span class="java-package">object.gui</span>.
+	<xfr>
+		Pour préparer vos classes pour cette tâche,
+		vous allez devoir ajouter quelques champs
+		et méthodes à vos classes:
+	</xfr>
+</p>
+<ul>
+	<li>
+		<p>
+			Make sure to <u>add</u> the following
+			lines to the class
+			<span class="java-class">object.gui.Component</span>:
+		</p>
+		<pre class="prettyprint lang-java">
+class Component {
+  protected Dimension m_prefSize;
+
+  /**
+   * Gets the preferred size of this component.
+   * @return a dimension object indicating this component's preferred size
+   */
+  public Dimension getPreferredSize() {
+    if (m_prefSize==null)
+      return m_parent.dimension();
+    return new Dimension(m_prefSize);
+  }
+
+  /**
+   * Sets the preferred size of this component to a constant
+   * value.  Subsequent calls to <code>getPreferredSize</code> will always
+   * return this value.  Setting the preferred size to <code>null</code>
+   * restores the default behavior.
+   *
+   * @param preferredSize The new preferred size, or null
+   */
+  public void setPreferredSize(Dimension d) {
+    m_prefSize = d;
+    m_parent.layout();
+  }
+
+  public void setPreferredSize(int w, int h) {
+    m_prefSize = new Dimension(w, h);
+    m_parent.layout();
+  }
+}	
+		</pre>
+	</li>
+	<li>
+		<p>
+			Make sure to <u>add</u> also the following
+			lines to the class
+			<span class="java-class">object.gui.Container</span>:
+		</p>
+		<pre class="prettyprint lang-java">
+class Container {
+  protected LayoutManager m_layoutMgr;
+
+  public void layoutManager(LayoutManager mgr) {
+    m_layoutMgr = mgr;
+  }
+
+  public LayoutManager layoutManager() {
+    return m_layoutMgr;
+  }
+
+  /**
+   * Causes this container to lay out its components.
+   */
+  public void layout() {
+    m_parent.layout();
+  }
+
+  protected void doLayout() {
+    if (m_layoutMgr != null)
+      m_layoutMgr.layout(this);
+    for (int i = 0; i &lt; m_childrenCount; i++) {
+      Component c = m_children[i];
+      if (c instanceof Container)
+        ((Container) c).doLayout();
+    }
+  }
+
+/**
+ * Ask this component for its preferred size when
+ * layed up in its parent container.
+ */
+  @Override
+  public Dimension getPreferredSize() {
+    if (m_prefSize!=null)
+      return new Dimension(m_prefSize);
+    if (m_layoutMgr != null)
+      return m_layoutMgr.preferredSize(this);
+    return new Dimension(0,0);
+  }
+
+}
+		</pre>
+	</li>
+	<li>
+		<p>
+			Finally, make sure to <u>add</u> the following
+			lines to your class
+			<span class="java-class">object.gui.Frame</span>:
+		</p>
+		<pre class="prettyprint lang-java">
+public class Frame extends Container {
+  @Override
+  public void layout() {
+    doLayout();
+  }
+}
+		</pre>
+	</li>
+</ul>
+<p>
+	OK, we are good to go, everything should compile, across all
+	source folders, not just the source folder <em>"task4"</em>.
+	If you still have compilation errors,
+	this is not expected, something did not go as planned. Please fix
+	any compilation error. If you need to, ask for help.
+	<xfr>
+		OK, tout devrait compiler, dans tous les dossiers source,
+		pas seulement dans le dossier <em>"task4"</em>.
+		Si vous avez des erreurs de compilation, ce n'était pas
+		prévu, quelque chose ne va pas. Corrigez les erreurs
+		avant de continuer, demandez de l'aide si vous en avez
+		besoin.
+	</xfr>
+</p>
+<p>
+	<b>Non-Regression Test:</b> the provided test class
+	<span class="java-class">WindowTest</span>
+	in the package
+	<span class="java-package">object.gui.task4</span> should also
+	work. It is the same as the previous test, done in task3,
+	but using the copied classes in the package 
+	<span class="java-package">object.gui</span>, 
+	so it should still work. If it does not, please fix any problems
+	before continuing with this task.
+	<xfr>
+		<b>Test de Non-Régression:</b> la classe 
+		<span class="java-class">WindowTest</span> fournie
+		dans le paquet 
+		<span class="java-package">object.gui.task4</span> devrait toujours
+		fonctionner et vous permettre de vérifier que le code non seulement
+		compile mais continue de marcher comme avant, à la fin de la tâche 3.
+		Si cela ne marche pas, corrigez les problèmes avant de continuer.
+	</xfr>
+</p>
+<p>
+	Now that we are setup correctly and the classes compile and work,
+	we can start this task about layout managers.
+	So far, we have coded explicit layouts of components and containers,
+	setting the bounds of our	components manually. It is a useful approach
+	that can be just what one needs when one wants to
+	tightly control a layout. But often, it is easier to use layout
+	managers.
+	<xfr>
+		Maintenant que nous sommes dans un état cohérent, avec nos classes
+		qui compilent et qui fonctionnent, nous pouvons débuter cette tâche
+		sur les gestionnaires de placement pour les containers. Jusqu'à
+		maintenant, nous avons toujours positionner et dimensionner nos
+		composants à la main, ce qui a du sens lorsque l'on veut un
+		maximum de contrôle sur l'organisation des composants d'une
+		interface graphique. Mais souvent, il est plus facile d'utiliser
+		des gestionnaires qui automatisent le gestion du placement et des
+		dimensions des composants dans les containers.
+	</xfr>
+</p>
+	
+<h3>Layout Managers</h3>
+
+<p>
+	A layout manager is attached to a container and manages the layout
+	of the children of that container, hence the name <em>layout manager</em>.
+	If you look under the source folder <em>"task4"</em> and in the
+	Java package 	<span class="java-package">object.gui.layout</span>,
+	you will see the abstract class <span class="java-class">LayoutManager</span>:
+	<xfr>
+		Un gestionnaire de placement est attaché à un container et gère le placement
+		et le positionnement des composants de ce container, au sens de l'arbre des
+		composants. Si vous regardez dans le dossier <em>"task4"</em>, dans le paquet
+		<span class="java-package">object.gui.layout</span>, vous verrez la classe
+		abstraite <span class="java-class">LayoutManager</span>:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public abstract class LayoutManager {
+  public abstract void layout(Container target);
+  public abstract Dimension preferredSize(Container target);
+}
+</pre>
+<p>
+	The method <span class="java-method">layout</span> lays out
+	the given container, that is, determines the bounds for each
+	of the children of the given container. But applications
+	never call this method directly, applications call the
+	method <span class="java-method">Container.layout()</span>:
+	<xfr>
+		La méthode <span class="java-method">layout</span> est celle
+		qui positionne et dimensionne les composants d'un container.
+		Mais cette méthode n'est jamais appelé directement par le
+		code d'une application. Pour provoquer une réorganisation,
+		il faut appeler la méthode
+		<span class="java-method">Container.layout()</span>:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+class Container {
+  /**
+   * Request this container to layout its children.
+   */	
+  public void layout() {
+    m_parent.layout();
+  }
+  
+  protected void doLayout() {
+    if (m_layoutMgr != null)
+      m_layoutMgr.layout(this);
+    for (int i = 0; i &lt; m_childrenCount; i++) {
+      Component c = m_children[i];
+      if (c instanceof Container)
+        ((Container) c).doLayout();
+    }
+  }
+}
+class Frame {
+  @Override
+  public void layout() {
+    doLayout();
+  }
+}
+</pre>
+<p>
+	What is going on here? Well, if one called the method
+	<span class="java-method">layout</span> on a container,
+	the intent is for that container to layout its children.
+	But in order to do so properly, the container needs to
+	know its own dimension. Right? This means the container
+	must have had its bounds set. But by who? Well, only
+	its parent can do that. 
+	So to be able to layout a container, you must make
+	sure its dimension has been set by its parent,
+	which means you must make sure its parent has done a layout,
+	which recursively requires its parent to have had its dimension set,
+	and so on. We are facing a recursive algorithm that needs
+	a condition to stop.
+	<xfr>
+		Que se passe-t-il ici? Et bien, si la méthode 
+		<span class="java-method">layout</span> est appelée
+		sur un container, l'intention est que ce container
+		réorganise ses composants. Mais afin de faire cela
+		correctement, il faut que le container connaisse sa
+		dimension. N'est-ce pas? Cela veut dire que le
+		container doit avoir dimensionné. Mais par qui?
+		Et bien, seulement son container parent peux le
+		faire. Cela revient à s'assurer que le container
+		parent à refait l'organisation de ses composants.
+		Et ainsi de suite, nous sommes en présence d'un
+		algorithme récursif qui a besoin d'une condition
+		d'arrêt.
+	</xfr>
+</p>
+<p>
+	Fortunately, the frame at the root of the	tree has
+	had its dimension set when created since it
+	corresponds to the size of the window on the screen.
+	So one can always ask the frame to do a layout, resulting
+	in the layout of the entire tree via the method
+  <span class="java-method">doLayout</span>. Notice
+	this is exactly what happens when asking
+	any container to layout since the method
+	<span class="java-method">layout</span> percolates
+	the request up to the frame, which will result
+	in the layout of the entire tree.
+	<xfr>
+		Et bien, l'algorithme s'arrête à la racine de l'arbre,
+		sur la "frame" puisqu'elle a ses dimensions fixées à
+		sa création et qui correspondent à la taille de la fenêtre.
+		Ainsi, il est toujours possible de demander à la racine
+		de l'arbre de faire une réorganisation de ses composants,
+		résultant en la réorganisation de tout l'arbre via
+		la méthode <span class="java-method">doLayout</span>.
+		Notez que c'est exactement ce qui se passe lorsque la
+		méthode <span class="java-method">layout</span> est invoquée
+		sur un container puisque la demande percole vers la racine
+		de l'arbre.
+	</xfr>
+</p>
+<p>
+	The code should work, so you can try it out with
+	our examples in the
+	package <span class="java-package">object.gui.examples</span>.
+	We gave you two examples, one with a border layout
+  (class <span class="java-class">BorderLayoutExample</span>)
+	and the other with a flow layout
+	(class <span class="java-class">FlowLayoutExample</span>).
+	These two examples rely on the traditionnal
+	border and flow layouts, both available through
+	the classes
+	<span class="java-class">BorderLayout</span> and
+	<span class="java-class">FlowLayout</span>
+	in the package 
+	<span class="java-package">object.gui.layout</span>.
+	<xfr>
+		Le code devrait fonctionner, vous pouvez donc l'essayer
+		via nos exemples dans le paquet
+		<span class="java-package">object.gui.examples</span>.
+		Nous vous avons donné deux exemples, l'un avec un "border layout"
+		(classe <span class="java-class">BorderLayoutExample</span>)
+		et l'autre avec un "flow layout"
+		(classe <span class="java-class">FlowLayoutExample</span>).
+		Ces deux exemples s'appuie sur les organisations connues
+		"border" et "flow", codées dans les classes 
+		<span class="java-class">BorderLayout</span> et
+		<span class="java-class">FlowLayout</span>
+		dans le paquet
+		<span class="java-package">object.gui.layout</span>.
+	</xfr>
+</p>
+<table>
+	<tr>
+		<th><img src="border-layout-example.png" width="80%" /></th>
+		<th><img src="flow-layout-example.png" width="80%" /></th>
+	</tr>
+</table>
+
+<h3>Optimizing the layout process</h3>
+
+<p>
+	This above design works and we understood how it works, right?
+	So now it is time to evaluate this design, that is, we need
+	to ask ourselves if we can do better. The design is clearly
+	not optimal since
+	we redo the layout of the entire tree, even if there is
+	only one container that needs to redo its layout.
+	Since the tree may be big, this is clearly not optimal.
+	We would like to do the layout of containers that need
+	to redo their layout and only for them.
+	<xfr>
+		La conception que nous venons de voir marche et vous l'avez
+		bien compris. N'est-ce pas? Mais on peut faire mieux.
+		Regardons ce qui se passe: nous refaisons à chaque
+		fois l'organisation de la totalité de l'arbre, même si il n'y
+		a qu'un seul container qui doit refaire l'organisation de ses
+		composants. Si l'arbre des composants est grand, ce n'est clairement
+		pas optimal.
+	</xfr>
+</p>
+<p>
+	The idea is to introduce a boolean flag to indicate if a container
+	needs a layout or not. Look at the modified code below:
+	<xfr>
+		Comment allons nous faire? L'idée est d'introduire un drapeau
+		qui indiquerait si un container à besoin de refaire l'organisation
+		de ses composants ou pas. Regardez le code ci-dessous:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+class Container {
+  public void layout() {
+    if (!m_doLayout) {
+      m_doLayout = true;
+      m_parent.layout();
+    }
+  }
+  protected void doLayout() {
+    if (m_doLayout) {
+      m_doLayout = false;
+      if (m_layoutMgr != null)
+        m_layoutMgr.layout(this);
+      for (int i = 0; i &lt; m_childrenCount; i++) {
+        Component c = m_children[i];
+        if (c instanceof Container)
+          ((Container) c).doLayout();
+      }
+    }
+  }
+}
+class Frame {
+  @Override
+  public void layout() {
+    m_doLayout = true;
+    doLayout();
+  }
+}
+</pre>
+<p>
+	We can see how the optimization works, right?
+	The flag is set true when a layout has been asked
+	upon a container and on all its parent. Then,
+	the flag is used to prune out sub-trees of
+	containers that do not need to redo their layout.
+	That sounds good, right?
+	<xfr>
+		Nous pouvons voir que l'optimisation marche, n'est-ce pas?
+		Le drapeau est positionné à vrai si la réorganisation est
+		nécessaire, sur le container qui le faire mais aussi pour
+		tous ses parents dans l'arbre. Ainsi, le drapeau peux être
+		utilisé pour couper le processus de réorganisation
+		pour les sous-arbres qui n'en ont pas besoin.
+	</xfr>
+</p>
+<p>
+	Did we forget to set the flag 
+	<span class="java-field">m_doLayout</span> in some cases?
+	If the parent container does a layout, it will set
+	the bounds of its children, using the method
+	<span class="java-method">setBounds(int,int,int,int)</span>.
+	If a container gets new bounds, it means its size
+	might has changed, right? If its size changed, it
+	needs to redo a layout of its children. So the class
+	<span class="java-class">Container</span>
+	needs to override the method 
+	<span class="java-method">setBounds(int,int,int,int)</span>,
+	just like this:
+	<xfr>
+		Avons-nous oublié de positionner le drapeau
+		<span class="java-field">m_doLayout</span> dans certains
+		cas? Considérons la méthode
+		<span class="java-method">setBounds(int,int,int,int)</span>
+		qui permet à un container parent de positionner et dimensionner un
+		composant fils. Si le composant fils est en fait un container,
+		ses dimensions ont peut-être changées, et si c'est le cas,
+		il devrait revoir l'organisation de ses composants.
+		Ainsi, la classe 
+		<span class="java-class">Container</span> doit surcharger
+		la méthode 
+		<span class="java-method">setBounds(int,int,int,int)</span>
+		comme ci-dessous:
+	</xfr>	
+</p>
+<pre class="prettyprint lang-java">
+  public void setBounds(int x, int y, int w, int h) {
+    m_doLayout |= (w!=m_width || h!=m_height);
+    super.setBounds(x,y,w,h);
+  }
+</pre>
+<p>
+	Notice that we make sure that we force the flag
+	to true if the size has changed, but we left
+	it unchanged otherwise. It is important to preserve
+	the flag value if the size has not changed.
+	You could also code it this way:
+	<xfr>
+		Mais regardez bien le code, vous voyez que nous ne
+		forçons le drapeau à vrai que si la dimension
+		du container change. Vous pourriez le coder aussi
+		ainsi:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public void setBounds(int x, int y, int w, int h) {
+    if (w!=m_width || h!=m_height)
+      m_doLayout=true;
+    super.setBounds(x,y,w,h);
+  }
+</pre>
+<p>
+	Could we have called the method
+	<span class="java-method">layout</span>?
+	Certainly not! The method 
+	<span class="java-method">setBound</span> is called
+	by the parent layout manager, while doing a layout.
+	So a layout is already underway, so there is no need
+	to ask for a new layout. Furthermore, this would
+	create an infinite recursion since doing a layout
+	on the frame would do a complete layout of the tree
+	and each container would ask a layout that would induce
+	the frame to redo a layout...
+	<xfr>
+		Aurions nous pu appeler la méthode
+		<span class="java-method">layout</span>?
+		Surement pas! La méthode
+		<span class="java-method">setBound</span> est
+		appelée par le gestionnaire du parent, lorsqu'il
+		revoit l'organisation des composants de ce parent.
+		Cela veut dire qu'une réorganisation est déjà
+		en cours, il n'y pas de raison d'en demander une
+		autre, ce qui provoquerait une récursion infinie.
+	</xfr>
+</p>
+<p>
+	<b>Make sure you understand all this. As usual,
+		discuss this and ask question if you do not. </b>.
+</p>
+<p>
+	Are we good with the code as it is? Not exactly,
+	you knew it, right?
+	A container should also 
+	redo its layout if the set of	its children change,
+	right? So we need to override the methods that
+	add or remove a child.
+	<xfr>
+		Est-ce que notre code est bon maintenant? Pas
+		encore, n'est-ce pas? Un container devrait aussi
+		revoir son organisation spatiale si l'ensemble
+		de ses composants change. Donc nous devons
+		considérez les méthodes qui ajoutent et enlèvent
+		des composants:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  protected void added(Component child) {
+    ...
+    layout();
+  }
+  protected void removed(Component child) {
+    ...
+    layout();
+  }
+</pre>
+<p>
+	But wait a second here, can we invoke the method
+	<span class="java-method">layout</span>?
+	Do we risk an infinite recursion?
+	Well, what do you think? Justify your
+	answer.
+	<xfr>
+		Minute! Pouvons-nous invoquer la méthode
+		<span class="java-method">layout</span>?
+		Ne risquons nous pas une récursion infinie
+		comme nous venons d'en parler? Et bien,
+		qu'en pensez vous? Justifiez votre réponse.
+	</xfr>
+</p>
+<p>
+	We are OK, we can invoke the method
+	<span class="java-method">layout</span>
+	if we make the assumption that the tree
+	of components is not changed during a layout,
+	which is a reasonable assumption if developers
+	of graphical components are told about it.
+	Therefore, invoking the method
+	<span class="java-method">layout</span>
+	is not only safe, but mandatory, since we need
+	to percolate the request up to the frame
+	(the root of the layout tree).
+	<xfr>
+		Pas de risque ici, nous pouvons invoquer la
+		méthode 	<span class="java-method">layout</span>
+		si nous faisons l'hypothèse que l'arbre des composants
+		ne change pas pendant la réorganisation spatiale de
+		ses composants (pendant un "layout"). Cela semble
+		une hypothèse acceptable, à condition de le faire
+		savoir aux développeurs de composants graphiques
+		(widgets). 
+	</xfr>
+</p>
+<p>
+	Are we good now? You think so? Not quite. See, the layout
+	manager of a container may be changed. It would
+	seem logical to force a re-layout by the new
+	layout manager.
+	<xfr>
+		Et maintenant? Tout est bon? Et bien pas encore.
+		Vous voyez, il est possible de changer le gestionnaire
+		d'un container. Dans ce cas, il semblerait normale que
+		le container demande à ce nouveau gestionnaire de
+		revoir l'organisation spatiale de ses components.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public void layoutManager(LayoutManager mgr) {
+    m_layoutMgr = mgr;
+    layout();
+  }
+</pre>
+<p>
+	Are we good finally? Yes, we are. Yeah!
+	Now, an <b>important question for you:</b> <em>did you understand
+		what we did here? <u>Really understood?</u></em> Look at the
+	following important points:
+	<xfr>
+		Et maintenant, tout est bon? Oui, enfin!
+		Maintenant une <b>question importante pour vous:</b> <em>est-ce
+			que vous avez compris ce que nous venons de faire?
+			<u>Vraiment compris?</u></em> Regardez les points importants
+		suivant:
+	</xfr>
+</p>
+<ol>
+	<li>
+		We delegated the layout of a container to a layout manager
+		that automates the layout process.
+		<xfr>
+			Nous avons délégué l'organisation spatiale d'un container
+			à un gestionnaire qui automatise le processus au lieu de
+			le faire à la main.
+		</xfr>
+	</li>
+	<li>
+		We optimized the layout process to
+		avoid redoing unnecessary layouts, using a flag that
+		indicates if a layout is necessary or not.
+		<xfr>
+			Nous avons optimisé le processus de réorganisation pour
+			éviter de réorganiser des containers qui n'en ont pas
+			besoin.
+		</xfr>
+	</li>
+	<li>
+		As a result,
+		we had to make sure we set this flag to true whenever
+		necessary, in places that were not obvious to start with.
+		<xfr>
+			Pour que l'optimisation soit correcte, il a fallu
+			positionner le drapeau dans plusieurs méthodes qui
+			ne sautaient pas aux yeux dès le départ.
+		</xfr>
+	</li>
+	<li>
+		We paid attention to potential infinite recursion
+		and we had to make an assumption about the programming
+		model of graphical composants that developers must know
+		about.
+		<xfr>
+			Nous avons fait attention à éviter les récursions
+			infinies et nous avons du faire une hypothèse sur le
+			modèle de programmation qui doit être communiquée
+			aux développeurs d'interfaces graphiques.
+		</xfr>
+	</li>
+</ol>
+<p>
+	See, this is really what understanding a code is about.
+	You need to know it so well that you are
+	able to introduce an optimization and keep the code
+	working. This requires you, the developer, to understand
+	the code and to track all the methods that are impacted by
+	the optimization you want to introduce. And last, but not
+	least, you have do this <u>before</u> you start coding in order
+	to avoid stumbling on unforseen problems as you code or debug.
+	You need to <u>design</u>
+	a proper solution <u>before</u> you start coding it.	We know, this
+	is not easy, but the more you try, the better at it you will
+	become.
+	<xfr>
+		Vous voyez, c'est cela bien comprendre un code. Vous
+		devez le connaître suffisamment bien pour pouvoir le
+		modifier, comme introduire une optimisation, et
+		que le code fonctionne toujours. Cela vous demande,
+		en tant que développeur, de comprendre le code
+		et de comprendre toutes les méthodes qui sont impactées
+		par les changements que vous introduisez. Encore
+		plus important, il est important de le faire en amont
+		du codage proprement dit. Il faut réfléchir à votre
+		optimisation et à ses conséquences avant de commencer
+		à changer le code. Ce n'est pas facile, nous le savons
+		bien, mais plus vous essaierez, plus vous apprendrez
+		à le faire, et plus vous serez efficace.
+	</xfr>
+</p>
+
+<h3>Optimizing further</h3>
+
+<p>
+	Can we optimize further? Yes, we can. As it is,
+	each time a container is asked to do a layout,
+	via the method <span class="java-method">layout</span>,
+	the layout of the entire tree is done, synchronously.
+  Right? Look at the method 
+	<span class="java-method">layout</span>,
+	it percolates up to the frame object and the class
+	<span class="java-class">Frame</span> overrides
+	this method to call the method
+	<span class="java-method">doLayout</span>
+	that recurses down the tree to redo the layout.
+	<xfr>
+		Pouvons nous optimiser encore notre code?
+		Absolument, c'est possible. Mais analysons d'abord ce qui
+		se passe dans le code actuel. La réorganisation de l'arbre
+		se fait pour chaque demande, de façon synchrone.
+		Regardez la méthode <span class="java-method">layout</span>,
+		l'invocation percole vers la racine de l'arbre
+		puis déclanche une réorganisation globale de l'arbre
+		en synchrone. 
+	</xfr>
+</p>
+<p>
+	Of course, this works, especially with our optimization that
+	prunes the layout process for sub-trees that do not need
+	a relayout. But the synchronous part is not efficient.
+	For instance, imagine you are adding or removing several components
+	to or from a container. For each operation, a full layout will be
+	done. But is this necessary? Not really, a layout is only
+	really necessary before the next repaint. Indeed,
+	until the layout tree is repainted, the
+	fact that it needs a new layout is irrelevant.
+	It would even be incorrect with respect to the focus
+	mangement and the routing of mouse and keyboard events.
+	<xfr>
+		Cela marche, bien sûr, surtout avec l'optimisation
+		que nous avons introduite pour ne pas revoir
+		l'organisation des sous-arbres qui n'en ont pas besoin.
+		Mais c'est ce coté synchrone qui n'est pa optimal.
+		En effet, imaginez que vous transformez l'arbre des
+		composants, ajoutant ou enlevant plusieurs composants
+		de plusieurs containers. A chaque opération, une
+		réorganisation complète aura lieu. Est-ce nécessaire?
+		Pas vraiment, la réorganisation n'est nécessaire qu'avant
+		le prochain réaffichage. En effet, tant que l'arbre n'est
+		pas repaint, sa réorganisation spatiale n'a pas d'importance.
+		Elle serait même erronée vis-à-vis du focus et donc
+		du routage des événements	souris et clavier
+	</xfr>
+</p>
+<p>
+	What are we saying here? We are saying that it is not necessary
+	or even correct to be super aggressive to do a complete layout, each time
+	the method <span class="java-method">layout</span> is
+	called on a container. We should delay the actual re-layout
+	until the next paint. Just like this:
+	<xfr>
+		Que disons-nous ici? Nous disons qu'il n'est pas
+		nécessaire ou même correcte d'être super aggressif dans
+		la réorganisation spatiale. Nous devrions retarder la
+		réorganisation jusqu'au moment du prochain affichage,
+		comme cela:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+class Frame {
+  @Override
+  public void layout() {
+    m_doLayout = true;
+    repaint();
+  }
+  public void doPaint(Graphics g) {
+    if (m_doLayout)
+      doLayout();
+    super.doPaint(g);
+  }
+}
+</pre>
+<p>
+	This allows your code to do a bunch of changes to the
+	tree of components, across
+	several containers, and incur only the overhead of a single
+	final layout. Moreover, <u>it ensures a correct routing of events</u>.
+	For instance, imagine a click of a button
+	that reorganizes the graphical user interface, adding or removing
+	components. Also imagine that this happens on the button down event.
+	With an aggressive re-layout, the layout process will happen right
+	there and then. Consequently, the button up event might be erroneously
+	routed to a different component if the layout has sufficiently changed.
+	Indeed, with the new layout, the current mouse position
+	might be over a different component, computationally but not on the
+	screen since the window has not been repainted yet.
+	For the human that has clicked the mouse,
+	the mouse is still over the old component since the new layout
+	has not been painted on the screen yet. None of these problems will
+	happen if the layout occurs at the last moment, just before
+	the component tree is repainted.
+	<xfr>
+		Cela permets à votre code de faire tout un ensemble de changement
+		sur l'arbre des composants et ne payer le prix que d'une seule
+		réorganisation spatiale. Mais cela assure aussi un routage correct
+		des événements souris et clavier. Imaginez par exemple que vous
+		avez un bouton qui permette de réorganiser votre interface graphique.
+		Lorsque le bouton est enfoncé, le listener va faire cette réorganisation,
+		enlevant et ajoutant plusieurs composants. Si la réorganisation
+		était faite de manière synchrone, elle serait faite plusieurs fois
+		pour rien. Mais en plus, si l'organisation spatiale change suffisamment,
+		le routage de l'événement du bouton relâché pourrait être changé
+		vers un autre composant qui se trouverait maintenant sous la souris.
+		Sauf que comme l'arbre n'a pas été repeint, pour l'utilisateur,
+		la souris n'a pas bouger et est toujours au dessus de l'ancien
+		composant. Le fait de revoir l'organisation juste avant de
+		repeindre évite tous ces problèmes.
+	</xfr>
+</p>
+<p>
+	Do you understant this new code? Do you understand the asynchronous
+	nature of the repaint and the relayout? This is important because
+	this is really what event-oriented programming is about. 
+	<b>Make	sure you understand and discuss these points</b>.
+	You need to. <u>If you just read through, you may understand but
+	you will not learn</u>. <b>Discussing and experimenting are the two pillars
+	to your learning process</b>.
+	<xfr>
+		Comprenez vous ce nouveau code? Comprenez vous la nature
+		asynchrone de ce code? C'est très important de bien
+		comprendre parce que la programmation orientée-événement
+		est intrinsèquement asynchrone.
+		<b>Assurez vous de bien comprendre et d'en discuter.</b>
+		Vous devez le faire. Si vous ne faites que lire l'explication
+		ci-dessus, vous allez peut-être comprendre en lisant, mais
+		vous n'allez pas maîtriser. Pour maîtriser, discuter et
+		expérimenter sont deux moyens efficaces.
+	</xfr>
+</p>
+
+<h3>Preferred Size</h3>
+
+<p>
+	The method <span class="java-method">preferredSize</span>
+	on the class <span class="java-class">Component</span>
+	determines the preferred size of the component.
+	Now let's think about this.
+	<xfr>
+		La méthode <span class="java-method">preferredSize</span>
+		sur la classe <span class="java-class">Component</span>
+		détermine la taille préférée d'un composant.
+		Réfléchissons à cela ensemble.
+	</xfr>
+</p>
+<p>
+	If you would be designing a layout manager, you would want
+	to write the code to layout a container. For that, you
+	would need to know the dimension of that container and
+	the preferred sizes for each children of that container.
+	You would then try to accomodate these preferred sizes
+	when setting the bounds of the children, that is,
+	their location and their dimension.
+	<xfr>
+		Si vous faisiez la conception d'un gestionaire d'organisation
+		spatiale, vous voudriez écrire du code pour organiser
+		spatialement les composants d'un container. Pour cela,
+		vous auriez besoin de connaître les dimensions de ce
+		container et la taille que chaque composant.
+		préférerait avoir. Avec ces informations, vous essaieriez
+		de satisfaire les souhaits de taille des composants
+		en les positionnant et en les dimensionnant au sein de
+		la surface du container.
+	</xfr>
+</p>
+<p>
+	But how does a component know its preferred size?
+	For components that are not containers,
+	they are supposed to know their preferred size. If a component
+	does not know how its preferred size, it will use the dimension
+	of its parent. Look at the method
+	<span class="java-method">getPreferredSize</span>
+	on the class
+	<span class="java-class">Component</span>:
+	<xfr>
+		Mais comment un composant connaît-il sa taille préférée?
+		Pour les composants qui ne sont pas des containers,
+		ils sont supposés connaître leur taille préférée.
+		Si un composant n'a pas de souhait particulier, il va
+		utiliser la taille de son container parent. Regardez
+		le code ci-dessous:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+class Component {
+  protected Dimension m_prefSize;
+
+  public Dimension getPreferredSize() {
+    if (m_prefSize==null)
+      return m_parent.dimension();
+    return new Dimension(m_prefSize);
+  }
+  public void setPreferredSize(Dimension d) {
+    m_prefSize = d;
+    m_parent.layout();
+  }
+  public void setPreferredSize(int w, int h) {
+    m_prefSize = new Dimension(w, h);
+    m_parent.layout();
+  }
+}
+</pre>
+<p>
+	Note that the preferred size can be given to a component
+	by calling the method <span class="java-method">setPreferredSize</span>
+	on the class <span class="java-class">Component</span>.
+	<xfr>
+		Mais aussi, la taille préférée d'un composant peut aussi être
+		donnée à ce composant en invoquant la méthode
+		<span class="java-method">setPreferredSize</span>
+		définie sur la classe <span class="java-class">Component</span>.
+	</xfr>
+</p>
+<p>
+	But is it safe to invoke the method
+	<span class="java-method">layout</span> in this context?
+	It should, right? Think about it and try to justify in your
+	own words before you read on. So, let's discuss this.
+	Setting the preferred size of
+	a component does not seem likely to happen within the
+	global layout of the component tree. Plus, what else could we
+	do? Changing the preferred size requires a re-layout.
+	Finally, what would happen if one would set the preferred size
+	on a component during a global layout? 
+	With our optimization delaying the actual re-layout to the
+	next repaint, the worse case is that we will request another
+	asynchronous layout. Of course, there is a risk of an infinite loop:
+	layout - repaint - doLayout - setPreferredSize - layout.
+	But this is really a design bug on one of the components.
+	So we are good here, we will say that we can invoke
+	the method <span class="java-method">layout</span> from
+	the method <span class="java-method">setPreferredSize</span>.
+	We therefore have to make sure that developers know
+	about this.
+	<xfr>
+		Mais est-ce sûr d'invoquer la méthode 
+		<span class="java-method">layout</span> dans ce contexte?
+		Cela devrait, n'est-ce pas? Pensez-y par vous-même... justifiez
+		votre position avant de poursuivre la lecture. C'est fait?
+		Bon, discutons en. Donner à un composant sa taille préférée
+		ne paraît pas probable lors d'une réorganisation spatiale
+		de l'arbre des composants. De plus, que pouvons-nous d'autre?
+		Changer la taille préférée demande de revoir l'organisation
+		spatiale du parent. Avec notre réorganisation asynchronre, le
+		pire sera que nous demanderons une autre réorganisation qui se
+		fera plus tard, en asynchrone. Nous avons donc le risque
+		d'une récursion infinie asynchronre:
+		layout - repaint - doLayout - setPreferredSize - layout.
+		Mais on se rends bien compte qu'il y a un problème de
+		conception avec le composant provoquant cette situation.
+		Nous allons donc considérer que nous avons une bonne
+		solution et nous devons donc attirer l'attention des
+		développeurs sur ce point.
+	</xfr>
+</p>
+<p>
+	But usually, a component does not rely on its preferred size
+	being set directly, it can compute its preferred size.
+	For instance, a button displaying
+	itself as an icon could use the size of that icon as its
+	preferred size. A label could compute the size of the text to
+	display, given a font size.
+	Any subclass of the class <span class="java-class">Component</span>
+	can therefore override the method 
+	<span class="java-method">getPreferredSize</span> to do the
+	adequate computation. Of course, you would still check if the
+	preferred size was setup
+	by calling the method <span class="java-method">setPreferredSize</span>
+	on the class <span class="java-class">Component</span>.
+	<xfr>
+		Mais généralement, un composant peut calculer un taille
+		préférée qui est plus adaptée. Par exemple, un bouton
+		qui s'affiche via une image (icon) peut utiliser la taille
+		de l'image comme taille préférée. Un label qui affiche un
+		text peut utiliser la taille du text dans une certaine fonte
+		comme taille préférée.
+		Toute classe, sous-classe de la classe
+		<span class="java-class">Component</span>, peut donc
+		surchargée la méthode
+		<span class="java-method">getPreferredSize</span> pour
+		calculer la taille la plus adéquate à sa situation.
+		Bien sûr, vous devrez tester si la taille préférée a été
+		donné par un appel à la méthode
+		<span class="java-method">setPreferredSize</span>.
+	</xfr>
+</p>
+<p>
+	So we are good for components that are not containers.
+	But what about child components that are in fact containers?
+	Some may know their preferred size because it was setup
+	with the method <span class="java-method">setPreferredSize</span>
+	but it is unlikely. Most containers must compute their
+	preferred size based on the preferred sizes of their children.
+	The preferred size is computed by the associated
+	layout manager, calling the method
+	<span class="java-method">LayoutManager.preferredSize</span>.
+	To confirm this, look at how the class
+	<span class="java-class">Container</span>
+	overrides the method <span class="java-method">getPreferredSize</span>:
+	<xfr>
+		Donc nous avons discuté le cas des composants qui ne sont
+		pas des containers, mais qu'en est-il pour les containers?
+		Certains connaîtrons leur taille préférée car elle a été
+		donnée en invoquant la méthode
+		<span class="java-method">setPreferredSize</span>,
+		mais c'est un cas plutôt rare.
+		Dans la plupart des cas, les containers vont calculer leur
+		taille préférée sur la base des tailles préférées de leur
+		composants. Ce calcul est fait par le gestionaire d'organisation
+		spatiale, par la méthode
+		<span class="java-method">LayoutManager.preferredSize</span>.
+		Pour confirmer cela, regardez comment la classe 
+		<span class="java-class">Container</span> surcharge
+		la méthode <span class="java-method">getPreferredSize</span>
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Container {
+  @Override
+  public Dimension getPreferredSize() {
+    if (m_prefSize!=null)
+      return new Dimension(m_prefSize);
+    if (m_layoutMgr != null)
+      return m_layoutMgr.preferredSize(this);
+    return new Dimension(0,0);
+  }
+}
+</pre>
+
+<h3>That's it folks</h3>
+<p>	
+	Please do commit your work.
+</p>
+<textarea class="terminal" rows="4" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.gui, Task4 completed"
+  $ git push --all
+</textarea>
+

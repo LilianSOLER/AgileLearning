@@ -1,0 +1,91 @@
+<vars>
+  sprint=ricm3.ovm
+  task=t0
+</vars>
+
+<p>
+  So let's illustrate what is an interpreter, so that you get an idea of
+  what we are building here. So let's compare an interpreter to a compiler.
+</p>
+<p>
+  So let's talk about Java. First, you edit some sources, your files with
+  a <em>java</em> extension. Then, you use the Java compiler to compile
+  those sources into classfiles, files with the <em>class</em> extension.
+  Finally, you launch the execution of the Java Platform that loads your
+  classes, using a classpath where to find the classfiles.
+</p>
+<p>
+  With interpreted language, things are different. It all starts with
+  launching an interpreter and starting an interative session. This
+  is very much like Linux shell, which is in fact an interpreter.
+  So you type lines of commands and they are interpreted right away
+  as you hit enter. Hence the name: an interpreter. So let's illustrate
+  a simple session:
+</p>
+<textarea class="terminal">
+  $ cd ~/AgileLearning/workshops/oop/ricm3.ovm
+  $ java -cp bin ricm3.ovm.OvmMain
+  >
+</textarea>
+<p>
+  See, from the shell interpreter, you launched the execution of the
+  Java platform that loaded our interpreter, resulting in our interpreter
+  prompting you for entering a statement of the language. See that the
+  prompt as changed from '$' to '>'.
+</p>
+<p>
+  What is a statement?
+  The simplest form is an arithmetic expression ended by a semicolumn:
+</p>
+<pre class="prettyprint lang-java">
+  > 2 + 3 ;
+  -> 5
+  >
+</pre>
+<p>
+  When you hit enter, the statement was parsed and then interpreted. The
+  statement was recognized by the parsing as an expression that is correct
+  syntactically. Then, it was interpreted and the value '5' was computed.
+  Our language will support variables:
+</p>
+<pre class="prettyprint lang-java">
+  > int x = 2;
+  > int y = 3;
+  > x + y ;
+  -> 5
+  >
+</pre>
+<p>
+  We just define two global variables named "x" and "y".
+  We can also define functions:
+</p>
+<pre class="prettyprint lang-java">
+  > int x = 2;
+  > int y = 3;
+  > x + y ;
+  -> 5
+  > void min(int x, int y) {
+  if (x &lt; y)
+    return x;
+  return y;
+  }
+  >
+</pre>
+<p>
+  Now, the interpreter knows a function named "min". You
+  can therefore invoke it:
+</p>
+<pre class="prettyprint lang-java">
+  > min(2,3);
+  -> 2
+</pre>
+<p>
+  So you get the idea of a session, this is an interactive session
+  between you and the interpreter. You write down statements, one
+  at a time, and they are interpreted as you type them. So now,
+  let's move on more technical details about the internals of
+  the interpreter and then discuss the specifics of our language.
+</p>
+
+
+  

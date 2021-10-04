@@ -1,0 +1,169 @@
+<vars>
+  sprint=prog.basics
+  task=t4
+  step=t4-s2
+</vars>
+<p>
+  The <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">TicTacToe game</a> is
+  an old paper and pencil guessing game that you may have played as a child.
+  We will do a simple computer version, working at the command line in your
+  shell. 
+  <xfr>
+  Le jeu <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">TicTacToe game</a> 
+  est un vieux jeu à base de papier et crayon, que vous avez probablement
+  connu enfant. Nous allons réaliser une version électronique simple, 
+  à base de lignes de commandes dans votre shell.
+  </xfr>
+</p>
+<textarea class="terminal" rows="18">
+prog.basics$ java -cp ./bin ricm3.oop.games.GameMain
+Hello!
+ 0) Hanged Man
+ 1) Tic Tac Toe 
+What do you want to play:
+1
+Let's play Tic-Tac-Toe then...
+Player X: row,col?
+0,0
+-----
+|X  |
+|   |
+|   |
+-----
+Player O: row,col?
+1,1
+-----
+|X  |
+| O |
+|   |
+-----
+Player X: row,col?
+2,1
+-----
+|X  |
+| O |
+| X |
+-----
+</textarea>
+
+<p>
+  Let's discuss the code now.
+  Have a look at the class
+  <span class="java-class">GameMain</span> and the
+  method
+  <span class="java-method">main</span>.
+  As you can see, we impose very little on the class
+  <span class="java-class">TicTacToe</span>:
+  <xfr>
+  Discutons du code maintenant. Regardez la classe
+  <span class="java-class">GameMain</span> et la
+  méthode
+  <span class="java-method">main</span>.
+  Comme vous pouvez le voir, nous imposons très peu de choses 
+  sur la classe 
+  <span class="java-class">TicTacToe</span>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class TicTacToe {
+
+  public static char[][] grid;
+
+  public static void initGame(char first) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+  public static void playGame() throws IOException {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>
+<p>
+  The method
+  <span class="java-method">initGame</span> is expected to initialize
+  a brand new game, with the given player as the first player to play.
+  The given player must be either 'X' or 'O'. If not, your code
+  should throw an IllegalArgumentException.
+  <xfr>
+  La méthode
+  <span class="java-method">initGame</span> doit initialiser
+  le jeu, avec le joueur donné comme le premier jouer.
+  Le joueur donné peut être 'X' ou 'O'. Si ce n'est pas le cas, votre code
+  doit lever une IllegalArgumentException.
+  </xfr>
+</p>
+<p>
+  The method
+  <span class="java-method">playGame</span> plays one game.
+</p>
+
+<h3>Difficulties</h3>
+
+<p>
+  We expect you to experience difficulties with three facets of coding
+  this game:
+</p>
+<ol>
+  <li>The grid of cells, as
+    <span class="java-keyword">char[][]</span></li>
+  <li>Encoding player choices in cells</li>
+  <li>Determining the winner</li>
+</ol>
+<p>
+  Let's discuss the grid of cells. Since you succeeded in doing the previous game,
+  you know what is an array. You also know that an array can have elements that
+  are primitive values such as numbers or elements that are object references. Since
+  you know that arrays are objects, you should be able to understand the concept
+  of arrays of arrays, which is of course a matrix.
+  <xfr>
+  Discutons de la grille de cellules. Puisque vous avez réussi à faire le
+  jeu précédent, vous savez ce qu'est un tableau. Vous savez aussi qu'un 
+  tableau peut avoir des éléments qui sont des valeurs primitives comme des
+  nombres, ou des éléments qui sont des références d'objets. Puisque vous
+  connaissez cela, vous devriez être capable de comprendre le concept
+  de tableau de tableaux, qui correspond en fait à une matrice.
+  </xfr>
+</p>
+<p>
+  Again, take charge of your learning, you have everything you need to experiment.
+  So go again, try out arrays of arrays, write small programs, execute them under
+  debugger, and browse arrays of arrays in the <em>Variables</em> view while
+  debugging. Experimenting is the best way to learn.
+  <xfr>
+  A nouveau, soyez responsable de votre apprentissage, vous avez tout ce qu'il
+  faut sous la main pour cela. Essayez les tableaux, les tableaux de tableaux,
+  écrivez des petits programmes, et parcourez vos tableaux de tableaux
+  dans la vue <em>Variables</em>, sous debug. Expérimentez, c'est le 
+  meilleur moyen d'apprendre.
+  </xfr>
+</p>
+<p>
+  The second delicate point is the encoding: use the letter 'X' for the player X,
+  the letter 'O' for the player O, and use a space ' ' to indicate an empty
+  cell. This is a very common trick in coding, use specific values of a large
+  domain of values to represent concepts. Here, the large domain is the domain
+  of all possible characters. The specific values are the characters ' ', 'O', and 'X'.
+  The concepts are an empty cell, a cell played by player X, and a cell played 
+  by player 'O'.
+  <xfr>
+  Le second point délicat est l'encodage: utilisez la lettre 'X' pour le
+  joueur X, la lettre 'O' pour le joueur O, et utilisez un espace pour indiquer
+  une cellule vide. C'est une démarche classique pour ceux qui codent, d'utiliser
+  des valeurs spécifiques d'un domaine de valeurs pour représenter des
+  concepts. ici, le domaine est celui des caractères. Les valeurs 
+  spécifiques sont: ' ', 'O', and 'X'. Les concepts sont: cellule vide,
+  cellule jouée par le joueur X, cellule jouée par le joueur 'O'.
+  </xfr>
+</p>
+<p>
+  The third delicate point is about determining the winner, if any.
+  After each play, the program must inspect the board and determine if
+  one of the player won the game. This is not to be left to the human players.
+  Since the board is only 3x3, you can use brute force here, testing all
+  possibilities.
+  <xfr>
+  Le troisième point délicat est la détermination du gagnant, s'il y en a un.
+  Après chaque partie, le programme doit inspecter la carte et 
+  déterminer si 'lun des joueurs a gagné la partie. Ce tâche n'est pas laissée
+  aux joueurs humains. Puisque la carte est seulement 3x3, vous pouvez
+  tester toutes les options sans problème.
+  </xfr>
+</p>

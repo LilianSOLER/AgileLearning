@@ -1,0 +1,332 @@
+<vars>
+  sprint=prog.basics
+  task=t3
+  step=t3-s1
+</vars>
+
+<p>
+  Switch to the Java perspective, if you are not already there.
+  Under the Java perspective, in the <em>Package Explorer</em> view,
+  on the left-hand side of the window, you can see the
+  <em>prog.basics</em> project into your Eclipse workspace.
+  Browse the <em>prog.basics</em> project to find the Java package
+  <span class="java-package">oop.util</span>
+  and the class 
+  <span class="java-class">MathUtils</span>.
+  <xfr>
+  Allez sur la perspective Java, si vous n'y êtes pas déjà.
+  Sous cette perspective, dans la vue <em>Package Explorer</em>, 
+  sur le coin gauche de la fenêtre, vous pouvez voir le projet
+  <em>prog.basics</em> dans votre workspace.
+  Parcourez le projet <em>prog.basics</em> pour trouver
+  le package <span class="java-package">oop.util</span>
+  et la classe
+  <span class="java-class">MathUtils</span>.
+  </xfr>
+  </p>
+
+<h3>Mathematical Method -- Absolute Value</h3>
+
+<p>
+  We will start with the simple mathematical function that
+  returns the absolute value of a number, either an integer
+  number
+  (<span class="java-keyword">int</span>)
+  or a real number
+  (<span class="java-keyword">float</span>).
+  Notice that in Java, like in most other programming languages,
+  we need to define two methods in the class
+  <span class="java-class">MathUtils</span>.  
+  <xfr>
+  Nous allons démarrer avec la fonction mathématique élémentaire
+  qui retourne la valeur absolue d'un nombre, soit un entier
+  (<span class="java-keyword">int</span>)
+  ou un réel
+  (<span class="java-keyword">float</span>).
+  Notez qu'en Java, comme dans la plupart des langages de programmation,
+  nous avons besoin de définir 2 méthodes dans la classe
+  <span class="java-class">MathUtils</span>.  
+  </xfr>
+  
+</p>
+<pre class="prettyprint lang-java">
+  /**
+   * @param n
+   * @return the absolute value of the given argument.
+   */
+  static public int abs(int n) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+
+  /**
+   * @param n
+   * @return the absolute value of the given argument.
+   */
+  static public float abs(float n) {
+    throw new RuntimeException("Not Yet Implemented");
+  }  
+</pre>
+<p>
+  The compiler will know which method to invoke depending
+  on the given argument:
+  <xfr>
+  La compilateur va savoir quelle méthode invoquer
+  en fonction de l'argument:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  int i = MathUtils.abs(-3); 
+  float f = MathUtils.abs(-3.5F); 
+</pre>
+<p>
+  So what is the absolute value of a number, it is the
+  corresponding positive value. So abs(3)==3 while abs(-3)==3.
+  Obviously, the current implementations are not doing the job.
+  In fact, they are simply throwing an exception, stating
+  that the methods have not been implemented yet.
+  Remember, exceptions are a way of saying "Sorry, no can't do".
+  So this is the case here, since the implementations are
+  not available yet.
+  So go ahead, implement the two methods.
+  <xfr>
+    Donc qu'est la valeur absolue d'un nombre? c'est la valeur
+    positive correspondante. abs(3)==3 et abs(-3)==3. 
+    Evidemment, l'implémentation courante ne fait pas ce qu'il faut.
+    En fait, cette implémentation se limite à lever une exception,
+    signifiant que la méthode n'a pas encore été implémentée.
+    Rappelez-vous, les exceptions sont un moyen de dire "désolé,
+    nous ne pouvons le faire". 
+    Donc c'est le cas ici, puisque l'implémentation n'est pas encore 
+    disponible.
+  </xfr>
+</p>
+
+<h3>Mathematical Method -- Minimum and Maximum Value</h3>
+
+<p>
+  Nothing too fancy here, we are talking about the simple mathematical
+  functions that returns the minimum or maximum value between two
+  numbers, either integer
+  numbers
+  (<span class="java-keyword">int</span>)
+  or a real numbers
+  (<span class="java-keyword">float</span>).
+  <xfr>
+  Rien de compliqué ici, nous parlons de fonctions mathématiques simples
+  qui retournent le minimum ou le maximum de deux nombres, soit 
+  entiers   (<span class="java-keyword">int</span>)
+  ou réels
+  (<span class="java-keyword">float</span>).
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  /**
+   * Compares the two given numbers and return the smallest.
+   * @param x,y
+   */
+  static public int min(int x, int y) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+
+  /**
+   * Compares the two given numbers and return the smallest.
+   * @param x,y
+   */
+  static public float min(float x, float y) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+
+  /**
+   * Compares the two given numbers and return the largest.
+   * @param x,y
+   */
+  static public int max(int x, int y) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+
+  /**
+   * Compares the two given numbers and return the largest.
+   * @param x,y
+   */
+  static public float max(float x, float y) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>
+<p>
+  Again, the compiler will know which method to invoke depending
+  on the given argument:
+  <xfr>
+  A nouveau, le compilateur saura quelle méthode invoquer en fonction
+  de l'argument donné:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  int i = MathUtils.max(-3,2); 
+  float f = MathUtils.min(-3.5F,2F); 
+</pre>
+<p>
+  However, what will the compiler do with the following
+  statement?
+  <xfr>
+  Cependant, que va faire le compilateur avec l'instruction suivante?
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  MathUtils.min(-3.5F,2); 
+</pre>
+<p>
+  The arguments are a float and an integer, so what should
+  happen. Well, try it. So? Indeed, everything is treated
+  as a float.
+  <xfr>
+  Les arguments sont un réel et un entier, donc que doit-il se passer?
+  Essayez. Alors? en effet, tout est traité comme un réel.
+  </xfr>
+
+</p>
+<pre class="prettyprint lang-java">
+  float f = MathUtils.max(-3.5F,2); 
+</pre>
+<p>
+  So the compiler applies a conversion, deciding to convert the integer
+  into a float. But why not convert the float into an integer? Well,
+  this is about preserving information. An integer can be converted to
+  a float, without any loss. A float, however, cannot be converted to
+  an integer without loosing the digits after the dot.
+  <xfr>
+  Donc le compilateur applique une conversion, décidant de convertir
+  l'entier en un réel. Mais pourquoi ne convertit-il pas le réel en un
+  entier? Et bien, cela engendrerait une perte d'information. Un entier peut 
+  être converti en un réel sans perte d'information, le contraire n'est pas
+  vrai.
+  </xfr>
+</p>
+<pre>
+  float f = (float)2;  // lossless cast
+  int   i = (int)2.5F; // loss of information
+</pre>
+
+<h3>Mathematical Method -- Comparing Values</h3>
+
+<p>
+  This is a traditional trick in computing, encode information
+  using integer values. Here, we need to compare two numbers.
+  So we have three possible cases:
+  <xfr>
+  C'est une histoire récurrente en informatique, encoder l'information
+  en utilisant des valeurs entières. Ici nous avons besoin de
+  comparer deux nombres. Nous avons trois cas possibles:
+  </xfr>
+</p>
+<ol>
+  <li>The two numbers are equal.</li>
+  <li>The first number is smaller than the second number.</li>
+  <li>The second number is smaller than the first number.</li>
+</ol>
+<p>
+  We cannot use a boolean that has only two possible values:
+  <span class="java-keyword">true</span> or
+  <span class="java-keyword">false</span>.
+  So we can use an integer to encode the three cases:
+  <xfr>
+  Nous ne pouvons pas utiliser un booléen, car celui-ci ne fournit
+  que deux valeurs:  <span class="java-keyword">true</span> or
+  <span class="java-keyword">false</span>.
+  Donc nous allons utiliser un entier.
+  </xfr>
+</p>
+<ol>
+  <li> Return 0 if the two numbers are equal.</li>
+  <li> Return -1 if the first number is smaller than the second number.</li>
+  <li> Return 1 if the second number is smaller than the first number.</li>
+</ol>
+<pre class="prettyprint lang-java">
+  /**
+   * Compares the two given numbers.
+   * @param x,y
+   * @return 0 if the two given numbers are equal, 
+   *         -1 if the first is less than the second
+   *         +1 if the first is greater than the second
+   */
+  static public int comp(int x, int y) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+
+  /**
+   * Compares the two given numbers.
+   * @param x,y
+   * @return 0 if the two given numbers are equal, 
+   *         -1 if the first is less than the second
+   *         +1 if the first is greater than the second
+   */
+  static public int comp(float x, float y) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>
+
+<h3>Mathematical Method -- Factorial</h3>
+
+<p>
+  The mathematical function <em>factorial</em>
+  is noted <em>n!</em> and recursively defined as follows:
+</p>
+<pre>
+  n! = n * (n-1)!
+</pre>
+<p>
+  As a computer function, it can also be defined recursively
+  as follows:
+</p>
+<pre>
+  fact(n) = n * fact(n-1)
+</pre>
+<p>
+  But it can also be approached iteratively, as follows:
+</p>
+<pre>
+   n! = n * (n-1) * (n-2) * ... * (n - n + 1)
+</pre>
+<p>
+  We ask that you implement both approaches in the
+  following two methods:
+</p>
+<pre class="prettyprint lang-java">
+  /**
+   * Compute the factorial number of the given number.
+   * The implementation is an iterative approach, using
+   * a loop statement.
+   */
+  static public int factI(int n) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+
+  /**
+   * Compute the factorial number of the given number.
+   * The implementation follows a recursive approach.
+   */
+  static public int factR(int n) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>
+
+<h3>Testing Your Mathematical Methods</h3>
+
+<p>
+  You will be able to test your coding with our tests,
+  look for our tests in the Java package
+  <span class="java-package">oop.util.tests</span>. 
+  In particular, look for the class 
+  <span class="java-class">MathTests</span> that
+  runs tests to check your implementations of the
+  previous mathematical functions.
+  <xfr>
+  Vous allez être capable de tester votre code avec vos tests,
+  regardez pour cela nos tests dans le package 
+  <span class="java-package">oop.util.tests</span>. 
+  En particulier, regardez la classe
+  <span class="java-class">MathTests</span> qui 
+  exécute les tests pour vérifiez vos implémentations 
+  des fonctions mathématiques précédentes.
+  </xfr>
+</p>
+

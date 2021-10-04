@@ -1,0 +1,60 @@
+<vars>
+  sprint=java.basics
+  task=t6
+  step=t6-s2
+</vars>
+
+
+<p>
+  Launch the execution of the class <span class="java-class">JavaBasicsStep6</span>,
+  what do you see? First it does not crash, but it complains
+  because all three polygon objects are not the same mathematical polygon.
+  Since p1 and p2 are the same, you can tell that it is p3 that is not
+  shaped correctly.
+  <xfr>
+    Lancer l'exécution de la classe
+    <span class="java-class">JavaBasicsStep6</span>, que voyez vous?
+    En premier lieu: l'exécution se termine sans crash. Mais elle se plaint
+    parce que les 3 polygons ne sont pas les mêmes mathématiquement parlant.
+    Puisque p1 et p2 sont le même object polygon, vous pouvez dire que le
+    problème doit venir de p3.
+  </xfr>
+</p>
+<p>
+  Look at the method <span class="java-method">createPolygon</span>,
+  it contains the bug. Pay attention to how the different points are created
+  and then translated. Build the object graph, with the array and the points.
+  Help yourself with the debugger to see what is happening and how things
+  are going wrong. Then fix the code of the
+  method <span class="java-method">createPolygon</span>.
+  <xfr>
+    Regardez la méthode <span class="java-method">createPolygon</span>,
+    elle contient le bug. Faites attention à la manière dont les différents
+    points sont créés puis translatés. Construisez sur une feuille de papier
+    le graphe d'objets, avec le tableau et les points. Aidez vous du debugger
+    pour voir ce qui se passe vraiment. Puis corrigez le bug.
+  </xfr>
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/java.basics"
+   classpath="bin;tests.jar"
+   classname="basics.step6.TestPolygon1">
+  <banner>
+  </banner>
+  <hint>
+    Try again, you didn't fix the
+    method <span class="java-method">createPolygon</span>
+    properly.
+  </hint>
+  <success>
+    You did fixed it.
+    Well done.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+<div name="check1_unfold" style="display:none;" >
+</div>

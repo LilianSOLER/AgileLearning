@@ -1,0 +1,909 @@
+<vars>
+  sprint=object.classes
+  task=t2
+</vars>
+
+<p>
+  This task is about designing a file system, usable from a basic
+  command-oriented shell.
+  This is interesting
+  both from an object-oriented programming perspective and a shell
+  perspective.
+  From a shell perspective, you will better understand what is a
+  shell and how it interacts with the underlying file system.
+  From an object-oriented programming perspective, you will
+  use the power of object-oriented programming to implement
+  and improve an implementation of an in-memory file system.
+  <xfr>
+    Cette tâche est sur la conception d'un système de fichier, utilisable
+    depuis la ligne de commande comme un shell. C'est une tâche intéressante
+    à la fois du point de vue de la programmation orientée-object et
+    du point de vue de ce qu'est un shell.
+    Vous comprendrez mieux ce qu'est un shell et comment il intéragit
+    avec le système de fichiers sous-jacent. En ce qui concerne la
+    programmation objet, nous allons apprendre à utiliser les mécanismes
+    avancés de la programmation orientée-objet.
+  </xfr>  
+</p>
+
+<h3>File System</h3>
+
+<p>
+  You are probably already familiar with the concept of a file
+  system, based on directories and files. A file is a sequence
+  of byte; a sequence that can be read or written randomly.
+  Each file belongs to one directory and directories are structured
+  as a family tree---each directory belongs to one parent directory.
+  Therefore, a directory has only one parent and zero to many child
+  directories.
+  <xfr>
+    Vous êtes familier du concept de système de fichiers, fondé sur
+    les concepts de dossiers et de fichiers. Un fichier est une
+    séquence d'octets; une séquence qui peut être lue et écrite
+    de façon aléatoire. Chaque fichier appartien à un seul dossier
+    et les dossiers sont organisés comme un arbre généalogique, avec chaque
+    dossier appartenant à un seul dossier. Autrement dit,
+    chaque dossier a un seul parent et zéro ou plusieurs dossier
+    fils. 
+    </xfr>
+</p>
+<p>
+  Look in the project <em>"object.classes"</em> in the source
+  folder <em>shared</em> for the package
+  <span class="java-package">oop.filesys</span>.
+  You will find the Java interfaces for our file system.
+  These interfaces are inspired from the Linux file system
+  and should feel familiar.
+  <xfr>
+    Regarez le projet <em>"object.classes"</em> dans le dossier
+    source <em>shared</em> pour le paquet 
+    <span class="java-package">oop.filesys</span>.
+    Vous allez y trouver les interfaces de notre système de fichiers,
+    qui sont inspirées du système de fichier Linux et qui devraient
+    donc vous paraître familière.
+  </xfr>
+</p>
+<ul>
+  <li>Interface <span class="java-class">IFileSystem</span></li>
+  <li>Interface <span class="java-class">IFile</span></li>
+  <li>Interface <span class="java-class">IDirectory</span></li>
+</ul>
+<p>
+  To get a better feel for these interfaces, you can also look
+  at our tests, in the class
+  <span class="java-class">TestSuite</span> in the package
+  <span class="java-package">oop.filesys.tests</span>.
+  The code is fairly simple.
+  <xfr>
+    Pour mieux comprendre comment utiliser ces interfaces, vous
+    pouvez regarder nos tests dans la classe
+    <span class="java-class">TestSuite</span> dans le paquet
+    <span class="java-package">oop.filesys.tests</span>.
+    Le code est facile à lire et à comprendre.
+  </xfr>
+</p>
+<p>
+  Now look in the source folder <em>task2</em>, you will find the
+  skeletons for the classes to implement our file system.
+  These classes are the following in the Java package
+  <span class="java-package">filesys.oop.task2</span>:
+  <xfr>
+    Regardez dans le source folder <em>task2</em>, vous allez
+    trouver les squelettes des classes qui implémentent notre
+    système de fichiers. Ces classes sont les suivantes dans le
+    paquet 
+    <span class="java-package">filesys.oop.task2</span>:
+  </xfr>
+</p>
+<ol>
+  <li>class <span class="java-class">FileSystem</span>.</li>
+  <li>class <span class="java-class">Directory</span>.</li>
+  <li>class <span class="java-class">File</span>.</li>
+</ol>
+<p>
+  Notice that these classes implement the interfaces defined
+  in the Java package
+  <span class="java-package">oop.filesys</span>.
+</p>
+
+<h3>In-Memory File System</h3>
+
+<p>
+  What is an in-memory file system? It may not be obvious to you
+  since you are used to a file system
+  above a mass storage, like with USB keys or a hard disks;
+  so you probably associate the concept of a file system with the
+  ability to use a mass storage. Historically, this is entirely
+  true, but a file system is also just a way to organize data.
+  <xfr>
+    Qu'est-ce qu'un système de fichier en mémoire? Cela peut ne
+    pas être évident à prime abord car vous êtes habitué aux
+    systèmes de fichiers sur un stockage de masse. Historiquement,
+    vous n'avez pas tort, mais un système de fichier est juste
+    façon d'organiser des données.
+  </xfr>
+</p>
+<p>
+  In our case, an in-memory file system is a file system implemented using
+  Java object. There is no concept of mass storage. A directory
+  is an object, it references sub-directories and files, that are
+  also objects. In particular, this means that files are Java objects.
+  The content of a file is a sequence of bytes, they are kept in a byte array,
+  just another Java object.
+  See, these bytes are never <em>"written"</em> to
+  a mass storage and consequently they are never <em>"read"</em>
+  either.
+  <xfr>
+    Dans notre cas, un système de fichier en mémoire est un système de
+    fichier implémenté avec des objets Java, en mémoire seulement. Il
+    n'y a aucun concept de stockage de masse. Un dossier est un objet
+    qui référence des sous dossier et des fichiers, qui sont aussi des
+    objets. Les fichiers sont des objets Java. Le contenu d'un fichier
+    est une séquence d'octets qui est gardée dans un tableau d'octet,
+    encore un objet Java. Ces octets ne sont jamais écrit sur un stockage
+    de masse et donc ils ne sont jamais lu.
+  </xfr>
+</p>
+<p>
+  So be open minded, a file system is only a way to organize information,
+  it is not always related to a mass storage. It is a way to organize
+  files within directories with hierarchical names. In fact, Linux implements
+  an in-memory file system, called the
+  <a href="https://wiki.debian.org/ramfs"><em>ramfs</em></a>,
+  which stands for
+  a <b>f</b>ile <b>s</b>ystem in <b>ram</b> memory.
+  <xfr>
+    Ayez l'esprit ouvert, un système de fichier n'est après tout qu'une
+    organisation de l'information, il n'a pas à être relié à un système
+    de stockage de masse. C'est une organisation hiérarchique en dossiers
+    de fichiers qui sont des séquences d'octets. En fait, Linux implémente
+    un système de fichier en mémoire, appelé  
+    <a href="https://wiki.debian.org/ramfs"><em>ramfs</em></a>,
+    pour <b>f</b>ile <b>s</b>ystem in <b>ram</b> memory.
+  </xfr>
+</p>
+
+<h3>Implementation</h3>
+  
+<p>
+  We ask that you finish the implementation of the classes
+  in Java package
+  <span class="java-package">filesys.oop.task2</span>,
+	implementing a in-memory file system.
+  Please respect the code already present: class names,
+  types and names of fields, and signatures of methods.
+  You may add new methods and new fields,
+  if necessary. You may add new classes, but this should not be
+  necessary. Of course, you may add new classes to carry
+	your own experiments and your own tests.
+  There are a few important points to respect:
+  <xfr>
+		Nous vous demandons de finir l'implémentation des classes
+		dans le package
+		<span class="java-package">filesys.oop.task2</span>,
+		en implementant un système de fichier en mémoire.
+		Nous vous demandons de respecter le code qui vous
+		a été donné: les noms des classes, les types et les noms
+		des champs, ainsi que les signatures des méthodes.
+		Vous pouvez bien sûr ajouter des nouveaux champs
+		et de nouvelles signatures. Vous pouvez aussi
+		créer de nouvelles classes, surtout pour expérimenter
+		et tester. Il y a un certain nombre de points importants
+		à respecter:
+  </xfr>
+</p>
+<ul>
+  <li>
+    You may <b>not</b> modify the interfaces from the
+    Java package
+    <span class="java-package">oop.filesys</span>.
+  </li>
+  <li>
+    Notice the constructors of
+    the class <span class="java-class">Directory</span>.
+    One is to construct the root of the tree of the file system.
+    The other is to construct other directories, belonging to
+    a parent directory. 
+  </li>
+  <li>
+    Remember that all directories belong to the same file system.
+  </li>
+  <li>
+    Notice that each directory maintains the parent-child relationship.
+    Indeed, a directory is created as a child of another directory, right?
+    So it makes sense to maintain the relation of ownership immediately
+    as part of constructing a directory.
+  </li>
+  <li>
+    Notice that each file also maintain the relation of ownership
+		with its directory since a file belongs to a parent directory.
+  </li>
+  <li>
+    Since directories and files are organized as a tree, there
+    is a path along that tree to any file or directory.
+    That path is what returns
+    the method <span class="java-class">path</span>, the path
+    of a file or directory can be built recursively based on the path
+    of the parent directory. 
+  </li>
+</ul>
+<p>
+  <b>Do not confuse</b> the parent relationship between directory
+  objects, which forms a tree structure, with the inheritance
+  relationship between classes, which also forms a tree structure.
+  One is a tree structure related to the object graph, that is,
+  how you decided to organize objects into meaningful and
+  useful object graphs. The other is related to the inheritance
+  hierarchy of classes, that is, how you decided to organize
+  your source code, exploiting class inheritance via the
+  <span class="java-keyword">extends</span>
+  keyword.
+  <xfr>
+    Ne confondez pas les deux arbres. Un arbre est la relation
+    entre les dossiers, une relation entre un dossier père et
+    ses dossiers fils. L'autre arbre est celui de l'héritage
+    entre classes. Le premier est un arbre dans le graphe d
+    d'objet, à l'exécution. Il décrit la manière par laquelle
+    les objets sont organisés pour travailler ensemble.
+    Le second est en rapport à la structuration en classes
+    que vous avez choisi et l'exploitation de l'héritage.
+  </xfr>     
+</p>
+<p>
+  So go ahead, implement the above classes and do not forget to
+  test your code, writing your own test code. As part of that
+  testing, you may also use our line-oriented shell as a way to
+  play with your implementation. Read on the next section for
+	information about that.
+	<xfr>
+		Allez-y, implémentez les classes ci-dessus et n'oubliez pas
+		de tester votre code, en écrivant votre propre code de test.
+		Vous pouvez aussi utiliser notre shell pour faire des tests
+		via la ligne de commande. Pour savoir comment faire, lisez
+		la section suivante.
+	</xfr>
+</p>
+
+<h3>Using our Shell</h3>
+
+<p>
+   Look for the 
+  class <span class="java-class">filesys.oop.task2.Task2Shell</span>
+  as a way to launch our shell with your implementation of the
+  file system. You can use the following commands:
+</p>
+<ol>
+  <li><em>pwd</em> to print the working directory.</li>
+  <li><em>cd</em> to change the working directory.</li>
+  <li><em>ls</em> to list files and directories in the working directory.</li>
+  <li><em>mkdir</em> to make a new directory in the working directory.</li>
+  <li><em>rmdir</em> to remove a directory from the working directory.</li>
+  <li><em>touch</em> to create a file in the working directory.</li>
+  <li><em>rm</em> to remove a file from the working directory.</li>
+  <li><em>cat</em> to print a file in the working directory.</li>
+  <li><em>edit</em> to edit a file in the working directory.</li>
+  <li><em>mv</em> to move a file or directory.</li>
+  <li><em>ln</em> to create a symbolic link. <b>Do not use for now</b>.</li>
+</ol>
+<p>
+  So go ahead, play around with the shell that should look and feel
+  like your regular Linux shell, but a bit simpler.
+  You can get help with the command "help".
+  <xfr>
+    Allez-y, utilisez notre shell pour tester votre implémentation.
+  </xfr>
+</p>
+<p>
+	Of course, you are welcomed to look and understand the design and
+	implementation of our shell... The more code you read, the better
+	you will become.
+</p>
+
+<h3>Lifecycle Discussion</h3>
+
+<p>
+  Once you have tested your code, and then played around with our shell,
+	and you feel you code
+  is OK, we must discuss a <em>very important design point</em> in details:
+  <b>
+    the lifecycle of a directory or a file.
+  </b>
+  <xfr>
+    Une fois que vous avez utilisé le shell et que vous pensez que votre
+    code est correct, nous devons entamer une discussion importante sur
+    la conception:
+    <b>
+      le cycle de vie d'un dossier ou d'un fichier.
+    </b>  
+  </xfr>
+</p>
+<p>
+	What is the lifecyle of a directory or a file? Well, notice
+  that a directory may be created and then later removed.
+  The same is true with a file. Look at the snippet of code
+	below:
+  <xfr>
+    Notez qu'un dossier peut être créé puis détruit.
+    De même pour un fichier. Regardez le petit bout de code
+		ci-dessous:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  IDirectory d = root.mkdir("tmp");
+  IFile f = d.touch("todo-notes");
+  ...
+  d.rm("todo-notes");
+  root.rmdir("tmp");
+</pre>
+<p>
+  Nothing surprising here, since it is what you are used to, when using a shell.
+  Create a temporary directory to create a file, use the file, remove the file,
+  and then remove the directory.
+  But what about this code?
+  <xfr>
+    Il n'y a rien de surprenant dans le code ci-dessus, n'est-ce pas?
+    Il y a une création d'un dossier temporaire, puis d'un fichier, qui sera
+    supprimé avant de supprimer le dossier. Tout cela est parfaitement correct
+    et ne doit pas vous surprendre puisque cela corresponds à un usage
+    habituel des dossiers et des fichiers.
+    Mais que dire de ce code ci-après:
+  </xfr>  
+</p>
+<pre class="prettyprint lang-java">
+  IDirectory d = root.mkdir("tmp");
+  root.rmdir("tmp");
+  d.touch("todo-notes");
+  ...
+  d.rm("todo-notes");
+</pre>
+<p>
+  What should happen on the third line?
+  It is obviously wrong, right? Indeed, the directory "tmp"
+	has been removed and it is still used. Will Java raise an exception?
+  Not really, the object still exist, so Java will carry any method
+  invocation on the object without throwing any exception.
+  This means that it is the developers' job to do so, tracking
+  the lifecycle of the object. Here, the Java object exists,
+  but the directory that it represents has been removed.
+  The same must be done with files.
+  <xfr>
+    Que doit-il se passer à la troisième ligne? Il y a un bug,
+    n'est-ce pas? Mais est-ce que Java va lever une execption?
+    Pas vraiment puisque l'objet existe, il est parfaitement valid
+    du point de vue du runtime Java, donc Java va exécuter toute
+    invocation de méthode sur l'objet. Cela veut dire que c'est la
+    responsabilité de votre code de savoir si un objet
+    corresponds à un dossier a été enlevé ou pas.
+    Cela est vrai aussi pour les fichiers.
+  </xfr>
+</p>
+<p>
+  From a specification point of view,
+  a removed directory should no longer accept to be operated on.
+	The same must be true for removed files. Look at the specification of the
+  method
+  <span class="java-method">touch</span> on the interface
+  <span class="java-class">IDirectory</span>:
+  <xfr>
+    Regardons la spécification, un dossier qui a été supprimé ne doit
+    plus être operationnel. Regardez la spécification dans le code
+    de la méthode
+    <span class="java-method">touch</span>
+    sur l'interface 
+    <span class="java-class">IDirectory</span>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  /**
+   * Create a file with the given name, or returns it if it exits already.
+   * @param the name of the wanted file (not a path)
+   * @return the created file.
+   * @throws FSException if unexpected situation.
+   */
+  public IFile touch(String name) throws FSException;
+</pre>
+<p>
+  See, the specification tells you that you must expect that
+	an execption may be thrown in the case of an unexpected situation.
+	Well, if the directory has been removed, the situation qualifies
+	as an unexpected situation,	right? Indeed, since some code is using
+	a removed directory, which is a programming error. 
+  So this means that it is up to your code to track if a directory object represents
+  a valid directory or a removed directory. The same is true for file objects.
+  <xfr>
+    Il est clair que la spécification dit que l'objet doit savoir si
+    il corresponds à un dossier valid ou un dossier supprimé. Si il
+    corresponds à un dossier supprimé, il doit soulever une exception
+    FSException si on lui demande de créer un fichier.
+    C'est donc à votre code de savoir si un object corresponds ou pas
+    à dossier supprimé. C'est la même chose pour les objects qui
+    représentent un fichier.
+  </xfr>
+</p>
+
+<!--
+<h3>Debugging/Logging Tip</h3>
+
+<p>
+  Look at the following code snippet. Should it fail with a
+  thrown exception?
+	<xfr>
+		Regardez le code ci-dessous, doit-il échouer ou pas
+		en levant une exception d'exécution?
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  IDirectory d = root.mkdir("home");
+  root.rmdir("home");
+  System.out.println("Removed "+d.path());
+</pre>
+<p>
+  Well, we could say yes, since a removed directory is invoked
+	at line 3. But we could also realize it may be usefull that
+  certain methods remain functional on removed directories and files.
+	Maybe, you still want to be able to log illegal accesses, like
+	in the following code:
+	<xfr>
+		Et bien nous pourrions dire que oui, puisque un dossier qui a
+		été enlevé est invoqué à la ligne 3. Cependant, il est souvent
+		intéressant de garder certaines méthodes en étant de fonctionnement.
+		Par exemple, vous pourriez vouloir garder un log des accès illégaux:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  PrintStream logger;
+  IFile touch(IDirectory d, String name) {
+    try {
+      return d.touch(name);
+    } catch(FSException ex) {
+      logger.println("Illegal access: "+d.path());
+    }	
+    return null;
+  }
+</pre>
+<p>
+	Also, you may want during debugging to look at a directory
+	or a file that might have been removed. If you click on that
+	object in the <em>"Variables"</em> view, the debugger will
+	invoke <span class="java-method">toString</span> on the
+	object. If it is a directory, it likely that it has overriden
+	that very method like this:
+	<xfr>
+		Vous pourriez aussi vouloir continuer à debugger normalement.
+		Vous voyez, le debugger invoke la méthode
+		<span class="java-method">toString</span> lorsque vous cliquez
+		sur une variable qui est une référence d'objet. Si l'objet
+		redéfini la méthode <span class="java-method">toString</span>
+		comme le fait la classe
+		<span class="java-class">Directory</span>, votre expérience
+		de debug ne va pas être sympa.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Directory implements IDirectory {
+  @Override
+  public String toString() {
+    return path();
+  }
+}
+</pre>
+<p>
+  So the method <span class="java-method">toString</span> should keep
+	working at all times or your debugging experience will be
+  a nightmare. Try it, raise an FSException in the method
+  <span class="java-method">path</span>, single step through the snippet above
+  and see what happens when you click on a reference variable that
+	refers to a directory. 
+  <xfr>
+    Il est fortement conseillé donc que la méthode
+    <span class="java-method">toString</span> continue de fonctionner
+    sur les objets supprimés. Essayez, faites en sorte que la méthode
+    <span class="java-method">path</span> lève une exception. Puis,
+    exécutez pas-à-pas le snippet de code ci-dessus et voyez ce qui se passe.
+  </xfr>
+</p>
+<p>
+	Which method should still work on an object considered as invalid?
+	Well, there is no definitive answer there, but usually the methods
+	that allow to know which object it is, when debugging or logging,
+	are a good starting place.
+</p>
+
+<h3>Discussing: <span class="java-class">Exception</span> or
+	<span class="java-class">RuntimeException</span> </h3>
+
+<p>
+	When should one use a regular exception or a runtime exception?
+	This is an interesting question to discuss. So let's look again
+	at the specification of the method
+	<span class="java-class">IDirectory.touch(String)</span>.
+</p>
+<pre class="prettyprint lang-java">
+  /**
+   * Create a file with the given name, or returns it if it exits already.
+   * @param the name of the wanted file (not a path)
+   * @return the created file.
+   * @throws IllegalStateException if this directory was removed from its parent.
+   * @throws IOException if the name conflicts with a directory name.
+   *         Use also for other unspecified exception.
+   */
+  public IFile touch(String name) throws IOException;
+</pre>
+<p>
+	Notice the coding difference between the illegal-state exception
+  (<span class="java-class">IllegalStateException</span>) and the
+	input-output exception (<span class="java-class">IOException</span>).
+	One is declared in the signature of the method
+	<span class="java-method">touch</span>, via a
+	<span class="java-keyword">throws</span> clause. The other is not
+	declared. Why is that?
+	<xfr>
+		Notez la différence de codage entre l'exception "état illégal"
+		et celle "entrée-sortie". L'une est déclarée dans la clause
+		<span class="java-keyword">throws</span> de la méthode
+		<span class="java-method">touch</span> et l'autre ne l'est pas.
+		Pourquoi?
+	</xfr>
+</p>
+<p>
+	You should remember that <b>exceptions are either regular exceptions
+	or runtime exceptions</b>, meaning that an exception class either
+	extends, directly or indirectly, the class
+	<span class="java-class">Exception</span> or the class
+	<span class="java-class">RuntimeException</span>. 
+	Go read the documentation of the class
+	<span class="java-class">RuntimeException</span>. 
+	<xfr>
+		Vous devez vous comprendre et mémoriser que les exceptions
+		sont soit des exceptions "normales" et bien des exceptions
+		dites d'exécution. Ces dernières sont les classes d'exceptions
+		qui étendent, directement ou indirectement, la classe
+		<span class="java-class">RuntimeException</span> alors que
+		les premières étendent, directement ou indirectement, la classe
+		<span class="java-class">Exception</span>. 
+	</xfr>		
+</p>
+<p>
+	The documentation of the class
+	<span class="java-class">RuntimeException</span>
+	tells you that runtime exceptions do not need to be declared
+	in the signature of methods or constructors that may throw them.
+	This means that using runtime exceptions does not force the use
+	of <span class="java-keyword">try-catch</span> blocks everywhere.
+	<xfr>
+		La documentation de la classe
+		<span class="java-class">RuntimeException</span>
+		vous dit que les exceptions d'exécution n'ont pas besoin
+		d´être déclarée dans la signature des méthodes qui les
+		soulèvent. Cela veut dire que si vous codez en utilisant des
+		exceptions d'exécution, vous ne forcez pas l'usage de
+		blocs lexicaux <span class="java-keyword">try-catch</span>
+		pour les gérer.
+	</xfr>
+</p>
+<p>
+	Let's do a small experiment so that we make sure you understand.
+	In the method
+	<span class="java-method">touch</span>
+	of the class
+	<span class="java-class">filesys.oop.task2.Directory</span>,
+	try throwing an illegal argument exception if there is no given name,
+	like this:
+	<xfr>
+		Faisons une petite expérimentation pour s'assurer que vous
+		avec compris. Dans la méthode
+		<span class="java-method">touch</span>
+		de la classe
+		<span class="java-class">filesys.oop.task2.Directory</span>,
+		essayez de lever une exception "état illégal" si le paramêtre
+		du nom vaut la valeur	<span class="java-keyword">null</span>.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  @Override
+  public IFile touch(String name) {
+    if (name==null)
+      throw new IllegalArgumentException();
+    return name;
+  }
+</pre>
+<p>
+	What happens? Nothing, right? Indeed, an illegal-argument exception
+	is a runtime exception, the class 
+	<span class="java-class">IllegalArgumentException</span>
+	also extends the class
+	<span class="java-class">RuntimeException</span>.
+	Now try throwing a regular exception, like this:
+	<xfr>
+		Que se passe-t-il? Rien, n'est-ce pas? En effet, l'exécution
+		levée est bien une exception d'exécution puisque la classe
+		<span class="java-class">IllegalArgumentException</span>
+		étends la classe
+		<span class="java-class">RuntimeException</span>.
+		Essayez maintenent de lever une exception normale:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  @Override
+  public IFile touch(String name) {
+    if (name==null)
+      throw new Exception();
+    return name;
+  }
+</pre>
+<p>
+	What happens? The compiler complains about an unhandled exception.
+	It is perfectly correct, of course.
+	At this point, you would need to add the unhandled exception to the
+	method signature, just like this:
+	<xfr>
+		Que se passe-t-il? Le compilateur se plaint maintenant à propos
+		d'une exception non gérée, et il a raison.
+		A ce point, vous pouvez déclarer l'exception non-gérée dans la
+		signature de la méthode, comme ceci:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  @Override
+  public IFile touch(String name) throws Exception {
+    if (name==null)
+      throw new Exception();
+    return name;
+  }
+</pre>
+<p>
+	But what happens then? The compiler complains that the
+	<span class="java-keyword">throws</span>-clause
+	is not compatible with the definition of the method
+	that this method overrides, that is, the method
+	<span class="java-class">IDirectory.touch(String)</span>.
+	See, Java considers that thrown exceptions are part
+	of the method signature.
+	<xfr>
+		Mais que se passe-t-il maintenant? Le compilateur
+		montre une autre erreur, il dit que la clause
+		<span class="java-keyword">throws</span> n'est
+		pas compatible avec celle de la définition de la méthode
+		surchargée
+		<span class="java-class">IDirectory.touch(String)</span>.
+		Vous voyez, Java considère que les exceptions déclarées
+		comme levées font bien partie de la signature d'une
+		méthode.
+	</xfr>	
+</p>
+<p>
+	Now think, can you justify why that is? Why does it make
+	sense that a method overriding another method cannot declare new
+	thrown exceptions in the
+	<span class="java-keyword">throws</span>-clause?
+	If you cannot make sense of this, discuss it with others
+	and ask questions to the teaching staff.
+	<xfr>
+		Réfléchissez à cela maintenant. Pouvez vous le justifier?
+		Si ce n'est pas clair, discutez en avec les autres étudiants
+		et posez des questions aux enseignants.
+	</xfr>
+</p>
+<p>
+	Because it does make sense. The signature of a
+	method is a contract for whomever uses it. So if it does
+	not declare that a certain exception is thrown, no one invoking
+	that method will define 
+	<span class="java-keyword">try-catch</span> blocks. Why
+	should they? Indeed, look at the code below:
+	<xfr>
+		En effet, cela a du sense. La signature d'une méthode
+		est un contrat pour ceux qui l'invoque. Cela veut dire
+		que si une méthode ne déclare pas une exception comme
+		levée, alors le code utilisant cette méthode ne sera
+		pas forcé d'ajouter des blocs lexicaux
+		<span class="java-keyword">try-catch</span> partout.
+		Pour vous en convaincre, regardez le code ci-dessous:
+	</xfr>		
+</p>
+<pre class="prettyprint lang-java">
+  public IFile foo(IDirectory d, String name) {
+    return d.touch(name);
+  }
+</pre>
+<p>
+	It looks perfect, and it is.
+	But remember that when invoking a method,
+	there is late binding going on, that is,
+	the invoked method may be	one from a subclass.
+	In this case, it is the method of the class
+	implementing the interface
+	<span class="java-class">IDirectory</span>. 
+	<xfr>
+		Ce code est correct. Cependant, rappelez vous
+		de la présence de la liaison tardive. Rappelez-vous
+		que l'appel d'une méthode est une demande pour l'exécution
+		d'une méthode en fonction d'un signature. Du coup,
+		la méthode exécuter peut être celle d'une sous-classe.
+		Dans notre cas, c'est le code d'une méthode sur la classe
+		qui implémente l'interface
+		<span class="java-class">IDirectory</span>.
+	</xfr>
+</p>
+<p>
+	But now, what should happen if that overriding method
+	should declare a new exception as thrown? The code
+	would not be ready to handle this. This is changing
+	the contract and this should not be allowed by the
+	compiler. 
+	<xfr>
+		Mais maintenant, que devrait-il se passer si la méthode
+		invoquée, après la liaison tardive, définissait une
+		exception comme levée? Et bien le code ne serait pas
+		prêt à gérer une telle exception. C'est un changement
+		de contrat que le compilateur doit interdire.
+	</xfr>
+</p>
+<p>
+	See, it does not
+	make sense for an overriding method to declare new
+	exceptions in its <span class="java-keyword">throws</span>
+	clause. <b>Make sure that you understand this point</b>,
+	ask if you do not.
+	<xfr>
+		Vous voyez, cela n'a pas de sense d'autoriser une
+		sous-classe à surcharger une méthode et à déclarer
+		de nouvelles exceptions comme levées. Assurez vous
+		de bien comprendre ce point et demandez de l'aide
+		si ce n'est pas le cas.
+	</xfr>
+</p>
+<p>
+	But, of course, you can use runtime exception to throw exception
+	when unexpected situations arise in your implementation.
+	See, this is why regular exceptions and runtime exceptions
+	are conceptually different. A regular
+	exception may be about an exceptional situation, since it is
+	an exception after all, but the corresponding exceptional
+	situation is expected to happen as part of the regular
+	execution of the method, just not often. For a runtime exception,
+	the exceptional situation is not expected, it needs
+	to be reported but it should not have happened. In our
+	example with directories and files, we throw exceptions
+	to indicate an illegal usage, hence the use of the class
+	<span class="java-class">IllegalStateException</span>.
+	<xfr>
+		Cela étant dit, vous pouvez bien sûr utiliser des exceptions
+		d'exécution pour indiquer une situation inattendue dans
+		vos implémentations. Vous voyez, c'est pour cela que les
+		exceptions d'exécution sont différentes. Une exception est
+		toujours levée à cause d'une situation exceptionnelle, mais
+		cette situation peut être exceptionnelle mais attendue ou
+		bien inattendue. Dans notre exemple avec les dossiers
+		et les fichiers, nous levons des exceptions d'exécution
+		pour indiquer un usage illégal, d'où l'usage de la classe
+		<span class="java-class">IllegalStateException</span>.
+	</xfr>
+</p>
+-->
+
+<h3>Summary</h3>
+
+
+<p>
+  So we have learned several things.
+</p>
+<ul>
+	<li>
+		Exceptions are either regular or runtime exceptions
+		and they are not used indifferently, you must understand
+		the difference between regular and runtime exceptions.
+		<xfr>
+			Les exceptions peuvent être soit des exceptions normales
+			soit des exceptions d'exécution. Il faut comprendre la
+			difference.
+		</xfr>
+	</li>
+  <li>Read and understand the specification thoroughfully.<br>
+    Did you see these exceptions?
+    Did you question the method <span class="java-method">valid</span> on
+    files and directories.
+    Did you dismiss understanding why?
+    <xfr>
+      Lisez et comprenez la spécification du code que vous écrivez en détails.
+      Aviez vous vu ces exceptions? Aviez vous fait attention à la méthode
+      <span class="java-method">valid</span> sur les fichiers et les dossiers?
+      Aviez vous un peu éviter de creuser pourquoi elle était là?
+    </xfr>
+  </li>
+  <li>
+    Certain objects have a specific lifecycle dictated by the application domain.
+    This means some objects may be valid in Java terms but the objects are
+    invalid from an application perspective. This must be managed by your code.
+    <xfr>
+      Certains objects ont un cycle de vie spécifique, dicté par
+      le domaine d'application. Cela veut dire que certains objets sont valides
+      du point de vue Java mais ils ne sont invalides du point de vue de
+      l'application. C'est à votre code de gérer cet état de fait.
+    </xfr>
+  </li>
+  <li>
+    Be mindfull that not all methods may throw exceptions on invalid objects.
+    For debugging purposes, keep some methods working will help you understand
+    what is going when you debug your code. But some application domain may
+    require that some methods must throw an exception and others may not.
+    Always follow the specification. If you design your own classes,
+    you need to specify a lifecycle if necessary and the behavior of methods
+    when the object is invalid.
+    <xfr>
+      Rappelez vous que toutes les méthodes ne lèvent pas forcément une exception
+      lorsque un objet est invalide. Certaines méthodes doivent continuer
+      à fonctionner pour pouvoir debugger efficacement. Mais suivant les
+      domaines d'application, il est possible que la spécification vous
+      réclame de gérer que telles méthodes lèvent une exception alors que
+      d'autres ne le feront pas.
+    </xfr>
+  </li>
+</ul>
+<p>
+	<span style="color:red;">
+	These points are difficult to understand, make sure that you discuss them
+	with other students and the teaching staff. Just reading will not be enough,
+	even if you understood what was written.
+	</span>
+	<xfr>
+		Ces points sont cruciaux, il faut les comprendre parfaitement. Pour cela,
+		vous devez les discuter avec les autres étudiants et les professeurs.
+		Lire et comprendre ne sera pas suffisant.
+	</xfr>
+</p>
+
+<h3>Passing Our Tests</h3>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.classes"
+   classpath="bin;tests.jar;../object.collections/edu-polytech-oop-collections.jar"
+   classname="object.classes.tests.Task2Tests"> 
+  <banner>
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check_unfold">
+  </unfold>
+</check>
+<div name="check_unfold" style="display:none;">
+  <p>
+    That's all folks for this task.
+    But before we move on, please make sure
+    that you commit and push your work to our server:
+  </p>
+  <textarea class="terminal" rows="5" width="60%" >
+    $ git add --all
+    $ git commit -m "Sprint object.classes, Task2 completed"
+    $ git push --all
+  </textarea>
+</div>
+<!--
+<steps>
+  <step name="t2-s1" label="Simplest Design" >
+  </step>
+  <step name="t2-s2" label="Polymorphic Design" >
+  </step>
+  <step name="t2-s3" label="Extensible Design" >
+  </step>
+</steps
+
+<p>
+  That's all folks for this task.
+  But before we move on, please make sure
+  that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.classes, Task2 completed"
+  $ git push --all
+</textarea>
+-->

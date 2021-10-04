@@ -1,0 +1,94 @@
+
+* Programming Basics
+  - Java Compilation, Execution, and Debugging
+    - using a terminal
+    - concept of a workspace: src/bin folder, compilation
+    - Basic Eclipse setup: Java projects, build path
+    - Eclipse debugging basics
+	- Java Programming Basics
+    - Coding in Java with Eclipse - the starter kit
+      - HelloWorld
+      - Undrestanding main arguments
+      - A bit about strings
+      - A bit about exceptions
+    - Testing and debugging with Eclipse
+			- Writing test code
+      - Breakpoints on throw exceptions
+    - Workshop test framework     
+  - Java Programming Boot Camp
+	  - Simple mathematical methods
+    - Simple array methods
+    - Simple string methods
+    - More about Java exceptions
+  - Java Simple Games
+	  - HangedMan Game
+    - Horizontal TicTacToe Game
+    - Vertical TicTacToe Game
+    - Passing our checks
+
+* Java Basics
+  Everything coded must pass automated tests.
+
+  - Your first classes and objects
+    This task will introduce the very basics about classes and objects, using a very simple example. It will show you how to define a class, with fields and methods. It will also show you how to instantiate a class, creating objects.
+  - Discussing object references
+    This task will introduce the concept of object references. Object references are the Java equivalent to C pointers. Therefore, object references are essential in organizing objects in meaningful organizations where they can cooperate to provide useful behaviors.
+  - Discussing static fields and methods
+    This task will explore the concept of static fields and methods and how they differ from regular fields and methods. We will highlight also important points about references.
+  - Discussing constructors
+    Constructors are one of the very nice features of object-oriented programming, a feature that really helps developer write cleaner and simpler code, code that becomes easier to understand and evolve. Sounds exciting? Let's get started then!
+  - Coding style -- C vs Java
+    This task is an exercise in coding style, we will be contrasting object-oriented programming with regular imperative programming, C-style. Do not worry if you are not a C expert, you will be able to follow and learn from this exercise.
+  - Java Arrays
+    This task introduces the concept of arrays in Java, which should feel pretty familiar to any developer. But we will use this opportunity to get you to debug a bit more, bugs that are more subtle to understand. It will be mostly about unmastered aliasing in the object graph.
+  - Evaluating and Improving code
+    Code is not something you do once, execute, and then forget. Code is a living entity, changing over time. Sometimes, you start from scratch, in which case you design the code, then you debug it, and then you improve it. Sometimes, you start from existing code, which is the case in this task. This means understanding the code first and then improve it. But to improve it, you need to know what is there to improve. This is exactly what we will do in this task. You will first understand the code given to you and you will setup an evaluation of its quality in terms of the number of objects created and the efficiency of the algorithms in place. Based on the evaluation of the previous task, you will improve the code and evaluate the impacts of the improvements you did.
+
+* Hanoi Tower
+  Everything coded must pass automated tests.
+  Guided class design and implementation.
+
+* Word Count
+  - About Streams
+    Streams are an important concept when programming, this spike is about the core idea and the basics of reading or writing streams.
+  - Word Count
+    Let's get down to it... counting characters, words, and lines. You will write a very simpler parser of character streams, reading characters from files.
+  - Occurrence Count
+    Counting occurrences will drastically change the structure of the program. It will be an interesting endeavor, guaranteed!
+  - Performance Evaluation
+    This task is about introducing counters in our word count program to evaluate performance and identify potential improvements.
+    This is about introducing a dictionary of known words, indexed by the first letter of a word.
+
+* Object collection
+  Everything coded must pass automated thorough tests.
+
+  - Introduce the concept of the root class Object
+  - Vectors
+  - Lists
+  - Introduce Java interface
+  - Hash Tables
+  - Packaging collections in a Java Archive
+
+* Object classes
+  Introduces polymorphic programming and inheritance.
+
+  - Simple Examples
+  - File System -- First Design
+  - File System -- Polymorphic Design
+  - File System -- Extensible Design
+  - File System -- Wrapping the Linux file system
+
+* Object calculator
+  - Simple polish notation calculator for integer values
+  - Adding float values and thus types
+  - Adding boolean values and operators
+  - Towards a programming language
+		- Functions with arguments
+    - Lexical blocks with local variables
+    - If-then-else statement
+    - While statement
+    - return statement
+    - call-site statement
+    - recursion, example the factorial function.
+
+

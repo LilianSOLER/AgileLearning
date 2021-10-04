@@ -1,0 +1,169 @@
+<vars>
+  sprint=java.basics
+  task=t4
+  step=t4-s1
+</vars>
+
+<h3>Introducing Construtors</h3>
+	
+<p>
+  A constructor is a special method that is automatically invoked on a newly
+  created object. It is the one place where you put the initialization code
+  for your objects. Let's consider the class
+  <span class="java-class">Point</span>, a constructor could look like this:
+  <xfr>
+    Un constructeur est une méthode spéciale qui est automatiquement
+    invoquée lors de la création d'un nouvel objet. C'est l'endroit où
+    mettre le code d'initialization de vos objets. Considérons la
+    classe <span class="java-class">Point</span>, a constructeur
+    pourrait ressembler à cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Point {
+    Point(int x, int y) {
+      this.x = x;
+      this.y = y;
+    } 
+  }
+</pre>
+<p>
+  You can now easily create points this way:
+</p>
+<pre class="prettyprint lang-java">
+  Point p1,p2;
+  p1 = new Point(5,10);
+  p2 = new Point(12,76);	  
+</pre>
+<p>
+  <b>Warning:</b><br> 
+  If you do not define any constructor, Java provides a default
+  one for you, a constructor with no arguments.
+  But as soon as you define a constructor with arguments,
+  Java no longer provides a default constructor with no arguments.
+  If you need one, you have to define your own.
+  Let's not argue if this is weird or great, let's make sure
+  that our class <span class="java-class">Point</span>
+  has a no-argument constructor:
+  <xfr>
+    Si vous ne définissez pas de constructeur, Java en définit un
+   	par défaut, sans argument. 
+   	Mais dès que vous définissez un constructeur avec des arguments,
+   	Java ne définit plus de constructeur sans argument. Si vous avez
+   	besoin d'un tel constructeur, vous devez le définir.
+   	Ne discutons pas du bien-fondé ou pas de cela, vérifions simplement
+   	que notre classe <span class="java-class">Point</span> a bien
+   	un constructeur sans argument:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Point {
+    Point() {}
+    Point(int x, int y) {
+      this.x = x;
+      this.y = y;
+    }
+  }
+</pre>
+<p>
+  Notice that the no-argument constructor can be empty
+  since Java always initializes fields to a zero value.
+  Note that this means that all reference fields are
+  initialized to <span class="java-keyword">null</span>.
+  <xfr>
+    Notez que le constructeur sans argument peut être vide
+    puisque Java initialise toujours les champs avec une valeur nulle.
+    Ceci signifie que tous les champs de type référence
+    sont initialisés à <span class="java-keyword">null</span>. 
+  </xfr>
+</p>
+
+<h3>Cloning Construtors</h3>
+
+<p>
+  Often, classes have a <em>cloning</em> constructor, a constructor
+  that allows to make a copy of an existing object.
+  <xfr>
+    Souvent, les classes définissent un constructeur <em>cloning</em>,
+    permettant de copier l'objet courant dans un autre objet (nouvellement
+    créé).
+    
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Point {
+  Point() {}
+  Point(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+  Point(Point p) {
+    this.x = p.x;
+    this.y = p.y;
+  }
+  }
+</pre>
+
+<h3>Chaining Construtors</h3>
+
+<p>
+  As you can see, in the earlier example,
+  the second constructor looks very similar
+  to the first, with a bit of code redundancy. This is often
+  the case with constructors. Java provides you with the
+  ability to invoke a constructor from a constructor:
+  <xfr>
+    Dans l'exemple précédent, le second constructeur
+    est très similaire au premier. C'est souvent le cas
+    avec les constructeurs. Du coup, Java vous permet
+    d'appeler un constructeur depuis un autre constructeur:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Point {
+    Point() {}
+    Point(int x, int y) {
+      this.x = x;
+      this.y = y;
+    }
+    Point(Point p) {
+      this(p.x,p.y);
+    }
+  }
+</pre>
+<p>
+  Notice how the constructor is invoked, using <em>this</em>
+  as a method name.
+  Since a constructor is not a regular
+  method, it cannot be invoked like a regular method,
+  using the <em>"this.something()"</em> notation.
+  Instead, Java allows to call a constructor using
+  the name <em>"this"</em> as in the example below:
+  <xfr>
+    Vous noterez la syntaxe particulière pour invoquer
+    le constructeur, en utilisant <em>this</em> comme
+    nom de méthode. Vous ne pouvez pas appeler un constructeur
+    comme une méthode normale.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Point(Point p) {
+    this(p.x,p.y);
+  }
+</pre>
+<p>
+  Why is this feature interesting?
+  To avoid code redundancy. Of course,
+  with such a simple example, the avoided redundancy is
+  small, almost not convincing. But if you imagine more
+  complex constructors, then it would become a much
+  more valuable feature.
+  <xfr>
+    Pourquoi cette fonctionnalité est-elle intéressante?
+    Pour éviter d'avoir du code redondant. Bien sûr, avec un
+    exemple aussi simple, la redondance évitée est minime. 
+    Mais si vous imaginez des constructeurs plus complexes,
+    alors cette fonctionnalité devient réellement utile.
+  </xfr>
+</p>
+

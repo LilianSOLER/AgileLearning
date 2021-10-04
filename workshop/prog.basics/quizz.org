@@ -1,0 +1,94 @@
+
+* Task1: Java Compilation, Execution, and Debugging
+Concepts: 
+   workspace/projects
+   souces/class files
+   compilation
+   java packages
+Eclipse basic setup
+   workspace and projects
+   Java/Debug perspective
+   project: layout (src/bin), import vs new
+   Installed JREs
+   bin/src separation
+   cleaning projects
+Java
+   write a class Toto in a package edu.polytech
+   what is the entry point of your program?
+   the public static main method, the entry point
+   Variables and Variable view
+	   name/value
+     drill down
+     objects/identities (simple concept)
+   Arrays
+   Strings
+Debugging
+   breakpoints: what are they. how set them up.
+   single-stepping
+   F6, F8
+
+A few details might escape you, if you are a beginner, but the overall meaning of 
+what is happening should be pretty easy to understand. A program manipulates values and objects. 
+It does so by following a recipe, composed of statements. The execution flows through the statements, 
+written in the source. Sometimes, the execution flows loops around to execute the same statements 
+several times. Ultimately, the execution reaches the end of the recipe and terminates.
+
+   - notion of statements/recipe/execution flow
+   - notion of variables
+   - while statement
+   - object/identities/asking for a service
+
+What is the compilation?
+
+What are class files?
+
+What is the class path?
+
+What is the source path?
+
+what is a Java package?
+
+What is the execution flow? what is a statement? why do we speak of recipe?
+
+what is a reference?
+
+what is a variable, holding values or references.
+
+if you know the identity of an object, can you ask a service? 
+relation between a service and invoking a method?
+
+If you have a class Toto in a package edu.polytech, where is it on the file system?
+
+Write snippets:
+  - class Toto in edu.polytech
+  - main entry point
+  - print a string
+  - string + operator
+  - printf a number
+  - write an integer variable
+  - assign an arithmetic expression: like 2*(3+4)
+		
+* Task2: Java Programming Basics
+** Setup
+  - create packages
+  - create classes
+  - Launching from Eclipse, with or without arguments
+** Java basics
+  - variables
+    - primitive values:  int/float/char
+    - references
+    - lexical blocks and variable declarations
+  - control flow
+    - conditions with operators: ==, !=, etc.
+		- if-then-else
+    - loop statements
+  - Arrays
+		- primitive values
+    - references
+  - Aliasing (introduction)
+
+* Task3: Java Programming Boot Camp
+* Task4: Java Simple Games
+
+
+

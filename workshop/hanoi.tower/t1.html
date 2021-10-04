@@ -1,0 +1,281 @@
+<vars>
+  sprint=hanoi.tower
+  task=t1
+</vars>
+
+<p>
+  What do we know about disks? We know that:
+</p>
+<ul>
+  <li> Disks have a size. </li>
+  <li> Disks are on a peg. </li>
+</ul>
+<p>
+  So this looks like we know enough to start up a class,
+  with the right fields and the necessary constructor.
+  Here is the class <span class="java-class">Disk</span>
+  and a method <span class="java-method">main</span>
+  that creates a new disk.
+</p>
+<pre class="prettyprint lang-java">
+  class Disk {
+    in size;
+    Peg peg;
+    Disk(int size) {
+      this.size = size;
+    }
+  }
+
+  class Main {
+    static public void main(String[] args) {
+      Disk d = new Disk(3);
+    }
+  }
+</pre>
+<p>
+  Why do we have a constructor? Because a newly-created object
+  needs to be constructed before it can participate within the object
+  graph. In other words, the constructor
+  is the code that creates the first initial state for a newly
+  created object. In this case, a disk has a size, so instantiating
+  a disk requires to give it a size right away. That's cool.
+  <xfr>
+	  Pourquoi avons nous un constructeur? Parce qu'un objet
+    doit être construit avant de pouvoir prendre sa place dans le graphe
+    d'objets. Ici, un disque a une taille, donc instancier un disque
+    nécessite de préciser sa taille.
+ </xfr>
+</p>
+<p>
+  Now, would it make sense to change the size of a disk throughout
+  the lifetime of a disk? Not really, a disk has its size for its
+  entire lifetime. But having a field
+  <span class="java-method">size</span>, defined as it is above,
+  allows to write this code:
+  <xfr>
+    Maintenant, est-ce que changer la taille d'un disk au cours
+    de sa vie aurait du sens? Pas vraiment, un disque conserve la
+    même taille tout au long de sa vie. Mais avoir un champs
+    comme défini plus haut permets d'écrire ce code:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  static public void main(String[] args) {
+    Disk d = new Disk(3);
+    d.size = 0;
+  }
+</pre>
+<p>
+  Try it, you will see that the code compiles and run.
+  Indeed, if you have a reference to a disk object,
+  you can change its size. 
+  Fortunately, there is a way in Java to make fields a private matter.
+  Just declare them <span class="java-keyword">private</span>, like this:
+  <xfr>
+	  Essayez, vous verrez que ce code compile et tourne.
+    En effet, si vous avez une référence	vers un objet disque,
+    vous pouvez changer sa taille. 
+	  Heureusement, Java permet de protéger des champs, en les déclarant
+	  <span class="java-keyword">private</span>, comme cela:
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Disk {
+    private in size;
+    ...
+  }
+</pre>
+<p>
+  Try again the main code above, you see, the compiler is no longer
+  letting you compile the line "d.size = 0;".
+  <xfr>
+	  Essayez à nouveau le code ci-dessus, vous voyez, le compilateur
+	  ne vous autorise pas de faire "d.size = 0;". 
+ </xfr>
+</p>
+<p>
+  But now, if the field <span class="java-field">size</span> is hidden,
+  we need to add a method to returns the size of disk. Let's make it
+  a public method. And in fact, let's make the
+  class <span class="java-class">Disk</span> public as well.
+  Also, let's make the constructor public. 
+  <xfr>
+	Mais maintenant, si le champ <span class="java-field">size</span> 
+	est caché, nous avons besoin d'ajouter une méthode pour retourner la
+	taille d'un disque. Définissons une méthode publique. Et définissons
+	la classe <span class="java-class">Disk</span> publique également,
+	ainsi que son constructeur.
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class Disk {
+    private in size;
+    public Disk(int size) {
+      this.size = size;
+    }
+    public int getSize() { return size; }
+      ...
+    }
+  }
+</pre>
+<p>
+  That is looking good. What should be private is declared private and
+  what should be public is declared public. The class is declared public
+  because a disk is a public concept, there is no reason to hide that
+  the class <span class="java-class">Disk</span> exists. The
+  constructor is public because anyone can instantiate that class
+  and create disk objects. And the method
+  <span class="java-class">getSize</span> is public because the size
+  of a disk is public knowledge.
+  <xfr>
+	  Cela semble ok. Ce qui doit être protégé est déclaré private et
+	  ce qui doit être publique est déclaré public. La classe est 
+	  déclarée publique parce qu'un disque est un concept publique, il
+	  n'y a pas de raisons de cacher que la classe 
+	  <span class="java-class">Disk</span> existe. Le constructeur est
+	  publique parce que n'importe qui peut instancier cette
+	  classe pour créer des objets disque. Enfin, la méthode
+    <span class="java-class">getSize</span> est publique parce la taille
+    d'un disk est une information publique.
+ </xfr>
+</p>
+<p>
+  Now, what about the field <span class="java-field">peg</span>,
+  should it be private or public? Let's consider that from the disk
+  perspective. It is none of its concern really, the peg represents
+  where the disk is currently stacked. Therefore, this is not really
+  a private information. So there is no reason to set that field
+  private.
+  <xfr>
+	Maintenant, discutons du champ <span class="java-field">peg</span>,
+	doit-il être privé ou publique? Un peg représente où un disque
+	est couramment empilé. ceci n'est pas une information privée au disque.
+	Donc il n'y a pas de raison de cacher ce champ. 
+ </xfr>
+</p>
+<p>
+  One last point, shouldn't we defend against illegal sizes?
+  And by the way, what is an illegal size? A legal size for a disk
+  seems to be a size that is superior or equal to one.
+  So, what can we do if a disk is constructed with an illegal
+  size value? Just like this:
+  <xfr>
+	Un dernier point, devons-nous empêcher les tailles illégales?
+	Et d'ailleurs, à quelles conditions une taille est considérée 
+	illégale? Une taille légale pour un disque est une taille supérieur
+	ou égale à un. Donc, que pouvons-nous faire si un disque est
+	construit avec une taille illégale, comme ci-après:
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  static public void main(String[] args) {
+    Disk d = new Disk(-3);
+  }
+</pre>
+<p>
+  Java gives you the ability to raise an exception, upon an exceptional
+  condition. There are two ways to do this. You can use asserts or
+  you can throw your own exceptions. With asserts, the code would look
+  like this:
+  <xfr>
+	Java donne la capacité de lever un exception lors d'une situation
+	exceptionnelle. Il y a deux moyens de faire cela. Vous pouvez
+	utiliser des assertions, ou vous pouvez lever vos propres
+	exceptions. Avec des assertions, le code ressemble à cela:
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class Disk {
+    private in size;
+    public Disk(int size) {
+      assert(size&gt;=1);
+      this.size = size;
+    }
+    public int getSize() { return size; }
+      ...
+    }
+  }
+</pre>
+<p>
+  When throwing your own exception, the code would look a little different,
+  see below. The advantage of assertions is that they are only checked
+  at runtime if the <em>"-enableassertions"</em> flag is given when launching
+  the execution of the Java platform.
+  So asserts introduce no overhead when disabled, but then they
+  are not checked. If you want to always check
+  for some exceptional conditions, irrespective of the assert status,
+  you need to add code like this:
+  <xfr>
+	Pour lever une exception, le code est un peu différent, voyez
+	ci-après. L'avantage des assertions est qu'elles sont testées à 
+	l'exécution seulement si l'option <em>"-enableassertions"</em> est 
+	donnée au moment du lancement du programme. Donc les assertions n'engendrent
+	pas d'overhead (coût) quand elles sont débranchées, mais bien sûr elles
+	ne sont pas testées dans ce cas. Si vous voulez toujours 
+	vérifier une condition exceptionnelle, vous devez ajouter du code
+	comme suit:
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class Disk {
+    private in size;
+    public Disk(int size) {
+      if (size &lt; 1)
+        throw new IllegalArgumentException("Illegal size");	     
+      this.size = size;
+    }
+    public int getSize() { return size; }
+      ...
+    }
+</pre>
+<p>
+  So you see here another good reason to use constructors,
+  constructors can be defensive against illegal arguments.
+  <xfr>
+	Donc vous voyez ici une autre bonne raison d'utiliser des constructeurs,
+	ceux-ci regroupant le code vérifiant la validité des arguments.
+ </xfr>
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/hanoi.tower"
+   classpath="bin;tests.jar"
+   classname="hanoi.tower.TestDisk">
+  <banner>
+    <b>TODO:</b> create the class <span class="java-class">Disk</span>,
+    in the Java package <span class="java-package">hanoi.tower</span>.
+    Thow an IllegalArgumentException in the constructor
+    <span class="java-method">Disk</span> if the given size is
+    invalid. When you are done, please check that everything is ok.
+  </banner>
+  <hint>
+    Not quite. Try again.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+<div name="check1_unfold" style="display:none;" >
+  <p>
+    One class down. Great.
+    Let's move on to the class Peg.
+  </p>
+</div>
+
+<p>
+  That's all folks for this task. Congrats, you designed and created
+  your first real class. 
+  Please make sure that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint hanoi.tower, Task1 completed"
+  $ git push --all
+</textarea>
+	
+

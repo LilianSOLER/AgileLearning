@@ -1,0 +1,835 @@
+<vars>
+  sprint=object.gui
+  task=t1
+</vars>
+
+<p>
+	We have been programming together using an object-oriented paradigm
+	for a while now and some of you have started to see their coding
+	patterns evolve as a result of that. But some of you are still very
+	much thinking in
+	terms of algorithms and data structure, still coding in Java more or less
+	like they would in any imperative programming language. One question
+	usually reveals the truth in terms of your object-oriented coding
+	proficiency: do you	think in terms of a population of cooperating
+	objects	when designing and then coding?
+  <xfr>
+		Cela fait un moment que nous programmons ensemble en utilisant
+		le paradigme orienté-objet et certains d'entre vous ont déjà
+		vu leur patron de codage changer significativement, mais d'autres
+		pensent encore en terme de programmation impérative avec
+		des algorithmes sur des structures de données. En général,
+		une question simple permets de savoir dans quel groupe vous
+		vous situez: pensez vous en terme d'une population d'objets
+		coopérant lorsque vous concevez et que vous codez?
+  </xfr>
+</p>
+<p>
+	You see, this question reveals one of the most important differences
+	between imperative and object-oriented programming. In the C language,
+	for example, a structure in C is just some data, it has no
+	behavior. There is no encapsulation. Then you write some code, encoding
+	an algorithm rather than a cooperation. With an object,
+	it helps to think	of individuals, offering a public behavior to other
+	individuals. As an individual, an object
+	awaits to be asked to do something. When this happens, an object
+	often relies on other objects to do what has been requested.
+	This requires that objects know each other, this is what the object
+	graph is about.
+	<xfr>
+		Vous voyez, cette question révèle l'une des différences les plus importantes
+		entre la programmation impérative et celle orientée-objet.
+		Dans le langage C par exemple, une structure en C ne représente que
+		des données, elle n'a pas de comportement. Puis, il y a des fonctions
+		qui manipulent cette structure de données. Il n'y a pas d'encapsulation,
+		il n'y a ni comportements, ni coopération, plutôt un algorithme.
+		Avec les objets, cela va vous aider de penser en termes d'individus qui
+		collaborent. Ces individus offrent un comportement publique que
+		d'autres individus peuvent utiliser. En tant qu'individu, un objet
+		attends qu'un autre objet lui demande un service qui fait parti de
+		son comportement publique. Il faut donc que les individus se connaissent
+		et c'est le rôle du graphe d'objets.
+	</xfr>
+</p>
+<p>
+	And this is where encapsulation starts to make sense. Think of it this
+	way, you use the postal service to send or receive letters and parcels,
+	do you know how the postal service is organized and how it routes
+	your items? Of course you do not, it is not your concern. Well, the
+	same is true about objects, you may want to know about a service, but
+	you do not care about the details of its implementation. This is
+	encapsulation and it can be done using mechanisms such as
+	Java interfaces or Java abstract classes as well as deciding
+	what is public or private.
+	<xfr>
+		C'est dans ce contexte que l'encapsulation prends tout son sens.
+		Pensez à la métaphore de la poste qui vous permets d'envoyer des
+		lettres et des colis. Savez vous comment ce service postal est
+		organisé? Comment les lettres et les colis sont acheminés? Bien
+		sûr que non, cela ne vous concerne pas. Et bien, c'est pareil
+		avec les objets. Vous souhaitez utiliser un service rendu par
+		un objet mais vous ne voulez pas savoir comment il est mis en
+		oeuvre en interne. L'opacité de la mise en oeuvre est
+		ce que l'on appelle l'encapsulation. En Java, l'usage d'interfaces
+		ou de classes abstraites sont de bons mécanismes pour encapsuler
+		des mises en oeuvre. Bien sûr, l'usage de qualifiers "private"
+		et "publique" sont aussi utiles.
+	</xfr>
+</p>
+<p>
+	Object-oriented programming opens a path towards handling complexity
+	in a very similar way to how humans organize themselves in real life.
+	As individuals, we do stuff, often relying on the help of others.
+  Often, we work as teams of individuals, with most teams leveraging
+	other teams, building larger and larger organisations in this way,
+	allowing to handle larger and more complex tasks. We are quite far from the pure
+	algorithmic view of computer science that you are used to. These are not
+	incompatible, we are not saying that designing algorithms is not useful,
+	quite the contrary, mastering algorithms is an essential first step.
+	But, when coding using an object-oriented	language, one has to own the paradigm,
+	perceive its program as	a population of objects cooperating together,
+	and only then object-oriented programming will became a powerful tool,
+	as opposed to feel like a hinderance.
+  <xfr>
+		La programmation orientée-objet ouvre des possibles pour mieux
+		gérer la complexité, d'une façon assez proche de la manière
+		dont les êtres humains le font. En tant qu'individu, nous
+		faisons des choses et cela souvent avec l'aide d'autres
+		individus. Ainsi, nous travaillons souvent en équipe et
+		les équipes s'appuient les unes sur les autres, créant
+		des organisations humaines de plus en plus grandes et
+		pouvant gérer des tâches de plus en plus complexes.
+		Nous sommes donc bien loin de la vision de la programmation
+		impérative dont vous avez l'habitude. Nous ne disons pas
+		que cette vision n'est pas utile, elle l'est à plus petite
+		échelle. A plus large échelle, la puissance de la programmation
+		orientée-objet se révèle à ceux qui pensent en termes d'une
+		population d'individus coopérants. 
+  </xfr>
+</p>
+<p>
+	<b>So why discuss all this now?</b> Well, we are about to discuss
+	graphical user interfaces, which will <u><b>challenge</b> your understanding
+	of object-oriented programming</u>. The frameworks use all of the
+	advanced object-oriented features such as inheritance and polymorphism.
+	But more importantly, to understand these frameworks, you must
+	perceive objects as cooperating entities. Your programs will no
+	longer be made of a single algorithm. In other words, a
+	program will no longer be about a single cook following a single recipe,
+	step by step.
+	It will be about each cook following multiple recipes, moving along
+	the different recipes one step at a time, going back and forth
+	between different recipes. Each cook will react to events, progressing
+	a recipe a bit and then progressing another one, and so on.
+  <xfr>
+		Pourquoi discuter de tout cela maintenant? Et bien, nous
+		allons discuter d'interfaces graphiques pour l'utilisateur,
+		une discussion qui va défier votre compréhension et votre
+		usage de la programmation orientée-objet. En effet, tous
+		les canevas pour concevoir et coder ces interfaces graphiques
+		utilisent les mécanismes avancés de la programmation orientée-objet,
+		tels que l'héritage et le polymorphisme. Mais il est encore plus
+		important que vous soyez à l'aise avec la vision d'une population
+		d'individus coopérants. Il n'est plus question d'écrire un
+		algorithme. Vos programmes ne seront plus structuré comme
+		une seule recette que suit un cuisinier. Le cuisinier va
+		suivre plusieurs recettes simultanément, en réagissant
+		aux évènements et en avançant opportunément une recette
+		ou l'autre. 
+  </xfr>
+</p>
+<p>
+	Each recipe is still a recipe, this is not what changed.
+	What changed is the execution. We no longer execute a single
+	algorithm from start to finish, we execute multiple algorithms
+	by small steps, often reacting to external events.
+	For example, if you are cooking pasta, you cannot put the pasta
+	in the water until the water boils. The water boiling is the
+	event and you are reacting to that event by putting the pasta
+	in the boiling water. Later, the pasta will be cooked, it will
+	be another event you will react to by draining the pasta.
+	And so on. Nevertheless, you can write
+	down the recipe for cooking pasta as a sequence of steps,
+	as an algorithm, but the execution of this algorithm will
+	be done incrementally, step by step.
+	<xfr>
+		Chaque recette est toujours une recette que l'on doit
+		faire étape par étape. Ce qui change est que le cuisinier
+		ne suit plus une seule recette linéairement, le cuisinier
+		suit plusieurs recettes, en progressant pas à pas, en
+		fonction des opportunités. Par exemple, si le cuisinier
+		cuisine des pâtes, il ne peut mettre les pâtes dans l'eau
+		avant qu'elle ne soit en ébullition. Le début de l'ébullition
+		de l'eau est l'évènement qui va déclencher la réaction du
+		cuisinier: mettre les pâtes dans l'eau. Plus tard, les pâtes
+		seront cuites et ce sera l'évènement qui déclenchera une
+		autre réaction du cuisinier: passer les pâtes. Et ainsi de
+		suite, l'enchaînement	des évènements et des réactions va continuer.
+		Donc vous avez bien la recette écrite comme une succession d'étapes,
+		mais ces étapes sont faites en réaction à des évènements déclencheurs.
+	</xfr>
+</p>
+  
+<h3>The Object Graph</h3>
+
+<p>
+	Let's illustrate the perception change from the
+	standard algorithmic view towards an object-oriented view.
+	We will use a simple example: a polygon and its translation
+	on a 2D plane. The algorithmic view is like this:
+  <xfr>
+		Illustrons ce changement de perception d'un approche algorithmique
+		vers celle d'une approche orientée-objet. Nous allons utiliser
+		une exemple simple: un polygone et sa translation dans un plan.
+		L'approche algorithmique donnerait quelque chose comme cela:
+  </xfr>
+</p>
+<pre>
+  A polygon is a set of points.
+  To translate a polygon by (dx,dy):
+    - iterate over the set
+      - for each point, translate its coordinates
+        x = x + dx 
+        y = y + dx
+</pre>
+<p>
+	The coding in C would look like something like this:
+</p>
+<pre class="prettyprint lang-c">
+struct point{
+  int x,y ;
+};
+void point_translate(struct point* pt, int dx, int dy ) { 
+  pt→ x += dx ;
+  pt→ y += dy ;
+}
+struct polygon{
+  struct point* points;
+  int npoints ;
+};
+void polygon_translate(struct polygon *poly, 
+                       int dx, int dy) { 
+  for (int i=0; i &lt; poly→npoints;i++) {
+    struct point* pt = poly→points[i];
+    point_translate(pt,dx,dy);	
+  }
+}
+</pre>
+<p>
+	And the corresponding <em>"data structure"</em> would look like this
+	in memory:
+</p>
+<img src="polygon.png" />
+<p>
+  Of course, this looks like an object graph and you could use it as
+	a basis to design the following code: 
+</p>
+<pre class="prettyprint lang-java">
+public class Point{
+   public int x,y;
+   public void translate(int dx, int dy) { 
+       this.x += dx;
+       this.y += dy;
+   }
+}
+
+public class Polygon{
+   private Point points[];
+   private int   npoints;
+
+   public void translate(int dx, int dy) { 
+      for (int i=0; i &lt; this.npoints;i++) {
+         Point pt = this.points[i];
+         pt.translate(dx,dy);	
+      }
+   }
+}
+</pre>
+<p>
+	Well, you can see this Java code as being just like the C code.
+	And in some sense, you would be right. But of course, this code
+	is so simple that it would be hard to design and code it differently.
+	And yet, we can use this example to see <em>"individuals"</em>
+	that are <em>"cooperating"</em>. Think of yourself as a point.
+	You are sitting there, quietly, doing nothing. Suddenly,
+	someone is asking you to move, that is, to translate yourself
+	from one position to another. Since you are a nice point, you
+	comply.
+	<xfr>
+		Vous pouvez voir dans cette exemple que le code Java est très
+		proche du code en C. Mais avec un code si simple, ce n'est pas
+		surprenant, il serait difficile d'avoir des conceptions très
+		différentes. Et pourtant, on peut utiliser cette exemple pour
+		commencer à voir des <em>"individus"</em> qui <em>"coopèrent"</em>.
+		Imaginez que vous êtes un point. Vous êtes tranquille, dans
+		votre coin, en train de ne rien faire. Soudainement, quelqu'un
+		vous demande de vous translater sur le plan. Comme vous êtes
+		sympa, vous le faites.
+	</xfr>
+</p>
+<ul>
+	<li>But who ask you to move?</li>
+	<li>Why were you asked to move?</li>
+</ul>
+<p>
+	Well, as a <em>"point"</em> individual, you do not know. If we step back and you look
+	at the population of objects, then you understand that the point
+	was invoked by a polygon. But the same questions apply to the polygon object:
+	<xfr>
+		En tant qu'un individu <em>"point"</em>, vous n'avez pas les réponses
+		à ces questions. Si vous prenez de la hauteur et que vous regardez
+		la population d'objets, alors vous comprenez que le point a été
+		invoqué par le polygone. Mais bien sûr les questions se répètent
+		du point de vue du polygon:
+	</xfr>
+</p>
+<ul>
+	<li>But who ask the polygon to move?</li>
+	<li>When or why was that request made?</li>
+</ul>
+<p>
+	<b>With the above object graph, you just don't know</b>. But it is
+	ok because you are designing a polygon object, implemented as
+	a small group of individuals working together: the polygon
+	object, the array, and the points. You goal is design a
+	polygon that can be translated.
+	<xfr>
+		Avec ce graphe d'objets, vous ne savez pas répondre
+		à ces questions. Mais ce n'est pas un problème, puisque
+		vous faites la conception d'un polygone, pas plus. Ce
+		polygone est une petite population d'objets: le polygone,
+		le tableau, et les points. Et cette population sait
+		faire une translation dans le plan.
+	</xfr>
+</p>
+<p>
+	So let's take this new perception of object-oriented programming
+	and discuss how it applies to the design and coding of graphical
+	user interfaces. You all know what a button
+	is, it is something that you can click on with a mouse.
+	So let's suppose we have a simple button model with two states:
+	pressed or released. So we could model it like this:
+	<xfr>
+		Nous allons maintenant prendre cette nouvelle perception
+		de la programmation orientée-objet et l'appliquer à la
+		conception et le codage d'interfaces graphiques pour l'utilisateur.
+		Au coeur de ces interfaces, il y a le concept de bouton
+		que l'utilisateur peut cliquer avec sa sourie.
+		Maintenant, supposons que nous modélisons simplement ce
+		bouton comme ayant deux états: appuyer ou relâcher.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Button{
+  public boolean isPressed();
+}
+</pre>
+<p>
+	Great, right? The method will allow you to ask a button
+	if it is pressed or released. But wait, how would you know
+	that it changed state?
+	Are you going to poll it all the time, let's say every 10ms?
+	And what about if you have ten buttons in your graphical interface?
+	Now you will poll
+	all of them? Does that seem practical to you? Well, what do you think?
+	Most of the time, you will poll them just to discover that
+	nothing has happened. Imagine the end user has gone for a coffee
+	break, for several minutes nothing will happen. What about if
+	he went home for the night? Do you get our point? What you
+	would like is to be <em>"told"</em> that something has changed
+	when something has indeed changed.
+	So a better	design would be relying on a <em>"listener"</em>:
+	<xfr>
+		Super, la méthode va vous permettre de savoir si un bouton
+		est appuyé ou relâché. Mais comment allez-vous savoir si
+		un bouton change d'état? Allez-vous venir le consulter
+		régulièrement? Peut-être toutes les 10ms? Et si vous
+		avez dix boutons dans l'interface graphique? Vous allez
+		les interroger tous, toutes les 10ms? Est-ce que cela vous
+		semble une bonne solution? Vous comprenez bien sûr que
+		la plupart du temps, vous allez demander à un bouton si
+		il a changé d'état, toutes les 10ms, pour rien car le
+		bouton n'aura pas changé d'état. En effet, imaginez que
+		l'utilisateur est en pause café, loin de son écran, ou pire,
+		il est rentré chez lui pour la nuit. Vous comprenez
+		ce que l'on suggère, vous comprenez bien que vous voudriez
+		que le bouton vous dise si il change d'état, via
+		un <em>écouteur</em>:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Button{
+  public boolean isPressed();
+  public void setListener(ButtonListener l);
+}
+
+public interface ButtonListener {
+  void down(Button b); 
+  void up(Button b); 
+}
+</pre>
+<p>
+	With this design, no more polling
+	if you want to know what happens to a button,
+	you would instead register a <em>listener</em>
+	for the button, an object whose purpose in life is to
+	wait to be told that the button it watches over had
+	a change of state. A listener would look like this:
+	<xfr>
+		Avec cette conception, plus besoin de scruter
+		un bouton pour savoir si il change d'état,
+		vous allez enregistrer un écouteur pour ce
+		bouton. Un écouteur est un objet dont le but
+		dans la vie sera d'attendre qu'on lui dise qu'un
+		bouton, sur lequel il a été enregistré, à changer d'état.
+		Un écouteur pourrait ressembler à cela:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class MyButtonListener implements ButtonListener {
+  public void down(Button b) {}
+  public void up(Button b) {}
+
+  public void watch(Button b) {
+    b.setListener(this);
+  }
+}
+</pre>
+<p>
+	Look at the method <span class="java-method">watch(Button)</span>,
+	it tells you to watch a given button, adding yourself
+	as a listener. But notice that you have no idea who will invoke the
+	method <span class="java-method">watch(Button)</span>.
+	Notice also that you have no idea who will invoke the
+	methods <span class="java-method">down</span>
+	or <span class="java-method">up</span>. It does not matter.
+	You are a button listener and your job is to react to whatever
+	happens to the button, whenever it happens.
+	So let's assume that the purpose of the listener is to
+	<u>detect	a click</u>: the fact that the button is pressed and then
+	released. Let's say just like this:
+	<xfr>
+		Regardez la méthode <span class="java-method">watch(Button)</span>,
+		elle demande à un écouteur d'écouter les changements d'états d'un
+		bouton. Mais remarquez que vous ne savez pas qui invoque cette
+		méthode, ni pourquoi se bouton là est choisi. Notez aussi que
+		vous ne savez pas qui invoquera plus tard les méthodes
+		<span class="java-method">down</span> et
+		<span class="java-method">up</span>.
+		Vous savez juste que vous devez réagir à l'invocation de
+		ces méthodes. Mais quelle réaction? Supposons que votre
+		but est de détecter un <em>"click"</em>: le fait que le
+		bouton a été appuyé puis relâché. Disons comme cela:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class ClickDetector implements ButtonListener {
+  boolean m_clicked = false;
+  public void down(Button b) { }
+  public void up(Button b) { m_clicked = true; }
+  public void watch(Button b) {
+    b.setListener(this);
+  }
+}
+</pre>
+<p>
+	Now, can you guess what the object graph may look like
+	at execution time? Well, something like this:
+</p>
+<img 
+    src="click-detector.png" 
+   alt="triangle with all three sides equal" width="60%"/>
+<!-- 
+    height="250px"
+    width="400px"-->
+<p>
+	Notice the two worlds. There is the <u><em>library world</em></u>
+	that provided you with a class
+	<span class="java-class">Button</span>,
+	with objects that are not yours. Then,
+	there is the <u><em>world of your objects</em></u>,
+	in this instance the object that is an
+	instance of your class
+	<span class="java-class">ClickDetector</span>.
+	<xfr>
+		Notez les deux mondes en présence. Il y a le monde
+		de la <u><em>librairie</em></u> qui fournit la classe
+		<span class="java-class">Button</span> et dont les
+		objets ne vous appartiennent pas. Et puis il y a
+		le <u><em>monde de vos objets</em></u>,
+		ici c'est l'écouteur, l'instance de la classe
+		<span class="java-class">ClickDetector</span>.
+	</xfr>	
+</p>
+<p>
+	Understand and remember the concept of <u><em>callbacks</em></u> from
+	the library objects on your objects. You need to realize
+	that you are not in control of that execution flow. Your objects
+	are reacting to callbacks, that is, invocations
+	on listeners made by the library objects.
+	Do you see now why we wanted to be able to see objects
+	as entities being invoked, organized into
+	a cooperating population? We hope you do, but as usual,
+	if you do not, discuss it with other students and with
+	the teaching staff.
+	<xfr>
+		Comprenez et retenez le concept de <u><em>rappels</em></u>
+		depuis les objets de la librairie vers les vôtres. Vous devez
+		bien comprendre que vous ne contrôlez pas l'exécution ici. Vos
+		objets ne feront que réagirent aux rappels, c'est à dire à
+		l'invocation des méthodes des écouteurs par la librairie.
+		Vous voyez pourquoi il est important de voir une population
+		d'individus qui coopèrent. Si vous ne voyez pas, discutez
+		en et posez des questions.
+	</xfr>
+</p>
+<p>
+	By the way, if you understood that point, you are probably
+	asking yourself the following question: who will know that
+	the button was clicked? Sounds like you would need another listener,
+	right? Something like this:
+	<xfr>
+		Maintenant, si vous avez compris le point précédent, vous
+		vous demandez probablement la chose suivante:
+		mais qui saura que le bouton a été cliqué? Il semblerait
+		que vous ayez besoin d'un autre écouteur, non? Quelque
+		chose comme cela:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public interface ClickListener {
+  void clicked(Button b); 
+}
+public class ClickDetector implements ButtonListener {
+  ClickListener m_listener;
+  public void down(Button b) {}
+  public void up(Button b) {
+    m_listener.clicked(b);
+  }
+  public void watch(Button b, ClickListener l) {
+    b.setListener(this);
+    m_listener = l;
+  }
+}
+</pre>
+<p>
+	Look at the new method
+	<span class="java-method">watch(Button,ClickListener)</span>,
+	the one telling you to watch over a given
+	button also tells you who to tell when the button
+	has been clicked. This is of course only one possible
+	design, but it is a simple one that makes sense. Again,
+	we see objects as cooperating entities.
+	<xfr>
+		Regardez la méthode
+		<span class="java-method">watch(Button,ClickListener)</span>,
+    elle demande d'écouter les changements d'états d'un bouton
+		et elle vous dit qui prévenir lors que vous avez détecté
+		un clique. C'est une conception simple et claire qui vous
+		montre des objets qui coopèrent.
+	</xfr>
+</p>
+
+<h3>Grammars and Automata</h3>
+
+<p>
+	It is time that we discuss in more details that
+	execution flow that invokes the callbacks on
+	your click detector. We all know
+	that a button is clicked by a human using the
+	graphical interface, traditionally called the <em>end user</em>. 
+	So let's imagine that the end user moved the
+	mouse over the button on the screen,
+	pressed down the mouse button and then released it.
+	We would expect our click detector to be
+	invoked correspondingly by the graphical
+	library:
+	<xfr>
+		Il est temps de lever le voile sur l'exécution qui
+		rappelle vos écouteurs. Nous savons tous qu'un
+		utilisateur clique sur un bouton avec une souris.
+		Cela veut dire que l'utilisateur a déplacé sa
+		souris sur le bouton, à appuyé sur le bouton
+		de la souris puis l'a relâché. Nous pourrions nous
+		attendre à ce que notre écouteur soit invoqué
+		de la façon suivante par la librairie graphique:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Button b;
+  ButtonListener l;
+  l.down(b);
+  l.up(b);
+</pre>
+<p>
+	This sequence of invocations is what we had imagined
+	when writing the code	of our click detector
+	and it works, if the sequence
+	is always this one. But are we sure it is?
+	What if the end user presses on the mouse button
+	while the mouse is somewhere on the screen,
+	outside of the button, then moves the mouse over the
+	button, and only release the mouse button there.
+	Is it a click then? Probably not, right?
+	<xfr>
+		Cette séquence d'invocations est ce que nous avions
+		imaginé lorsque nous avions écrit le code de
+		notre détecteur de click, et notre code marchera
+		si nous avons bien cette séquence d'invocations.
+		Mais avons-nous bien toujours cette séquence?
+		Que se passe-t-il si l'utilisateur appuie sur le
+		bouton de la souris en dehors de notre bouton,
+		puis déplace la souris sur notre bouton mais en
+		restant appuyé, puis relâche le bouton de la souris.
+		Est-ce alors un click ou pas? Probablement pas.
+	</xfr>
+</p>
+<p>
+	Another example: you can also imagine an end user pressing down the
+	mouse button while over a button on the screen,
+	but then move the mouse outside of that button,
+	and only then release the mouse button. In fact,
+	you do this often, as an end user, to cancel a
+	click that you started, don't you?
+	<xfr>
+		Un autre exemple: vous pouvez imaginer que
+		l'utilisateur déplace la souris sur notre
+		bouton, puis appuie sur le bouton de la souris,
+		mais déplace la souris hors de notre bouton
+		avant de relâcher le bouton de la souris.
+		N'est-ce pas ce que vous faîtes souvent lorsque
+		vous voulez annuler un click?
+	</xfr>
+</p>
+<p>
+	This brings the concept of the grammar of possible
+	invocations. We originally thought that it would
+	always be the grammar represented by the regular
+	expression: <em>(Down Up)*</em>. But it is not quite true.
+	We need to factor in the fact the mouse may enter
+	and leave the surface of the button on the screen.
+	This requires a more complete button listener:
+	<xfr>
+		Cela nous amène au concept de la grammaire des
+		invocations possibles. Au début, nous avions
+		imaginé que cette grammaire était celle-ci:
+		<em>(Down Up)*</em>. Mais ce n'est pas le cas
+		car il nous faut prendre en compte le fait
+		que la souris entre et sort du bouton:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Button{
+  public boolean isPressed();
+  public void setListener(ButtonListener l);
+}
+
+public interface ButtonListener {
+  void enter(Button b); 
+  void leave(Button b); 
+  void down(Button b); 
+  void up(Button b); 
+}
+</pre>
+<p>
+	So what is the grammar of invocations now?
+	Somethine like the grammar below, starting in the
+	state <em>"OUTSIDE"</em>:
+	<xfr>
+		Quelle est donc la grammaire maintenant? Elle
+		peut-être celle ci-dessous, ayant comme état
+		initial l'état <em>"OUTSIDE"</em>:
+	</xfr>
+</p>
+<table style="width:100%">
+  <tr>
+    <th style="text-align:left;">
+<pre>
+  OUTSIDE:
+    enter → INSIDE
+  INSIDE:
+    up    → INSIDE 
+    down  → DOWN
+    leave → OUTSIDE
+  DOWN: 
+    up    → INSIDE : { notify listener }
+    leave → OUTSIDE
+</pre>
+		</th>
+    <th>
+			<!--
+					Generated with:
+          $ rm click-detector-graph.svg
+					$ dot -Tsvg click-detector-graph.dot >> click-detector-graph.svg
+				-->
+			<img src="click-detector-graph.svg" width="50%" />
+		</th>
+  </tr>
+</table>
+<p>
+	Thus, you need to design your listener as an automaton, also called
+	Finite State Machine (FSM). The reason is to <em>"parse"</em>, meaning
+	<em>understand</em> the sequence of callbacks. Each method invoked
+	on your object is a step in a process and that process needs to recognize
+	a pattern in that sequence: a click. But how do we define a click against
+	a grammar?
+	<xfr>
+		La conséquence est que vous devez implémenter votre écouteur
+		comme un automate. La raison est que votre écouteur doit
+		comprendre la séquence des invocations de rappels. Chaque
+		rappel est un pas dans une séquence d'évènements et votre
+		écouteur doit reconnaître un pattern dans cette séquence,
+		le pattern pour un click. Mais comment définir un click
+		vis à vis de la grammaire?
+	</xfr>
+</p>
+<p>
+	We can define a click through the following sequence: <em>enter-down-up</em>.
+	A click is recognized upon the "up" transition from the state "DOWN".
+	When a click is recognized,
+	the listener (<span class="java-class">ClickListener</span>)
+	will be invoked.
+	<xfr>
+		Nous pouvons définir un click au travers de la séquence
+		suivante: <em>enter-down-up</em>. Un click sera donc reconnu
+		par la transition "up" depuis l'état "DOWN". Lorsqu'un
+		click est reconnu, l'écouteur
+		(classe <span class="java-class">ClickListener</span>)
+		sera appelé.
+	</xfr>
+</p>
+<p>
+	So we know that we need to design our listeners as finite state machines, but
+	you may wonder how to implement a finite state machine for the
+	grammar given above. There are many ways, but we thought that it would
+	be good to show	you a classical implementation.
+	<xfr>
+		Donc nous savons que nous devons écrire nos écouteurs comme des
+		automates, mais vous vous demandez sûrement comment écrire un automate
+		dans ce contexte? Il y a plusieurs façons, mais voici une implémentation
+		classique:
+	</xfr>
+</p>	
+<pre class="prettyprint lang-java">
+  public interface ClickListener {
+    void clicked(Button b); 
+  }
+
+  public class ClickDetector implements ButtonListener {
+
+    public static final int OUTSIDE_STATE = 1;
+    public static final int INSIDE_STATE = 2;
+    public static final int DOWN_STATE = 3;
+
+    ClickListener m_listener;
+    int m_state = OUTSIDE_STATE;
+
+    public void watch(Button b, ClickListener l) {
+      b.setListener(this);
+      m_listener = l;
+    }
+    public void enter(Button b) {
+      switch(m_state) {
+      case OUTSIDE_STATE:
+        m_state = INSIDE_STATE;
+        break;
+      }
+    }
+    public void leave(Button b) {
+      switch(m_state) {
+      case INSIDE_STATE:
+      case DOWN_STATE:
+        m_state = OUTSIDE_STATE;
+        break;
+      }
+    }
+    public void down(Button b) {
+      switch(m_state) {
+      case INSIDE_STATE:
+        m_state = DOWN_STATE:
+        break;
+      }
+    }
+    public void up(Button b) {
+      switch(m_state) {
+      case INSIDE_STATE:
+        m_state = INSIDE_STATE:
+        break;
+      case DOWN_STATE:
+        m_listener.clicked(b);
+        m_state = INSIDE_STATE:
+        break;
+      }
+    }
+  }
+</pre>
+<p>
+	Notice this implementation will only work with legal 
+	sequences of callbacks. If any illegal sequence happens, the
+	behavior is unspecified. In your implementations, we strongly
+	suggests that you detect and reject illegal sequences.
+	<xfr>
+		Notez que cette implémentation ne marchera qu'avec des
+		séquences légales de rappels. Toute séquence invalide,
+		ne respectant pas la grammaire, résultera dans un comportement
+		non spécifié. Dans vos implémentations, nous vous recommandons
+		fortement de détecter et de rejeter les séquences illégales.
+	</xfr>
+</p>
+
+<h3>Click Detector Implementation</h3>
+
+<p>
+	So go ahead, implement the corresponding click detector.
+  Look in the source folder <em>task1</em> and
+  in the Java packages 
+  <span class="java-package">object.gui.task1</span>.
+	You will see the class 
+  <span class="java-class">ClickDetector</span> that
+	must be implemented.
+	<xfr>
+		Il est temps pour vous d'implémenter le détecteur
+		de click. Regardez dans le dossier source <em>task1</em>
+		et dans le paquet Java 
+		<span class="java-package">object.gui.task1</span>.
+		Vous allez y trouver la classe
+		<span class="java-class">ClickDetector</span> que
+		vous devez finir de coder.
+	</xfr>
+</p>
+<p>
+	<b>Nota Bene:</b> your implementation will have to
+	accept legal sequences of callbacks but reject illegal
+	ones by throwing the exception 
+  <span class="java-class">IllegalSequenceException</span>.
+	<xfr>
+		<b>Nota Bene:</b> votre implémentation devra détecter
+		et rejeter les séquences illégales de rappels en levant
+		l'exception 
+		<span class="java-class">IllegalSequenceException</span>.
+	</xfr>
+</p>
+<p>
+	To test your click detector. You can launch the
+	class <span class="java-class">Task1Main</span>.
+	The idea is that it will generate sequences of
+	callbacks, both legal ones and illegal ones.
+	<xfr>
+		Pour tester votre détecteur de click, vous pouvez
+		lancer la classe <span class="java-class">Task1Main</span>.
+		L'idée est qu'elle va générer des séquences de
+		rappels, légales et illégales.
+	</xfr>
+</p>
+
+<h3>That's if folks</h3>
+
+<p>
+	Please do commit your work.
+</p>
+<textarea class="terminal" rows="4" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.gui, Task1 completed"
+  $ git push --all
+</textarea>
+

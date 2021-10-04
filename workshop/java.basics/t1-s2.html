@@ -1,0 +1,388 @@
+<vars>
+  sprint=java.basics
+  task=t1
+  step=t1-s2
+</vars>
+
+<p>
+  Let's put your new knowledge to practice
+<p>
+
+<h3>Class <span class="java-class">Vector</span></h3>
+
+<p>
+  Create a new class <span class="java-class">Vector</span>,
+	in the Java package <span class="java-package">basics.step1</span>,
+  that represents a mathematical vector using <u>polar coordinates</u>.
+  You will need two fields: <span class="java-field">rho</span>
+  and <span class="java-field">theta</span>,
+  rho for the length
+  and theta for the angle. The type of the two fields will be 
+  <span class="java-keyword">float</span>.
+  <xfr>
+    Créez une nouvelle classe
+    <span class="java-class">Vector</span> qui représente le concept
+    d'un vecteur mathématique en coordonnées polaires. Vous aurez
+    donc besoin de deux champs: rho et theta. Le champ rho pour
+    la longeur et le champ theta pour l'angle. Le type de ces deux
+    champs sera des valeurs réelles en Java, soit le type
+    <span class="java-keyword">float</span>.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class Vector {
+    float rho;
+    float theta;
+    Point toPoint(Point origin) { ... }
+    void translate(Point p) { ... }
+  }
+</pre>
+<p>
+  About the methods, we remind you that you can project
+  a vector onto cartesian coordinates by the following formula:
+  <xfr>
+    Nous vous rappelons que vous pouvez traduire des coordonnées
+    polaires en coordonnées cartésiennes avec les formules ci-dessous:
+  </xfr>	  
+</p>
+<pre class="prettyprint lang-java">
+  x = rho * Math.cos(theta);
+  y = rho * Math.sin(theta);
+</pre>
+<p>
+  Notice that the cosinus and sinus functions are already
+  available on the class <span class="java-class">Math</span>,
+  as static methods, hence, you do not need an receiver object.
+  This means that you translate a point by a vector using this code:
+  <xfr>
+    Notez que les fonctions mathématiques sinus et cosinus sont
+    déjà sur la classe <span class="java-class">Math</span>,
+    comme des méthodes statiques ce qui explique que vous n'avez
+    pas besoin d'un objet receveur.
+    Cela veut dire que vous pouvez translater un point avec
+    un vecteur de la façon suivante:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  int x2 = p.x + (int)(rho * Math.cos(theta));
+  int y2 = p.y + (int)(rho * Math.sin(theta));
+</pre>
+<p>
+  Notice that you need to cast the <span class="java-keyword">float</span>
+  down to an <span class="java-keyword">int</span>. Why casting?
+  Because a float has more information than an integer, so the compiler
+  wants to make sure you know what you are doing when assigning a float
+  value to an integer variable.
+  <xfr>
+    Vous noterez aussi la nécessité d'une projection de type (cast)
+    vers une valeur entière en utilisant la syntaxe (int). Pourquoi
+    une projection de type est-elle nécessaire? Les valeurs réelles
+    contiennent plus d'information que les valeurs entières. Aussi,
+    le compilateur veut s'assurere que vous savez ce que vous faites
+    lorsque vous assignez une valeur réelle dans une variable entière.
+  </xfr>
+</p>
+
+<h3>Design Discussion</h3>
+
+<p>
+  When writing code, you will face decisions, these decisions
+  and their justifications are the design considerations for your
+  code. Indeed, the same feature can often be written in different
+  ways, with different pros and cons.
+  It is therefore time to discuss in more details
+  the design of the methods of the class
+  <span class="java-class">Vector</span>:
+  <xfr>
+    Quand vous écrirez du code, vous allez devoir prendre des décisions,
+    et ces décisions et leur justifications sont les considérations de
+    conception de votre code. En effet, la même fonctionalité peut souvent
+    se coder de différentes façons, avec des pour et des contre différents.
+    Il est donc temps de discuter de la conception des méthodes de la classe
+    <span class="java-class">Vector</span>:
+  </xfr>
+</p>
+<ul>
+  <li>
+    In our design, the method <span class="java-method">toPoint</span>
+    creates a new point
+    with coordinates corresponding to the end of the vector when the vector
+    is applied to the given origin point.
+    Notice that we could have chosen to change the given point object
+    rather than creating a new one.
+    <xfr>
+      La méthode
+      <span class="java-method">toPoint</span>
+      produit un nouvel objet point dont les coordonnées correspondent
+      à l'extrémité du vecteur appliqué au point donné (origine).
+      Remarquez que nous aurions pu choisir de modifier l'objet point donné
+      en argument plutôt que de créer un nouvel objet point.
+    </xfr>
+  </li>
+  <li>
+    The method <span class="java-method">translate</span> translates
+    the given point by the vector, changing its coordinates.
+    <xfr>
+      La méthode
+      <span class="java-method">translate</span>
+      translate le point donné par le vecteur, changeant les coordonnées
+      du point.
+  </xfr>
+  </li>
+</ul>
+<p>
+  So you can see that we illustrate two complementary patterns with
+  our two methods. With the method <span class="java-method">toPoint</span>,
+  the object given as argument is left unmodified by the execution of
+  the method. With the method <span class="java-method">translate</span>,
+  the object given as argument is modified by the execution of the method.
+    <xfr>
+    Donc vous pouvez voir que nous illustrons deux aspects complémentaires
+    avec nos deux méthodes. Avec la méthode <span class="java-method">toPoint</span>,
+    l'objet passé en argument est non modifié par l'exécution de la méthode.
+    Avec la méthode <span class="java-method">translate</span>,
+    l'objet passé en argument est modifié par l'exécution de la méthode.
+    </xfr>
+</p>
+<p>
+  In some sense, you can think of the execution flowing to an object
+  when one of its method is invoked, that is, the execution flows to
+  the receiver object (<span class="java-keyword">this</span>).
+  The receiver becomes the center of the universe, from an execution
+  perspective. It is given arguments,
+  some of which are primitive values,  others are
+  references to other objects. The execution of the method
+  can modify the receiver or any of these objects whose identities
+  have been passed as arguments. Important, in Java, <u>objects are
+  always passed by reference, never by value</u>. Note that this is not
+  always the case in other programming languages.
+  <xfr>
+    Dans un certain sens, vous pouvez penser que l'exécution arrive
+    sur un objet quand l'une de ses méthodes est invoquée, cet objet
+    étant l'objet receveur (<span class="java-keyword">this</span>).
+    Le receveur devient alors le centre de l'univers, du point de vue
+    de l'exécution. Il reçoit les arguments, certains étant des
+    valeurs primitives, d'autres des références d'objets.
+    L'exécution de la méthode peut modifier le receveur ou les objets
+    dont les références ont été passé en argument. Attention,
+    en Java, les objets sont toujours passé par référence lors de
+    l'invocation d'une méthode, ce n'est pas toujours vrai dans
+    tous les langages de programmation.
+    </xfr>
+</p>
+<p>
+  So let's get back to our example with the method
+  <span class="java-method">toPoint</span>. Let's suppose that
+  you have a vector <span class="java-lvar">v</span> and that you
+  want to translate a point <span class="java-lvar">p1</span>
+  by that vector to a point <span class="java-lvar">p2</span>.
+  So you want two objects, representing two mathematical points.
+  You would write the following code:
+  <xfr>
+    Revenons à notre exemple avec la méthode
+    <span class="java-method">toPoint</span>. Supposons que
+    vous avez un vecteur <span class="java-lvar">v</span> et que vous
+    voulez translater un point <span class="java-lvar">p1</span>
+    par ce vecteur vers un point <span class="java-lvar">p2</span>.
+    Donc vous voulez deux objets, representant deux points.
+    Vous allez naturellement écrire le code suivant:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Vector v = new Vector();
+  v.rho = 1; v.theta = Math.PI/4;
+  Point p1 = new Point();
+  p1.translate(2,3);
+  Point p2 = v.toPoint(p1);
+</pre>
+<p>
+  You would know that p2 is not the same object as p1.
+  And you know that p1 has not been modified.
+  But now, let's suppose we want to use the method
+  <span class="java-method">translate</span>.
+  We know that the method modifies the given point,
+  so we need to write our code a bit differently:
+  <xfr>
+    Vous devez savoir que p2 n'est pas le même objet que p1.
+    Et vous savez que p1 n'a pas été modifié.
+    Maintenant, supposons que nous voulons utiliser la méthode
+    <span class="java-method">translate</span>.
+    Nous savons que la méthode modifie le point donné,
+    donc nous avons besoin de coder différemment:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Vector v = new Vector();
+  v.rho = 1; v.theta = Math.PI/4;
+  Point p1 = new Point();
+  p1.translate(2,3);
+
+  Point p2 = new Point();
+  p2.translate(p1.x,p1.y);
+
+  v.translate(p2);
+</pre>
+</p>
+<p>
+  Notice that we are now forced to copy the first point,
+  creating a new point because we know that the method
+  <span class="java-method">Vector.translate(Point)</span> will
+  change the object given as an argument.
+  So let's cleanup a little bit this code, introducing your
+  first constructor.
+</p>
+<pre class="prettyprint lang-java">
+  class Point {
+    int x, y;
+    void Point(Point p) {
+      this.x = p.x;
+      this.y = p.y;
+    }
+  }
+</pre>
+<p>
+  So now we can rewrite our code like this:
+</p>
+<pre class="prettyprint lang-java">
+  Vector v = new Vector();
+  v.rho = 1; v.theta = Math.PI/4;
+  Point p1 = new Point();
+  p1.translate(2,3);
+
+  Point p2 = new Point(p1);
+  v.translate(p2);
+</pre>
+<p>
+  Use the debugger to understand what we just did with adding
+  a constructor. We will dive later on constructors, but for now,
+  an intuitive understanding of a constructor is enough.
+  <xfr>
+    Utiliser le debugger pour comprendre ce nouveau code et
+    ce qui se passe avec le constructeur. Nous détaillerons
+    plus tard ce que sont les constructeurs en Java, pour
+    l'instant, une intuition sera suffisante.
+  </xfr>
+</p>
+<p>
+  Now, notice
+  the somewhat <em>"inverted design"</em> of the method
+  <span class="java-method">Vector.translate(Point)</span>
+  since a point object is given
+  to a vector object so that it will translate the given point.
+  <xfr>
+    Notez du coup le coté design inversé de la méthode
+    <span class="java-method">Vector.translate(Point)</span>
+    puisque un point est donné à un vecteur pour qu'il le change.
+  </xfr>
+</p>
+<p>  
+  Another design could have been a design where a point is given a
+  vector so that the point can translate itself. The code would look
+  like this:
+  <xfr>
+    Une autre conception est possible dans laquelle
+    on donnerait à un point un vecteur par lequel le point se translaterait.
+    Le code ressemblerait à ceci:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Point {
+    int x;
+    int y;
+
+    void translate(int dx, int dy) {
+      this.x = this.x + dx;
+      this.y = this.y + dy;
+    }
+    void translate(Vector v) {
+      this.x = this.x + (int)(rho * Math.cos(theta));
+      this.y = this.y + (int)(rho * Math.sing(theta));
+    }
+  }
+</pre>
+<p>
+  The code above works, it compiles and it executes correctly.
+  But its <b>aesthetic</b> is questionable, this is not a good-looking
+  code because there is a poor <b>separation of concerns</b>. The problem
+  is the code of the class
+  <span class="java-class">Point</span> needs to
+  know about the details of the conversion of a polar vector to
+  cartesian coodinates, something that should be
+  the responsability of the class
+  <span class="java-class">Vector</span>.
+  So let's revisit our design:
+  <xfr>
+    Ce code compile et fonctionne, mais son <b>esthétique</b> est questionable.
+    Ce code n'est pas propre parce qu'il n'y a pas une bonne <b>séparation
+    des problèmes</b>. Le point important
+    est le code de la classe <span class="java-class">Point</span> 
+    a besoin de savoir convertir un vecteur polaire vers
+    un vecteur cartésien, quelque chose qui devrait être la responsabilité 
+    de la classe <span class="java-class">Vector</span> et non pas celle
+    de la class <span class="java-class">Point</span>.
+    Donc revisitons notre design:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Point {
+    int x;
+    int y;
+
+    void translate(int dx, int dy) {
+      this.x += dx;
+      this.y += dy;
+    }
+    void translate(Vector v) {
+      this.x = this.x + v.toX();
+      this.y = this.y + v.toY();
+    }
+  }
+  class Vector {
+    ...
+    int toX() {
+      return (int)(rho * Math.cos(theta));
+    }
+    int toY() {
+      return (int)(rho * Math.sing(theta));
+    }
+  }
+</pre>
+
+<h3>Take charge of your learning</h3>
+
+<p>
+  As always, take charge of your learning. Reading and understanding is not enough.
+  You need to put in practice. One of the lessons here is that you need to
+  envision different possible designs when you write code because code is a
+  very versatile tool and there are often many ways to code the same feature.
+  The resulting could be clean or ugly, fast or slow. Of course, we are
+  striving for clean and fast.
+  <xfr>
+    Comme toujours, prenez en charge votre apprentissage. Lire et comprendre
+    n'est pas suffisant, vous devez pratiquer. Une des leçons ici est que vous
+    devez considérer différents designs lorsque vous codez parce que le code
+    est une argile très versatile et 
+    il y a souvent de multiples manières de code une fonctionnalité.
+    Le code peut-être moche ou beau, lent ou rapide. Bien sûr, l'idée est
+    d'aller vers du code beau et rapide.
+  </xfr>
+</p>
+<!--
+<pre class="prettyprint lang-java">
+  class Point {
+    int x,y;
+    void translate(int dx, int dy) { ... }
+    void translate(Vector v) { ... }
+  }
+  class Vector {
+    float rho,theta;
+    int toX() { ... }
+    int toY() { ... }
+    Point toPoint(Point origin) { ... }
+    void translate(Point p) { ... }
+  }
+</pre>
+-->
+<p>
+  Happy coding, happy learning!
+</p>

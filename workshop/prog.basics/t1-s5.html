@@ -1,0 +1,306 @@
+<vars>
+  sprint=prog.basics
+  task=t1
+  step=t1-s5
+</vars>
+
+<h3>Introducing Java Packages</h3>
+<p>
+  The concept of <b>Java packages</b>
+  is important as it impacts not only how we organize classes, but also how
+  we compile and execute them.
+  <xfr>
+    Le concept de paquet Java est important car il impacte non seulement
+    la manière dont vous allez organiser vos classes mais aussi la manière
+    de les compiler et de les exécuter.
+  </xfr>
+</p>
+<p>
+  Java <em>packages</em> organize Java classes into namespaces, organizing classes
+  in a world-wide tree. The intent is to avoid that two organizations around
+  the world produces Java classes with the same name.
+  Therefore, each organization that produces a Java class is
+  expected to use a proper package name that distinguishes that class 
+  from other classes from other organizations.
+  <xfr>
+    Les paquets Java organisent les classes dans des espaces de noms,
+    organisant tout le code Java du monde au sein d'un arbre de paquets.
+    L'intention est d'éviter les conflits de nom entre classes produites
+    par des organisations différentes. Ainsi, chaque organisation qui
+    développe du code Java doit choisir des noms de paquets Java qui lui
+    sont propre.
+  </xfr>
+</p>
+<p> Let's apply this idea to our HelloWorld class. 
+  We could use the following package name: 
+  <span class="java-package">edu.polytech.ricm3.oop</span>.
+  Why? Because Polytech is an educational institution (edu),
+  this class is for the RiCM3 year, and for the Object-Oriented Programming
+  workshop (OOP).
+  Of course, we could pick another name, as long as it is a
+  name related to the organization (edu.polytech).
+  Also, if you are writing Java classes for yourself, you would
+  probably pick simpler package names, may be just 
+  <span class="java-package">ricm3.oop</span>.
+  Look at the class below:
+  <xfr>
+    Appliquons cette idée à notre classe HelloWorld.
+    Nous pourrions utiliser le nom de paquet suivant:
+    <span class="java-package">edu.polytech.ricm3.oop</span>.
+    Why? Parce que Polytech est une institution académique (edu),
+    cette classe est RiCM3, et pour l'atelier OOP (Object-Oriented
+    Programming).
+    Bien sûr, nous pourrions choisir un autre nom, tant qu'il
+    est relatif à celui de l'institution (edu.polytech).
+    Aussi, si vous écrivez une classe pour votre propre usage,
+    il est clair que vous choisirez un nom de paquet plus simple.
+    comme par exemple
+    <span class="java-package">ricm3.oop</span>.
+    Regardez la classe ci-dessous:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  package ricm3.oop;
+  public class HelloWorld {
+    public static void main(String[] args) {
+      System.out.println("Hello World!");
+    } 
+  }
+</pre>
+<p>
+  Adopting a Java package has two immediate impacts on how we write
+  our class <span class="java-class">HelloWorld</span>.
+</p>
+<ol>
+  <li>
+    <p>
+      We must mention the package at the beginning
+      of the source file for the class <span class="java-class">HelloWorld</span>:
+    </p>
+  </li>
+  <li>
+    We must store the file <em>HelloWorld.java</em> in a directory
+    whose path matches the package name.
+    <br>In our case, for a package
+    <span class="java-package">ricm3.oop</span>, we would have
+    the following path:<br>
+    src/ricm3/oop/HelloWorld.java
+    <br>
+    starting
+    from the <em>hello.world</em> directory.
+    <xfr>
+      Nous devons avoir le fichier <em>HelloWorld.java</em> dans un
+      dossier dont le chemin correspond au nom du paquet Java.
+      Dans notre cas, le paquet est
+      <span class="java-package">ricm3.oop</span>,
+      nous devons donc le cheming correspondant
+      (src/ricm3/oop/HelloWorld.java) en partant
+      du dossier du projet <em>hello.world</em>.
+    </xfr>
+  </li>
+</ol>
+<p>
+  Enough theory, let's do it, let's introducing packages. Copy both the class
+  <span class="java-class">HelloWorld</span> and
+  <span class="java-class">Greetings</span>
+  in the package <span class="java-package">ricm3.oop</span>.
+  The good news is that the way to compile classes does not
+  change that much.
+  <xfr>
+    Introduisons les paquets dans notre approache.
+    Copiez les deux classes
+    <span class="java-class">HelloWorld</span> et
+    <span class="java-class">Greetings</span>
+    dans le paquet <span class="java-package">ricm3.oop</span>.
+    Pour compiler:
+  </xfr>
+</p>
+<textarea class="terminal" rows="3">
+  hello.world$ javac -g -sourcepath ./src -classpath ./bin -s ./bin -d ./bin src/ricm3/oop/HelloWorld.java
+  hello.world$ javac -g -sourcepath ./src -classpath ./bin -s ./bin -d ./bin src/ricm3/oop/Greetings.java
+</textarea>
+<p>
+  Notice that the sourcepath and classpath remain the same,
+  only the name of the classes change, taking into account the
+  full path to the source file.
+  <xfr>
+    Noter que le chemin vers les sources et les classes ne changent
+    pas (sourcepath et classpath), seul le nom des classes à compiler
+    changent, en prenant en compte le nom du paquet de la classe.
+  </xfr>
+</p>
+<p>
+  Now look under the <em>"bin"</em> directory. You also have an
+  interesting hierarchy of folders now. The Java compiler generated
+  the class files in folders that corresponds to package names.
+  <xfr>
+    Regardez sous le dossier <em>bin</em>. Vous avez une hiérarchie
+    de dossier correspondant aux paquets pour lesquels des classes
+    ont été compilé. 
+  </xfr>
+</p>
+<textarea class="terminal" rows="6">
+  hello.world$ find bin -name "*.class"
+  bin/ricm3/oop/HelloWorld.class
+  bin/ricm3/oop/Greetings.class
+  bin/HelloWorld.class
+  bin/Greetings.class
+</textarea>
+<p>
+  Notice that you now have multiple classes with the same name,
+  but across different packages. Indeed, you have two classes
+  <span class="java-class">HelloWorld</span> and two classes
+  class <span class="java-class">Greetings</span>.
+  Two are in the
+  package <span class="java-class">ricm3.oop</span>
+  and two are in the
+  <span class="java-class">default</span> package,
+  the package with no name. So in fact, all classes
+  are in a package, even when you do not specify one.
+  <xfr>
+    Vous noterez que vous pouvez avoir plusieurs classes
+    avec le même nom, mais dans des paquets différents.
+    Toute classe Java est dans un paquet. Lorsque vous n'en
+    spécifiez pas, les classes sont mises dans le paquet
+    <span class="java-class">default</span> package,
+    qui en réalité est le seul paquet sans nom.
+  </xfr>
+</p>
+<p>
+  Of course, you have matching sources for these compiled classes,
+  with a similar organisation in files and directories; something
+  you can easily check with the find command like this:
+  <xfr>
+    Bien sur, vous avez les sources qui correspondent à ces
+    classes compilées avec une stucture similaire dans le système
+    de fichiers, ce que vous pouvez vérifier facilement avec
+    la commande find, comme ceci:
+  </xfr>
+</p>
+<textarea class="terminal" rows="6">
+  hello.world$ find src -name "*.java"
+  src/ricm3/oop/HelloWorld.class
+  src/ricm3/oop/Greetings.java
+  src/HelloWorld.java
+  src/Greetings.java
+</textarea>
+<p>
+  You may not know of the <em>find</em> command on Linux.
+  Always remember that if you do not know a Linux command,
+  you can always ask the manual page
+  for it, using the man command, just like this:
+</p>
+<pre class="terminal">
+  $ man find
+</pre>
+<p>
+  In this case, the manual is a bit hard to read.
+  Here is a simple explanation of what we used earlier.
+  The <em>find</em> command is a recursive search on your file system.
+  It searches from the given directory (either bin or src above),
+  for files names matching a pattern (either "*.class" or "*java" above).
+  Keep using it and you will learn other features of the command find.
+</p>
+<p>
+  One cool usage here is to leverage the command "find" to compile multiple
+  files at once. Of course, there are better ways to do this, but none
+  simpler. Let's start with the ability of the Java compiler to compile
+  multiple classes at once:
+</p>
+<textarea class="terminal" rows="3">
+  hello.world$ javac -g -classpath ./bin -s ./bin -d ./bin src/HelloWorld.java src/Greetings.java src/ricm3.oop.HelloWorld src/ricm3.oop.Greetings
+</textarea>
+<p>
+  So it is like the java compiler needs the list of files produced
+  by the find command. But how can we pass the result of a command to
+  another command? Well, it is pretty easy actually. Let's start by
+  the echo command that pretty much echoes a string on the terminal:
+</p>
+<textarea class="terminal" rows="6">
+  hello.world$ echo "toto titi"
+  toto titi
+  hello.world$ ls
+  bin  HelloWorld.class  HelloWorld.java  src  tests.jar
+  hello.world$
+</textarea>
+<p>
+  So look at the following:
+</p>
+<textarea class="terminal" rows="5">
+  hello.world$ ls
+  bin  HelloWorld.class  HelloWorld.java  src  tests.jar
+  hello.world$ echo `ls`
+  bin  HelloWorld.class  HelloWorld.java  src  tests.jar
+</textarea>
+<p>
+  Be careful to use the "back single quote" and not the single quote
+  to surround the command. So what does this do? The shell will execute
+  the command <em>`ls`</em> first and pass its output to the echo command.
+  The result is the echo command echoing the output of the ls command.
+  Not very interesting in this case, but for compiling Java classes,
+  it is just great.
+</p>
+<textarea class="terminal" rows="9">
+ find src -name "*.java"
+src/HelloWorld.java
+src/Greetings.java
+src/ricm3/oop/HelloWorld.java
+src/ricm3/oop/Greetings.java
+ogruber@pingouin:hello.world$ echo `find src -name "*.java"`
+src/HelloWorld.java src/Greetings.java src/ricm3/oop/HelloWorld.java src/ricm3/oop/Greetings.java
+</textarea>
+<p>
+  Now, let's use the 
+  <em>find</em> command in order to to compile all our classes
+  at once. Because we can agree that compiling one Java class at a time
+  is a bit frustrating and quite inefficient.
+  Here is how to do it:
+</p>
+<textarea class="terminal" rows="3">
+  hello.world$ javac -g -classpath ./bin -s ./bin -d ./bin `find src -name "*.java"`
+</textarea>
+<p>
+  If you are a beginner and you do not get it, it is ok, you can still type
+  it as given above.
+  After all, this is not a shell programming
+  workshop, but a Java programming workshop.
+  Yet, as you will become more experience in using the Linux
+  shell, you should understand it fully one day. 
+</p>
+<check
+   blocking="false"
+   silent="onSuccess"
+   lang="java"
+   cwd="workspace/hello.world"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task1.Check4">
+  <banner>
+    Alright, as usual, let's check that you did all the above correctly.
+    We will check that you have the four classes in the right
+    packages.
+  </banner>
+  <hint>
+    Please check the following:
+    <ol>
+      <li>
+      That you have the classes
+      <span class="java-class">HelloWorld</span>
+      and
+      <span class="java-class">Greetings</span>
+      in the default package (with no name)
+      as well as in the package 
+      <span class="java-package">ricm3.oop</span>.
+      </li>
+      <li>
+	That these classes are under the source folder
+	called <em>"src"</em>, with the proper hierarchy
+	of folders to match the package names.
+      </li>
+    </ol>
+  </hint>
+  <success>
+    Cool, nicely done.
+  </success>
+  <unfold></unfold>
+</check>
+

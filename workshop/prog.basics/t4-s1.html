@@ -1,0 +1,270 @@
+<vars>
+  sprint=prog.basics
+  task=t4
+  step=t4-s1
+</vars>
+<p>
+  The <a href="https://en.wikipedia.org/wiki/Hangman_(game)">HangedMan game</a> is
+  an old paper and pencil guessing game that you may have played as a child.
+  We will do a simple computer version, working at the command line in your
+  shell.
+  <xfr>
+  Le jeu  <a href="https://en.wikipedia.org/wiki/Hangman_(game)">HangedMan game</a>
+  est un vieux jeu à base de papier et crayon, que vous avez probablement
+  connu enfant. Nous allons réaliser une version électronique simple, 
+  à base de lignes de commandes dans votre shell.
+  </xfr>
+  
+</p>
+<p>
+  The computer will use a dictionnary of simple names, for example names of
+  cartoon characters. It will choose randomly a name and display as many dashes
+  as there are letters and spaces in that name. Then, it will repetitively ask
+  the player for a guess, as a letter or space. This will look like this:
+  <xfr>
+  La machine va utiliser un répertoire de noms simples, par exemple
+  des noms de personnages cartoon. Elle va choisir de manière aléatoire un
+  nom et afficher autant de tirets que de lettres et d'espaces dans ce
+  nom. Puis, elle va répétitivement demander à l'utilisateur de deviner
+  le nom, en entrant une lettre ou un espace. cela va ressembler à:
+  </xfr>
+</p>
+<textarea class="terminal" rows="18">
+  prog.basics$ java -cp bin ricm3.oop.games.GameMain
+  Hello!
+  0) Hanged Man
+  1) Tic Tac Toe
+  What do you want to play? 0
+  ----
+  Guess? e
+  -e---
+  Guess? r
+  -err-
+  Guess? J
+  Jerr-
+  Guess? y
+  Jerry
+  You won!
+  Do you want to play again? (y/n)
+</textarea>
+<p>
+	Let us remind you how you can read the user input at the keyboard,
+	here is a snippet to remind you how to do it:
+	<xfr>
+		Laissez nous vous rappeler comment lire les lignes entrées au clavier
+		par l'utilisateur:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+	InputStreamReader r = new InputStreamReader(System.in);
+ 	BufferedReader br = new BufferedReader(r);
+	while (true) {
+	  String line = br.readLine();
+	  ... process the line
+	}
+</pre>
+<p>
+	You remembered how to do it? Right? No? We did see that not so long ago.
+	Hum, so you forgot, but you had written it down in your personal notes so you
+	found it quickly, with your personnal notes on what you understood and how
+	to use that code. Right? No? Well, you do not have the right strategy.
+	You are supposed to remember what you learn and you are supposed to take notes
+	about your own understanding of what we do in this workshop. Taking notes
+	will help you memorize more and will also help you find the information
+	quickly if you forget.
+	So go back, re-read the <a href="/prog.basics/t2-s5.html">task</a>,
+	and start taking notes about what you learn, the Java syntax constructs,
+	the concepts, and the coding tricks.
+	<xfr>
+		Vous vous rappeliez comment faire? N'est-ce pas? Après tout, nous avions
+		vu comment faire il y a peu de temps. Vous aviez oublié, mais vous avez
+		retrouvé rapidement dans vos notes? N'est-ce pas? Non? Et bien il semble
+		que vous manquiez de méthode dans votre apprentissage. Il faut faire
+		et mémoriser. Il faut prendre des notes pour vous aider à mémoriser
+		mais aussi pour savoir où chercher l'information rapidement.
+		Retournez donc voir la  <a href="/prog.basics/t2-s5.html">tâche</a>,
+		et commencez à adapter votre méthodologie de travail pour une meilleur
+		apprentissage.
+	</xfr>
+</p>
+<p>
+  Let's discuss the overall code architecture now.
+  Have a look at the class
+  <span class="java-class">GameMain</span> and the
+  method
+  <span class="java-method">main</span>.
+  As you can see, we impose very little on the class
+  <span class="java-class">HangedMan</span>:
+</p>
+<pre class="prettyprint lang-java">
+public class HangedMan {
+
+  public static char[][] dico; // dictionary of words
+  public static char[] word;   // the chosen word when playing
+
+  public static void initGame() {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+  public static void playGame() throws IOException {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>
+<p>
+  The method
+  <span class="java-method">initGame</span> is expected to initialize
+  a brand new game.
+  The method
+  <span class="java-method">playGame</span> plays one game.
+</p>
+<p>
+  We expect you to have a bit of difficulties with the
+  dictionary, implemented as a matrix of characters,
+  or an array of arrays of characters. This implementation
+  choice is <b>imposed</b>, you have to use it.
+  <xfr>
+ Vous allez avoir quelques difficultés avec le répertoire de noms,
+ implémenté comme une matrice de caractères, ou bien comme un
+ tableau de tableaus de caractères. Ce choix d'implémentation est 
+ imposé, vous devez le suivre.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static char[][] dico;
+</pre>
+<p>
+  But first thing first, it is the first time we see a static field.
+  A static field is like a global variable. The full name of the
+  variable is the composition of the package name, the class name,
+  and the variable name, with the usual dotted notation.
+  So in this case, we have the name:
+  <span class="java-class">ricm3.oop.games.HangedMan.dico</span>.
+  <xfr>
+ Mais en premier lieu, c'est la première fois que vous utilisez
+ un champ static. Un champ static est comme une variable globale. Le nom 
+ plein de la variable est composé du nom du package, du nom de la 
+ classe et du com de la variable, avec le point comme séparateur.
+ Dans notre cas, nous avons le nom:
+  <span class="java-class">ricm3.oop.games.HangedMan.dico</span>.
+  </xfr>
+</p>
+<p>
+  You can always use the full name, anywhere, but it is tedious.
+  As you have guessed by now, Java is smart enough to allow you
+  to just type <span class="java-lvar">dico</span>, most of the
+  time. However, you need to understand how Java completes such
+  short names. When you type <span class="java-lvar">dico</span>,
+  Java looks up the name in the following order:
+   <xfr>
+  Vous pouvez toujours utiliser le nom plein, partout, mais
+  cela est fastidieux. Comme vous l'avez deviné, Java est assez
+  intelligent pour vous permettre de simplement taper
+  <span class="java-lvar">dico</span>, la plupart du temps. 
+  Toutefois, vous devez comprendre comment Java complète
+  ces noms courts. Quand vous tapez <span class="java-lvar">dico</span>,
+  Java cherche le nom dans l'ordre suivant:
+  </xfr>
+</p>
+<ol>
+  <li>Current method.</li>
+  <li>Current class.</li>
+  <li>Imported classes.</li>
+</ol>
+<p>
+  First, Java looks up the name in the local method.
+  This means in the current lexical block, a lexical block
+  being defined as "{ ... }" in your source. So Java starts
+  by local variables, the one defined in the current lexical
+  block. Then, the parent block and so on, up to the outer
+  lexical block of the current method.
+  <xfr>
+  	Premièrement, Java cherche le nom dans la méthode locale.
+  	Ceci signifie dans le bloc lexical courant, bloc défini
+  	comme "{ ... }" dans votre source. Donc Java démarre
+  	avec les variables locales, celles définies dans le bloc
+  	lexical. Puis le bloc parent et ainsi de suite, jusqu'au
+  	bloc de plus haut niveau.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+ 1  static void foo(int x) {
+ 2    int y;
+ 3    if (x!=0) {
+ 4      y = x;
+ 5      while (y>0) {
+ 6        dico[x][y]=0;
+ 7        y = y - 1;
+ 8      }
+ 9    }
+10  }
+11  static int dico[][]; 
+</pre>
+<p>
+  Line 7, the variable <span class="java-lvar">y</span>
+  is looked up in the current
+  <span class="java-keyword">while</span> block.
+  It is not found, so the look up goes on to the parent
+  <span class="java-keyword">if</span> block, where it is
+  not found. The lookup continues up to the method block,
+  where it is found.
+  <xfr>
+  Line 7, la variable <span class="java-lvar">y</span>
+  est cherchée dans le bloc
+  <span class="java-keyword">while</span>.
+  Elle n'est pas trouvée, donc Java cherche dans le bloc parent
+  <span class="java-keyword">if</span>, où elle n'est pas trouvée
+  non plus. La recherche continue au niveau du bloc méthode, bloc
+  dans lequel la variable est trouvée.
+  </xfr>
+</p>
+<p>
+  Line 4, the lookup for the
+  variable <span class="java-lvar">x</span> is very similar,
+  going up the blocks, up to the method, where the
+  variable <span class="java-lvar">x</span> is found as an
+  argument to the method.
+  <xfr>
+  Line 4, la recherche (lookup) pour la
+  variable <span class="java-lvar">x</span> est très similaire,
+  parcourant les blocs, jusqu'à la méthode, où la
+  variable <span class="java-lvar">x</span> est trouvée (comme
+  un argument de la méthode).
+  </xfr>
+</p>
+<p>
+  Line 6, the lookup of the 
+  variable <span class="java-lvar">dico</span> is very similar,
+  but it will not be found in the method
+  <span class="java-method">foo</span>. So Java keeps on
+  looking in the class where the method 
+  <span class="java-method">foo</span> is defined. 
+  It is defined line 11, in the current class.
+  If it would not be found in the current class, Java would
+  then look in all imported classes.
+  <xfr>
+  Line 6, la recherche de la
+  variable <span class="java-lvar">dico</span> est très similaire,
+  mais elle ne va pas être trouvée dans la méthode
+  <span class="java-method">foo</span>. Donc Java continie de
+  chercher dans la classe où la méthode 
+  <span class="java-method">foo</span> est definie. 
+  Elle est définie ligne 11, dans la classe courante.
+  Si elle n'avait pas été définie dans la classe courante, Java aurait
+  cherché dans toutes les classes importées.
+  </xfr>
+</p>
+<p>
+  You remember what imported classes are? Right? If not, you can
+  go back to previous tasks or you can use search it on the Web.
+  But this time, remember the concept. It ties to the availability
+  of static methods and static variables, so it is pretty important
+  when Eclipse complains that a variable or a method cannot be resolved.
+  <xfr>
+   Rappelez-vous ce que sont les classes importées? Si la réponse est non,
+   vous pouvez retourner dans les tâches précédentes ou vous pouvez regarder
+   sur le Web. Mais cette fois, rappelez-vous ce concept. Il impacte 
+   la recherche des noms, ce qui est majeur, notamment quand Eclipse
+   se plaint qu'une variable ou une méthode ne peut être résolue.
+  </xfr>
+</p>
+  
+  

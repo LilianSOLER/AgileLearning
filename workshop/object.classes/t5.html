@@ -1,0 +1,1210 @@
+<vars>
+  sprint=object.classes
+  task=t5
+</vars>
+
+<p>
+  In this task, we will code our second implementation
+	that will extend the abstract classes that we introduced
+	in the previous task:
+	<span class="java-class">Directory</span> and
+	<span class="java-class">File</span> in the Java package
+	<span class="java-package">oop.filesys</span>.
+	This is no longer about a file system in memory (ramfs), 
+	it is about a <em>loop-back</em> file system.
+	<xfr>
+		Dans cette tâche, nous allons faire notre deuxième implémentation
+		qui va étendre les classes abstraites que nous avions
+		introduit lors des tâches précédentes:
+		<span class="java-class">Directory</span> et
+		<span class="java-class">File</span> dans le paquet
+		<span class="java-package">oop.filesys</span>.
+		Cette tâche n'est plus à propos d'un système de fichier en
+		mémoire (ramfs) mais à propose d'un système de fichier
+		en boucle sur un fichier (loop-back).
+	</xfr>
+</p>
+<p>
+	In Linux, there is an identical concept of a
+	<em>loop-back</em> file system, allowing to
+	consider a file as a mass-storage device, allowing to
+	create a file system in a file. For those interested,
+	you can read about it
+	<a href="https://en.wikipedia.org/wiki/Loop_device">here</a>
+	on Wikipedia, but let us give you the short version below.
+	<xfr>
+		Sous Linux, il y a un concept identique, ce qui permet
+		de considérer un fichier comme un périphérique de
+		stockage. Cela permet donc de créer un système de fichier
+		au sein d'un fichier et non sur un périphérique de
+		stockage. Vous pouvez vous renseigner cette
+		<a href="https://en.wikipedia.org/wiki/Loop_device">page</a>
+		sur Wikipedia, mais nous vous donnons une version plus courte
+		ci-dessous.
+	</xfr>		
+</p>
+<p>
+  You know what a mass-storage device is, your own machine has
+	one, either a hard disk or a solid-state disk (SSD). USB keys are
+	also mass-storage devices.
+	And you know that you can format a mass-storage device so
+	that it contains a file system,
+	that is a tree of directories and files.
+	What you may not know is that a file system is stored
+	in blocks of bytes. Indeed, a mass-storage
+	device is a block-oriented device, knowing how to read or
+	write a block. All blocks are of the same size, typically
+	512 bytes.
+	<xfr>
+		Vous savez ce qu'est un périphérique de stockage,
+		votre machine personnelle en contient un, coome un
+		disque dure. Les clés USB sont aussi des périphériques
+		de stockage de masse. Comme vous le savez aussi,
+		vous pouvez formater un tel périphérique pour qu'il
+		contienne un système de fichiers, qui est un arbre
+		de dossiers et de fichiers. Mais ce que vous ne savez
+		peut-être pas c'est que ces fichiers et dossiers sont
+		stockés sur des blocs de données d'une taille fixe.
+		En effet, un périphérique de stockage sait écrire
+		et relire des blocs de données, qui font traditionnellement
+		512 octets.
+	</xfr>
+</p>
+<p>
+	But before we dive into more details,
+	let's consider the idea of a file being
+	considered as a mass-storage device, does it even make
+	sense? Well, what is a mass-storage device? It is
+	a block-oriented device	that is sequence of
+	persistent blocks of bytes, with each block
+	typically being 512 bytes in length.
+	Well, what is a file? A file is sequence of bytes.
+	So clearly, we can consider a file as a sequence
+	of blocks, each block being 512-byte long.
+	Remember that files can be randomly accessed
+	and blocks of bytes can be read or written.
+	In Java, this is available through the class
+	<span class="java-class">java.io.RandomAccessFile</span>.
+	<xfr>
+		Mais avant de plonger plus avant dans les détails,
+		revenons un peu sur l'idée de voir un fichier comme
+		un périphérique orienté-blocs. Est-ce que cela vous parle?
+		Qu'est-ce qu'un fichier après tout, n'est-ce pas une suite
+		d'octets? Il est donc possible de voir cette suite d'octets
+		par blocs de 512 octets, n'est-ce pas? Il est possible
+		de lire n'importe quel bloc à n'importe quel moment.
+	</xfr>
+</p>
+<p>
+	OK, but why would anyone want to create a file system
+	within a file. First, because it is cool and it provides
+	us another interesting implementation for our file system.
+	More seriously, hypervisors,
+	such as VirtualBox or VMware, 
+	are using this technique to virtualize
+	mass-storage devices. When you create a virtual machine
+	on your host Windows machine to install a guest Linux,
+	the	guest Linux will need a hard disk, that is, a
+	mass-storage device. The mass-storage device will be in
+	fact a file in the host Windows file system.
+	<xfr>
+		Mais pourquoi vouloir créer un système de fichiers dans
+		un fichier? En premier, parce c'est cool et que cela nous
+		fournit une autre implémentation de notre file système
+		qui n'est pas seulement un cas d'école. Plus sérieusement,
+		les hyperviseurs, tels que VirtualBox ou VMware, utilisent
+		cette technique pour virtualizer les périphériques
+		de stockage de masse. Lorsque vous installez un
+		guest Linux sur une machine Windows, il faut bien
+		un disque pour le Linux, ce disque sera un fichier dans
+		Windows.
+	</xfr>
+</p>
+<p>
+	Another case might be that you want to create an image
+	for a USB key. You create a file and then a file system
+	within that file. Then, later on, you insert a USB key
+	and copy the file onto the key, but as a low-level
+	copy, that is, copying sectors.
+	When done, the USB key will be magically formatted,
+	to whatever	you decided when building the image file.
+	Such files are exactly what you download when you install
+	a Linux distribution on a USB key.
+	<xfr>
+		Un autre cas d'usage serait de faire une clé USB.
+		Vous créez un fichier puis vous l'utilisez pour
+		y créer un système de fichier. Puis, lorsque vous
+		allez insérer une clé USB, vous pourrez copier
+		votre fichier sur votre clé, par une copie de bas niveau.
+		La copie de bas niveau est une copie des blocs.
+		Après la copie, votre clé USB contiendra le système
+		de fichiers que vous aviez créé.
+	</xfr>
+</p>
+
+<h3>Loop-back Block Device</h3>
+
+<p>
+	Back to our implementation. We want a real file system,
+	one that preserves our directories and files across
+	shutdowns, but we do not have a real mass-storage device
+	available. So, it makes sense to use a file as a mass-storage
+	device. So look at the fully-functional class
+	<span class="java-class">BlockDevice</span>
+	in the Java package
+	<span class="java-package">oop.filesys.dev</span>.
+  <xfr>
+    Revenons à notre implémentation. Nous voulons a vrai système
+    de fichiers, un système de fichier persistant qui préserve nos
+    dossiers et fichiers malgré les arrêts et les redémarrage.
+    Cependant, nous n'avons pas un medium de stockage persistant disponible.
+    Il est alors intéressant d'utiliser un fichier comme notre
+    medium de stockage persistant. Vous pouvez regarder la classe
+	  <span class="java-class">BlockDevice</span>
+    dans le paquet
+	  <span class="java-package">oop.filesys.dev</span>.
+  </xfr>
+</p>  
+<p>
+	A mass-storage device appears as a block device, that is, a device
+	containing a sequence of fixed-size blocks of bytes. Typical
+	block sizes are 512, 1k, 4k, etc. We will use blocks that are
+	512 bytes long. A block device offers two operations: read
+	or write a block. This is the foundation on which we will build
+	our file system.
+  <xfr>
+    Un medium de stockage, appelé aussi périphérique de stockage de masse,
+    est un medium qui contient des blocs de taille fixe qui contiennent des
+    octets. La taille d'un bloc peut être de 512, 1k, 4k, etc. Nous
+    utiliserons de blocs d'une taille de 512 octets. Un medium de stockage
+    réponds à deux demandes: la lecture d'un block et l'écriture d'un bloc.
+    Cela sera suffisant pour construire notre système de fichier au dessus.
+  </xfr>
+</p>
+<p>
+	<b>Nota Bene:</b> notice that our block device does not initialize
+	the blocks.	So if a block has never been written, its content is unknown.
+  <xfr>
+    Notez que notre medium de stockage n'initialize pas les blocs, donc
+    si un bloc n'a jamais été écrit, son contenu est non spécifié (inconnu).
+  </xfr>
+</p>
+
+<h3>Chain Allocation Table</h3>
+
+<p>
+	The Chain Allocation Table
+  is an important piece of the puzzle, it is an allocator
+	for chains of blocks. Why is it important? Because a file
+	in our file system will be a chain of blocks. Also, directories
+	will be saved into a chain of blocks. Now, look
+	at the class 
+	<span class="java-class">ChainAllocationTable</span>
+	in the Java package
+	<span class="java-package">oop.filesys.task5.dev</span>.
+	The purpose of this class is to provide 
+	the concept of chains of blocks, essentially lists
+	of blocks. Therefore, it must be able to do:
+  <xfr>
+    La table d'allocation des chaînes de blocs est une pièce importante
+    de notre file système. En effet, un fichier sera sauvegardé dans une
+    chaîne de blocs ainsi que le contenu d'un dossier. Regardez
+    maintenant la classe
+	  <span class="java-class">ChainAllocationTable</span>
+	  dans le paquet 
+	  <span class="java-package">oop.filesys.task5.dev</span>.
+    Le rôle de cette classe est d'offrir ces opérations:
+  </xfr>
+</p>
+	<ol>
+		<li> allocate blocks <xfr>allouer des blocs</xfr></li>
+		<li> free blocks <xfr>liberer des blocs</xfr></li>
+		<li> manage lists of blocks <xfr>gérer des listes de blocs</xfr></li>
+	</ol>
+<p>
+	The class <span class="java-class">ChainAllocationTable</span>
+	is fully functional, so you will not need to write any code there.
+	But you will use it. Consequently, we provided you with an example
+  of how to use the block device and the chain allocation table. Look
+	at the class
+	<span class="java-class">Tests</span>. You
+	will learn how to create and use a block device
+	and a chain allocation table. 
+  <xfr>
+    La classe <span class="java-class">ChainAllocationTable</span>
+    est totalement fonctionnelle, vous n'avez pas à la modifier ou
+    à la compléter. Mais vous allez l'utiliser et donc vous devez
+    comprendre l'utiliser correctement. Pour vous aidez, nous vous
+    avons donner une exemple qui vous montre comment créer un
+    block device et une table d'allocation de blocs.
+  </xfr>
+</p>
+<p>
+	<span style="color:red"><b>Nota Bene:</b></span>
+  this is an important note for your <b>Git repository</b>.
+	If you create many files used as block devices
+	and these files are large, they should not be git-committed
+  and git-pushed on your repo on vteacher. So <u>make sure that you remove
+	them <b>before</b> adding and committing your work to git</u>.
+	You need to remove them before doing the git-add
+	command. The file "disk.img" is used by default
+	and it is ignored by git, so you may keep it.
+	If you want to use other names for block-device files
+  and keep them while you git-add and git-commit,
+	just add them to the file <em>".gitignore"</em>
+	in the directory "object.classes" to add a pattern
+	of files that Git will automatically ignore, such as "disk*.img".
+  <xfr>
+    Nota Bene: il est important pour votre repo Git de gérer
+    avec précaution les fichiers qui contiennent vos blocs
+    car ce sont des gros fichiers qui n'ont pas vocation
+    à être répliqué sur votre repo sur VTeacher. Assurez
+    vous de les détruire avant de faire la séquence git-add, git-commit,
+    and git-push. Si vous souhaitez les garder, vous pouvez, ajouter
+    les dans le fichier .gitignore pour demander à git de les
+    ignorer. C'est déjà le cas pour le fichier "disk.img".
+  </xfr>
+</p>
+<p>
+  You may want to learn how the allocation table works internally.
+  This is neither mandatory nor strictly necessary to use it,
+  but it is an interesting study and it may help you get a global
+  understanding.
+  <xfr>
+    Vous pourriez être intéressé par le fonctionnement interne
+    de la table d'allocation. Cela n'est ni requis ni nécessaire
+    pour savoir l'utiliser, mais cette une étude de cas intéressant
+    pour vous et cela pourrait vous aider à mieux comprendre
+    ce qui vous est demandé.
+  </xfr>
+</p>
+<p>
+	Everything happens through a simple table, located at the beginning
+	of the block device. This means	the overall layout of a block device
+	looks like this:
+  <xfr>
+    Tout se passe par le biais d'une seule table, localisée au début
+    du block device. Cela veut dire qu'un block device ressemble à
+    cela, en termes de bloc:
+  </xfr>
+</p>
+<pre>
+  ---------------------------------------
+  | Table     |      |    ....   |      |
+  ---------------------------------------
+  b0           b2                 b255
+</pre>
+<p>
+	In the first blocks, b0 to b1, we have the table itself.
+	Hence, in this case, the table uses 2 blocks. Since
+	each entry in the table is 4-byte long, and a block is
+	512-byte long, we can deduce that the table can manage
+	256 blocks (2*512/4). Of course, the computation goes
+	the other way around in reality. Given a block device
+	with N blocks, the table length in blocks will be :
+  <xfr>
+    Dans les premiers blocs, b0 et b1, nous avons la table.
+    D'ou, dans ce cas là, la table utilise 2 blocs. Puisque
+    chaque entrée de la table prends 4 octets, et étant donné
+    que nos blocs sont de 512 octets, nous pouvons déduire que
+    la table peut gérer 256 blocs (2*512/4), ce qui sera la taille
+    du block device. En fait, on part de la taille du block device
+    et on calcule le nombre de blocs qu'il faut utiliser pour
+    la table au début du bloc device.
+  </xfr>
+</p>
+<pre>
+  blockSize = 512;
+  ENTRY_SIZE = 4;
+	m_nEntriesPerBlock = blockSize / ENTRY_SIZE;
+  m_nReservedBlocks = ENTRY_SIZE * blockCount / blockSize;
+</pre>
+<p>
+	We know the table has 4-byte entries (ENTRY_SIZE=4),
+	which really means it is an array of integer values,
+	each value being encoded on 4 bytes	(32 bits).
+  Each entry corresponds
+	to the status of one block on the block device.
+  Although the table looks like an array of integers,
+	it is not managed as a regular Java array,
+	it is managed directly across one or more pre-allocated
+	contiguous blocks on the device. The table is 
+	created and initialized when the block device is
+	formatted. 
+	So in the example
+	just above, the contents of the table would look like this
+	right after the device has been formatted:
+  <xfr>
+    Nous savons que la table contient des entrées qui font 4 octets
+    (ENTRY_SIZE=4), ce qui nous dit que c'est en fait un tableau
+    d'entiers, des entiers sur 4 octets (32 bits). La table n'est
+    pas gérer comme un tableau Java, elle est gérer directement dans
+    une suite de blocs au début du bloc device. Cette table est
+    créée et initialisée lorsque le bloc device est formaté.
+    Ci-dessous, vous avez la table telle qu'elle est initialisée
+    par le formattage:    
+  </xfr>
+</p>
+<pre>
+  -----------------------------------------------
+  |-3 |-3 |-2 |-2 |-2 |-2 |-2 |-2 |-2 |.....|-2 |
+  -----------------------------------------------
+   0   1   2   3   4   5   6   7   8         255
+</pre>
+<p>
+	You can see the table indicates that the first two blocks
+  are reserved (block status is -3)and all the other blocks
+  are	unallocated blocks (also called free blocks, the status -2).
+  The following table gives you the encoding used for the status
+  of a block:
+  <xfr>
+    Vous pouvez voir que la table indique que les deux premiers
+    blocs sont réservés (le status des blocs est -3). Tous les
+    autres blocs sont dans libre (le status est -2). Les valeurs
+    de status viennent de l'encodage suivant:
+  </xfr>
+</p>
+<ul>
+	<li>RESERVED_BLOCK: -3  (the entry can be neither allocated nor freed)</li>
+  <li>FREE_BLOCK:     -2  (the entry is not currently allocated to any chain)</li>
+  <li>EOF_BLOCK:      -1  (the entry is the last entry of a chain)</li>
+  <li>ALLOCATE_BLOCK: &gt;0  (the entry corresponds to an allocated block)</li> 
+</ul>
+<p>
+	Now, let's look at a table after three chains have been
+	allocated.
+  <xfr>
+    Regardons maintenant notre table après que trois chaînes
+    aient été alloué.
+  </xfr>
+</p>
+<pre>
+  -----------------------------------------------
+  | R | R |-1 | 5 | 7 | 6 |-1 |-1 |-1 |.....| F |
+  -----------------------------------------------
+   0   1   2   3   4   5   6   7   8         255
+               ^   ^ 	             ^
+</pre>
+<p>
+	Notice the characters '^' that show you where the different
+	chains start: block 3, block 4, and block 8.
+	Another way to look at this is the following:
+  <xfr>
+    Notez le caractère '^' qui vous montre les premiers blocs
+    de chacune des trois chaînes: blocs 3, 4, et 8.
+    Une autre représentation de la même chose est la suivante:
+  </xfr>
+</p>
+<pre>
+	Chain-A: 
+	  table[3] = 5
+	  table[5] = 6
+	  table[6] = -1 // end marker
+	Chain-B:
+	  table[4] = 7
+	  table[7] = -1 // end marker
+	Chain-C:
+	  table[8] = -1 // end marker	
+</pre>
+<p>
+	Notice how is the array used to encode chains of blocks that
+	are nothing else than lists of blocks. Look at the method
+  <span class="java-method">allocate</span> in the class
+  <span class="java-class">ChainAllocationTable</span>:
+  <xfr>
+    Notez que le tableau est utilisé pour encoder les chaînes
+    de blocs qui ne sont rien d'autres que des listes de blocs.
+    Regardez la méthode <span class="java-method">allocate</span>
+    dans la classe
+    <span class="java-class">ChainAllocationTable</span>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class ChainAllocationTable {
+  public int allocate(int last) throws IOException;
+}
+</pre>
+<p>
+	This method starts a
+	new list, containing a single block, if given
+	EOF_ENTRY as the last block. If given a real block
+	number as the last block in the chain, it will append
+	a new block at the end of the chain that starts at
+  the given block number.
+	So the previous example would have been obtained like
+	this:
+  <xfr>
+    Cette méthode démarre une nouvelle liste, une liste qui
+    ne contient qu'un seul bloc, si la valeur donné en paramêtre
+    est EOF_ENTRY. Si la valeur donnéé est un numéro de bloc,
+    la méthode ajoute alors un nouveau bloc à la fin de la
+    chaîne de blocs qui débute au numéro de block donné.
+    Donc l'état de la table donné ci-dessous est le résultat
+    des opérations suivantes sur une table fraîchement
+    initialisée:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+	ChainAllocationTable table;
+	int chainA = table.allocate(EOF_BLOCK); // -&gt; returned 3
+	int chainB = table.allocate(EOF_BLOCK); // -&gt; returned 4
+	int last = table.allocAppend(chainA);   // -&gt; returned 5
+	last = table.allocate(last);            // -&gt; returned 6
+	last = table.allocate(chainB);          // -&gt; returned 7
+	int chainC = table.allocate(EOF_BLOCK); // -&gt; returned 8
+</pre>
+<p>
+	Important, if your are looking at an allocation scheme, always
+  look at the corresponding deallocation scheme. Indeed,
+  if you allocate something,
+	chances are you will need to deallocated it at some later time.
+	This is	the case here. When a chain is created, it will be used to
+	support a file. Therefore, it will need to be deallocated when
+	the file will be removed from its directory. 
+	When a chain is removed, the blocks allocated for that chain must
+	be freed. Regarding deallocation, look at the method
+	<span class="java-method">deallocate</span> and 
+	<span class="java-method">prune</span> in the class
+	<span class="java-class">ChainAllocationTable</span>.
+  <xfr>
+    Important, si vous regardez un mécanisme d'allocation, pensez
+    toujours à regarder le mécanisme de déallocation correspondant.
+    En effet, si vous faites des allocations, vous ferrez aussi des
+    désallocations. C'est le cas ici, bien sûr. Vous allez créer
+    des chaînes pour stocker le contenu de vos fichiers et vous
+    allez désallouer ces mêmes chaînes lorsque vos fichiers seront
+    détruits. Pour désallouer ou tronquer une chaîne, regardez les
+    méthodes 
+	  <span class="java-method">deallocate</span> et
+	  <span class="java-method">prune</span> dans la classe
+	  <span class="java-class">ChainAllocationTable</span>.
+  </xfr>
+</p>	
+
+<h3>Implementing the File System</h3>
+
+<p>
+	It is time to get started with our new file system implementation,
+	as a set of concrete classes extending the abstract classes
+	that were introduced in the previous task in the Java package
+	<span class="java-package">oop.filesys.task4</span>. Look
+	in the package
+	<span class="java-package">oop.filesys.task5.fs</span>,
+	we gave you all the classes, they are all fully implemented
+	but for the two core classes:
+	<span class="java-class">Directory</span> and
+  <span class="java-class">File</span>.
+	Remember our two goals here:
+  <xfr>
+    Il est temps de se lancer dans l'implémentation de notre
+    système de fichiers. Nous devons donc concevoir et coder
+    des classes concrètes qui étendent les classes abstraites
+    que nous avons introduit dans la tâche précédente
+    dans le paquet 
+	  <span class="java-package">oop.filesys.task4</span>.
+    Regardez dans le paquet
+    <span class="java-package">oop.filesys.task5.fs</span>,
+    nous vous avons donné les classes concrètes, presque
+    totalement implémentées, sauf pour les deux classes
+	  <span class="java-class">Directory</span> and
+    <span class="java-class">File</span>.
+    Rappelons-nous ce que nous cherchons à faire:
+  </xfr>
+</p>
+<ol>
+	<li>Learn how a real file system works.</li>
+	<li>Put our extensible design to the test.</li>
+</ol>
+<p>
+	Indeed, remember this sprint is about learning advanced
+	object-oriented techniques. In the last task, we revisited
+	the design of our file system so that it can be extensible,
+	meaning it could have multiple implementations with minimal
+	work. This is why we separated our design in abstract classes
+	and concrete classes extending the abstract ones. We are
+	about to test if we did it right by coding a new implementation.
+  <xfr>
+    En effet, notre propos est de mettre en application
+    des techniques orientées-objets avancées. Dans la tâche
+    précédente, nous avons revisité la conception de notre
+    système de fichier pour qu'il soit plus facilement extensible,
+    en séparant le code en des classes abstraites et concrètes.
+    Nous allons faire une nouvelle implémentation et nous allons
+    donc pouvoir vérifier ce faisant si nous avions bien fait
+    notre réorganisation à la tâche 4. 
+  </xfr>
+</p>
+<p>
+	If our design was good and you made the right decisions about
+	where to implement the various methods of the interfaces
+	<span class="java-class">IDirectory</span>  and
+	<span class="java-class">IFile</span>, this new implementation
+  of a file system
+	will be easy to do. But maybe, you will have to revisit some
+	of the decisions you made in the previous task and you may have
+	to change your code accordingly. If you do, do not forget to always
+	verify that your code still passes the tests of the previous task.
+	Indeed, it is really easy to introduce bugs when we come back to
+	an existing code and change something.
+  <xfr>
+    Si vous avez fait une bonne conception de la restructuration
+    à la dernière tâche en implémentant les différentes méthodes
+    des interfaces
+    <span class="java-class">IDirectory</span> et
+	  <span class="java-class">IFile</span> au bon endroit,
+    la réalisation de cette nouvelle implémentation d'un système
+    de fichier se fera facilement. Mais il est possible que vous
+    n'ayez pas fait exactement ce qu'il fallait à la dernière
+    tâche et que vous deviez revisiter vos choix. Si vous modifiez
+    quoi que ce soit dans le code des classes de la tâche précédent,
+    assurez vous que vos classes passent toujours nos tests. En effet,
+    il est trop facile d'introduire des bugs lorsque l'on fait
+    des modifications a posteriori.
+  </xfr>
+</p>
+<p>
+	Let's discuss the given classes that are already fully implemented.
+	Of course, they are concrete classes adhering to our abstract design
+	of the previous task, so everything should look familiar. 
+	You also have the class
+	<span class="java-class">Shell</span> to launch a shell on this
+	implementation and the class
+	<span class="java-class">Tests</span> to launch our tests.
+  There is nothing new here compared to the same classes
+	in previous tasks. Then, you have the class
+	<span class="java-class">FileSystem</span> and the compagnon
+	class <span class="java-class">Factory</span>, look at the
+	code, it is very small and self-explanatory.
+  <xfr>
+    Discutons un peu les classes que vous nous avons donné dans cette tâche.
+    Elles sont des classes concrètes qui étendent nos classes abstraites
+    de la tâche précédente, donc vous devriez retrouver vos petits facilement.
+	  Vous avez aussi la classe <span class="java-class">Shell</span> pour
+    lancer un shell sur cette nouvelle implémentation de notre système de
+    fichiers. Vous avez aussi la class
+	  <span class="java-class">Tests</span> pour lancez nos tests.
+    Tout cela n'est pas nouveau, vous aviez des classes similaires
+    lors de tâches précédentes. Enfin, vous avez la classe
+	  <span class="java-class">FileSystem</span> et sa compagne,
+    la classe <span class="java-class">Factory</span>. Ces deux classes
+    sont petites et le code est facilement lisible.    
+  </xfr>
+</p>
+<p>
+	The class <span class="java-class">FileSystem</span> shows
+	you how things start, in particular, how the root directory
+	is created. Notice the important concept of formatting or not,
+	in the constructor of the class	<span class="java-class">FileSystem</span>.
+  Remember, we want a real file system, one that remembers its
+	contents across shutdowns of the Java Runtime Environment.
+  Therefore, the first time, we have a cold start and the block device needs
+	to be formatted, so that a brand new file system can be
+	created. But this needs to be done only the first time, the
+  next times we need a warm start that preserves the content of the
+  block device and therefore preserves our directories and files.
+	<span style="color:red">
+    Look at the command-line session below and pay particular attention
+    to how to lauch the execution of the class
+	  <span class="java-class">Shell</span>:
+    <b><em>"<u>cold</u>"</em></b> (formatting) or <b><em>"<u>warm</u>"</em></b>
+    (not formatting).
+  </span>. 
+  <xfr>
+    La classe <span class="java-class">FileSystem</span> vous montre
+    comment tout commence, en particulier, comment le dossier racine
+    est créé. Notez aussi le concept crucial de demander un formattage ou pas
+    lors du démarrage, dans le constructeur de la classe
+	  <span class="java-class">FileSystem</span>.
+    Rappelez-vous que nous voulons un vrai système de fichiers, qui préserve
+    le contenu de nos fichiers et des dossiers même lorsque vous arrêtez
+    votre programme. Du coup, à la première exécution, nous avons un démarrage
+    à froid et il faut formatter le block device. Pour les exécutions suivantes,
+    nous avons un démarrage à chaud où l'on veut retrouver le contenu du block
+    device et donc nos dossiers et fichiers.
+	  <span style="color:red">
+      Regardez la session en ligne de commande ci-dessous et
+      pretez une attention particulière au lancement de la classe 
+	    <span class="java-class">Shell</span>:
+	  it <b><em>"<u>cold</u>"</em></b> (formatting) or <b><em>"<u>warm</u>"</em></b>
+    (not formatting).
+    </span>
+  </xfr>
+</p>
+<pre class="terminal" rows="15">
+  $ cd ~AgileLearning/workshops/oop
+  $ source setenv.sh
+  $ cd workspace/object.classes
+  $ CLASSPATH="-cp ./bin:../object.collections/edu-polytech-oop-collections.jar"
+  $ java $CLASSPATH oop.filesys.task5.fs.Shell -cold -file test.img -count 2048
+  &gt; ls /
+  &gt; mkdir /home
+  &gt; ls /
+  home
+  &gt; sync
+  &gt; exit
+  $ java $CLASSPATH oop.filesys.task5.fs.Shell -warm -file test.img -count 2048
+  &gt; ls /
+  home
+  &gt; exit
+</pre>
+<p>
+	The first time, the shell will format the block device,
+  creating an empty file system.
+	The second, there will be not formatting of the block
+  device and the file system will remember whatever you
+	did in previous executions, just like with a real file
+	system. How cool is that. Of course, you will need
+	to finish the implementation first...
+	This means coding the two core classes:
+	<span class="java-class">Directory</span> and
+  <span class="java-class">File</span>.
+  <xfr>
+    Lors du premier lancement, l'exécution du shell va formatter le
+    block device, créant un système de fichiers vide. Lors de la
+    seconde exécution, il n'y aura pas formattage et le système
+    de fichier aura conservé son contenu. Bien sûr, tout cela ne
+    sera vrai qu'une fois que vous aurez fini votre implémentation
+    et qu'elle fonctionera.
+    Cela veux dire finir de coder les classes
+	  <span class="java-class">Directory</span> et
+    <span class="java-class">File</span>.
+  </xfr>
+</p>
+<p>
+	To do that, you need to understand that you have two worlds
+	that you need to keep	synchronized. One the one hand,
+	the world of the Java	objects representing the directories
+	and files, along with the bytes the files contain.
+  On the	other hand, there is the world of the block
+	device,	with chains of blocks and the contents of blocks.
+  <xfr>
+    Pour faire cela, vous devez comprendre les deux mondes
+    que votre code va maintenir en cohérence. D'un coté,
+    nous avons le monde des objets Java en mémoire qui
+    représente des dossiers et des fichiers avec leur contenu.
+    D'un autre coté, nous avons le monde du block device,
+    les chaînes de blocs, et le contenu des blocs.
+  </xfr>
+</p>
+<p>
+	For a file, you will have an object, an instance of the
+	class <span class="java-class">File</span>. An application,
+  like the shell or any other one, will read and write bytes
+  from and to that file, through that object representing
+  that file, but of	course, this means that behind the scene,
+  your code
+	needs to read or write bytes in blocks. Since a file
+	is a sequence of bytes, your code will have to manage
+	a chain of blocks for each file.
+  <xfr>
+    Pour un ficher, nous avons un objet, une instance de
+    la classe <span class="java-class">File</span>. Une
+    application, comme le shell ou une autre, va lire
+    et écrire dans ce fichier, au travers de cette objet
+    qui représente ce fichier. Votre code va devoir faire
+    les lectures et les écritures nécessaire dans les
+    blocs associés à ce fichier dans le bloc device.
+    Ces blocs sont ceux de la chaîne de blocs associé
+    à ce fichier.
+  </xfr>
+</p>
+<p>
+	For a directory, it will be a bit different since
+	the contents of a directory is a list of nodes,
+	either files or directories. But again, you will
+	have an object, an instance of the class
+	<span class="java-class">Directory</span> and
+	you have a chain of blocks on the device.
+  <xfr>
+    Pour un dossier, les choses vont être un peu
+    différentes puisque le contenu d'un dossier est
+    une liste de noeuds, soit des dossiers soit des fichiers.
+    Mais encore une fois, on aura un objet représentant
+    ce dossier, une instance de la classe
+    <span class="java-class">Directory</span>.
+    Vous allez y associé en chaîne de blocs pour
+    sauvegarder ou recharger les informations nécessaires.
+  </xfr>
+</p>
+<p>
+	Your code will have to keep those two worlds
+	in sync, hence the command <em>"sync"</em>
+	by the way.
+	It is time for you to get creative... figure out a
+	way. It all starts upon startup when the file
+	system creates the root directory, look at
+	the constructor of the class
+	<span class="java-class">FileSystem</span>.
+	It all ends when the file system is synchronized
+	with the underlying block device, look at the
+	method
+	<span class="java-method">synch</span>,
+	also in the class
+	<span class="java-class">FileSystem</span>.
+  <xfr>
+    Votre code va donc être responsable de garder ces
+    deux modes en cohérence. C'est à vous de jouer,
+    d'être créatif, de comprendre ce qui se passer
+    et de concevoir le code qui va bien pour le faire.
+    Tout démarre avec la construction du système
+    de fichier dans le constructeur de la classe
+	  <span class="java-class">FileSystem</span>.
+    Et tout se termine par la méthode
+	  <span class="java-method">synch</span>,
+	  dans la classe 
+	  <span class="java-class">FileSystem</span>,   
+    qui synchronize l'état des dossiers et des
+    fichiers avec le contenu des blocs dans le
+    block device.
+  </xfr>
+</p>
+<p>
+	There are many possible designs and implementations,
+	so figure out your own, probably discussing it amongst
+  students or with your professors.
+	Then, learn more by comparing designs and implementations. Discuss the pros
+	and cons. Expand your understanding.
+  <xfr>
+    Il y a pleins de conceptions et d'implémentations possible,
+    trouvez la votre, probably en discutant entre étudiants
+    ou avec vos professeurs. Allez plus loin en comparant
+    avec d'autres conceptions et d'autres implémentations.
+    Discuter des pours et des contres. Maîtrisez le champs
+    des possibles.
+  </xfr>
+</p>
+
+<h3>Design Discussion</h4>
+
+<p>
+	So you got creative and you got a version that works.
+	You may even have discussed with others and compared
+	your designs and implementations. Great. 
+	Let us ask you a couple of questions about your design:
+  <xfr>
+    Vous avez réussi à concevoir et implémenter votre
+    solution. Vous avez sans doute réussi aussi à échanger
+    avec d'autres. C'est super. Il est temps que l'on vous
+    pose quelques questions:
+  </xfr>
+</p>
+<ul>
+	<li>
+		Upon a warm startup, when you are not formatting a
+		new file system on the device, are you constructing
+		new objects	for all directories and files that exist
+		on the device?
+    <xfr>
+      Lors d'un démarrage à chaud, lorsque vous ne formattez
+      pas le block device, construisez vous tous les objets
+      pour représenter tous les dossiers et tous les fichiers
+      qui existent sur le block device?
+    </xfr>
+	</li>
+	<li>
+		When constructing a file object, are you loading the
+		content of the file from the block device? For example,
+		do you have a Java array that contains the entire
+		sequence of	bytes of the file?
+    <xfr>
+      Lorsque vous construisez un fichier, chargez-vous
+      en mémoire tout le contenu du fichier, c'est à dire
+      tous les blocs associés à ce fichier? Par exemple,
+      utilisez vous un tableau d'octets en Java qui à la
+      taille du fichier?
+    </xfr>
+	</li>
+	<li>
+		When synchronizing your file system and the block
+		device, are you saving all directories and all
+		files?
+    <xfr>
+      Lorsque vous synchronizez votre système de fichiers
+      en mémoire (objet Java) et le bloc device (blocs),
+      sauvegardez-vous tous les dossiers et tous les fichiers,
+      dans tous les cas?
+	</li>
+</ul>
+<p>
+  If you answered yes to any of the questions above,
+	your design is not optimal. It may work for small
+	files within small file systems with few directories,
+  but it will not	scale up to realistic file systems,
+  with many directories	and many files.
+	It will also not scale up to managing large files
+	such as video files.
+  <xfr>
+    Si vous avez répondu oui à au moins l'une des
+    questions ci-dessus, votre conception et votre
+    codage n'est pas optimal. Votre code marche sans doute,
+    mais seulement sur de système de fichiers. Il ne fonctionnera
+    pas bien avec un gros système de fichiers qui aurait
+    beaucoup de dossiers et beaucoup de fichiers. Il ne
+    fonctionnera pas très bien non plus avec de gros
+    fichiers.  
+  </xfr>
+</p>
+<p>
+	Loading the contents of a file in memory certainly was
+	a good way to reuse your previous implementation
+	of a file, developed for the <em>"ramfs"</em>.
+	But it is really a bad idea, especially with large files.
+	Imagine loading	a file of 2BG in memory? How many
+	gigabytes of memory do you have on your machine?
+	Yeah, not enough for loading a couple of large files,
+	let alone all the files.
+  <xfr>
+    Charger tout le contenu d'un fichier en mémoire dans
+    un tableau d'octets en Java était surement un bon
+    moyen de réutiliser l'implémentation que nous avions
+    fait pour le ramfs. Mais c'est vraiment une mauvaise
+    idée lorsque l'on parle de fichiers sur un bloc device,
+    des fichiers qui peuvent faire plusieurs MB ou même GB.
+    Vous n'allez pas avoir assez de mémoire sur votre machine.
+  </xfr>
+</p>
+<p>
+	Loading the entire tree of directories and files
+	was also a natural first design, again reusing your
+	previous implementation. The design is simple:
+	load everything at startup and then save everything
+	when synchronizing (the command <em>"sync"</em>).
+	But in reality, this is not such a good idea,
+	if you have a large	file system. First, your startup
+	time will increase as the size of the file system
+	increases. Not cool. But even worse, you are loading
+	everything for nothing since a given execution will
+	likely need only a few files from a couple of
+	directories. A design that would load only what
+	is necessary, when necessary, sounds more efficient.
+  <xfr>
+    Autre point, charger tout l'arbre des dossiers et des
+    fichiers est probablement une première conception assez
+    naturelle et dont le codage est simple: tout sauvegarder
+    et tout charger. Simple mais loin d'être optimale.
+    Avec un gros système de fichiers, on ne souhaite que
+    charger à la demande car une application n'accède pas
+    tous les dossiers et tous les fichiers, seulement certains
+    dossiers et certains fichiers.
+  </xfr>
+</p>
+<p>
+	When synchronizing, not all directories or files need
+	to be synchronized. Most of the files or directories
+	are only read, not modified, so there is no need to
+	synchronize them. So it would make sense to keep track
+	of which files or directories have been modified
+	to optimize the synchronization process.
+  <xfr>
+    Lorsque vous sauvegarder tous les dossiers et tous les
+    fichiers, ce n'est pas non plus optimal car tous les
+    fichiers chargés en mémoire n'ont pas été modifié.
+    De même pour les dossiers, tous n'ont pas été modifié.
+    Il sera donc intéressant de connaître ceux qui ont été
+    modifié et de ne sauvegarder que ceux là.
+  </xfr>
+</p>
+<p>
+	So let's discuss the three golden rules of a good
+	design:
+</p>
+<span style="color:orange">
+<ol>
+	<li>
+		Do not load the entire contents of a file in memory.
+		Use only one buffer, the size of a block.
+    <xfr> Ne chargez pas tout le contenu d'un fichier,
+      vous n'avez en réalité besoin que d'un seul
+      bloc à tout instante en mémoire.
+    </xfr>
+	</li>
+	<li>
+		Avoid creating the entire tree of directories
+		and files at startup. Do it on-demand only.
+    <xfr>
+      Ne pas chargez la totalité de l'arbre des
+      dossiers et des fichiers dès le départ.
+      Il faut le faire à la demande.
+    </xfr>
+	</li>
+	<li>
+		Only synchronize directories and files that
+		have been actually modified.
+    <xfr>
+      Ne sauvegarder à la synchronization que les
+      fichires et les dossiers qui ont été effectivement
+      modifié.
+    </xfr>
+	</li>
+</ol>
+</span>
+<p>
+  Taking these golden rules into account, it
+  is time to be critical of your first design and
+	come up with a second one that respects these golden
+	rules. To help you, let us give you two more core ideas.
+  <xfr>
+    En prenant ces règles d'or en considération, il est
+    temps de revoir votre conception et votre codage
+    pour l'améliorer. Pour vous aidez dans cette étape
+    importante, laissez-nous vous donner encore deux
+    points importants.
+  </xfr>
+</p>
+
+<h4>Constructed vs Loaded</h4>
+
+<p>
+	For a better design,	you will need to understand that
+	there is sometimes a difference between having a
+	<em><u>constructed</u></em> object and a
+	<em><u>loaded</u></em> object.
+  <xfr>
+    Pour aller vers une meilleure conception, il va falloir
+    que vous appréciez la différence entre un objet construit
+    et un objet chargé.
+  </xfr>
+</p>
+<p>
+	As always, a constructed object must always be usable,
+	but what does it mean to be usable? It means that methods
+	can be invoked without undue errors. So this means
+	that an object could be constructed with a minimal state
+	and the rest of the state could be loaded only when needed.
+	For a directory, a minimal state is the name and parent
+	of that directory. Indeed, when creating the parent directory,
+	it will need to have its list of nodes, which requires to have
+	objects for all its sub-directories. But realistically, a sub-directory
+	with just its name and parent is enough in most cases.
+  <xfr>
+    Comme toujours, un objet construit est un objet dans un état
+    utilisable, après l'exécution d'un constructeur. Mais qu'est-ce
+    que veux dire utilisable? Cela veut dire que l'on peux invoquer
+    des méthodes sans provoquer d'erreurs inattendues. Cela permet
+    donc de construire un objet dans un état interne minimal et qui
+    sera augmenté en fonction des besoins de l'exécution. Pour un
+    dossier, l'état minimale nécessaire est le nom et le dossier
+    parent. En effet, du point de vue du parent, ce parent doit
+    avoir une liste de dossiers enfants et ces dossiers doivent
+    au minimum connaître leur nom et leur parent. Mais tant que l'on
+    utilise pas un dossier, l'état minimale est suffisant.
+  </xfr>
+</p>
+<p>
+	But of course, this minimal state may not be enough for executing
+  some methods on a directory. Some methods require the state of the
+  directory to be fully loaded from the block device. To permit that,  
+  we propose to extend, in a backward compatible way, the abstract
+	class <span class="java-class">oop.filesys.task4.Directory</span>:
+  <xfr>
+    Mais bien sûr, cet état minimal ne sera pas suffisant pour certaines
+    méthodes sur un dossier. Ces méthodes demandent que l'état du dossier
+    soit totalement chargé depuis le block device. Pour permettre cela,
+    nous vous proposons d'étendre la classe
+	  class <span class="java-class">oop.filesys.task4.Directory</span>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+packae oop.filesys.task4;
+public abstract class Directory implements IDirectory {
+  protected void load() throws IOException {
+  }
+}
+</pre>
+<p>
+	Then, just make sure that any method that requires a fully loaded
+	state starts by invoking that method <span class="java-method">load</span>.
+  Some of these methods will be methods
+  on the class <span class="java-class">oop.filesys.task5.Directory</span>
+  but others may be on the previously coded class
+	<span class="java-class">oop.filesys.task4.Directory</span>.
+  If you do modify the class 
+	<span class="java-class">oop.filesys.task4.Directory</span>,
+  make sure that it stills run correctly and therefore still
+  passes our tests. If you have broken something with your changes,
+  fix it.
+  <xfr>
+    Il vous faut maintenant juste vous assurer que les méthodes qui
+    nécessite un état complet appellent la méthode <span class="java-method">load</span>
+    pour s'assurer que l'état est chargé. Ces méthodes peuvent être des
+    méthodes sur votre classe
+    <span class="java-class">oop.filesys.task5.Directory</span>
+    ou bien des méthodes sur la classe
+    <span class="java-class">oop.filesys.task4.Directory</span>.
+    Si vous modifiez la classe 
+	  <span class="java-class">oop.filesys.task4.Directory</span>,
+	  assurez-vous qu'elle marche toujours correctement et qu'elle passe
+    toujours nos tests.
+  </xfr>
+</p>
+<p>
+	Now, you will have to implement the actual method
+	<span class="java-method">load</span> on your
+	concrete class <span class="java-class">Directory</span>,
+	overriding the empty implementation of the abstract class.
+	Of course, the
+	method should load the state only once, suggesting the use
+	of a boolean status flag that is true when the state has
+	been loaded. 
+  <xfr>
+    Vous allez maintenant devoir implémenter la méthode
+    <span class="java-method">load</span> sur votre classe
+    concrète <span class="java-class">Directory</span>,
+    en surchargeant la méthode abstraite de la superclass.
+    Bien sûr, la méthode ne doit charger l'état de l'objet
+    qu'une seul fois, ce qui suggère la présence d'un flag
+    pour indiquer si l'objet a été chargé ou pas. 
+  </xfr>
+</p>
+
+<h4>Dirty Flag</h4>
+
+<p>
+	To avoid synchronizing too much, you will have to maintain
+	a dirty flag for each file and each directory. The dirty flag
+	of a node remains false as long as the versions of the node in
+	memory and on the block device remain the same. But as soon
+	as a file is written to, the file is marked as dirty. Also, as
+	soon as a directory has a node added or removed, it is marked
+	as dirty. When synchronizing, only dirty directories and files
+	need to be saved.
+  <xfr>
+    Pour éviter de sauvegarder trop durant la synchronization,
+    vous allez certainement devoir maintenir un drapeau qui indique
+    si un objet a été modifié ou pas, depuis sa dernière sauvegarde.
+    Si le flag n'est pas là, la version en object et la version dans
+    les blocs sur le block device sont les mêmes. Si le flag est là,
+    la verion en objects a été modifié et les blocks sur le block device
+    contiennent une version de l'état de l'objet qui n'est plus à jour.
+    Avec ce flag, il est alors possible de ne sauvegarder que les objets
+    qui doivent l'être et non pas tous.
+    </xfr>
+</p>
+<p>
+	Note that this discussion does not tell you to load the entire
+	contents of files in memory as one Java array of bytes.
+  You are still supposed to only
+	have a small portion of a file in memory, maybe like one
+	block at a time. In this case, the flag is about the current block
+  rather than the entire file.
+  <xfr>
+    Notez que cette discussion ne vous dit pas de charger tout un
+    fichier d'un coup sous forme d'un tableau Java d'octets.
+    Vous êtes toujours supposer n'avoir qu'un seul bloc courant.
+    Dans ce context, le drapeau indique l'état de ce bloc courant,
+    modifié ou pas.
+  </xfr>
+</p>
+
+<h3>Debugging Your code</h3>
+
+<p>
+  Debugging will be a challenge and will be done in several steps.
+  The first step is the usual debugging step where you will fix the
+  bugs that make your code crash. You already know how to do that well.
+  <xfr>
+    Vous assurez que votre code est correct va présenter plus de défis
+    qu'à l'habitude. Il vous faudra progresser par étape pour ne pas
+    vous perdre. La première étape sera la même que d'habitude où vous allez
+    essayer de faire marcher votre code, vous savez déjà bien faire cela.
+  </xfr>
+</p>
+<p>
+  A second step will be about make the persitence of your file system
+  work. It will be about creating some directories and some files during
+  a first cold execution (formatting) and then try to verify that they are
+  still there in successive (warm) executions (no formatting). You may want
+  to check that you can keep creating directories, creating files, removing
+  files, modify files, or moving files and you can still shutdown the execution,
+  restart, and still find all your modified directories and files.
+  <xfr>
+    La seconde étape sera le test de la persistence de votre système de fichiers.
+    Vous allez créer des dossiers et des fichiers dans une exécution à froid,
+    ce qui formatte le système de fichiers au démarrage. Puis, en relaçant des
+    exécutions à chaud, vous allez vérifier que vous retrouvez vos dossiers et
+    vos fichiers. Vous allez bien sûr continuer de créer et détruire des dossiers
+    et des fichiers et vérifier que cela marche. Vous allez aussi modifier le contenu
+    de fichiers, les déplacer, etc.
+  </xfr>
+</p>
+<p>
+  A third step will be to check if your code is optimal with respect to persistence,
+  regarding both speed and memory footprint.
+  So you want to make sure that you load only what is necessary.
+  Also, you want to make sure that you do not load several times the same file or
+  directory. You want also to verify that you do not save a file
+  or a directory more often than necessary.
+  <xfr>
+    La troisième étape sera de vérifier que le code est optimal vis à vis de votre
+    implémentation de la persistence, à la fois en termes de performance mais aussi
+    d'empreinte mémoire. Vous voulez vous assurer que vous ne chargez un fichier ou
+    un dossier qu'une seule fois. Vous voulez vous assurer qu'un seul bloc par fichier
+    utilisé est en mémoire. Vous voulez vous assurer que vous ne sauvegarder pas un
+    fichier ou un dossier plus que nécessaire.
+  </xfr>
+</p>
+<p>
+  To debug at first you can use the shell, given as the class
+	<span class="java-class">Shell</span> in the package
+	<span class="java-package">oop.filesys.task5.fs</span>.
+  But it will be very tedious to do the same tests over and over,
+  typing commands. Rapidly, you will want to write test classes,
+  code using the file system and testing that it works as you
+  expect it to work, from an implementation perspective.
+  The quality of your code is in your hands, it is not something
+  that our tests can evaluate.
+  <xfr>
+    Au début, vous allez utiliser le shell pour faire des tests à la main,
+    mais cela va devenir rapidement une perte de temps. Vous allez donc
+    rapidement écrire des tests, c'est à dire que code qui utilise votre
+    système de fichiers et qui teste telle ou telle facette de votre implémentation.
+    En effet, la qualité finale de votre implémentation est votre responsabilité,
+    nos tests ne peuvent pas évaluer cela.
+  </xfr>
+</p>
+
+<h3>Passing our tests</h3>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.classes"
+   classpath="bin;tests.jar;../object.collections/edu-polytech-oop-collections.jar"
+   classname="object.classes.tests.Task5Tests"> 
+  <banner>
+		You are happy with your tested implementation, it is time to pass our tests.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+
+<h3>That's all folks</h3>
+<p>
+  Please make sure to commit and push your work to our server.
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.classes, Task5 completed"
+  $ git push --all
+</textarea>
+<p>
+	<span style="color:red"><b>Nota Bene:</b></span>
+  this is an important note for your Git repository.
+	If you create many files used as block devices
+	and these files are large, make sure that you remove
+	them before committing your work to git.
+	You need to remove them before doing the git-add
+	command. The file "disk.img" is used by default
+	and it is ignored by git, so you may keep it.
+	Remember that you can also add more names or patterns
+	to the file <em>".gitignore"</em>
+	in the directory "object.classes". Look at the
+	manual for details with "man gitignore".
+</p>

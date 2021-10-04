@@ -1,0 +1,469 @@
+<vars>
+  sprint=prog.basics
+  task=t3
+  step=t3-s2
+</vars>
+
+<p>
+  Browse the <em>prog.basics</em> project to find the Java package
+  <span class="java-package">oop.util</span>
+  and the class 
+  <span class="java-class">ArrayUtils</span>.
+  <xfr>
+    Parcourez le projet <em>prog.basics</em> pour trouver
+    le package <span class="java-package">oop.util</span>
+    et la classe
+    <span class="java-class">ArrayUtils</span>.
+  </xfr>
+</p>
+<p>
+  The concept of arrays is a fundamental one in programming
+  and somewhat approached differently in different programming
+  languages such as C, Python, or Java. In Java, 
+  an array is a sequence of elements, a fixed-size
+  sequence, with a direct access to individual elements using
+  their index in the sequence. Look at the small snippet of code
+  below, it is there to remind you how to create an array and to access
+  its elements in Java.
+  <xfr>
+    Le concept de tableau est fondamental en programmation et est
+    approché différement dans différents languages de programmation
+    tels que C, Python, ou Java. En Java, un tableau est une séquence
+    d'éléments, une séquence de taille fixe, avec un accès direct
+    aux éléments individuels en utilisant leur index dans la séquence. 
+    Regardez l'extrait de code ci-dessous qui vous rappelle comment
+    créer un tableau et accéder à ses éléments en Java.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  int[] values = new int[4];
+  values[0] = 2;
+  values[2] = 3;
+  values[1] = values[0] + values{1];
+</pre>
+<p>
+  Remember that Java arrays have all their elements initialized
+  to zero when created. For arrays of numbers, such as
+  <span class="java-keyword">int[]</span> or
+  <span class="java-keyword">float[]</span>, the value
+  zero is the number 0. For arrays of characters,
+  the value zero is the character '\u0000', which
+  is a weird notation for the <em>unicode zero character</em>.
+  <em>Unicode</em> is an encoding for computer of all letters
+  and signs belonging to any human language, such as
+  latin letters, arabic numbers and letters, or chinese logograms.
+  Why is an encoding necessary? Because computers really only know how
+  to manipulate 0s and 1s, thus numbers. So characters are encoded as numbers.
+  <xfr>
+    Rappelez-vous que les tableaux Java ont tous leurs éléments 
+    initialisés à zéro lorsqu'ils sont crées. Pour les tableaux de 
+    nombres, tels que:
+    <span class="java-keyword">int[]</span> ou
+    <span class="java-keyword">float[]</span>, la valeur zéro
+    est le nombre 0. Pour les tableaux de caractères, 
+    la valeur zéro est le caractère '\u0000', qui est une notation bizarre
+    pour le caractère <em>unicode zero</em>.
+    <em>Unicode</em> est un encodage pour les ordinateurs de toutes les 
+    lettres et signes appartenant au langage humain, tels que les lettres
+    latines, les nombres et lettres arabes, les logograms chinois.
+    Pourquoi est-ce nécessaire? parce que les ordinateurs 
+    savent seulement manipuler les nombres, donc les caractères sont
+    encodés comme des nombres.
+  </xfr>  
+</p>  
+<pre class="prettyprint lang-java">
+  char[] values = new char[4];
+  values[0] = 'a';
+  values[2] = 'b';
+  values[1] = '\u0000';
+</pre>
+<p>
+  Remember that Java prevents you from accessing elements that
+  are out of bounds. If that happens, the Java runtime will throw
+  an exception object, instance of the class
+  <span class="java-class">IndexOutOfBoundsException</span>.
+  By throwing such an exception, the Java runtime expresses
+  the refusal to do a requested access:
+  <xfr>
+    Rappelez-vous que Java vous empêche d'accéder à des éléments qui 
+    sont en dehors des limites d'un tableau. Si cela arrive, le runtime
+    Java levera une exception, une instance de la class
+    <span class="java-class">IndexOutOfBoundsException</span>.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  int[] values = new int[4];
+  // All the following statements will throw an exception if executed
+  values[-1] = 2; 
+  values[4] = 3;
+  values[137] = 0;
+</pre>
+
+
+<h3>Array Method -- Summing and Averaging Values</h3>
+
+<p>
+  Many functions can be applied to sequences of numbers,
+  so many functions can be applied to arrays
+  since an array is a sequence.
+  We will only consider very common functions:
+  summing and averaging the elements.
+  Let's start with summing the elements:
+  <xfr>
+    Beaucoup de fonctions peuvent être appliquées sur des séquences
+    d'éléments, donc beaucoup de fonctions peuvent être appliquée à
+    des tableaux puisqu'un tableau est une séquence.
+    Nous allons seulement considérer la fonction suivante, qui additionnent
+    et calcule la moyenne des éléments.
+    Commençons par la somme des éléments:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static int sum(int[] values, int offset, int length) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+  public static float sum(float[] values, int offset, int length) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>
+<p>
+  Notice the arguments
+  <span class="java-lvar">offset</span> and
+  <span class="java-lvar">length</span>, they are
+  key to providing flexibility. This is something you will
+  everywhere in Java libraries and framework.
+  Without them,
+  a developer could only sum all the values of an array.
+  With them, a developer can specify any sub-sequence.
+  The <span class="java-lvar">offset</span> argument
+  gives the element to start at and the
+  <span class="java-lvar">length</span> argument
+  gives the number of elements to include in the sum.
+  <xfr>
+    Notez les arguments <span class="java-lvar">offset</span> et
+    <span class="java-lvar">length</span>, ils sont clés dans le sens
+    de fournir de la flexibilité. Vous trouverez cette approche
+    dans la majorité des librairies et canevas Java. Sans eux,
+    un dévelopeur pourrait seulement additionner tous les éléments
+    d'un tableau. Avec eux, il peut spécifier une sous-séquence.
+    L'argument <span class="java-lvar">offset</span> 
+    donne l'élement de départ et l'argument
+    <span class="java-lvar">length</span> 
+    donne le nombre d'éléments à inclure dans la somme.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  int[] values = new int[] { 0,1,2,3,4,5,6,7,8,9 };
+  int sum = ArrayUtils.sum(values,1,5);
+  // sum == 15 == (1 + 2 + 3 + 4 + 5);
+</pre>
+<p>
+  To sum the entire sequence, no problem, just use
+  the following:
+</p>
+<pre class="prettyprint lang-java">
+  int[] values = new int[] { 0,1,2,3,4,5,6,7,8,9 };
+  int sum = ArrayUtils.sum(values,0,values.length);
+</pre>
+<p>
+  <b>Note here how Java arrays know their own length</b>.
+</p>
+<p>
+  Let's continue with averaging the elements of a
+  sub-sequence of an array.
+</p>
+<pre class="prettyprint lang-java">
+  public static int average(int[] values, int offset, int length) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+  public static float average(float[] values, int offset, int length) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>
+
+<h3>Array Method -- Copying an array</h3>
+
+<p>
+  The subject of copying an array is a large subject, with subtleties.
+  We will start with the most basic copy and finish with more complex
+  considerations about copies. The most simple case is the following:
+  <xfr>
+  La copie de tableau est un sujet récurrent, qui comporte des subtilités.
+  Nous allons commencer avec la copie élémentaire et aller vers
+  des considérations plus complexes.
+  Le cas simple est le suivant:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static int[] copy(int[] src) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>
+<p>
+  The method takes an array as an argument, creates a new array of the
+  same size, and then copies all the values. In the end, the new array
+  is returned and it contains the same values as the given array.
+  So go ahead, implement this method, you already know everything you
+  need to know to be able to do it.
+  <xfr>
+  La méthode prend un tableau en argument, crée un nouveau tableau de
+  la même taille, puis copie les valeurs. A la fin, le nouveau tableau 
+  est retourné et il contient les mêmes valeurs que le tableau initial.
+  Implémentez cette méthode, vous connaissez déjà tout ce qu'il faut 
+  pour cela.
+  </xfr>
+</p>
+<p>
+  Now, sometimes, one does not want to create a new array but wishes
+  to copy the values of one array onto another array. The method
+  would look like this:
+  <xfr>
+  Dans certains cas, on ne souhaite pas créer un nouveau tableau,
+  mais on souhaite copier les valeurs d'un tableau dans un autre 
+  tableau, comme cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static int[] copy(int[] dst, int[] src) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>
+<p>
+  The method takes two arrays as arguments. In the end, the array
+  <span class="java-lvar">dst</span> will the same values as the
+  array <span class="java-lvar">src</span>.
+  But we have a couple of questions here:
+  <xfr>
+  La méthode prend deux tableaux comme arguments. A la fin, le tableau
+  <span class="java-lvar">dst</span> aura les mêmes valeurs que
+  le tableau <span class="java-lvar">src</span>.
+  Mais nous avons quelques questions ici:
+  </xfr>
+</p>
+<ol>
+  <li>What if the array <span class="java-lvar">dst</span> is smaller
+    than the array <span class="java-lvar">src</span>?
+  </li>
+  <li>What if the array <span class="java-lvar">dst</span> is larger
+    than the array <span class="java-lvar">src</span>?
+  </li>
+</ol>
+<p>
+  If smaller, we already know what will happen, the Java runtime will
+  throw an exception when the method
+  <span class="java-method">copy</span> will try to access
+  elements that do not exist. You already know which exception:
+  IndexOutOfBoundsException. 
+  <xfr>
+  Si plus petit, nous savons déjà ce qui va se passer, le runtime
+  java va lever une exception quand la méthode <span class="java-method">copy</span>
+  essayera d'accéder à des éléments qui n'existent pas. Vous connaissez 
+  déjà l'exception levée: IndexOutOfBoundsException.
+  </xfr>
+</p>
+<p>
+  If larger, the execution will succeed. But not all elements in the
+  array <span class="java-lvar">dst</span> will be overridden.
+  The other values will remain unchanged.
+  <xfr>
+  Si plus grand, l'exécution terminera sans exception. Mais seulement
+  un sous-ensemble des éléments dans le tableau  <span class="java-lvar">dst</span> 
+  seront modifiés.
+  </xfr>
+<p>
+<p>
+  So go ahead, implement the last method
+  <span class="java-method">copy</span>.
+  <xfr>
+    Donc avancez, implémentez la dernière méthode
+    <span class="java-method">copy</span>. 
+  </xfr>
+</p>
+<p>
+  Obviously, the previous methods do not confer enough control,
+  upon which subsequence of values should be copied where.
+  We need more arguments to offer a more complete control to
+  developers.
+  <xfr>
+  Evidemment, les méthodes précédentes ne fournissent pas assez de contrôle
+  sur la sous-séquence de valeur qui doit être copiée. Nous avons besoin
+  d'argument supplémentaires.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static void copy(int[] dst, int dstOffset, int[] src, int srcOffset, int length) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>  
+<p>
+  This is what we call complete control.
+  The argument <span class="java-lvar">srcOffset</span> and
+  <span class="java-lvar">length</span> control the subsequence that
+  is copied from the source array
+  <span class="java-lvar">src</span>.
+  The argument <span class="java-lvar">dstOffset</span> controls
+  where it is copied to in the destination array
+  <span class="java-lvar">dst</span>.
+</p>
+<p>
+  So go ahead, implement the last method
+  <span class="java-method">copy</span>.
+  Done? Tested? Great.
+</p>
+<p>
+  You need to do the same methods to copy arrays of float values.
+  But let us give you a great trick: reusability.
+  Instead of 3 methods to implement, using almost similar lines of code,
+  you can implement only one and reuse it from the two others:
+  <xfr>
+  Vous devez écrire des méthodes similaires pour réaliser la copie
+  de tableaux de réels. Mais il y a une astuce: la réutilisation.
+  Au lieu de 3 méthodes à implémenter, utilisant approximativement les
+  mêmes lignes de code, vous pouvez implémenter seulement une méthode
+  et la réutiliser:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static void copy(float[] dst, int dstOffset, float[] src, int srcOffset, int length) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+  public static float[] copy(float[] src) {
+    float[] dst = new float[src.length];
+    copy(dst, 0, src, 0, src.length);
+    return dst;
+  }
+  public static void copy(float[] dst, float[] src) {
+    copy(dst, 0, src, 0, src.length);
+  }
+</pre>  
+<p>
+  Look at how smart the Java compiler is. It can look at this code
+  and figure out correctly what it means. The last two methods
+  are implemented by invoking the first one. It does so by
+  matching the signature, that is, the name of the method but
+  also the types of the arguments.
+  So for instance, look at the two invocations:
+  <xfr>
+  Appréciez l'intelligence du compilateur Java. Il peut considérer ce code
+  et déterminer correctement ce qu'il doit faire. Les deux dernières méthodes
+  sont implémentées en invoquant la première. Le compilateur compare
+  les signatures, c'est à dire, le nom des méthodes mais aussi le
+  type des arguments.
+  Par exemple, regardez les deux invocations suivantes:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  copy(dst, 0, src, 0, src.length);
+  copy(dst, 0, src, 0, src.length);
+</pre>  
+<p>
+  They can be types as follows:
+</p>
+<pre class="prettyprint lang-java">
+  void copy(float[], int, float[], int, int);
+  void copy(float[], int, float[], int, int);
+</pre>  
+<p>
+  So the compiler knows to generate code that
+  will call at runtime the only method that
+  has the same signature:
+</p>
+<pre class="prettyprint lang-java">
+  public static void copy(float[] dst, int dstOffset, float[] src, int srcOffset, int length) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>
+<p>
+  So method signatures, like your signature, identify method
+  uniquely. This means that all methods in a given class must
+  have different signatures: either different names or different
+  some differences with their arguments, either in number or type.
+  <xfr>
+  Donc les signatures de méthodes identifient une méthode de manière
+  unique. ceci signifie que toutes les méthodes dans une classe doivent
+  avoir des signatures différentes: soit différent noms ou différent
+  types d'arguments, ou encore différent nombre d'arguments.
+  </xfr>
+</p>
+
+<h3>Array Method -- Sorting an array</h3>
+
+<p>
+  Sorting a sequence of elements is also a very classical problem for developers.
+  You will implement one of the simplest algorithm to sort a sequence of numbers,
+  the <a href="https://en.wikipedia.org/wiki/Bubble_sort">Bubble Sort</a> alrgorithm.
+  Read about it, understand it, and implement it in the following methods:
+  <xfr>
+  Trier une séquence d'éléments est aussi un problème classique 
+  pour des développeurs. Vous allez implémentez l'un des algorithmes les plus
+  simples pour trier une séquence de nombres, l'algorithme 
+  <a href="https://en.wikipedia.org/wiki/Bubble_sort">Bubble Sort</a>.
+  Lisez à propos de cet algorithme, comprenez le, et implémentez le dans les
+  méthodes suivantes
+  </xfr>  
+</p>
+<pre class="prettyprint lang-java">
+  public static void sort(int[] array) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+  public static void sort(float[] array) {
+    throw new RuntimeException("Not Yet Implemented");
+  }
+</pre>
+<p>
+  Do not forget to use the debugger to help you.
+  We know, you feel that learning the debugger commands and principles
+  is a waste of time. You are sure that using print statements is enough
+  and much faster. Well, it may be faster, short term. But in 3 years,
+  after wasting hours and hours of debugging with print statements, you
+  will wish that you had taken the 30 minutes necessary to learn and master
+  a debugger... Trust us, learning to use a debugger is a worthwhile effort,
+  with an incredible return on investments.
+  <xfr>
+  N'oubliez pas d'utiliser le debugger pour vous aider.
+  Nous savons, vous avez l'impression qu'apprendre le debugger et ses 
+  principes est une perte de temps. Vous avez l'impression qu'utiliser 
+  des affichages (prints) est plus efficace. Cela peut être vrai, à court terme. 
+  Mais dans 3 ans, après avoir perdu des heures et des heures à débugger avec
+  des affichages, vous regretterez de ne pas avoir pris 30 minutes pour apprendre
+  le debugger. Faites nous confiance, apprendre à utiliser un debugger 
+  est un effort récompensé.
+  </xfr>  
+<p>
+  Done? Tested? Great.
+</p>
+
+<h3>Passing our Tests</h3>
+
+<p>
+  We provided you with some tests, to help you test your work but not only.
+  Read our tests and learn how to write your own. Indeed, our tests are not
+  complete and thorough, do not rely entirely on them to assess if your
+  code is correct. Take it this way:
+  <xfr>
+  Nous vous avons fourni des tests, pour vous aider à tester votre
+  travail mais pas seulement. Lisez nos tests et apprenez comment écrire les votres.
+  En effet, nos tests ne sont pas complets, donc ne vous appuyez pas
+  uniquement sur eux pour vérifier que votre code est correct.
+  </xfr>  
+</p>
+<p>
+  If you do not pass our tests, you are sure that your code is not correct.
+  If you pass our tests, your code may be correct or may still have bugs.
+  Either way, it is your responsability to write correct code.
+  More importantly, it is your responsability to understand the code you
+  write.
+  <b>Remember, this is all about taking charge of your learning</b>.
+  You are not working to get a grade, you are working to learn your craft,
+  the craft of your future job.
+  <xfr>
+  Si vous ne passez pas nos tests, vous êtes sûrs que votre code est
+  incorrect. Si vous passez nos tests, votre code peut être correct ou bien
+  il peut encore comporter des bugs. Dans tous les cas, c'est votre responsabilité
+  d'écrire du code correct.
+  De manière importante, c'est votre responsabilité de comprendre le code
+  que vous écrivez. Rappelez-vous, vous êtes responsable de votre 
+  apprentissage. Vous ne travaillez pas pour obtenir un grade, vous travaillez
+  pour apprendre votre futur métier.
+  </xfr> 
+</p>

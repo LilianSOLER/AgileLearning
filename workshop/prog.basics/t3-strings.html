@@ -1,0 +1,267 @@
+<vars>
+  sprint=prog.basics
+  task=t3
+  step=t3-s3
+</vars>
+
+<p>
+  Switch to the Java perspective, if you are not already there.
+  Under the Java perspective, in the <em>Package Explorer</em> view,
+  on the left-hand side of the window, you can see the
+  <em>prog.basics</em> project into your Eclipse workspace.
+  Browse the <em>prog.basics</em> project to find the Java package
+  <span class="java-package">ricm3.util</span>
+  and the class 
+  <span class="java-class">StringUtils</span>.
+  <xfr>
+  Allez sur la perspective Java, si vous n'y êtes pas déjà.
+  Sous cette perspective, dans la vue <em>Package Explorer</em>, 
+  sur le coin gauche de la fenêtre, vous pouvez voir le projet
+  <em>prog.basics</em> dans votre workspace.
+  Parcourez le projet <em>prog.basics</em> pour trouver
+  le package <span class="java-package">ricm3.util</span>
+  et la classe
+  <span class="java-class">StringUtils</span>.
+  </xfr>
+</p>
+<p>
+  Java has great support for strings, but we will be ignoring it for now.
+  We will code a notion of strings over arrays of characters, just like
+  the C programming language does it. For absolute beginners, this is more
+  practice with arrays. For C programmers, this is also more practice with
+  Java syntax and concepts. So everybody wins. For everybody, it is a good
+  occasion to understand if they mastered Java arrays or not in the previous
+  step of this task.
+  <xfr>
+  Java offre des fonctions avancées pour les chaînes de caractère, mais
+  nosu allons les ignorer pour l'instant. Nous allons coder les chaînes
+  avec des tableaux de caractères, comme le fait le langage C.
+  Pour les débutants complets, c'est plus pédagogique avec des tableaux.
+  Pour les programmeurs C, cela l'est également. Pour tous, c'est une
+  bonne occasion de comprendre si vous maîtrisez les tableaux Java ou pas.
+  </xfr>
+</p>
+<p>
+  So what is a string over an array of characters? A string is a sequence
+  of characters, so an array seems a good fit. But should we force the
+  array to have exactly the length of the string. Well, we could, but we will
+  not. So we will assume that the string is a sequence of characters terminated
+  with the <em>"zero"</em> character, the character <em>'\u0000'</em> in
+  the Unicode encoding.
+  <xfr>
+  Donc qu'est une chaîne construite comme un tableau de caractères? 
+  Une chaîne est une séquence de caractères, donc un tableau est a priori
+  adapté. Mais devons nous forcer le tableau à avoir la taille exacte de la
+  chaîne? Nous pouvons le faire, mais nous n'allons pas le faire.
+  Nous allons considérer qu'une chaine est une séquence de caractères terminée
+  par le caractère <em>"zero"</em> (en encodage Unicode).
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static final char EndOfStringChar = '\u0000';
+</pre>
+<p>
+  Here is an example of a string:
+</p>
+<pre class="prettyprint lang-java">
+  char[] s = new char[] { 'a', 'b', 'c', '\u0000' };
+</pre>
+<p>
+  The string is <em>"abc"</em>, terminated with the character <em>'\u0000'</em>.
+  The character <em>'\u0000'</em> is
+  not considered as being part of the string, it only indicates the end of the
+  sequence of characters of the string. 
+  So for instance, the following array does not contain a string,
+  because the sequence of characters is not terminated with the character
+  <em>'\u0000'</em>.
+  <xfr>
+  La chaîne est <em>"abc"</em>, terminée avec le caractère <em>'\u0000'</em>.
+  Le caractère <em>'\u0000'</em> n'est pas considéré
+  comem faisant partie de la chaîne, il indique seulement la fin de la
+  séquence définissant la chaîne. 
+  Donc par exemple, le tableau suivant ne contient pas une chaîne,
+  parce que la séquence n'est pas terminée avec le caractère:
+  <em>'\u0000'</em>.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  char[] s = new char[] { 'a', 'b', 'c' };
+</pre>
+<p>
+  Note that a string is always shorter than the array length, at least by one
+  character (the character <em>'\u0000'</em>). But it may be even shorter,
+  like in the following example of a string <em>"1234"</em> in an array of 10
+  elements.
+  <xfr>
+  Notez que la chaîne est toujours plus courte que la longueur du tableau,
+  au moins d'un élément (le caractère  <em>'\u0000'</em>).  Mais elle peut
+  être encore plus courte, comme par exemple la chaîne <em>"1234"</em> 
+  dans un tableau de 10 elements.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  char[] s = new char[10];
+  s[0] = '1';
+  s[1] = '2';
+  s[2] = '3';
+  s[3] = '4';
+  s[4] = '\u0000';
+</pre>
+
+<h3>Let's start simple</h3>
+
+<p>
+  The two most used features on strings are the methods to compute the length
+  of a string and to make a copy. You should have no problem understanding
+  the two method signatures below and even less problems implementing them.
+  <xfr>
+  Les deux fonctionnalités les plus utilisées sur les chaînes sont les
+  méthodes pour calculer la longueur d'une chaîne et pour faire une copie.
+  Vous devriez n'avoir aucun problème pour comprendre ces deux
+  signatures ci-dessous, et pour les implémenter.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static int strlen(char s[]) {
+    throw new RuntimeException("Not Yet Implemented");
+  } 
+
+  public static void strcpy(char[] dst, char[] src) {
+    throw new RuntimeException("Not Yet Implemented");
+  } 
+</pre>
+<p>
+  Then, let's consider the ability to concatenate two strings,
+  that is, to append one string to another. Below, the string
+  <span class="java-lvar">src</span> is appended at the end
+  of the string 
+  <span class="java-lvar">dst</span>.
+</p>
+<pre class="prettyprint lang-java">
+  public static char[] strcat(char[] dst, char[] src) {
+    throw new RuntimeException("Not Yet Implemented");
+  } 
+</pre>
+<p>
+  Pay attention to the JavaDoc, in the source file for
+  the class
+  <span class="java-class">ricm3.util.StringUtils</span>.
+  It says that if the array <span class="java-lvar">dst</span>
+  is too small, a new array must be created to hold the
+  concatenated strings.
+  <xfr>
+  Faites attention à la JavaDoc, dans le fichier source pour la
+  classe <span class="java-class">ricm3.util.StringUtils</span>.
+  Elel dit que si le tableau <span class="java-lvar">dst</span>
+  est trop petit, un nouveau tableau doit être crée pour 
+  contenir les chaînes concaténées.
+  </xfr>
+</p>
+<p>
+  Always read the JavaDoc, that you are implementing or
+  using a method. The JavaDoc tells what you need to know
+  about the method you are about to implement or about to
+  use. Either way, you must read it and understand it.
+  <xfr>
+  Lisez toujours la JavaDoc, que vous implémentiez ou utilisiez
+  une méthode. La JavaDoc vous dit ce que vous devez savoir
+  à propos d'une méthode que vous êtes en train d'implémenter ou 
+  d'utiliser. Dans tous les cas, vous devez la lire et la comprendre.
+  </xfr>
+
+</p>
+
+<h3>About substrings</h3>
+
+<p>
+  The ability to find the index of a character opens up the ability
+  to extract substrings from a string. The corresponding two methods
+  are the following: 
+  <xfr>
+  La capacité de trouver l'index d'un caractère ouvre la possibilité 
+  d'extraire une sous-chaîne d'une sous-chaîne. Les méthodes correspondantes
+  sont les suivantes:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static int indexOf(char[] s, char c, int offset) {
+    throw new RuntimeException("Not Yet Implemented");
+  } 
+  public static char[] substring(char[] dst, char[] src, int offset, int length) {
+    throw new RuntimeException("Not Yet Implemented");
+  } 
+</pre>
+
+<h3>Comparing strings</h3>
+
+<p>
+  Our last feature is the ability to compare strings.
+  So again, we have three possible cases:
+</p>
+<ol>
+  <li>The two strings are equal.</li>
+  <li>The first string is smaller than the second number.</li>
+  <li>The second number is smaller than the first number.</li>
+</ol>
+<p>
+  So again, we cannot use a boolean that has only two possible values:
+  <span class="java-keyword">true</span> or
+  <span class="java-keyword">false</span>.
+  So we can use an integer to encode the three cases:
+</p>
+<ol>
+  <li> Return 0 if the two numbers are equal.</li>
+  <li> Return -1 if the first number is smaller than the second number.</li>
+  <li> Return 1 if the second number is smaller than the first number.</li>
+</ol>
+<p>
+  But we need an order between strings in order to be able to speak of
+  one string being less than another one. That order is called the
+  <a href="https://en.wikipedia.org/wiki/Lexicographical_order">lexicographic order</a>.
+  You already know it, it is a generalization of
+  the alphabetical order.
+  <xfr>
+  Nous avons besoin d'un ordre entre les chaînes pour être capable de
+  dire qu'une chaîne est plus petite qu'une autre. Cet ordre est appelé
+  <a href="https://en.wikipedia.org/wiki/Lexicographical_order">
+  l'ordre lexicographique</a>.Vous le connaissez déjà, c'est une généralisation
+  de l'ordre alphabétique.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static int strcmp(char[] s1, char[] s2) {
+    throw new RuntimeException("Not Yet Implemented");
+  } 
+</pre>
+<p>
+  
+  The method returns the value 0 if the two strings are equals. Returns -1 if the string
+   *         s1 is lexicographically less than the string s2. Returns 1if this
+   *         string s1 is lexicographically greater than the string s2.
+
+
+<h3>Passing our Tests</h3>
+
+<p>
+  We provided you with some tests, to help you test your work but not only.
+  Look in the Java package
+  <span class="java-package">ricm3.util.tests</span>
+  for the class 
+  <span class="java-class">StringTests</span>.
+  Read our tests and learn how to write your own. Indeed, our tests are not
+  complete and thorough, do not rely entirely on them to assess if your
+  code is correct. 
+  <b>Remember, this is all about taking charge of your learning</b>.
+  Aren't you learning your craft? A craft that you chose to learn?
+  <xfr>
+  Nous vous avons fourni des tests, pour vous aider à tester votre
+  travail mais pas seulement. Regardez la classe
+  <span class="java-class">StringTests</span>
+  dans le package  
+ <span class="java-package">ricm3.util.tests</span>.
+ Lisez nos tests et apprenez comment écrire les votres. En effet, nos tests
+ ne sont pas complets, ne vous appuyez pas entièrement sur eux pour 
+ valider votre code. 
+ Rappelez-vous, vous êtes responsable de votre apprentissage..
+  </xfr>
+</p>

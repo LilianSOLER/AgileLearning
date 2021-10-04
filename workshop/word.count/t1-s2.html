@@ -1,0 +1,246 @@
+<vars>
+  sprint=word.count
+  task=t1
+	step=t1-s2
+</vars>
+
+<p>
+	The purpose of this task is to help you master the concept of streams
+	by implementing your own. 
+  At its core, a stream is traditionally a flow of bytes, that is,
+  a flow of values ranging from 0 to 255 (unsigned) or -128 to 127
+  (signed). The Java primitive type for a byte is called a
+  <span class="java-keyword">byte</span>, ranging from -128 to
+  +127.  Also, a stream is unidirectional, that is,
+  it is either to read from or to write into.
+  This suggests the following two behaviors:
+  <xfr>
+		Le but de cette tâche est de vous aider à comprendre ce qu'est
+		un flux d'octets par le codage de simples flux.
+    Traditionnellement, un flux est une sequence d'octet, c'est
+    à dire des valeurs entre 0 et 255 (valeur non signée) ou
+    de -128 à 127 (valeurs signées). Le type primitif en Java
+    pour un octet se note <span class="java-keyword">byte</span>
+    et c'est une valeur signée entre -128 et +127.  Un flux
+    est unidirectionnel, il sert à lire ou à écrire, comme
+    le montre les deux classes ci-dessous:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class InputStream {
+    byte read();
+  }
+  class OutputStream {
+    void write(byte value);
+  }
+</pre>
+<p>
+  <b>ToDo:</b> code both streams, encapsulating an array of bytes.
+  For the output stream, the array will be used internally to store
+  the bytes you write through the output stream. For the input stream,
+  the bytes you read through the input stream will come from the array.
+  To better understand what you need to do, look at the method
+  <span class="java-method">main</span> on the class 
+  <span class="java-method">StreamStep1</span>.
+  <xfr>
+    <b>A faire:</b> coder les deux streams, au moyen d'un tableau d'octets.
+    Pour le cas de l'OutputStream, le tableau sera utilisé pour garder
+    les octets écrits au travers de la méthode write du flux. Le tableau
+    sert donc à garder la séquence d'octets écrits.
+    Pour le cas de l'InputStream, les valeurs lues via la méthode
+    read viendront du tableau. Le tableau contient donc la séquence
+    d'octets lus.
+    Pour mieux comprendre, regardez l'usage dans la méthode
+    <span class="java-method">main</span> de la classe
+    <span class="java-method">StreamStep1</span>.
+  </xfr>
+</p>
+<p>
+  You have all the necessary skills to do that.
+  Look in the <em>streams</em> source folder, in the
+  package <em>streams.step1</em>, the necessary skeletons
+  are already there:
+    <xfr>
+	Vous avez maintenant toutes les compétences pour faire cela.
+	Regardez dans le source folder <em>streams</em>,
+	dans le package <em>streams.step1</em>, les squelettes
+	nécessaires sont déjà là:
+   </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class InputStream {
+    private byte[] buffer;
+    public InputStream(byte[] buffer);
+    public byte read();
+  }
+  public class OutputStream {
+    private byte[] buffer;
+    public OutputStream(byte[] buffer);
+    public void write(byte value);
+  }
+  public class StreamsStep1 {
+    static public void main(String[] args) {
+    byte[] buffer = new byte[256];
+    OutputStream os = new OutputStream(buffer);
+    for (int i=0;i &lt; 255;i++)
+      os.write(i);
+    InputStream is = new InputStream(buffer);
+    for (int i=0;i &lt; 255;i++)
+      assert(i==is.read());
+  }
+</pre>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="streams.step1.TestStream">
+  <banner>
+    When done with the implementation, check what you did.
+  </banner>
+  <hint>
+    Not quite. Try again.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+<div name="check1_unfold" style="display:none;" >
+</div>  
+
+<h3>Improved Streams</h3>
+
+<p>
+  The implementation above is quite limited, since
+  we must know in advance the size of the buffer. But what if
+  we do not? How could we change the implementation above
+  so that we can write an arbitrary number of bytes?
+  <xfr>
+    L'implémentation que vous venez de faire est un peu limitée,
+    puisque vous devez connaitre la taille de votre tableau.
+    Comment pourrions nous changer l'implementation pour avoir
+    un tableau qui puisse grandir?
+  </xfr>
+</p>
+<p>
+  Look in the source folder <em>step2</em>,
+  in a Java package <span class="java-package">streams.step2</span>.
+  The necessary class skeletons are there. Look at the two
+  constructors so that you understand how the InputStream and
+  OutputStream work together. Then, complete the skeletons:
+  <xfr>
+    Regardez dans le source folder <em>step2</em>,
+    dans le package <span class="java-package">streams.step2</span>.
+    Les squelettes de classes sont là. Regardez les deux
+    constructeurs de manière à comprendre comment InputStream et
+    OutputStream fonctionnent ensemble. Puis complétez les
+    squelettes:
+  </xfr>
+<p>
+  <ol>
+    <li>
+      <p>
+	When writing a byte, grow the array if it is full,
+	so that you never fail writing a byte. We already have
+	done that with the array of points in the class
+	<span class="java-class">Polygon</span>.
+	<xfr>
+	  Lors de l'écriture d'un octet, agrandissez votre tableau
+	  si il est plein. Nous avions déjà fait quelque chose
+	  de similaire avec la classe 
+	  <span class="java-class">Polygon</span>.
+	</xfr>
+      </p>
+    </li>
+    <li>
+      With the class <span class="java-class">InputStream</span>,
+      make sure to only allow reads that are valid ones.
+      <p>
+	That is, entries in the byte array that have been written
+	with a value. Indeed, not all the bytes in the array of
+	an output stream may have a valid value. Imagine an
+	output stream with an array of 64 bytes but only 3 bytes
+	have been written.
+	<xfr>
+	  Au travers de l'InputStream, vous ne devez lire que des
+	  octets qui sont valides. Donc si il y a 10 octets écrits
+	  dans un tableau de taille 20, il ne faudra accepter de
+	  lire que les 10 premiers octets, pas les suivant.
+	</xfr>
+      </p>
+      <p>
+	If an invalid read is requested, throw
+	an exception, see below. It is still a bit early to
+	discuss exceptions fully, just know that they are a way
+	to suspend the execution flow and signal an exceptional
+	condition. You can follow the execution under debugger
+	to see what happens.
+	<xfr>
+	  Si une lecture est invalide, vous devez lever une
+	  exception. C'est encore un peu tôt pour discuter
+	  des exceptions dans leur totalité, elle sont le
+	  moyen de détourner le flux d'exécution et d'indiquer
+	  une condition execptionnelle, d'où le nom d'exception.
+	</xfr>
+      </p>
+    </li>
+    <li>
+      If there are no more bytes to read, throw an End-Of-File
+      exception, an instance of the
+      class <span class="java-class">EOFException</span>.
+      You need to do something like this:
+      <pre class="prettyprint lang-java">
+  class InputStream {
+    byte read() throws EOFException {
+      ...
+      if (...)
+        throw new EOFException();
+      ...
+    }
+  }
+      </pre>
+      With Eclipse, remember to use Ctrl-Shift-T to locate a class, the 
+      class <span class="java-class">EOFException</span>.
+      You can also use Ctrl-Shift-O to reorganize your imports
+      automatically.
+    </li>
+    <li>
+      In the class 
+      class <span class="java-class">StreamsStep2</span>,
+      the copy of the
+      class <span class="java-class">StreamsStep1</span>,
+      change your main to the following:
+      <pre class="prettyprint lang-java">
+	static public void main(String[] args) throws EOFException {
+	OutputStream os = new OutputStream();
+	...
+	InputStream is = new InputStream(os);
+	...
+	}
+      </pre>
+    </li>
+  </ol>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="streams.step2.TestStream">
+  <banner>
+    When done with the implementation, check what you did.
+  </banner>
+  <hint>
+    Not quite. Try again.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<div name="check2_unfold" style="display:none;" >
+</div>  

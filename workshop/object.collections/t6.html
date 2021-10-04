@@ -1,0 +1,440 @@
+<vars>
+  sprint=object.collections
+  task=t6
+</vars>
+
+<p>
+  We have designed and developed a few collections.
+  We learned a lot in the process and we could toss
+  our collections to adopt the Java ones. Many would
+  advocate this, for the sake of using Java standard
+  collections. But we will not do that, for several
+  good reasons.
+  <xfr>
+    Nous avons conçu et développé quelques collections
+    et nous avons appris beaucoup. Nous pourrions les jeter
+    et adopter celles de Java. Mais nous n'allons pas faire cela,
+    pour plusieurs bonnes raisons.
+  </xfr>
+</p>
+<p>
+  First, you worked hard and our collections are as good as any
+  other. They are simple and do the job. In contrast, the Java standard
+  collections are complicated, very complicated. Second, our collection
+  match your skill level in Java.  The Java
+  collections are using a lot of concepts that we haven't seen yet,
+  such as generic types and synchronization. Third, last but not least,
+  we do not want to have developed our collections for just tossing them away,
+  do we?
+  <xfr>
+    Premièrement, nos collections sont simples mais elles font le boulot,
+    et plutôt bien. Les collections que propose Java sont compilquées.
+    Deuxièmement, nos collections sont à votre niveau de compréhension
+    de Java. Celles de Java utilisent beaucoup de concepts que nous n'avons
+    pas abordé encore. Troisièment, nos collections sont notre travail et
+    il n'est pas question de les avoir developpées pour ne pas les utiliser.
+  </xfr>
+</p>
+<p>
+  So we need to organize our collections so that we can
+  reuse them in the coming sprints. This is the purpose of this task.
+  <xfr>
+    Nous allons donc organiser nos collections pour pouvoir
+    les utiliser dans les sprints qui viennent. C'est le but de cette
+    tâche.
+  </xfr>
+</p>
+<p>
+  <b>WARNING:</b> whatever you do in this task, do not loose your work
+  from the previous tasks, preserve all the classes
+  you wrote during the previous tasks (step1 to step4).
+  This task is about creating new classes from the classes
+  developed in the previous tasks.
+  <xfr>
+    <b>Attention:</b> quoi que vous fassiez dans cette tâche,
+    ne perder pas les classes que vous
+    avez développé durant les tâches précédentes (step1 to step4).
+    Le but de cette tâche est de créer de nouvelles classes
+    à partir des classes créées lors des tâches précédentes.
+  </xfr>
+</p>
+
+<h3>Reorganizing our Code</h3>
+
+<p>
+  We created a source folder called <b><em>collections</em></b>,
+  so that we can cleanly separate our new classes from the old
+  ones. Note: if you forgot what source folders in Eclipse are,
+  well, it is time to memorize it.
+  <xfr>
+    Nous avons créer pour vous un nouveau dossier source
+    <b><em>collections</em></b>, pour pouvoir bien séparer les nouvelles
+    classes des anciennes. Note: si vous ne vous rappelez pas ce qu'est
+    un dossier source pour Eclipse, il est temps de le mémoriser.
+  </xfr>
+</p>
+<p>
+  We also chose a new Java package name:
+  <span class="java-package">edu.polytech.oop.collections</span>. 
+  Why this long name? Remember, package names must be designed
+  to avoid name conflicts, world wide. That is, two packages
+  from two different organisations must have different names.
+  The <em>edu</em> part is because we are an <em>educational</em>
+  organisation. The <em>polytech</em> is to explicit which
+  educational organisation and which cursus. The <em>oop</em> is
+  to identify this workshop.
+  <xfr>
+    Nous avons choisi aussi un nouveau paquet Java:
+    <span class="java-package">edu.polytech.oop.collections</span>.
+    Rappelez vous que les noms de paquet sont là pour éviter les
+    conflits de noms de classes au niveau mondial. Donc,
+    normalement, deux paquets de deux organisations doivent avoir
+    des noms différents. Ici, "edu" est pour éducation, parce
+    que Polytech est une école, ensuite "oop" est pour cet atelier.
+  </xfr>    
+</p>
+<p>
+  In that package, we already created the Java interfaces:
+  <span class="java-class">ICollection</span> and
+  <span class="java-class">IList</span> and
+  <span class="java-class">IMap</span>.
+  <xfr>
+    Dans ce paquet, nous avons déjà crée les interfaces
+    suivantes:
+    <span class="java-class">ICollection</span> et
+    <span class="java-class">IList</span> et
+    <span class="java-class">IMap</span>.    
+  </xfr>
+</p>
+<p>
+  You know already the last two, but what about the first one?
+  Well, we have refactored the interfaces
+  <span class="java-class">IList</span> and
+  <span class="java-class">IMap</span> to avoid redundancy:
+  <xfr>
+    Vous connaissez déjà les deux dernières, mais pas la
+    première. Nous avons réorganisé les interfaces 
+    <span class="java-class">IList</span> et
+    <span class="java-class">IMap</span> pour éviter
+    la redondance:
+  </xfr>
+</p>
+<ol>
+  <li>Notion of length.</li>
+  <li>Notion of iterator.</li>
+</ol>
+<p>
+  So really, both lists and maps were collections of elements,
+  of a certain size and with the ability to iterate over its elements.
+  So we created the interface
+  <span class="java-class">ICollection</span> 
+  to represent exactly these shared concepts capabilities all collections.
+  And then, we expressed that the interfaces
+  <span class="java-class">IList</span> and
+  <span class="java-class">IMap</span> 
+  extend the interface
+  <span class="java-class">ICollection</span>, just like this: 
+  <xfr>
+    En fait, les listes et les maps sont des collections d'éléments,
+    qui ont un nombre d'éléments et qui offre un itérateur sur leurs
+    éléments. Aussi, nous avons créé une interface 
+    <span class="java-class">ICollection</span> pour représenter
+    ces capacités communes aux listes et aux maps mais qui sont
+    en fait communes à toutes les collections. Puis nous avons
+    exprimé que les interfaces
+    <span class="java-class">IList</span> et
+    <span class="java-class">IMap</span>
+    étendent l'interface
+    <span class="java-class">ICollection</span>, comme ceci:    
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public interface ICollection {
+    public interface Iterator {
+      ...
+    }
+    Iterator iterator();
+    ...
+  }
+  public interface IList extends ICollection {
+    ...
+  }
+  public interface IMap extends ICollection {
+    ...
+  }
+</pre>
+<p>
+  What the keyword <span class="java-keyword">extends</span>
+  means is the following. Let's discuss it
+  for the interface
+  <span class="java-class">IList</span> that extends the
+  interface <span class="java-class">ICollection</span>.
+  Let's consider a class <span class="java-class">List</span> that
+  implements the interface <span class="java-class">IList</span>.
+  Now, the class <span class="java-class">List</span> 
+  has to implement all the methods of the interface
+  <span class="java-class">IList</span>, as before, but also all the
+  methods of the interface <span class="java-class">ICollection</span>.
+  As a consequence, a list object can be casted to an 
+  <span class="java-class">IList</span> or an
+  <span class="java-class">ICollection</span>, like this:
+  <xfr>
+    Discutons du cas de l'interface 
+    <span class="java-class">IList</span> qui étends l'interface
+    <span class="java-class">ICollection</span>.
+    Considérons maintenant une classe
+    <span class="java-class">List</span> qui implémente l'interface
+    <span class="java-class">IList</span>. Cette class
+    <span class="java-class">List</span> doit implémenter toutes les
+    méthodes de l'interface 
+    <span class="java-class">IList</span>, comme avant,
+    mais elle doit aussi implémenter toutes les méthodes de l'interface
+    <span class="java-class">ICollection</span>.
+    As a consequence, a list object can be casted to an 
+    <span class="java-class">IList</span> or an
+    <span class="java-class">ICollection</span>, like this:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class List implements IList { ... }
+
+  List impl = new List();
+  IList list = (IList)impl;
+  ICollection col = (ICollection)impl;
+  ICollection.Iterator iter = col.iterator();
+</pre>
+<p>  
+  The concept of interfaces is powerful in Java as it represents
+  extensible contracts. So for instance, we could define another
+  type of collection, a mathematical set,
+  just like this:
+  <xfr>
+    Le concept d'interface en Java est puissant puisqu'il représente
+    des contrats extensible. Ainsi, nous pourrions définir un nouveau
+    type de collection
+    qui corresponde à un ensemble mathématique, comme ceci:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  interface ISet extends ICollection {
+    public boolean contains(Object elem);
+    public void add(Object elem);
+    public void remove(Object key);
+  }
+</pre>
+<p>
+  As the interfaces
+  <span class="java-class">IList</span> and
+  <span class="java-class">IMap</span> do, the interface
+  <span class="java-class">ISet</span> inherits all
+  the methods of the interface
+  <span class="java-class">ICollection</span> that that they
+  all extends.
+  <xfr>
+    Comme les interfaces 
+    <span class="java-class">IList</span> et
+    <span class="java-class">IMap</span> en bénéficient, l'interface
+    <span class="java-class">ISet</span> hérate aussi de toutes les
+    méthodes de l'interface 
+    <span class="java-class">ICollection</span> qu'elles étendent
+    toutes.
+  </xfr>
+</p>
+<p>
+  You will notice that making those changes to interfaces
+  <span class="java-class">IList</span> and
+  <span class="java-class">IMap</span> does not 
+  impact our implementations of lists and maps, they are
+  still implementing the same set of methodes,
+  we just reorganized these methods across different interfaces.
+  <xfr>
+    Vous remarquerez que bien que nous ayons réorganisé les
+    interfaces <span class="java-class">IList</span> and
+    <span class="java-class">IMap</span>, cela n'impacte
+    pas leurs classes d'impĺémentation puisque l'ensemble
+    des méthodes à implémenter n'a pas changer, nous avons
+    seulement restructuré ces méthodes sur plusieurs interfaces.
+  </xfr>
+</p>
+<p>
+  Time to implement, reusing the classes that we coded in the
+  previous tasks. Now please copy the following classes
+  into the Java package
+  <span class="java-package">edu.polytech.oop.collections</span>.
+  <xfr>
+    Il est temps d'implémenter, en copiant, dans le paquet
+    <span class="java-package">edu.polytech.oop.collections</span>,
+    certaines des classes
+    que nous avions codé dans les tâches précédentes:
+  </xfr>
+</p>
+<ul>
+  <li>Class <span class="java-package">object.collections.step4.HashTable</span></li>
+  <li>Class <span class="java-package">object.collections.step3.Vector</span></li>
+  <li>Class <span class="java-package">object.collections.step3.List2</span></li>
+</ul>
+<p>
+  Let's fix the few compilation errors we get:
+  <xfr>
+    Corrigons les erreurs de compilations:
+  </xfr>
+</p>
+<ul>
+  <li>
+    Check your imports, it is probable that Eclipse has made a few mistakes
+    with your imports. Make sure that none of the classes in the package
+    <span class="java-package">edu.polytech.oop.collections</span>
+    are importing classes from previous steps (step1 to step4).
+    <xfr>
+      Vérifiez vos imports, il est probable qu'Eclipse n'a pas fait
+      ce qu'il fallait lors de la copie. Assurez que les classes
+      du paquet <span class="java-package">edu.polytech.oop.collections</span>
+      n'importe aucune classes des étapes précédentes (step1 à step4).
+    </xfr>
+  </li>
+  <li>
+    Make sure that your hash table use the class
+    <span class="java-package">object.collections.step3.List2</span>
+    for its buckets and not the class
+    <span class="java-package">object.collections.step3.List</span>.
+    If you have your own implementation, you can keep it.
+    <xfr>
+      Assurez-vous que votre table de hachage utilise la classe
+      <span class="java-package">object.collections.step3.List2</span>
+      pour ces seaux et non pas la classe 
+      <span class="java-package">object.collections.step3.List</span>.
+      Si vous avez votre propre implémentation, vous pouvez la garder.
+    </xfr>
+  </li>
+</ul>
+<p>
+  Now let's do a little bit of renaming.
+</p>
+
+<ul>
+  <li> Rename
+    <span class="java-class">List2</span> to
+    <span class="java-class">LinkedList</span>
+    <br>
+    Because <em>List2</em> is not really a name we want to keep,
+    it does not say much about the implementation.
+    The name <em>LinkedList</em> pretty much sums up the
+    implementation, so it is a good name.
+    <xfr>
+      Renommons la class 
+      <span class="java-class">List2</span> en
+      <span class="java-class">LinkedList</span>
+      <br>
+      Parce que le nom <em>List2</em> n'est pas vraiment un nom
+      que l'on souhaite garder, il ne dit rien de l'implémentation.
+      Le nom <em>LinkedList</em> indique parfaitement l'implémentation.
+    </xfr>
+  </li>
+  <li> Rename
+    <span class="java-class">Vector</span> to
+    <span class="java-class">ArrayList</span>
+    <br>
+    Because <em>Vector</em> does not say that it is a list,
+    although the class <span class="java-class">Vector</span>
+    implements the interface <span class="java-class">IList</span>.
+    So the name <em>ArrayList</em> is a more appropriate name.
+    <xfr>
+      Renommons la classe
+      <span class="java-class">Vector</span> en
+      <span class="java-class">ArrayList</span>
+      <br>
+      parce que le nom <em>Vector</em> ne dit pas que c'est une liste,
+      alors que la classe implémente l'interface 
+      <span class="java-class">IList</span>.
+      Le nom <em>ArrayList</em> est plus approprié.
+    </xfr>
+  </li>
+</ul>
+
+<h3>Packaging our classes</h3>
+
+<p>
+  So let's package your collection into a Java archive.
+  We provided you with a script to do this.
+</p>
+<textarea class="terminal" rows="4">
+  object.collections$ ./package.sh
+  ...
+  Created edu-polytech-oop-collections.jar
+</textarea>
+<p>
+  If it succeeds, everything is fine. Congratulations!
+</p>
+<p>
+  If it fails, there is something wrong.
+  It can fail for diverse reasons:
+</p>
+<ul>
+  <li>Compilation errors</li>
+  <li>Failing our tests</li>
+</ul>
+<p>
+  The script recompiles your classes in the package
+  <span class="java-package">edi.polytech.oop.collections</span>.
+  So if the compilation fails with our script and not in Eclipse,
+  this means that your imports are not in order.
+  Go through all your classes in the package
+  <span class="java-package">edi.polytech.oop.collections</span>
+  and make sure there are no imports from any previous
+  steps (step1 through step4).
+</p>
+<p>
+  Failing our tests should not really happen, since your code already
+  passed them in previous steps (step1 through step4). The checks
+  below will run the same tests:
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.collections"
+   classpath="bin;tests.jar"
+   classname="edu.polytech.oop.collections.MultiListTest"> 
+  <banner>
+    Testing ArrayList and LinkedList.
+  </banner>
+  <hint>
+    These tests fail. Please fix your code.
+  </hint>
+  <success>
+    Everything is OK.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.collections"
+   classpath="bin;tests.jar"
+   classname="edu.polytech.oop.collections.MapTest"> 
+  <banner>
+    Testing Maps.
+  </banner>
+  <hint>
+    These tests fail. Please fix your code.
+  </hint>
+  <success>
+    Everything is OK.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<p>
+  That's all folks for this task. But before we move on,
+  please make sure
+  that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.collections, Task6 completed"
+  $ git push --all
+</textarea>

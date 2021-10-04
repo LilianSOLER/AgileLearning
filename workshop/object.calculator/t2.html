@@ -1,0 +1,367 @@
+<vars>
+  sprint=object.calculator
+  task=t2
+</vars>
+<p>
+  The previous task showed you traditional imperative programming practice,
+  applied to coding a simple calculator, adding complexity when adding features,
+  without leveraging the power of object-oriented programming.
+  It is now time to start using our object-oriented programming skills to see
+  if we could approach the coding of this calculator differently.
+  We warn you, the code will get more complex than the version V0,
+  but it will be cleaner, more modular, and simpler to extend than the version one.
+	Object-oriented programming is like that, it is more complex at first that
+	simple imperative programming, but it becomes more and more useful
+	when the code grows in size and compexity.
+  <xfr>
+    Le tâche précédente vous a montrer une approche classique impérative
+    de la programmation d'une calculatrice. L'ajout de simple fonctionalité
+    impacte fortement la structure du code qui devient complex et dure à lire.
+    Il est temps d'utiliser nos compétences en programmation orientée-objet
+    pour améliorer le code. Nous allons être honnête, le code va devenir plus
+    compliqué dans son ensemble que la version V0, mais il va devenir plus
+    modulaire, plus propre, et donc plus simple à étendre.
+  </xfr>
+</p>
+<p>
+  It is important to understand that
+  there is a difference between unwaranted complexity and useful
+  complexity. Code complexity is not a good measure of quality, taken
+  in isolation of other metrics such as modularity or extensibility.
+  For example, a car is more complex than a bicyle, it does not mean
+  it is a bad design, it does more and differently. But in contrast,
+  we have all encountered solutions that are complex for the sake of
+  complexity, where complexity just does not help and this is not good.
+  <xfr>
+    Il est important de comprendre qu'il y a une différence entre une compléxité
+    qui n'apporte pas grand chose et une compléxité utile. La compléxité d'un code
+    n'est pas une mesure de qualité, comme mesure prise en isolation
+    d'autres métriques telles que la modularité ou l'extensibilité.
+    Par exemple, une voiture est plus complexe qu'un vélo, mais cela ne veut pas
+    dire que c'est une mauvaise conception. Mais nous avons tous rencontrer
+    des solutions complexes qui ne semblaient rien apporter, et cela n'est pas
+    dans le bon sens.
+    </xfr>
+</p>
+<p>
+  Therefore, we ask that you see beyond the initial increased complexity,
+	try to see what
+  that complexity brings to the table. The complexity of the code will
+  increase throughout the following three versions. Be patient and
+  work at understanding why this initial complexity is interesting.
+  Your patience and your work will be rewarded with a
+  finer understanding of object-oriented programming and how
+  its more complex features can really help you code faster
+  and better.
+  <xfr>
+    Aussi, ne voyez pas seulement l'augmentation de la complexité du code,
+    mais voyez ce que cette complexité apporte. La complexité du code va
+    augmenter de version en version. Donc soyez patient et essayez de comprendre
+    pourquoi cette complexité est intéressante au fur et à mesure qu'elle est
+    introduite. A la fin, vous verrez pourquoi et vous comprendrez mieux
+    comment utiliser la programmation orientée-objet pour aborder l'écriture
+    de code claire, modulaire, et extensible, avec pour avantage de coder
+    plus vite et mieux.
+  </xfr>
+</p>
+
+<h4>Which Classes Should We Have?</h4>
+
+<p>
+  Which classes should we have? This is usually one of the first questions
+  to ask yourself. Remember, a class corresponds to a
+  class of entities, so each class that you create need to correspond
+  to something that you can explain, some meaningful concept in your
+  program. So which concepts are we talking about here?
+  <xfr>
+    Quelles classes devrions nous avoir? C'est en effet la première question à se poser lorsque l'on veut faire de la programmation orientée-objet. Rappelez vous, une class corresponds à une classe d'entitées, donc chaque classe que vous créez doit correspondre à une entité que vous pouvez décrire et expliquer, un concept utile dans votre programme. Alors, quels sont les concepts dont nous parlons dans une calculatrice:
+  </xfr>
+</p>
+<ol>
+  <li>
+    <b>Expressions</b>: we have expressions, such as "+ 2 3"
+  </li>
+  <li>
+    <b>Values</b>: we do have values such as "2" or "true".
+  </li>
+</ol>  
+<p>
+  The next question is usually about abstract versus non-abstract
+  classes. For example, the concept of a class Mouse or a class Elephant
+  are concrete classes, having mouse and elephant objects makes sense.
+  But mice and elephants are mammals, so having a superclass Mammal also
+  makes sense, but it would be an abstract class, right?. Indeed, no living mammal is
+  only a mammal, it is always a given animal like a mouse or an elephant.
+  <xfr>
+    La question suivante est celle d'utiliser des classes abstraites ou pas. Par example, les concepts d'une souris ou d'un éléphant correspondent à des classes concrètes, il existe des souris et des éléphants dans la nature, mais le concept de mamifères est quant à lui abstrait. 
+  </xfr>
+</p>
+<p>
+  So what about our two classes above? Let's start with the class Value. 
+  Thinking about it, we really have an abstract concept of a value and
+  then we have two concrete concepts: integer values and
+  boolean values. This suggests a class hierarchy:
+  <xfr>
+    Alors, abstraite ou concrète nos classes? La class Value est clairement abstraite avec deux classes concrètes pour les valeurs booléennes et entières. Donc nous aurions la hiérarchie suivante:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  abstract class Value {}
+  class IntValue extends Value {}
+  class BoolValue extends Value {}
+</pre>
+<p>
+  That is a start, but isn't it true that a value is an expression?
+	Compare the following two lines:
+  <xfr>
+    C'est un bon début, mais n'est-il pas vrai qu'une valeur est une expression?
+    Regardez les deux lignes ci-dessous:
+  </xfr>
+</p>
+<textarea class="terminal" rows="4" width="60%" >
+  > * 2 + 2 3
+  -> 10
+  > * 2 5
+  -> 10
+</textarea>
+<p>
+	The first line, the operator '*' takes a value ("2") and an expression
+	("+ 2 3").
+	The second line, the same operator '*' takes two values ("2" and "5").
+	So if we would say that a value is an expression, we could then say that
+	the operator '*' takes two expressions. This means it would be legal
+	to write the following expression where the operator '*' takes
+	two expressions:
+  <xfr>
+		A la permière ligne, l'opérateur '*' prends une valeur ("2")
+		et une expression ("+ 2 3"). A la seconde ligne, le même opérateur
+		'*' prends deux valeurs ("2" et "5"). Donc si nous disions qu'une
+		valeur est une expression, alors nous pourrions dire que l'opérateur
+		'*' prends deux expression. Du coup, nous pourrions écrire l'expression
+		suivante où l'opérateur '*' prends deux expressions:
+  </xfr>
+</p>
+<textarea class="terminal" rows="2" width="60%" >
+  > * - 3 1 + 2 3
+  -> 10
+</textarea>
+<p>
+	OK, so a value is a expression, let's reflect that in our
+	class hierarchy.
+	<xfr>
+		Et bien une valeur est une expression, il faut donc représenter
+		cela dans notre hiérarchie de classes:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  abstract class Value extends Expression {}
+</pre>
+<p>
+  Since we are discussing expressions, is the concept of an expression
+  an abstract or concrete concept? It is obviously an abstract concept,
+  like in the case of the class Mammal discussed above.
+  <xfr>
+    Puisque nous discutons les expressions, le concept d'expression est-il abstrait ou concret? Encore une fois, il est clairement abstrait:
+</p>
+<pre class="prettyprint lang-java">
+  abstract class Expression {}
+</pre>
+<p>
+  What other concepts do we have that are expressions?
+  We have values, like we just said, either integer or boolean values.
+  But expressions are not only about individual values, expressions
+  compose values, operators, and expressions. 
+  So really, an expression is
+  a tree of operators and expressions:
+  <xfr>
+    Quels autres concepts avons nous comme expressions? Nous avons les valeurs, comme nous venons de le voir. Mais ce n'est pas tout, les expressions composent aussi les valeurs, en utilisant des opérateurs. Donc une expression est en fait un arbre d'operateurs et d'expressions:
+  </xfr>
+</p>
+<pre>
+  - + 2 * 3 4 / 5 6
+</pre>
+<p>
+  The above expression can also be viewed as a tree:
+</p>
+<img src="images/expression-tree.svg" />
+<p>
+  If we would consider that operators are expressions,
+	we could consider that an expression is a tree of expressions,
+	with each node of the tree being an operator or a
+  value. This would suggest the following class hierarchy then:
+  <xfr>
+    Si nous considérions que les opérateurs sont des expressions,
+    et ils le sont, nous pourrions considérer qu'une expression
+    est un arbre d'expressions, chaque noeud de l'arbre étant un
+    opérateur ou une valeur. Cela suggèrerait la hiérarchie de classe
+    suivante:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  abstract class Expression {}
+  class UnaryOp extends Expression {
+    Expression child;
+  }
+  class BinaryOp extends Expression {  
+    Expression left, right;
+  }
+  class UnaryOp extends Expression {  
+    Expression exp;
+  }
+  abstract class Value extends Expression {}
+  class IntValue extends Value {}
+  class BoolValue extends Value {}
+</pre>
+<p>
+  Notice that the classes
+  <span class="java-class">Expression</span>
+  and
+  <span class="java-class">Value</span>
+  are abstract. With the above class hierarchy,
+  the above expression can be seen
+  as a tree of objects.
+  <xfr>
+    Notez que les classes
+    <span class="java-class">Expression</span>
+    et
+    <span class="java-class">Value</span>
+    sont abstraites. Avec cette hiérarchie,
+    l'expression précédente peut être vue
+    comme un arbre d'objets:
+  </xfr>
+</p>
+<img src="images/expression-object-graph.svg" />
+<p>
+  Such a tree of objects could be created with the
+  following code snippet:
+</p>
+<pre class="prettyprint lang-java">
+  Expression newExpression() {
+    Expression exp;
+    BinaryOp left,right;
+    Value v1,v2;
+
+    v1 = new IntValue(3);
+    v2 = new IntValue(4);
+    right = new BinaryOp('*',v1,v2);
+  
+    left = new IntValue(2);
+    left = new BinaryOp('+',left,right);
+
+    v1 = new IntValue(5);
+    v2 = new IntValue(6);
+    right = new BinaryOp('',v1,v2);
+
+    exp = new BinaryOp('-',left,right);
+    return exp;
+  }
+</pre>
+
+<h3>Finishing the Implementation</h3>
+<p>
+  So, if the above discussion is clear and the different classes make
+  sense to you, it is now time to go look at the code we gave you, understand it,
+  and finish the implementation.
+  In the source folder <em>"task2"</em>,
+  in the Java package
+  <span class="java-package">ricm3.calculator.v2</span>,
+  we gave you skeleton classes.
+  The parsing works, so try it out by launching the class
+  <span class="java-class">CalcMainV2</span>.
+  You should see something like this:
+  <xfr>
+    Si vous avez compris la discussion précédente et que vous comprenez
+    les différentes classes dont nous avons parlé, il est temps d'aller
+    voir le code, de le comprendre, et d'en finir l'implémentation.
+    Dans le dossier source <em>ToDo</em>, dans le paquet Java
+    <span class="java-package">ricm3.calculator.v2</span>,
+    vous avez le squelette des classes dont on a parlé.
+    Le parseur marche, donc vous pouvez l'essayer en lançant la classe
+    <span class="java-class">CalcMainV2</span>.
+    Vous devriez voir quelque chose comme cela:    
+  </xfr>
+</p>
+<textarea class="terminal" rows="11" width="60%" >
+Welcome.
+> + 2 3
+(2 + 3)
+java.lang.RuntimeException: Not Yet Implemented
+	at ricm3.calculator.v2.BinaryOp.eval(BinaryOp.java:35)
+	at ricm3.calculator.v2.Calculator.loop(Calculator.java:52)
+	at ricm3.calculator.v2.CalcMainV2.main(CalcMainV2.java:26)
+> 
+</textarea>
+<p>
+  To help you understand the code and in particular the
+  class hierarchy, we gave you the code to print an expression.
+  To make it more interesting, the code prints an expression
+  in normal notation, not in the polish notation
+  used to enter it. This illustrates that we first parse what
+  is typed, which creates an expression as an object graph,
+  as discussed earlier. Then, this object graph, representing
+  the expression, is able to print itself back, using a
+  regular notation as a sequence
+  of values, operators, and parenthesis.
+  <xfr>
+    Pour vous aider, nous vous avons donné le code pour afficher une expression. Pour que cela soit plus intéressant, le code affiche l'expression avec la notation normale parenthésée et non pas la notation polonaise qui a été utilisé pour entrer l'expression au clavier. Cela illustre que nous parsons dans un premier temps ce qui est tapé au clavier, ce qui crée l'expression correspondante comme un graphe d'objets. Puis, ce graph d'objets, qui représente une expression, est capable d'imprimer l'expression en notation parenthésée.
+  </xfr>
+</p>
+<p>
+  So this is the point to understand when browsing the code:
+  grasp the idea of an object graph used to represent an
+  expression. Each line read from the standard input is
+  first parsed into an expression (object graph) and then that
+  expression is evaluated. The best approach to understand this is by 
+  browsing the code and executing under the debugger control.
+  Focus on understanding how the parsing of a line, typed
+  on the keyboard, yields an object graph representing what
+  was typed. Then, focus on the class hierarchy.
+  <xfr>
+    C'est le point à comprendre en lisant le code: il faut comprendre comment un graphe d'objet est utilisé pour représenter une expression, indépendament de la syntaxe utilisée pour la taper ou pour l'imprimer. Regardez bien le code et comprenez comment chaque ligne tapée au clavier est d'abord parser pour construire un arbre d'objets. Le meilleur moyen pour comprendre cela, utilisez le debugger.
+  </xfr>
+</p>
+<p>
+  Once you have looked at the execution parsing and building expressions as a graph of objects, which is in fact a tree, you can go and look again at the class hierarchy. It is important that you understand these two dimensions of object-oriented programming: the object graph and the class hierarchy. They are of course related, of course, but they are different.
+  <xfr>
+    Une fois que vous avez suivi la création d'une expression comme un graphe d'objets, en fait un arbre, vous pouvez revenir sur la hiérarchie des classes. Il est très important que vous compreniez ces deux dimensions de la programmation orientée-objet: le graph d'objet et la hiérarchie des classes. Elles sont reliées, bien évidemment, mais elles sont distinctes.
+  </xfr>
+<p>
+  Once you have a good understanding of the code we gave you,
+  it will be straightforward to complete the implementation
+  for the evaluation of an expression: the method
+  <span class="java-method">eval</span> of the
+  class <span class="java-class">Expression</span>.
+  Go ahead, take charge of your learning.
+  <xfr>
+    Une fois que vous avez une bonne compréhension du code que nous vous avons donné, il sera facile de compléter l'implémentation de l'évaluation d'une expression: la méthode <span class="java-method">eval</span> de la classe <span class="java-class">Expression</span>. Prenez en charge votre apprentissage.
+  </xfr>
+</p>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.calculator"
+   classpath="bin;tests.jar"
+   classname="calculator.TestCalcV2_01"> 
+  <banner>
+   Let's check your work.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+
+<p>
+  That's all folks for this step.
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint calculator, Task2 completed"
+  $ git push --all
+</textarea>

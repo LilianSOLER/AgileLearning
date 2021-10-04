@@ -1,0 +1,288 @@
+<vars>
+  sprint=object.collections
+  task=t3
+</vars>
+
+<p>
+  The concept of a list is to organise a set of items in a sequence,
+  just like a list of groceries in real life or the list of steps
+  of a recipe. Lists are dynamic, items can be added or removed from
+  a list. Lists are just a really cool data structure, used for many
+  things. Make lists your friends for the years to come, not your foes.
+  <img src="/emoticons/smile.png" height="16"/>
+  <xfr>
+    Le concept d'une liste est d'organiser un ensemble d'éléments en
+    un séquence, tout comme une liste de course à faire ou encore la
+    liste des étapes d'une recette de cuisine. Les listes sont dynamiques,
+    on peut y ajouter des éléments ou en enlever. Les listes sont des
+    structures de données qui sont vraiment sympa et très souvent utilisées.
+  </xfr>
+</p>
+
+<h3>List Basics</h3>
+
+<p>
+  So a list is a sequence of elements. In some sense, you could think
+  of an array as a sequence of elements as well. So let's look at an
+  array versus a list, from an object graph perspective. First, the array
+  graph below.
+  <xfr>
+    Une liste est une séquence d'éléments et il est possible de considérer
+    qu'un tableau est aussi une séquence d'éléments. Alors, comparons les,
+    depuis la perspective du graphe d'objet:
+  </xfr>
+</p>
+<img src="images/array-sequence-graph.svg" width="30%" />
+<p>
+  You can see that we choose two colors for the objects, just to identify
+  the elements of the sequence versus the sequence itself. In this case,
+  the sequence is implemented with an array (in blue). The elements are
+  colored in green.
+  Using the same color coding, let's look
+  at the object graph with a typical list implementation, just below.
+  <xfr>
+    Comme vous le voyez, nous avons choisi deux couleurs pour les objets,
+    simplement pour identifier les objets qui sont dans la séquence et
+    les objets qui implémentent la séquence.
+  </xfr>
+</p>
+<img src="images/list-sequence-graph.svg" width="50%" />
+<p>
+  Notice how the implementation of the list is actually a small graph
+  of objects (the blue ones surrounded by the dotted box).
+  Look at the corresponding code below:
+  <xfr>
+    Notez que l'implémentation de la liste est actuellement un petit graphe
+    d'objets (les objets bleus à l'intérieur de la boite en pointillé).
+    Regardons le code qui correspond:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class List {
+    private static class Cell {
+      Object element;
+      Cell next;
+    }
+    private Cell head;
+  }
+</pre>
+<p>
+  Notice that we reused the concept of an inner class,
+  the class <span class="java-class">Cell</span>, 
+  marked as private. So the implementation is a linked
+  list of cells, each cell referencing one element.
+  To clarify, let's look at the code for appending an
+  element to that list:
+  <xfr>
+    Notez que nous avons de nouveau utilisé le concept d'inner classe
+    pour la classe <span class="java-class">Cell</span>. Elle est
+    marquée privée car elle est une classe interne d'implémentation
+    et ne doit pas être visible de l'extérieur de la classe
+    <span class="java-class">List</span>. L'implémentation de notre
+    liste est donc une liste chaînée de cellules, une par élément dans
+    la liste. Pour clarifier cela, regardons le code pour ajouter en
+    fin de liste un élément.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class List {
+    private static class Cell {
+      Object element;
+      Cell next;
+      Cell(Object elem) { element = elem; }
+    }
+    Cell head;
+    public void append(Object elem) {
+      if (head==null)
+        head = new Cell(elem);
+      else {
+        Cell last = head;
+        while (last.next!=null)
+          last = last.next;
+        last.next = new Cell(elem);
+      }
+    }
+  }
+</pre>
+<p>
+  The code is pretty much self-explanatory, right?
+  So let's get down to it, let's implement a List.
+  Look in the package
+  <span class="java-package">object.collections.step2</span>.
+  You have the skeleton for the class
+  <span class="java-class">List</span>, please
+  implement the methods. We gave you also 
+  a class <span class="java-class">ListTest</span>
+  to test your implementation.
+  <xfr>
+    Le code se lit facilement, n'est-ce pas? Bon, il
+    est temps d'implémenter la classe 
+    <span class="java-class">List</span>, dans le paquet
+    <span class="java-package">object.collections.step2</span>.
+    Vous avez aussi une classe <span class="java-class">ListTest</span>
+    pour tester votre implémentation.
+  </xfr>
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.collections"
+   classpath="bin;tests.jar"
+   classname="object.collections.step2.TestList"> 
+  <banner>
+    When done with the implementation,
+    let us check what you did.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+
+<h3>List performance</h3>
+
+<p>
+  As always, we do not just write code and forget it.
+	We pay attention to how it is written and if it can
+	be improved. In this case, we
+	can easily see that the implementation of the list
+  scans the entire list each time an element is appended,
+	an operation that is quite common with lists.
+	This means that each operation <em>append</em> executes
+  something like this:
+	<xfr>
+		Comme toujours, nous n'écrivons pas du code pour juste
+		le faire marcher une fois et l'oublier. Nous faisons
+		attention à la manière dont il est écrit et nous pensons
+		à l'améliorer si possible. Dans notre cas, nous voyons
+		bien qu'il n'est pas efficace, nous parcourons la liste
+		à chaque que nous voulons rajouter un élément ȧ la fin
+		de la liste, une opération assez courante. Cela veut
+		dire que chaque ajout exécute quelque chose comme cela:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Cell last = head;
+  while (last!=null) {
+    if (last.next==null) {
+      // append at the end goes here ...
+      return;
+    }
+    last = last.next;
+  }
+  // append as the first element here.
+  return;
+</pre>
+<p>
+	Do you agree? Yes. OK. So what do you propose to improve the
+	situation? Try to imagine how you would do it,
+	before reading the next lines...
+	<xfr>
+		Etes vous d'accord? Oui. Bien. Donc que proposez vous
+		pour améliorer la situation? Essayez d'imaginer votre
+		solution avec de lire les lignes suivantes...
+	</xfr>
+</p>
+<p>
+  So let's improve that implementation. So what is the problem?
+  Unless the list is empty, we need to scan the entire list to
+  find the last element so that we can append the new element.
+  A simple optimization is to add a field
+  <span class="java-field">last</span>, to the
+  class <span class="java-class">List</span>,
+  that refers to the last element in the list.
+  <xfr>
+    Nous allons optimiser notre implémentation. Quel est le
+    problème ici? Sauf si la liste est vide, on doit la parcourir
+    pour trouver le dernier élément afin de faire l'ajout. Donc,
+    une optimization simple est de garder une référence sur ce
+    dernier élément en rajoutant un champs
+    <span class="java-field">last</span> à la classe
+    <span class="java-class">List</span>.
+</p>	  
+<pre class="prettyprint lang-java">
+  public class List {	
+    Cell head;
+    Cell last;
+    ...
+  }
+</pre>
+<p>
+  That field will keep the reference of the last element
+  of the list. <u>This is a classical case of remembering versus
+  recomputing all the time</u>. So go ahead, implement that optimization,
+  in a  class <span class="java-class">List2</span>,
+  in the same package
+  <span class="java-package">object.collections.step2</span>.
+  But be <b>mindfull</b> to maintain that <em>last</em> element up
+  to date when adding or removing elements in the list.
+  <xfr>
+    Ce champs gardera donc la référence sur le dernier élément
+    de la liste.
+    <u>Nous avons ici un exemple classique du choix
+      de mémoriser ou de recalculer à chaque fois
+    </u>.
+    C'est à vous, mettez en place cette optimization dans la
+    classe <span class="java-class">List2</span>,
+    in the same package
+    <span class="java-package">object.collections.step2</span>.
+    Mais rappelez vous de maintenir à jour cette référence
+    sur le dernier élément lors des ajouts et des retraits
+    d'éléments de la liste.
+  </xfr>
+</p>
+<p>
+  To <b>test your code</b>, you can easily modify the
+  class <span class="java-class">ListTest</span> to
+  test your optimized list, since we kept the exact
+  same behavior (the same methods).
+  <xfr>
+    Pour tester votre code, vous pouvez facilement
+    modifier la classe <span class="java-class">ListTest</span>
+    pour qu'elle utilise votre nouvelle liste optimisée.
+  </xfr>
+</p>
+<p>
+  Notice the performance improvement, in the range 30%-50%
+  with our tests. Of course, other programs may see
+  a larger or smaller improvement. But in all cases,
+  not bad for just a small change in the code,
+  right?
+  <img src="/emoticons/smile.png" height="16"/>
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.collections"
+   classpath="bin;tests.jar"
+   classname="object.collections.step2.TestList2"> 
+  <banner>
+    When done with the improved implementation,
+    let us check what you did.
+  </banner>
+  <hint>
+		Not quite.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<p>
+  That's all folks for this task. But before we move on,
+  please make sure
+  that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.collections, Task3 completed"
+  $ git push --all
+</textarea>

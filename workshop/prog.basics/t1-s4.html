@@ -1,0 +1,1740 @@
+<vars>
+  sprint=prog.basics
+  task=t1
+  step=t1-s4
+</vars>
+
+<p>
+  So we just finished our class
+  <span class="java-class">Greetings</span>
+  in a brand new Java project <em>hello.greetings</em>.
+  It is time to understand a bit more about the
+  method 
+  <span class="java-method">main</span>.
+  We will explain what it does, we will execute it
+  under the control of the Eclipse debugger, one
+  of the best tools when developing in Java.
+  <xfr>
+    Nous venons de finir notre classe
+    <span class="java-class">Greetings</span>,
+    dans un nouveau projet <em>hello.greetings</em>.
+    Il est temps maintenant de discuter de la méthode
+    <span class="java-method">main</span>.
+    Nous allons expliquer ce qu'elle fait, nous allons
+    l'exécuter sous le controle du debugger d'Eclipse,
+    l'un des meilleurs outils pour développer en Java.
+  </xfr>
+</p>
+
+<h3>The method <span class="java-method">main</span></h3>
+<p>
+  The method 
+  <span class="java-method">main</span>
+  is the entry point in your program, that is, it is
+  where the execution will start. The method
+  is defined with one argument whose value
+  is an array of strings.
+  <xfr>
+    La méthode  <span class="java-method">main</span>
+    est le point d'entrée dans votre programme, c'est à dire,
+    c'est l'endroit où l'exécution va commencer.
+    La méthode est définie avec un argument qui est
+    un tableau de chaînes de caractères.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static void main(String[] args) {
+    ...
+  }
+</pre>
+<p>
+  But what are those strings about and where are they coming from?
+  These strings are the program arguments.
+  OK, but what are program arguments?
+  When launching a program, you can provide arguments like
+  this:
+  <xfr>
+    Mais quelles sont ces chaînes de caractères?
+    D'où proviennent-elles?
+    Elles sont les arguments donnés lors du lancement
+    du programme:
+  </xfr>
+</p>
+<textarea class="terminal" rows="4" >
+  hello.greetings$ java -classpath ./bin hello.greetings.Greetings Neo and Morpheus
+  Greetings Neo and Morpheus
+</textarea>
+<p>
+  So we provided three arguments, as three strings "Neo", "and", and "Morpheus".
+  Note that arguments are just any sequence of characters, separated by one or more
+  spaces.
+  <xfr>
+    Nous avons fourni trois arguments, les trois chaînes de caractères
+    "Neo", "and", et "Morpheus". Remarquez que les arguments peuvent contenir
+    n'importe quels caractères, mais pas un espace puisqu'ils sont
+    séparés par une espace.
+  </xfr>
+</p>
+<p>
+  Let's now look at more of the code of the method
+  <span class="java-method">main</span>:  
+</p>
+<pre class="prettyprint lang-java">
+  package hello.greetings;
+  public class Greetings {
+
+  public static void main(String[] args) {
+    System.out.print("Greetings");
+    int i=0;
+    while (i &lt; args.length) {
+      System.out.printf(" %s",args[i]);
+      i = i+1;
+    }  		       
+    System.out.println("!");
+    return;
+  }
+}
+</pre>
+<p>
+  This code may be your first Java code. So rather than explaining on paper,
+  we are going to execute under the control of the Eclipse debugger,
+  so that you can see for yourself what it means to execute a program.
+  Interested? Great, let's get started.
+  <xfr>
+    Ce code est peut être votre premier code Java et du coup, plutôt que
+    de vous expliquer ce code sur papier, nous allons l'exécuter sous debug,
+    de manière à ce que vous puissiez comprendre ce que signifie exécuter
+    un programme. 
+    Etes vous intéressé? super, commençons.
+  </xfr>
+</p>
+
+<h3>Using a debugger</h3>
+
+<p>
+  A debugger is a tool
+  that allows you to control the execution of a program, controlling
+  its every step.
+  If you are familiar with programming, you certainly
+  understand the code already. You may even have experience with
+  using a debugger already. So go through the following paragraphs
+  quickly, then go find someone who is struggling and help
+  him or her.
+  <xfr>
+  Un debugger est un outil qui permet de contrôler l'exécution d'un 
+  programme, pas à pas. Si vous avez déjà programmé, vous comprenez
+  certainement ce qu'est un programme. Vous avez peut être déjà utilisé 
+  un debugger. Si c'est le cas, vous pouvez passer vite les paragraphes
+  suivants, puis trouver quelqu'un qui a des difficultés et aller l'aider.
+  </xfr>
+</p>
+<p>
+  Remember, this is <a href="/alearning.html">Agile Learning</a>
+  and we are all responsible
+  for the success of everyone in the team. If you are a beginner and you
+  are struggling in the following paragraphs,
+  go find someone that has more experience than you and ask for help.
+  <xfr>
+  Rappelez-vous, vous êtes dans une session d'apprentissage 
+  <a href="/alearning.html">Agile Learning</a>, et nous sommes tous 
+  responsables du succès de la session pour tous. Si vous êtes débutant
+  et que vous avez du mal dans les paragraphes suivants, cherchez
+  quelqu'un qui a plus d'expérience que vous et demandez de l'aide.
+  </xfr>
+</p>
+<p>
+  If you are a beginner, do not worry, just jump in the code. Use
+  the debugger as you best friend to help watch the execution unfold,
+  to help you understand what is going on. Chances are, you will
+  struggle on some finer points, but you should get a general idea
+  of what is going on without much of a struggle, thanks to using a debugger.
+  <xfr>
+  Si vous êtes débutant, ne vous inquiétez pas, plongez dans le code.
+  Utilisez le debugger comme votre meilleur ami pour suivre l'exécution
+  et pour comprendre ce qui se passe. Vous allez avoir du mal à certains
+  endroits, mais vous devriez arriver à comprendre ce qui se passe 
+  à l'exécution sans difficulté majeure, grâce au debugger.
+  </xfr>
+</p>
+<p>
+  Eclipse has one of the greatest debugger for Java, if not the greatest.
+  We already executed under the control of Eclipse, remember? Now we want
+  to control that execution with the debugger. So select the class
+  <span class="java-class">Greetings</span> with a right-click
+  and select "Debug as" this time as opposed to "Run as".
+  You could also via the debugger icon
+  <img src="images/eclipse-debugger-icon.png" height="16" />,
+  selecting the drop-down menu with the little black triangle
+  and then selecting the Java class you want to execute.
+  In this case, select <em>Greetings</em>.
+  <xfr>
+  Eclipse offre l'un des meilleurs debuggers pour Java. Nous avons 
+  déjà exécuté du code sous le contrôle d'Eclipse, vous vous 
+  en souvenez? Cette fois-ci, nous souhaitons contrôler l'exécution
+  via le debugger, du coup, selectionnez la classe
+  <span class="java-class">Greetings</span> avec un clique droit
+  et choissisez "Debug as" et non pas "Run as". Vous pourriez
+  aussi le faire via l'icone du debugger 
+  <img src="images/eclipse-debugger-icon.png" height="16" />,
+  en sélectionnant le menu avec le petit triangle noir
+  puis en sélectionnant la classe Java que vous voulez exécuter.
+  Dans notre cas, selectionnez <em>Greetings</em>.
+  </xfr>
+</p>
+<p>
+  The execution ran and stopped, right? You didn't see anything new,
+  did you? Well, we didn't ask the debugger to stop the execution.
+  So let's set a breakpoint in the method
+  <span class="java-method">main(String[])</span>,
+  in the class <span class="java-class">Greetings</span>
+  in the package
+  <span class="java-package">hello.greetings</span>.
+  To do so, double click
+  on the left hand-side edge of the <em>Editor</em> view, at the first
+  line of the <span class="java-method">main(String[])</span>.
+  You should see a small round blue bullet on that left hand-side edge,
+  line 6, just like this:
+   <xfr>
+   L'exécution a eu lieu et s'est stoppée, n'est ce pas? Vous n'avez rien vu 
+   de nouveau, n'est ce pas? Et bien, nous n'avons pas demandé au debugger
+   de stopper l'exécution. Donc définissons un point d'arrêt (breakpoint)
+   dans la méthode  <span class="java-method">main(String[])</span>,
+   dans la classe <span class="java-class">Greetings</span>
+   dans le package <span class="java-package">hello.greetings</span>.
+   Pour cela, double-clickez sur le coin gauche de la vue <em>Editor</em>,
+   à la première ligne du <span class="java-method">main(String[])</span>.
+   Vous devez voir un petit rond bleu sur ce coin gauche, ligne 6,
+   comme cela:
+   </xfr>
+</p>
+<img src="images/eclipse-greetings-brkpt.png" width="80%" />,
+<p>
+  So launch the execution again, under the debugger control,
+  now the execution will stop at the first line of the
+  method
+  <span class="java-method">main(String[])</span>,
+  in the class <span class="java-class">Greetings</span>,
+  where you setup your breakpoint.
+  This is what you should see:
+  <xfr>
+  Donc lancez l'exécution à nouveau, sous debugger. Maintenant
+  l'exécution va stopper à la première ligne de la méthode
+   <span class="java-method">main(String[])</span>,
+  dans la classs <span class="java-class">Greetings</span>,
+  où vous avez positionné votre breakpoint.
+  Vous devez voir cela:
+  </xfr>
+</p>
+<img src="images/eclipse-greetings-stopped-at-brkpt.png" width="80%" />,
+
+<h3>Single Stepping through an execution</h3>
+
+<p>
+  Single stepping through an execution is actually the best way
+  to realize what an execution is. We will do this by launching
+  the execution under the control of the Java debugger.
+  Since the execution is stopped, you can advance one step
+  at a time, this is called <em>single stepping</em>.
+  <xfr>
+    Suivre l'exécution pas à pas est en fait le meilleur moyen
+    de comprendre ce qu'est une exécution. Nous allons faire cela en
+    lançant l'exécution sous le contrôle du debugger Java.
+    Puisque l'exécution est stoppée, vous pouvez avancer pas à pas,
+    ce qui est appelé <em>single stepping</em> en anglais.
+  </xfr>
+</p>
+<p>
+  But before we do that, 
+  let's notice the different views in the <em>Debug</em> perspective.
+  Of course, you can see the source. Notice that the debugger
+  automatically browsed to the correct source, at the correct line,
+  where the execution was suspended at. 
+  <xfr>
+    Mais avant cela, remarquez les vues différentes dans la perspective 
+    <em>Debug</em>. Bien sûr, vous pouvez voir les sources. Le debugger
+    se déplace automatiquement au bon endroit dans les sources, à la
+    ligne en cours d'exécution.
+  </xfr>
+</p>
+<p>
+  Look at the <em>Debug</em> view, it shows you where you are suspended,
+  more globally. It tells you that you are debugging a <em>Java Application</em>.
+  It tells you that the application <em>hello.greetings.Greetings</em>
+  and that it runs on the localhost (your machine). Thankfully, this is
+  all true, right? This is what we did, we launch the class
+  <span class="java-class">Greetings</span> and it executes on your machine.
+  <xfr>
+    Regardez la vue <em>Debug</em>, elle vous montre où vous êtes suspendu
+    dans l'exécution. Cela vous dit que vous êtes en train de debugger
+    une <em>Java Application</em>, et que l'application est 
+    <em>hello.greetings.Greetings</em> et s'exécute sur votre machine (localhost).
+    Heureusement, cela est vrai n'est ce pas? C'est ce que nous avons fait,
+    nous avons lancé la classe <span class="java-class">Greetings</span> pour
+    l'exécuter sur notre machine.
+  </xfr>
+</p>
+<p>
+  The <em>Debug</em> view also tells you that the thread <em>main</em>
+  is suspended by a breakpoint
+  at line 6 in HelloWorld. The concept of <em>thread</em> is just another
+  name for an execution flow. All Java programs have at least one
+  execution flow, called as <em>Thread [main]</em>. 
+  <xfr>
+    La vue <em>Debug</em> dit aussi que le thread <em>main</em>
+    est suspendu par un breakpoint à la ligne 6 dans HelloWorld. 
+    Le concept de <em>thread</em> est juste un autre nom pour un 
+    flôt d'exécution. Tous les programmes Java ont au moins un 
+    flôt d'exécution, appelé <em>Thread [main]</em>. 
+  </xfr>
+</p>
+<p>
+  Also look at the <em>Variables</em>, it shows you the local variables
+  and arguments of your program. In this case, we can see the argument
+  <em>"args"</em> and it is an empty array (see the printed value as "[]").
+  We will come back to this <em>Variables</em> view later, because it is
+  a powerful tool for you to master. But for now, be curious, click on
+  the <em>args</em>, see that it is an array of strings. An array is
+  an ordered collection of elements, in this case, the elements are strings.
+  Click around and see for yourself, the strings are the one you typed as
+  arguments, in the debug configuration earlier. 
+  <xfr>
+    Regardez aussi la vue <em>Variables</em>. Cela vous montre les variables
+    locales et les arguments de votre programme. Dans notre cas, nous
+    pouvons voir l'argument  <em>"args"</em> qui correspond à un tableau vide
+    (voir la valeur affichée "[]").
+    Nous reviendrons à la vue <em>Variables</em> plus tard, parce ce que c'est
+    un élément important à maîtriser. Pour l'instant, soyez curieux, cliquez
+    sur <em>args</em>, voyez que c'est un tableau de chaînes de caractères.
+    Un tableau est un collection ordonnée d'éléments, et dans notre cas, les 
+    éléments sont des chaînes de caractères.
+    Cliquez dans la zone et voyez le résultat, les chaînes de caractères
+    sont celles que vous avez donné comme arguments, dans la 
+    configuration debug, précédemment.
+  </xfr>
+</p>
+<img src="images/eclipse-greetings-args-variable.png" width="80%"/>
+<p>
+  Finally notice the debugger toolbar, with all the icons to control
+  the execution of your program. Each icon does something different and
+  is associated with a keybord shortcut.
+  <xfr>
+    Finalement remarquez la toolbar debugger, avec tous les icônes
+    pour contrôler l'exécution de votre programme. Chaque icone fait 
+    une action différente et est associée à un raccourci clavier propre.
+  </xfr>
+</p>
+<img src="images/eclipse-debugger-toolbar.png" width="200">
+<p>
+  We will start with the only two you need right now, we will
+  cover the others later as we will need them.
+  You will be a master of debugging when you are
+  done with this workshop.
+  <xfr>
+    Nous allons commencer avec les deux icônes dont vous avez besoin
+    immédiatement, nous regarderons les autres plus tard lorsque nous en 
+    aurons besoin. Vous allez être un pro du debug lorsque vous aurez
+    fini ce workshop !
+  </xfr>
+</p>
+<ul>
+  <li>
+    <img src="images/eclipse-debugger-go-icon.png" height="16"> is
+    the <b>Resume</b> icon, associated with <b>F8</b>.
+  </li>
+  <li>
+    <img src="images/eclipse-debugger-step-over-icon.png" height="16"> is
+    the <b>StepOver</b> icon, associated with <b>F6</b>.
+  </li>
+  <!--
+  <li>
+    <img src="images/eclipse-debugger-step-into-icon.png" height="16"> is
+    the <b>StepInto</b> icon, associated with <b>F5</b>.
+  </li>
+  <li>
+    <img src="images/eclipse-debugger-step-return-icon.png" height="16"> is
+    the <b>StepReturn</b> icon, associated with <b>F7</b>.
+  </li>
+  <li>
+    <img src="images/eclipse-debugger-suspend-icon.png" height="16"> is
+    the <b>Suspend</b> icon to suspend an execution.
+  </li>
+  <li>
+    <img src="images/eclipse-debugger-terminate-icon.png" height="16"> is
+    the <b>Terminate</b> icon to stop an execution entirely.
+	    Shortkey is <b>Ctrl-F2</b>.
+  </li>
+-->
+</ul>
+<p>
+  OK, so let's single step, using <b>F6</b>. You should see something like
+  this, where the execution moved onto the next line.
+  <br>
+  <b>Note:</b> if nothing
+  happens when you hit <b>F6</b>,
+  you need to give the focus to the debugger, clicking your mouse
+  in the source. What does it mean to give the focus? It means that your key strokes
+  are given to the Eclipse debugger and not to another program/window.
+  <xfr>
+    Ok, exécutons en pas à pas, en utilisant <b>F6</b>. Vous devriez voir
+    quelque chose comme cela, où l'exécution s'est déplacée à la ligne 
+    suivante.
+    <br>
+    <b>Note:</b> Si rien ne se passe quand vous cliquez sur <b>F6</b>,
+    vous devez donner le focus au debugger, en cliquant votre souris dans
+    les sources. Que signifie donner le focus? 
+    Cela signifie que ce que vous tapez sur le clavier est dirigé vers
+    le debugger et non pas vers d'autres fenêtres/programmes.
+  </xfr>
+</p>
+<img src="images/eclipse-debug-after-f6-in-main.png" width="100%">
+<p>
+  So what happened?
+</p>
+<ol>
+  <li>When you hit the <b>F6</b> key, the debug resumed the execution.
+    The program executed the code at line 5, so it called the method
+    <span class="java-method">println</span>, which results in printing
+    "Greetings" on the <em>Console</em> at the bottom of the Eclipse
+    Workbench.
+    <xfr>
+      Lorsque vous avez tapé la touche <b>F6</b>, l'exécution a repris.
+      Le program a exécuté le code de la ligne 5, où il a appelé la
+      méthode <span class="java-method">println</span>, dont le résultat
+      a été d'afficher "Greetings" dans la console située dans le bas de
+      la fenêtre d'Eclipse.
+    </xfr>
+  </li>
+  <li>
+    The debugger suspended the execution when it arrived 
+    at line 6. You can see that by the blue arrow on the left-hand-side
+    edge at line 6.
+    <xfr>
+      Le debugger a suspendu l'exécution lorsqu'il est arrivé à
+      la ligne 6. Vous pouvez voir la petite flèche bleue sur la gauche
+      du source à la ligne 6.
+    </xfr>
+  </li>
+</ol>
+<p>
+  Keep on hitting <b>F6</b>, you will single step throughout the entire
+  execution. Until you reach the line 12, with the <em>return</em> statement.
+  At that line, hit <b>F8</b> to resume the execution and let it finish.
+  <xfr>
+    Continuez à presser <b>F6</b>, vous allez avancer pas à pas à travers
+    l'exécution, jusqu'à atteindre la ligne 12, comprenant l'instruction <em>return</em>.
+    A cette ligne, pressez <b>F8</b> pour résumer l'execution et la laisser 
+    finir.
+  </xfr>
+</p>
+<p>
+  Following the execution step by step, you will see the code
+  print each string in the array of arguments,
+  called <em>args</em>. Look at the value of the variable <em>i</em>,
+  starting at zero and then incrementing to the value 2.
+  In particular, look at the array of arguments, called
+  <span class="java-lvar">args</span>. It may look like this:
+  <xfr>
+    Suivez l'exécution pas à pas, vous allez voir la valeur de
+    chaque chaîne de caractère dans le tableau d'arguments,
+    appelé  <em>args</em>. regardez la valeur de la variable <em>i</em>,
+    commençant à zéro puis s'incrémentant jusqu'à la valeur 2.
+    En particulier, regardez le tableau d'arguments appelé
+    <span class="java-lvar">args</span>. Il peut ressembler à cela:
+  </xfr>
+</p>
+<img src="images/eclipse-debug-variables-at-line-10.png" width="70%">
+<p>
+  The array and the strings it references are all objects, this is why
+  Java is called an object-oriented programming language, it manipulates
+  objects. The Eclipse debugger is kind enough to show us the identities
+  of objects, so we can distinguish them. 
+  The array is an object, with the identity <em>(id=15)</em>. The first
+  string <em>"Albert"</em> is also an object and it has the identity <em>(id=24)</em>.
+  The second string <em>"Einstein"</em> is another object and it
+  has the identity <em>(id=28)</em>.
+  The numbers might be different on your screen, since your objects
+  might have different identities in your execution.
+  <xfr>
+    Le tableau et les chaînes de caractères qu'il référence sont tous des objets,
+    c'est pourquoi Java est qualifié de langage orienté objet, il 
+    manipule des objets. Le debugger Eclipse nous montre l'identité des objets,
+    de manière à ce que nous puissions les distinguer. 
+    Le tableau est lui-même un objet, avec l'identité <em>(id=15)</em>.
+    La première chaîne de caractères <em>"Albert"</em> est aussi un objet,
+    qui a l'identité <em>(id=24)</em>.
+    La seconde chaîne de caractères, <em>"Einstein"</em>, est un autre objet
+    qui a l'identité <em>(id=28)</em>.
+    Les nombres peuvent être différents sur vos écrans, puisque vos objets
+    peuvent avoir des identités différentes dans votre exécution.
+  </xfr>
+</p>
+<p>
+  A few details might escape you, if you are a beginner, but the overall
+  meaning of what is happening should be pretty easy to understand.
+  A program manipulates values and objects. It does so by following a recipe,
+  composed of statements. The execution flows through
+  the statements, written in the source. Sometimes, the execution flows
+  loops around to execute the same statements several times. Ultimately,
+  the execution reaches the end of the recipe and terminates.
+  <xfr>
+    Un détail vous a peut-être échappé, si vous êtes débutant, mais
+    la compréhension globale de ce qui se passe doit être comprise.
+    Un programme manipule des valeurs et des objets. Il le fait
+    en suivant une recette, composée d'instructions. Le flôt d'exécution
+    exécute les instructions les unes après les autres. Parfois, 
+    le flôt d'exécution boucle pour exécuter les mêmes instructions plusieurs
+    fois. A la fin, l'exécution atteint la fin de la recette et se termine.
+  </xfr>
+</p>
+<p>
+  You missed something the first time around, no problem at all.
+  You can start again the execution,
+  and try again. Don't forget to look at the values of the variables,
+  at each step, in the <em>Variables</em> view on the upper-right corner
+  of the Eclipse window. 
+  <xfr>
+    Vous n'avez pas bien compris quelque chose, pas de problème. 
+    Vous pouvez redémarrer l'exécution et essayer à nouveau. 
+    N'oubliez pas de regarder les valeurs des variables à chaque pas,
+    dans la vue <em>Variables</em>  dans le coin haut droit de la fenêtre 
+    Eclipse.
+  </xfr>
+</p>
+  
+<h3>Take charge of your learning</h3>
+
+<p>
+  <b>This is important</b>: remember to take charge of your learning.
+</p>
+<p>
+  So go ahead, use the debugger and explore what it means to execute
+  a program. You will see how the execution flows through the
+  various statements of the program. Use the debugger to print
+  the values of variables. You will see, this is not that hard.
+  You need only two commands for now: <b>F6</b> and <b>F8</b>.
+  You will also need to go click around in the <em>Variables</em>
+  view to look at the values contained in variables at each step.
+  <xfr>
+    Donc avancez, utilisez le debugger et explorez ce que signifie
+    exécuter un programme. Vous allez voir comment l'exécution traverse
+    les instructions du programme. Utilisez le debugger pour afficher
+    les valeurs des variables. Vous verrez, ce n'est pas difficile.
+    Vous avez seulement besoin de deux commandes pour l'instant:
+    <b>F6</b> et <b>F8</b>.
+    Vous allez aussi avoir besoin de cliquer dans la vue 
+    <em>Variables</em> pour voir les valeurs contenues dans les variables
+    à chaque pas.
+  </xfr>
+</p>
+<p>
+  You can start exploring what programming
+  is about. Welcome to a new world. Have fun discovering how programming
+  works. To help you, let us point out what you should be looking at
+  at this stage in the
+  class <span class="java-class">Greetings</span>. 
+  <xfr>
+  Vous pouvez commencer à explorer ce que programmer signifie. Bienvenue dans
+  le monde de la programmation. Appréciez de découvrir ce monde. Pour vous aider,
+  précisons ce que vous devez considérer à ce point dans la classe 
+  <span class="java-class">Greetings</span>. 
+  </xfr>
+</p>
+<ol>
+  <li> <b>The entry point:</b>
+    <div>
+      <p>
+				The execution of a program will always start at the first line
+				of the method <span class="java-method">main</span>
+				of the class given when launching the Java Runtime Environment.
+				<xfr>
+					L'exécution d'un programme commence toujours à la première ligne
+					de la méthode <span class="java-method">main</span> de la classe
+					spécifié lors du lancement de l'environnement d'exécution de Java.
+				</xfr>				
+      </p>
+    </div>
+  </li>
+  <li> <b>The execution flow:</b>
+    <div>
+      <p>
+				The execution progresses one statement at a time.
+				A statement typically ends with ";" like in this example:
+				<xfr>
+					L'exécution progresse "statement" après "statement",
+					chaque statement étant typiquement delimité par un point
+					virgule, comme dans cet exemple:
+				</xfr>				
+      </p>
+      <pre style="font-size: 12px;" class="prettyprint lang-java">
+	int i=0;
+      </pre>
+      <p>
+				That statement defines a variable named "i" and assign the integer value
+				"0" to it. Use the debugger (the Variable view) to see
+				the value of any variable.
+				<xfr>
+					Ce "statement" définit une variable qui s'appelle "i" et
+					lui assigne la valeur "0". Utilisez le debugger (la vue
+					des variables) pour voir la valeur de n'importe quelle
+					variable.
+				</xfr>
+			</p>
+    </div>
+  </li>
+  <li> <b>The <span class="java-keyword">while</span> statement:</b>
+    <div>
+      <p>
+				Most of the time, the execution proceeds sequentially,
+				one statement after another, in the lexical order they
+				appear in the source. So go ahead, use the debugger
+				<em>"next"</em> command to execute the program,
+				one statement at a time.
+				<xfr>
+					La plus part du temps, l'exécution procède séquentiellement,
+					"statement" par "statement", dans l'ordre lexical du texte
+					source. Vous pouvez donc utiliser la commande "next"
+					pour avancer l'exécution pas-à-pas, exécutant un
+					statement à chaque pas.
+				</xfr>
+      </p>
+      <p>
+				Now, notice what happens when the execution flows
+				through the
+				<span class="java-keyword">while</span> statement.
+				The construct allows you to write a lexical block of code
+				between <em>"{...}"</em>
+				and loop over that block while a condition is true.
+				When the
+				condition becomes false, the execution continues in
+				sequence after the block of the code.
+				<xfr>
+					Remarquez ce qui se passe lorsque l'exécution
+					boucle sur le statement
+					<span class="java-keyword">while</span>.
+					L'exécution va exécuter plusieurs fois de suite
+					le bloc lexical défini entre accolades. La boucle
+					continuera tant que la condition du while sera
+					vrai et s'arretera lorsque cette condition sera
+					fausse.
+				</xfr>
+      </p>
+      <p>
+				This is what we do here over the arguments. The arguments
+				are available in a array of strings. An array is an ordered
+				sequence of elements. So the code prints each argument,
+				starting with printing the first and stopping after the last.
+				The following code snippet would print the integer
+				numbers from 0 to 10:
+				<xfr>
+					C'est ce que nous faisons avec les arguments du program.
+					Les arguments sont disponibles via un tableau. Un tableau
+					est séquence ordonnée d'éléments. Le code affiche donc
+					les arguments du premier au dernier. Le code ci-dessous
+					imprime les entiers de 0 à 10:
+				</xfr>
+      </p>
+			<pre style="font-size: 12px;" class="prettyprint lang-java">
+  int i=0;
+  while (i &lt; 10) {			
+    System.out.println(" i="+i);
+    i = i + 1;
+  }
+      </pre>
+
+    </div>
+  </li>
+  <li> <b>Variables:</b>
+    <div>
+      <p>
+				Through debugging, it is easy to get the intuition of
+				what a variable is.
+				A variable is a named storage box that contains a value.
+				Pretty much like naming a shoe box on a shelf.
+				The variable is typed, telling what kind of values the box
+				can store. Below is the definition of the variable
+				<span class="java-lvar">i</span>,
+				its type is <span class="java-keyword">int</span>,
+				which means the variable can store integer values.
+				<xfr>
+					Avec le debugger, il est facile d'avoir l'intuition
+					de ce qu'est une variable. Une variable est une boite
+					de stockage nommée qui contient une valeur. On pourrait
+					imaginer une boite à chaussure sur une étagère avec un
+					nom dessus. Ci dessous, vous voyez la définition d'une
+					variable
+					<span class="java-lvar">i</span>,
+					avec le type <span class="java-keyword">int</span>,
+					ce qui veut dire que la variable peut contenir
+					des valeurs entières.
+				</xfr>
+      </p>
+      <pre style="font-size: 12px;" class="prettyprint lang-java">
+	int i=0;
+      </pre>
+      <p>
+				The variable <span class="java-lvar">s</span> is a bit different,
+				it is called a reference. You can see it is typed as
+				a String.
+				<xfr>
+					La variable <span class="java-lvar">s</span> est un peu différente,
+					elle est une référence. Vous pouvez voir qu'elle est typée
+					comme une chaîne de caractères (String):
+				</xfr>
+      </p>
+      <pre style="font-size: 12px;" class="prettyprint lang-java">
+	String s;
+      </pre>
+      <p>
+				In Java, strings are objects, they are not primitive values
+				like integers. Integers can be stored in variables, but objects
+				cannot. Objects, like strings, are too big to fit in the storage box,
+				but their identity can fit.
+				<xfr>
+					En Java, les chaînes de caractères sont des objets, elles
+					ne sont pas des valeurs primitives comme les entiers.
+					Les valeurs primitives comme les entiers peuvent être
+					assignéés aux variables mais les objets ne peuvent pas,
+					ils sont trop gros pour tenir dans la boite à chaussure.
+					Par contre, leur identité est petite et elle peut tenir
+					dans la boite.
+				</xfr>
+      </p>
+      <p>
+				Think of it this way: a person is too big to
+				fit in a shoe box, on a shelf in your closet,
+				but his or her phone number written on a piece of paper can.
+				A phone number uniquely identifies a single person; if you
+				have a phone number, you know the person it identifies.
+				Even better, a phone number allows to call that person
+				and ask for a service. References will allow us to do
+				the same with objects. For example, if you want a string
+				to tell you how long it is (meaning how many characters it contains),
+				you can just ask like that:				
+				<xfr>
+					Pensez y de cette façon: une personne ne peut tenir
+					dans une boite à chaussure, sur une étagère, dans votre
+					placard, mais vous pouvez écrire son numéro de téléphone
+					sur un bout de papier et mettre ce bout de papier dans la
+					boite. Le numéro de téléphone joue le rôle de l'identité
+					de cette personne. Si vous avez le numéro, vous pouvez
+					appeler cette personne et lui demander un service.
+					Cela sera la même chose pour un objet, si vous avez
+					une variable référence qui contient l'identité de cet
+					objet, alors vous pourrez invoquer une méthode sur cet
+					objet. Par exemple, si vous voulez demander à une chaîne
+					de caractères sa longeur, vous pouvez le faire comme
+					ceci:
+				</xfr>
+      </p>
+			<pre style="font-size: 12px;" class="prettyprint lang-java">
+  String s = "Hello !";
+  int length = s.length();
+      </pre>
+			<p>
+				Notice the dotted notation "s.length()". You should
+				read it as "ask the object referenced by the variable s
+				to execute the method named "length". This is how
+				you ask an object to render a service, by invoking
+				a method on an object.
+        For instance, this is how you print a string:
+				<xfr>
+					Notez la notation pointée "s.length()". Vous devriez
+					la lire comme ceci: demande à l'objet référencé par la
+					variable "s" d'exécuter la méthode nommée "length".
+					C'est ainsi que l'on demande à un objet de rendre un
+					service, par l'invocation d'une méthode sur un objet.
+          Ci-dessous,
+					voici comment demander l'impression d'une chaîne de
+					caractères:
+				</xfr>
+			</p>
+			<pre style="font-size: 12px;" class="prettyprint lang-java">
+1  String str = "Hello !";
+2  PrintStream ps = System.out;
+3  ps.println(str);
+      </pre>
+			<p>
+				Line 2, the variable "ps" that holds a reference to an object
+				that is a print stream. It is the object that knows how to
+				print on the screen. Line 3, that object is requested 
+				to print the string referenced by the variable "str".
+				If you try that snippet of code, you will see that it
+				does print the string "Hello !" in the Eclipse console.
+				So go ahead, create a new class, with a main method
+				that contains these lines then execute your code under
+				the control of the debugger. You should know how to do it
+				by now.
+				<xfr>
+					Vous voyez la variable "ps" qui contient la référence d'un
+					objet qui est un flux d'impression (print stream). C'est
+					l'objet qui sait comment imprimer des caractères sur l'écran.
+					Vous voyez la requête d'impression de la chaîne référencée
+					par la variable "str". Si vous essayez ce petit bout de
+					code, vous le verrez écrire la chaîne "Hello !" dans la
+					console d'Eclipse. Essayer ! Créez une nouvelle classe,
+					avec une méthode main qui contient ces quelques lignes
+					et lancez l'exécution sous debugger. Vous devriez savoir
+					le faire désormais.
+				</xfr>
+			</p>
+      <p>
+				Are you feeling a bit confused right now?
+				Don't worry, we will come back many times
+				on discussing variables and especially reference variables.
+				In just a few weeks, all these concepts will be crystal clear
+				and you will be using them easily without even thinking twice
+				about it.
+				<xfr>
+					Vous sentez vous un peu perdu? Pas de panique, c'est assez normal.
+					Nous venons de voir beaucoup de concepts, il faudra un peu de temps
+					et de travail pour qu'ils deviennent naturels. Dans quelques semaines,
+					vous les utiliserez sans même y penser.
+				</xfr>
+      </p>
+    </div>
+  </li>
+  <li> <b>Printing an array of strings:</b>
+    <div>
+      <p>
+				Look at the code snippet below, it is a loop that prints all the
+				strings referenced from the array "args".
+				<xfr>
+					Regardez ce bout de code ci-dessous, c'est une boucle qui
+					imprime toutes les chaînes de caractères référencées depuis
+					un tableau:
+				</xfr>
+      </p>
+      <pre style="font-size: 12px;" class="prettyprint lang-java">
+1  public static main(String args[]) {
+2    int i = 0;
+3    while (i &lt; args.length) {
+4      String s = args[i++];
+5      System.out.println(s);
+6     }
+7  }
+      </pre>
+			<p>
+				If you copy this code into your own class, with a main
+				entry point, executing that class will print all
+				the strings you pass as arguments when launching the execution.
+				Notice that it will print one string per line. This is what
+				the method <span class="java-method">println</span> does.
+				You can print all strings on a single line, separated with commas,
+				just like this:
+				<xfr>
+					Si vous copiez ce bout de code dans votre propre classe
+					dans sa méthode <span class="java-method">main</span>, alors
+					il imprimera tous les chaînes que vous passerez comme
+					argument lors du lancement de l'exécution. Ce code
+					imprimera un argument par ligne, c'est ce que la méthode
+					<span class="java-method">println</span> fait.
+					Vous pouvez choisir d'imprimer tous les arguments sur une
+					seule ligne, séparés par une virgule:
+				</xfr>
+			</p>
+      <pre style="font-size: 12px;" class="prettyprint lang-java">
+1  public static main(String args[]) {
+2    int i = 0;
+3    while (i &lt; args.length) {
+4      String s = args[i++]+", ";
+5      System.out.print(s);
+6     }
+7  }
+      </pre>
+			<p>
+				Notice that we used the method <span class="java-method">print</span>
+				instead of the method <span class="java-method">println</span>.
+				Notice also that we use the '+' operator on strings that				
+				concatenates two strings.
+				<xfr>
+					Notez que nous avons utilisez pour cela la méthode
+					<span class="java-method">print</span> au lieu de la
+					méthode <span class="java-method">println</span>.
+					Notez aussi comment nous avons concaténé deux chaînes
+					de caractères avec l'opérateur '+'.
+				</xfr>
+			</p>
+			<p>
+				Java also supports a C-style-printf, if you know the C programming
+				language already, it might be useful: 
+			</p>
+      <pre style="font-size: 12px;" class="prettyprint lang-java">
+1  public static main(String args[]) {
+2    int i = 0;
+3    while (i &lt; args.length) {
+4      String s = args[i];
+5      System.out.printf("args[%d]: %s\n",i,s);
+6      i = i + 1;
+7    }
+8  }
+      </pre>
+      <p>
+				Try out this different versions, see what is happening.
+				Watch the local variable <span class="java-lvar">s</span>
+				under debugger,
+				you can watch the values it takes throughout the loop.
+				Pay attention to the difference between using <em>print</em>
+				and <em>println</em>. The former only prints the given string.
+				The latter also prints the given string but the cursor goes
+				the begining of the next line (in fact, the combination
+				of a line feed and a carriage return).
+				<xfr>
+					Essayez ces différentes versions et voyez ce qui se passe,
+					en suivant l'exécution sous debugger. Faites attention
+					à l'usage de la méthode
+					<span class="java-method">print</span> versus
+					<span class="java-method">println</span>.
+				</xfr>
+      </p>
+    </div>
+  </li>
+
+  <li> <b>The <span class="java-keyword">return</span> statement:</b>
+    <div>
+      <p>
+				This is quite simple, it tells the execution to quit the
+				current method. In our case, since we are executing the
+				entry point, which is the first and only method, leaving
+				the main method means that the execution should finish.
+				<xfr>
+					C'est tout simple, ce "statement" indique que l'exécution
+					doit sortir de la méthode courante. Dans notre cas, puisque
+					nous sommes dans la première méthode (le point d'entrée),
+					sortir de la méthode courante signifie la fin de l'exécution.
+				</xfr>
+      </p>
+    </div>
+  </li>	
+</ol>
+<p>
+  If you are experiencing some difficulties, understanding the
+  program, this is not the end of the world, do not worry, we will come
+  back on all these concepts. Still, go ask around for help,
+	get some explanations
+  in order to get a feel for what is happening. Try stuff. In no time, you will
+  write your own code, if you take charge of your learning and you
+  are proactive about it.
+  <xfr>
+  Si vous avez des difficultés à comprendre le programme, ce n'est pas
+  une catastrophe, ne vous inquiétez pas, nous allons revenir sur ces 
+  concepts. Maintenant, allez demander de l'aide autour de vous,
+  afin de comprendre intuitivement ce qui se passe. Dans peu de temps,
+  vous allez écrire votre propre code, si vous vous responsabilisez par
+  rapport à votre apprentissage et que vous êtes dans une démarche 
+  proactive.
+  </xfr>
+</p>
+<p>
+  Congratulations, you observed your first execution of a
+  Java program by experiencing it directly under the control
+  of a debugger. You have just entered in a new world,
+  the world of computer programming.
+  <xfr>
+  Félicitations, vous avez observé votre première exécution d'un programme
+  Java en l'exécutant sous le contrôle du debugger. Vous venez juste
+  d'entrer dans le monde de la programmation.
+  </xfr>
+</p>
+<p>
+  Welcome to this new world. But let's keep it clean,
+  shall we?
+</p>
+
+<h4>A question for you</h4>
+
+<p>
+  Does your Eclipse <em>Debug</em> perspective looks like this?
+</p>
+<img src="images/eclipse-debug-too-many-runs.png" width="100%">
+<p>
+  Oh well, this is not a good thing. Look at your <em>Debug</em>
+  view, you have many executions running... Is that really what
+  you wanted? Probably not, you have probably forgotten to terminate
+  the executions that you are no longer interested in. Right?
+  <xfr>
+  Bien, ceci n'est pas une bonne chose. Regardez votre vue
+  <em>Debug</em>, vous avez plusieurs exécutions en cours.. est-ce
+  vraiment ce que vous vouliez? probablement non, vous avez oublié
+  de terminer les exécutions qui ne vous intéressent plus. Exact?
+  </xfr>
+</p>
+<p>
+  Eclipse allows you to execute
+  many programs at the same time, even debug them at the same time.
+  In some advanced debugging scenario, it is a great feature. At
+  your level, it probably means that you are just <b>not terminating
+    executions</b>. But why should we terminate executions?
+  <xfr>
+  Eclipse vous permet d'exécuter plusieurs programmes en même temps, 
+  également de débugger plusieurs programmes en même temps.
+  Dans certains cas de debug complexes, ceci est très utile. 
+  A votre niveau, cela signifie probablement que vous <b>nne terminez
+  pas vos exécutions</b>. Mais pourquoi devons nous terminer les exécutions?
+  </xfr>
+</p>
+<p>
+  Let's use a painter analogy. The painter starts painting on a new
+  canvas. Then he is interrupted before he finishes his painting.
+  Then he starts another painting, on another new canvas. And again.
+  And again. What happens?
+  <xfr>
+  Utilisons l'analogie d'un peintre. Il commence à peindre un nouveau
+  tableau sur une nouvelle toile. Il est interrompu avant de finir sa peinture. 
+  Puis il commence un autre tableau sur une nouvelle toile. Et encore. 
+  Qu'arrive t'il?
+  </xfr>
+</p>
+<p>
+  That painter will run out of canvases. If he is not running out of canvases,
+  he will keep buying them from the Web and his house will overflow with canvases.
+	Not a great situation, is it?
+  Rather than reusing a new canvas each time, if the current painting is
+  unsatisfactory, the painter can start over on the same canvas.
+  <xfr>
+  Ce peintre va épuiser ses toiles. S'il continue sans arrêt à acheter
+  des nouvelles toiles, il va saturer sa maison. Plutôt que d'utiliser
+  des nouvelles toiles, si le tableau en cours ne le satisfait pas, il
+  peut peindre un nouveau tableau sur la même toile.
+  </xfr>
+</p>
+<p>
+  This is the same with Eclipse. Every time you start an execution, Eclipse
+  will use a brand new instance of a Java Runtime. So if you keep starting
+  new executions without terminating the old ones, Eclipse will use more and
+  more instances of the Java Runtime. Is this a problem?
+  <xfr>
+ C'est la même chose avec Eclipse. Chauqe fois que vous démarrez une exécution,
+ Eclipse va utiliser une instance (un exemplaire) de runtime Java.
+ Si vous lancez à chaque fois une nouvelle exécution sans terminer les
+ précédentes, Eclipse va utiliser de plus en plus d'instances de runtime Java.
+ Est-ce un problème?
+  </xfr>
+</p>
+<p>
+  Sure it is. The ressources in your computer are not infinite and each Java
+  Runtime, like any other program, consumes resources. When your computer will
+  start running out of resources, it will first slow down... and then crawl
+  to a halt... becoming sundenly unusable. Not a good thing, at all.
+  <xfr>
+ Bien sûr que c'est un problème. Les ressources de votre machine ne sont 
+ pas infinies et chaque runtime Java, comme tout programme, en consomme.
+ Lorsque votre machine va commencer à manquer de ressources, elle va aller
+ de plus en plus lentement.. jusqu'à ne plus rien faire. Ce n'est pas une bonne chose...
+  </xfr>
+</p>
+<p>
+  So please, terminate the executions that you no longer need. Select them in the
+  <em>Debug</em> view and then click on the red square icon in the debugger
+  toolbar:
+</p>
+<img src="images/eclipse-debugger-toolbar.png" width="200">
+<p>
+  It will then look like this, with a cluttered <em>Debug</em> view:
+</p>
+<img src="images/eclipse-debug-too-many-terminated.png" width="100%">
+<p>
+  You can get back a clean <em>Debug</em> view by clicking the
+  <img src="images/eclipse-debug-twocross-icon.png" height="18">
+  icon.
+</p>
+<p>
+  Congratulations! Nice clean up.
+</p>
+
+<h4>Another question for you</h4>
+
+<p>
+  Did you take notes? Did you create a cheat sheet for yourself?
+  If you did, fantastic! If you did not, again, how much of all
+  this will you remember next week? Again, at the end of this
+  first semester, we can clearly see two groups of students.
+  Those that will master Eclipse and debugging, remembering
+  the keyboard short-cuts and advanced functionalities, and the
+  other students, stuck with using only the simplest functionalities
+  of Eclipse and its Java debugger. Again, who do you think will
+  come on top? Not only having better grades, but also working faster
+  and therefore having more time for having fun. Your choice.
+  <xfr>
+    Avez-vous pris des notes? Avez-vous créé un anti-sèche pour
+    Eclipse et pour le debugger? Si vous l'avez fait, c'est super.
+    Si ce n'est pas le cas, vous pensez réellement vous rappeler de tout
+    cela la semaine prochaine? A la fin du semestre, on voit clairement
+    deux groupes d'étudiants, le premier groupe maîtrise Eclipse
+    et l'utilise au mieux, l'autre reste sur un usage de base.
+    Qui pensez vous réussi le mieux? Il ne s'agira pas seulement
+    d'avoir de meilleurs notes, mais il s'agira aussi de pouvoir
+    travailler mieux et plus vite et donc d'avoir plus de temps
+    pour soi. C'est à vous décider.
+  </xfr>
+</p>
+
+<!--
+<h3>Programming Constructs</h3>
+
+<p>
+  Here, we want to discuss the programming constructs that are used
+  in our class <span class="java-class">Greetings</span>. If you are
+  a beginner, try to understand by yourself first. Then, ask for help
+  if you need to, from the teaching staff or a fellow student that has
+  programmed before. 
+</p>
+<p>
+  <b>Important</b>: remember to take charge of your learning,
+  try out the constructs we introduce, do not just read about them.
+  Write your own classes, name them as you please,
+  each class with its own method
+  <span class="java-method">main</span>. In these main methods,
+  write small code snippets to test your understanding of the proramming
+  constructs discussed below.
+  Run them under the debugger control and verify that they do what
+  you expect them to do. Learn by practice. You cannot learn programming
+  by only reading about it. You need to do it. This is
+  the only way to learn how to do something, by doing it over and over.
+  So take charge of your learning and have fun.
+</p>
+
+<h4>Printing</h4>
+
+<p>
+  First, line 16, we can see that we print out a different message: "Greetings"
+  rather than "Hello World!". So now you know how to print a string
+  on the screen from Java. Cool.
+</p>
+<p>
+  Second, you have notice that we use <em>System.out.print()</em>
+  or <em>System.out.println()</em>, so what is the difference?
+  With <em>print("toto")</em> the given string is printed and nothing more.
+  With <em>println("toto")</em> the given string is printed and the
+  cursor goes to a new line on the terminal window. Play with those,
+  see the difference for yourself. So go on, change as you see fit
+  the source of the method
+  <span class="java-class">Greetings</span>.<span class="java-method">main</span>,
+  recompile, and debug.
+  This is how you learn coding, by doing it, hands on, experimenting.
+</p>
+
+<h4>Variables</h4>
+
+<p>
+  Through debugging, you probably already got an intuition of
+  what a variable is.
+  A variable is a named storage box that contains a value.
+  The variable is typed, telling what kind of values the box
+  can store. Below is the definition of a variable, the variable
+  name is <em>anInt</em>, it names a box
+  typed as <span class="java-keyword">int</span>,
+  which means the box can store integer values.
+</p>
+<pre class="prettyprint lang-java">
+  int anInt;
+</pre>
+<p>
+  Notice that you do not see any mention of the storage box,
+  only the name of the variable and the type of the variable.
+  Storage boxes are an internal details,
+  they are managed automatically by the Java runtime.
+  These boxes are in fact managed in the main memory of your computer,
+  where your computer can store and retrieve numerical values. Storing
+  numerical values may not seem like much,
+  but numbers can be used effectively
+  to encode great many things, such as characters, colors, music, or images.
+  Numbers can be usedd to encode about anything actually.
+</p>
+<p>
+  In Java, variables can be typed as containing
+  integers (<span class="java-keyword">int</span>),
+  real numbers (<span class="java-keyword">float</span>), or
+  character (<span class="java-keyword">char</span>).
+  These types are called primitive types, the corresponding
+  values are small values, small enough to fit in storage boxes.
+</p>
+<p>
+  Sometimes, developers need to manipulate larger entities,
+  not just small primitive values. Example of such larger entities
+  are arrays or strings. In that case, we still use variables,
+  but special ones called <em>references</em>.
+  A reference variable still names a storage box,
+  but the value in the box is a numerical value that encodes
+  the identity of the larger entity.
+</p>
+<p>
+  It is really important to understand and remember that a reference
+  variable <b>does not contain the entity itself</b>, it contains
+  the identity of that entity. A little snippet of code might help you
+  understand that point better than words:
+</p>
+<pre class="prettyprint lang-java">
+1  String s1 = null;
+2  String s2 = "toto";
+3  s1 = s2;
+</pre>
+<p>
+  In the snippet of code above, you can see two variables,
+  named <em>s1</em> and <em>s2</em>. Each variable names
+  its own storage box. Each box stores the identity of a String,
+  given the <em>String</em> type of the variables.
+</p>
+<ol>
+  <li>
+    Line 1, the variable <em>s1</em> is assigned 
+    the <span class="java-keyword">null</span> value, which is
+    the null identity, meaning an identity corresponding to no entity.
+  </li>
+  <li>
+    Line 2, the variable <em>s2</em> is assigned 
+    the identity of the string <em>"toto"</em>.
+  </li>
+  <li>
+    Line 3, the variable <em>s1</em> is assigned the value
+    of the variable <em>s2</em>, which is the identity of
+    the string <em>"toto"</em>.
+  </li>
+</ol>
+<p>
+  In the end, <b>both variables refer to the same entity</b>,
+  since they store the identity of the same entity,
+  the string <em>"toto"</em>. Let's try all this
+  under debugger. Create a new class with a
+  method
+  <span class="java-method">main</span>
+  to test the above lines.
+  Compile your class, set a breakpoint with the debugger
+  <em>stop</em> command in your method
+  <span class="java-method">main</span>
+  and debug those lines, printing the values
+  of the variables.
+</p>
+<textarea class="terminal" rows="9" >
+main[1] print s1
+ s1 = "toto"
+main[1] print s2
+ s2 = "toto"
+main[1] print (s1==s2)
+ (s1==s2) = true
+</textarea>
+<p>
+  The last command tells you that the two variables <em>s1</em>
+  and <em>s2</em> refer to the same entity since their values
+  are equal. Remember, their values are the identity of an entity,
+  not the entity. 
+  So if the values are equals, this means the two identities are
+  equal. Since the two identities are equal, they identify the same
+  entity. Why? Because this is what an identity is.
+</p>
+<p>
+  An identity is a value that uniquely identify an entity. Pretty
+  much like a social security number or a phone number identifies a
+  human being. So if you have two pieces of paper with the same
+  phone number, the two pieces of paper refer to the same person.
+  Meaning that if you call, to ask a service, you will call the same
+  person and ask the service from the same person.
+  The pieces of paper are the storage boxes for your two variables,
+  the phone number is the identity of an entity.
+</p>
+<p>
+  An identity in Java is black-box value that identifies a Java entity,
+  an entity such as a string or an array. We will have more to say about
+  such entities soon, since Java entities are called objects and Java
+  is all about object-oriented programming. But that is a story for another
+  day...
+</p>
+<p>
+  Think of it this way if it helps, a reference variable typed <em>Person</em>
+  would refer to persons. The variable does not contain the person, it
+  contains their phone number. So if two variables contain the same
+  phone number, the two variables refer to the same person. Got it?
+  If not, ask around you for explanations until you understand it well.
+</p>
+  
+<h4>Arrays</h4>
+
+<p>
+  Arrays are also objects in the Java language, just like strings.
+  An array is a sequence of elements, in this case, a sequence of strings.
+  You can access any element using its index in the sequence. Here is
+  a snippet of code to create a new array of integers, with 5 elements:
+</p>
+<pre class="prettyprint lang-java">
+  int[] values = new int[5];
+  int val;
+  values[0]=32;                  // assigning the first value
+  val = values[0];               // getting the first value
+  values[values.length-1]=23;    // assigning the last value
+  val = values[values.length-1]; // getting the last value
+</pre>
+<p>
+  In the code above, you can see we use two variables, one to refer
+  to the array (<em>values</em>) and the other to hold a value
+  (<em>val</em>).
+  The code executes in sequence, in the order you read it actually.
+  The first line creates a new array with 5 elements.
+  The next lines show you how to assign values to array elements
+  and how to get them back.
+</p>
+<p>
+  Notice that arrays in Java know their own length, that is,
+  the number of elements they contain. You might think in terms
+  of the length of the sequence that the array contains.
+  Look at the last line, see the notation <em>args.length</em>
+  as the way to ask an array for its length.
+</p>
+<p>
+  So let's play around a bit with arrays. Let's try an array
+  of characters. Remember, to learn, you need to do. This
+  is how you can create an array of characters and initialize
+  it at the same time:
+</p>
+<pre class="prettyprint lang-java">
+1  char[] chars = { 'h', 'e', 'l', 'l', 'o' }; 
+</pre>
+<p>
+  Again, create a test class with a method
+  <span class="java-method">main</span> and add your
+  code to create an array of characters and 
+  print
+  the length of the array.
+  You can also write a loop that prints each character,
+  you should know how to do it. If you don't, read the
+  next section on loops and do it afterwards.
+</p>
+
+<h4>Loop construct</h4>
+
+<p>
+  The loop construct is a classical programming construct.
+  If you never have written code before, you may be puzzled,
+  but it is quite intuitive. A loop means you are doing something
+  over and over, until a condition is met. In this case,
+  we loop over until we have printed all the strings in
+  the array.
+</p>
+<p>
+  In our code, we use a loop construct called a <em>for</em>
+  statement. It defines a variable named <em>"i"</em>.
+  The variable is initialized to zero. Each time the loop
+  executes, the variable is incremented by one. The loop
+  goes on repeating itself until the value of the variable
+  <em>"i"</em> is greater or equal to the length of the
+  array of strings named by the arguments <em>"args"</em>.
+</p>
+<pre class="prettyprint lang-java">
+  for (int i=0;i &lt; args.length;i=i+1) {
+    ...
+  }
+</pre>
+<p>
+  This could be written also like this, using a construction
+  that might be easier to read for you:
+</p>
+<pre class="prettyprint lang-java">
+  int i=0;
+  while (i &lt; args.length) {
+    ...
+    i=i+1;
+  }
+</pre>
+<p>
+  So go ahead, put those constructs to use, write code that use them.
+  Change the source of the method
+  <span class="java-class">Greetings</span>.<span class="java-method">main</span>,
+  using a <em>while</em> statement instead of our <em>for</em> statement. 
+</p>
+
+
+<h4>Adding your own methods</h4>
+
+<p>
+  You are now familiar with the method 
+  <span class="java-class">Greetings</span>.<span class="java-method">main</span>,
+  but you can actually define methods of your own. Look at the code below:
+</p>
+
+<pre class="prettyprint lang-java">
+  public class Greetings {
+  
+    public static void echoArgs(String[] args) {
+      for (int i=0;i &lt; args.length;i=i+1) {
+        String s = args[i];
+        System.out.print(" "+s);
+      }  		       
+      return;
+    }
+    public static void main(String[] args) {
+      System.out.print("Greetings");
+      echoArgs(args);
+      System.out.println("!");
+      return;
+    }
+  }
+</pre>
+
+<p>
+  So go ahead, change the code in the class
+  <span class="java-class">Greetings</span>.
+  Compile and execute under the debugger.
+  Look at the debug session below, see the
+  use of the <span class="java-keyword">step</span>
+  command to follow
+  the execution in the method 
+  <span class="java-method">echoArgs</span>.
+</p>
+<textarea class="terminal" rows="43" >
+$ jdb -sourcepath src -classpath bin Greetings A B
+Initializing jdb ...
+> stop in Greetings.main
+Deferring breakpoint Greetings.main.
+It will be set after the class is loaded.
+> run
+run Greetings A B
+Set uncaught java.lang.Throwable
+Set deferred uncaught java.lang.Throwable
+> 
+VM Started: Set deferred breakpoint Greetings.main
+
+Breakpoint hit: "thread=main", Greetings.main(), line=19 bci=0
+19        System.out.print("Greetings");
+
+main[1] next
+> Greetings
+Step completed: "thread=main", Greetings.main(), line=20 bci=8
+20        echoArgs(args);
+
+main[1] step
+> 
+Step completed: "thread=main", Greetings.echoArgs(), line=6 bci=0
+6        for (int i=0;i<args.length;i++) {
+
+main[1] where
+  [1] Greetings.echoArgs (Greetings.java:6)
+  [2] Greetings.main (Greetings.java:20)
+main[1] list
+2    public class Greetings {
+3    
+4    
+5      public static void echoArgs(String[] args) {
+6 =>     for (int i=0;i &lt; args.length;i++) {
+7          String s = args[i];
+8          System.out.print(" "+s);
+9        }
+10      }
+11      
+main[1] 
+
+</textarea>
+<p>
+  Also notice the use of the 
+  <span class="java-keyword">where</span>
+  command that tells you where you are in
+  terms of the sequence of method invocations.
+  You can use the commands
+  <span class="java-keyword">up</span>
+  and
+  <span class="java-keyword">down</span>
+  commands to move up and down that
+  sequence of invocations.
+</p>
+<p>
+  Play around with this code and understand
+  the concept of invoking a method. Remember
+  the cooking metaphor. A program is a recipee
+  that a Chef follows, one instruction at a time.
+  Sometimes, a recipe refers to another recipe.
+  For example, a pasta recipe may refer to another
+  recipe for a special sauce.
+</p>
+<pre>
+  Recipe: Fusili in basil tomato sauce.
+  1) Put water to boil
+  2) Prepare the sauce
+  3) Put fusili pasta to cook in boiling water
+
+  Recipe: Basil tomato sauce
+  1) Chop fresh tomatoes
+  2) Cook tomatoes with basil
+  3) Salt and pepper to taste
+</pre>
+<p>
+  So the Chef will start with the first recipe,
+  execute step 1 and at step2 change recipe to
+  do the tomato sauce. Once done with the sauce,
+  it will come back to the first recipe and continue
+  with the step 3. There you have it, this is exactly
+  what a method invocation is.
+</p>
+<p>
+  If you would ask the Chef where he is at when he is
+  in the middle of the tomato sauce, he would say that
+  he is at the step 3 of the tomato sauce recipe and
+  he was at the step 2 in the Fusili recipe. That
+  is exactly what the <em>where</em> tells you.
+</p>
+
+<check
+   blocking="false"
+   silent="onSuccess"
+   lang="java"
+   cwd="workspace/hello.world"
+   classpath="bin;tests.jar"
+   classname="tests.TestGreetings2">
+<banner>
+  The following check will just verify that you have a
+  class	<span class="java-class">Greetings</span> with
+  the methods discussed above.
+</banner>
+  <hint>
+    Hum, seems you didn't get it quite right.
+    Please check your <em>hello.world</em> project
+    in the <em>workspace</em> directory:
+    <ol>
+      <li>
+	Make sure that you have a file called Greetings.java under
+	the "src" directory.
+      </li>
+      <li>
+	Make sure that you also have a file called "Greetings.class"
+	under the "bin" directory.
+      </li>
+      <li>
+	Make sure that you can load and execute your class Greetings
+	like this:
+	<textarea class="terminal" rows="4" >
+  hello.greetings$ java -classpath ./bin Greetings Albert Einstein
+  Greetings Albert Einstein!
+	</textarea>
+      </li>
+      <li>
+	Make sure that your class Greetings has the methods
+	<span class="java-method">echoArgs</span> and
+	<span class="java-method">main</span>,
+	declared exactly like this:
+<pre class="prettyprint lang-java">
+  public static void echoArgs(String[] args) {
+    ...
+  }
+  public static void main(String[] args) {
+    ...
+  }
+</pre>
+      </li>
+    </ol>
+    Ask for help if you need to.
+  </hint>
+  <success>
+    Fantastic.
+  </success>
+  <unfold></unfold>
+</check>  
+
+<h4>Null Pointer Exception</h4>
+
+<p>
+  Earlier, we discussed variables and in particular variables that are
+  references to objects. We mentioned that a reference may be null,
+  that is, the variable contains an identity that corresponds to no object.
+  So what happens if we use a variable with a null value?
+</p>
+<p>
+  What do you think can happen? If you are using the variable, it means
+  you want to <em>"talk"</em> to the referenced object... Remember, a
+  reference is like a phone number, a phone number allows you to call a
+  person and ask for a service. So if the phone number is not a valid
+  one, corresponding to no one, you cannot place the call, right?
+  Well, the Java runtime will be in the same position, the reference
+  being null, it will not be able to find the corresponding object,
+  since the value null does not identify any object.
+</p>
+<p>
+  Let's try it and see how the Java runtime reacts to a program
+  trying to use a null reference. We are going to modify the
+  program Greetings by passing the null value to the method
+  <span class="java-method">echoArgs</span>, just like this:
+</p>
+<pre class="prettyprint lang-java">
+  public static void echoArgs(String[] args) {
+    int i-0;
+    while (i &lt; args.length) {
+      String s = args[i];
+      System.out.print(" "+s);
+      i=i+1;
+    }  		       
+    return;
+  }
+
+  public static void main(String[] args) {
+    System.out.print("Greetings");
+    echoArgs(null);
+    System.out.println("!");
+    return;
+  }
+</pre>
+<p>
+  Now, after recompiling, execute the Greetings class under debugger.
+  You should get an execution under the debugger like this one:
+</p>
+<textarea class="terminal" rows="15" >
+$ jdb -classpath bin -sourcepath src Greetings
+Initializing jdb ...
+> run
+run Greetings
+Set uncaught java.lang.Throwable
+Set deferred uncaught java.lang.Throwable
+> 
+VM Started: Greetings
+Exception occurred: java.lang.NullPointerException (uncaught)"thread=main", Greetings.echoArgs(), line=6 bci=36
+6        while (i &lt; args.length) {
+
+main[1] where
+  [1] Greetings.echoArgs (Greetings.java:6)
+  [2] Greetings.main (Greetings.java:19)
+main[1]
+</textarea>
+<p>
+  So what happened? Well, what do you think? The Java runtime stopped
+  executing the program upon trying to use the null value in order to
+  reach an object.
+  The <span class="java-keyword">where</span>
+  command tells you exactly where that is. 
+  It happened when asking the array of arguments its length.
+</p>
+<pre class="prettyprint lang-java">
+  args.length
+</pre>
+<p>
+  But since the variable
+  <span class="java-lvar">args</span> contains
+  <span class="java-keyword">null</span>,
+  there is no array at the end of the line.
+  The Java runtime tells you about this unexpected situation
+  through raising an exception, a 
+  <span class="java-class">NullPointerException</span> for that matter.
+  The name says it all, does it not?
+</p>
+<p>
+  The execution stopped right there, where the null pointer exception
+  occured. You may ask the debugger to continue the execution, but
+  since an exception was thrown, the execution will terminate.
+  Try it for yourself and see what happens. This is what you should
+  get:
+</p>
+<textarea class="terminal" rows="8" >
+main[1] cont
+> Exception in thread "main" java.lang.NullPointerException
+	at Greetings.echoArgs(Greetings.java:6)
+	at Greetings.main(Greetings.java:19)
+
+The application exited
+hello.world$ 
+</textarea>  
+<p>
+  So that is how an execution ends upon trying to use a null reference.
+  Try executing the class
+  <span class="java-class">Greetings</span> 
+  directly, with the Java runtime, not under the control of the
+  debugger. You remember how to do this, right?
+</p>
+<textarea class="terminal" rows="6" >
+hello.greetings$ java -classpath bin Greetings
+GreetingsException in thread "main" java.lang.NullPointerException
+	at Greetings.echoArgs(Greetings.java:6)
+	at Greetings.main(Greetings.java:19)
+hello.greetings$ 
+</textarea>
+
+<h4>The if-then-else construct</h4>
+
+<p>
+  So how do we protect ourselves again using null references?
+  Well this is one of the purposes of the if-then-else construct.
+</p>
+
+<pre class="prettyprint lang-java">
+  public class Greetings {
+  
+    public static void echoArgs(String[] args) {
+      if (args==null) {
+        System.out.print(" No arguments");
+      } else {
+        for (int i=0;i &lt; args.length;i=i+1) {
+          String s = args[i];
+          System.out.print(" "+s);
+        }
+      }
+      return;
+    }
+    public static void main(String[] args) {
+      System.out.print("Greetings");
+      echoArgs(null);
+      echoArgs(args);
+      System.out.println("!");
+      return;
+    }
+  }
+</pre>
+<p>
+  You know what to do, right? Change your code, recompile,
+  and execute under debugger, single stepping through the
+  execution of the method
+  <span class="java-method">echoArgs</span>.
+  There is nothing difficult about understanding what is
+  going on.
+</p>
+<p>
+  Just one thing is important to grasp. Note the difference
+  between the assignment of a variable and the testing of
+  the value of a variable:
+</p>
+<pre class="prettyprint lang-java">
+  boolean isNull;
+  String[] args;
+  args = null;
+  isNull = (args == null);
+</pre>
+<p>
+  Try it and see for yourself, the value of the variable
+  <span class="java-lvar">isNull</span> will be
+  <span class="java-keyword">true</span>.
+  If you have variables that are integers or real numbers,
+  you can do more comparisons:
+</p>
+<pre class="prettyprint lang-java">
+  int i;
+  i = 3;
+  (i==3)  // is the value of variable "i" equals to 3
+  (i!=3)  // is the value of variable "i" different than 3
+  (i&lt;3)   // is the value of variable "i" less than 3
+  (i&lt;=3)  // is the value of variable "i" less or equal to 3
+  (i&gt;3)   // is the value of variable "i" greater to 3
+  (i&gt;=3)  // is the value of variable "i" greater or equal to 3
+</pre>
+<p>
+  Of course, you can compare the values of two variables, like this:
+</p>
+<pre class="prettyprint lang-java">
+  int i,j;
+  i = 3;
+  j = 4;
+  (i==j)  
+  (i!=j)  
+  (i&lt;j)   
+  (i&lt;=j)  
+  (i&gt;j)   
+  (i&gt;=j)  
+</pre>
+<p>
+  That's it folks, you are now officially a beginner programmer in Java!
+  Remember, your job is not only to read and understand.
+  You job is to learn how to write your own code.
+  So discuss all these programming constructs with your fellow
+  developers, use them, try them, write your own code.
+  Only then can you truly master these constructs and
+  improve as a developer through practice.
+</p>
+<p>
+  Practice, this is what it is all about when it comes to learning
+  a trade. This is your trade now, you have chosen to become a
+  software engineer and this is what software development is
+  about---writing programs. For us, here and now, it is about writing
+  object-oriented programs in Java. This is the trail that you just
+  started on. Enjoy the hike.
+</p>
+-->

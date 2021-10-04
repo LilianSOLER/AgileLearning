@@ -1,0 +1,597 @@
+<vars>
+  sprint=word.count
+  task=t1
+	step=t1-s3
+</vars>
+
+<p>
+	The purpose of this task is to help you master the concept of files
+	by implementing your own as an in-memory file. A regular file contains
+	a sequence of bytes that are stored on a mass storage device such as a disk
+	or USB key. Here, we will consider in-memory files, that is, a file
+  whose sequence of bytes are kept in memory, as a Java array of bytes.
+	<xfr>
+		Le but de cette tâche est de vous aidez à maîtriser le concept
+		de fichiers en implémentant le votre, en mémoire. Un fichier
+		habituellement contient une séquence d'octets qui sont conservés
+		sur une mémoire de masse comme un disque dur ou bien une clé
+		USB. Ici, nous allon considérer des fichiers en mémoire, c'est à
+		dire des fichiers qui conservent leur séquence d'octets en mémoire,
+		dans un tableau Java d'octets.
+	</xfr>
+</p>
+<p>
+	Our goal, design and code our file, our file input and output streams,
+	and finally our data input and output streams, so that we can redo
+	what we did earlier: a score ledger for a game, but only using our
+	code so that we understand every facets of it. Once you will have
+	done that, files and streams will no longer withhold any secrets from you.
+	<xfr>
+		Notre but est de concevoir et de coder notre fichier, les deux
+		streams d'octets associés, et enfin les deux flux de valeurs Java.
+		Avec ces classes, nous allons pouvoir reprendre notre livre
+		des scores mais cette fois-ci en utilisant nos fichiers,
+		seulement nos classes.
+	</xfr>
+</p>
+<p>
+	Let's look at the Java package
+	<span class="java-package">streams.step3</span> and the various classes
+	it contains:
+</p>
+<ul>
+	<li>
+		Class	<span class="java-class">InMemoryFile</span>
+	</li>
+	<li>
+		Class <span class="java-class">FileInputStream</span> and
+		Class <span class="java-class">FileOutputStream</span></li>
+	<li>
+		Class	<span class="java-class">DataInputStream</span> and
+		Class	<span class="java-class">DataOutputStream</span>
+	</li>
+</ul>
+
+<h3>Class	<span class="java-class">InMemoryFile</span></h3>
+
+<p>
+	We gave you a fully-functional class <span class="java-class">InMemoryFile</span>,
+	that wraps a byte array to hold the sequence of bytes of the file.
+	So a file has a current size, the number of <b>valid bytes</b>
+	in its array of bytes. To read or write these valid bytes,
+	we have two self-explanatory methods, the method
+	<span class="java-metho">byte read(int offset)</span> and
+	the method
+	<span class="java-method">void write(int offset, byte value)</span>.
+	Just notice that the byte array is grown if necessary if
+	a write happens at an offset passed the current end of the file.
+	However, a read passed the end of the file will throw the
+	end-of-file exception.
+	<xfr>
+		Nous vous avons donné une classe <span class="java-class">InMemoryFile</span>
+		entièrement fonctionnelle. Elle utilise un tableau d'octets
+		pour contenir la séquence d'octets d'un fichier.
+		Un fichier a une taille: le nombre d'octets valides qu'il
+		contient. Pour lire ou écrire ces octets valides,  nous avons
+		les méthodes 
+		<span class="java-metho">byte read(int offset)</span> et
+		<span class="java-method">void write(int offset, byte value)</span>.
+		Notez bien que la tableau d'octets est agrandi si nécessaire lors
+		de l'écriture à un enplacement au delà de la taille courante
+		du fichier, mais la lecture au delà de la taille du fichier
+		lèvera une exception indiquant la fin de fichier.
+	</xfr>
+</p>
+
+<h3>Class	<span class="java-class">FileInputStream</span> and Class	<span class="java-class">FileOutputStream</span></h3>
+
+<p>
+	Here, we want to offer the ability to wrap a file with either an input stream or
+	an output stream. Looking the classes 
+	<span class="java-class">FileInputStream</span> and
+	<span class="java-class">FileOutputStream</span>,
+	you should know how to finish up these classes.
+	After all, this is not that different from what you did
+	in the previous step.
+	<xfr>
+		Nous allons commencer par les deux flux d'octets nécessaires pour
+		manipuler nos fichier, le flux de lecture et le flux d'écriture.
+		Regardez les classes 
+		<span class="java-class">FileInputStream</span> et
+		<span class="java-class">FileOutputStream</span>.
+		Le codage de ces classes doit être facile, c'est très proche
+		de ce que vous avez fait dans les deux tâches précédentes.
+	</xfr>
+</p>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="streams.step3.TestStream">
+  <banner>
+    When done with the implementation, check what you did.
+  </banner>
+  <hint>
+    Not quite. Try again.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+<div name="check1_unfold" style="display:none;" >
+</div>  
+
+<h3> Class	<span class="java-class">DataInputStream</span> and
+		Class	<span class="java-class">DataOutputStream</span></h3>
+
+<p>
+	Now that we have working byte streams, we need to turn
+	towards data streams.
+	With byte streams, one reads or writes bytes into streams.
+	With data streams, one reads or writes Java values. 
+	First, one may read or write primitive values, such as
+	primitive values typed as
+	<span class="java-keyword">short</span>,
+	<span class="java-keyword">int</span>,
+	<span class="java-keyword">long</span>,
+	<span class="java-keyword">float</span>, or
+	<span class="java-keyword">double</span>.
+  All these are numbers are require to be encoded over multiple bytes,
+	like we have seen earlier when we wrote a 4-byte integer value or a
+	2-byte short value in our byte streams.
+	<xfr>
+		Maintenant que nos flux d'octets marchent, nous allons nous
+		tourner vers les flux de valeurs. Avec les flux d'octets,
+		on peut lire et écrire des octets. Avec les flux de valeurs,
+		on peut lire et écrire les valeurs reconnues par le langage
+		Java, telles que les valeurs primitives typées par
+		<span class="java-keyword">short</span>,
+		<span class="java-keyword">int</span>,
+		<span class="java-keyword">long</span>,
+		<span class="java-keyword">float</span>, or
+		<span class="java-keyword">double</span>.
+		Toutes ces valeurs doivent être encodées sur plusieurs octets,
+		comme nous l'avons vu dans les tâches précédentes. 
+	</xfr>
+</p>
+<p>
+	One may also write boolean values, characters and strings.
+	Boolean values may be encoded on 1 bit in theory, but we will use
+	one byte since it is the smallest value we can read or write in our
+	files.	Characters are UTF-8
+	encoded and strings are encoded as a sequence of UTF-8-encoded
+	characters.
+	<xfr>
+		On peut vouloir écrire des valeurs booléennes, des caractères,
+		et des chaînes de caractères. Pour encoder une valeur booléenne,
+		un seul bit suffit en théorie, mais nous utiliserons un octet
+		puisque c'est la plus petite valeur que nous puissions écrire
+		ou lire dans nos fichiers. Un caractère doit être encodé
+		en UTF-8 et les chaînes de caractères encodent leurs caractères
+		en UTF-8.
+	</xfr>
+</p>
+<p>
+	Of course, both the input and output data streams must agree
+	on the encoding, otherwise a data output stream could not be decoded
+	using an input data stream. So here we go, look at the classes
+	<span class="java-class">DataInputStream</span> and
+	<span class="java-class">DataOutputStream</span>, we ask that
+	you finish their implementation. You may want to look
+	at the next section before you start with the implementation.
+	<xfr>
+		Bien sûr, les deux flux de valeurs, en entrée et en sortie,
+		doivent être d'accord sur le format de l'encodage, sinon
+		un flux de sortie ne pourra pas être décodé par un flux d'entrée.
+		Regardez les classes 
+		<span class="java-class">DataInputStream</span> et
+		<span class="java-class">DataOutputStream</span>, nous vous
+		demandons de finir leur implémentation. Nous vous conseillons
+		de lire d'abord la section suivante.
+	</xfr>
+</p>
+
+<h3>A Piece of Advice</h3>
+<p>
+	Now let us give you a piece of technical advice, about
+	understanding and better handling signed versus non-signed
+	numbers. The input and output streams that you have are byte-oriented,
+	reading and writing signed byte values. Indeed, in Java,
+	all the integer types are signed:
+	<span class="java-keyword">byte</span>,
+	<span class="java-keyword">short</span>,
+	<span class="java-keyword">int</span>, and
+	<span class="java-keyword">long</span>. 
+  Nevertheless, any integer value in Java is a sequences of 0s and 1s,
+	internally. Indeed, a byte is always 8-bit in memory, composed of 
+	just 0s and 1s. The challenge is to understand how the
+	programming language you are using decides to interpret those 0s and 1s.
+	Let's look at a couple of examples and the possible interpretations:
+	<xfr>
+		Laissez nous vous donner des petits conseils pour mieux comprendre
+		les nombres en programmation et particulièrement les nombres
+		signés et non-signés. Les flux que nous avons défini sont des
+		flux d'octets signés, nous écrivons et lisons des valeurs signées.
+		Cela corresponds bien à Java puisqu'en Java, toutes les valeurs
+		entières sont signées: 
+		<span class="java-keyword">byte</span>,
+		<span class="java-keyword">short</span>,
+		<span class="java-keyword">int</span>, and
+		<span class="java-keyword">long</span>.
+		Néanmoins, une valeur entière est une séquence de 0s et de 1s,
+		en interne. Le défi est donc de comprendre comment ces 0s et ces
+		1s sont interprétés, comme dans les exemples ci-dessous:
+	</xfr>
+</p>
+<pre>
+	binary    hexa   unsigned  signed
+	00000001  0x01   1         1
+	00000000  0x00   0         0
+	11111111  0xFF   255       -1
+	11111110  0xFE   254       -2
+</pre>
+<p>
+	The same bit pattern can be interpreted as a signed value or unsigned
+	value. In C, you have signed and unsigned integer types (such as
+	int32_t and uint32_t), but in Java, the language only provides signed
+	integer types. This	means that the bit pattern 11111110 in memory
+	will always be interpreted as -2. This means that	when you assign
+	a byte value into a short or an integer variable, the value is first
+	sign-extended, filling the left bits with 1s.
+	<xfr>
+		Le même patterne de bits peut être interprété comme une valeur
+		signée ou non-signée. En C, vous avez des types signés et non-signés
+		pour les nombres entiers, mais pas en Java où il n'y a que des
+		nombres entiers signés. Cela veut dire que le patterne de bit
+		11111110 en mémoire sera toujours interprété comme la valeur -2.
+		Cela veut dire que lorsque vous assigné un octet ou un short
+		dans un entier, la valeur est d'abord étendu avec des 1s sur
+		les poids forts pour garder son	signe.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+	byte b = -2;
+	short s = b;
+</pre>
+<pre>
+  8bit value:
+    binary            hexa   unsigned  signed
+    11111110          0xFE   254       -2
+  16bit value:
+    binary            hexa     unsigned  signed
+    1111111111111110  0xFFFE   65534     -2
+</pre>
+<p>
+	So why do we care? Because we want to cut a larger value into
+	individual unsigned bytes and then later recompose the larger
+	value from the individual unsigned bytes. We need this to encode
+	and decode larger integer values into byte values.
+	In Java, the sizes of integer types are like this:
+	<xfr>
+		Mais pourquoi est-ce important? Parce que nous voulons
+		couper des nombres entiers grands en une suite d'octets
+		que nous souhaitons reconstitué plus tard en les mêmes
+		nombres entiers. Nous voulons en fait encoder 
+		des grands nombres entiers en séquences d'octets puis
+		pouvoir décoder ces séquences en recréant les nombres
+		d'origines:
+	</xfr>
+</p>
+<ol>
+	<li>1-byte <span class="java-keyword">byte</span></li>
+	<li>2-byte <span class="java-keyword">short</span></li>
+	<li>4-byte <span class="java-keyword">int</span></li>
+	<li>8-byte <span class="java-keyword">long</span></li>
+</ol>
+<p>
+	Let's discuss short values, cutting a short value into two bytes:
+	<xfr>
+		Discutons les valeurs courtes, qui sont coupées sur deux octets:
+	</xfr>
+</p>
+<pre>
+  16bit value:
+    binary            hexa     unsigned  signed
+    1111111111111110  0xFFFE   65534     -2
+  --
+    11111111          0xFF     255       -1
+    11111110          0xFE     254       -2	
+</pre>
+<p>
+	In Java, you would write the following code:
+</p>
+<pre class="prettyprint lang-java">
+  short s1 = -2;  // value is 0xFFFE
+  // we decompose the short value in two bytes
+  byte b1 = (byte)((s1 &gt;&gt;  8) & 0xFF);
+  byte b2 = (byte)((s1 &gt;&gt;  0) & 0xFF);    
+</pre>
+<p>
+	To understand the above code, you first need to understand that
+  Java evaluates arithmetic expressions using signed 32bit integers
+  or signed 64bit long integers, but never bytes or shorts.
+  So, in the expressions above, Java will first translate the short
+  value (16bits), stored in the variable s1, into the same int value 
+  (32bits). Once you know that, you need to know about
+	<a href="https://en.wikipedia.org/wiki/Bitwise_operation">
+		bitwise operations
+	</a>, perfectly explained on Wikipedia. So go read that
+	Wikipedia page until you can understand the above snippet of code.
+	Also understand the following code snippet that is
+	supposed to re-compose the two signed bytes together.
+	<xfr>
+		Pour comprendre le code ci-dessus, vous devez savoir que Java
+    évalue les expressions arithmetiques avec des entiers (32bits)
+    ou des entiers longs (64bits), mais jamais avec des short ou
+    des bytes. Puis vous devez connaître
+		les
+		<a href="https://en.wikipedia.org/wiki/Bitwise_operation">
+			opérations sur les bits</a> qui sont parfaitement
+		expliquées sur Wikipedia. Apprenez sur Wikipedia
+		tant que vous n'arrivez pas à lire et comprendre le
+		code ci-dessus et celui ci-dessous:		
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">	
+  // let's recompose the short value from those two bytes
+  short s2 = ((b1 &lt;&lt; 8) & 0xFF00) | b2;
+</pre>
+<p>
+	You need to grab a piece of paper and draw the bit patterns, shift
+	them left and right, and combine them with the bitwise-or operator.
+	Really, any good developer needs to understand binary and hexadecimal
+	notations as well as bitwise operations.
+	<xfr>
+		Ne faites pas que le lire, prenez du papier et un crayon et
+		représentez les patterns de bits, les décalages, et les combinaisons.
+		C'est important, tout bon développeur comprends le binaire et
+		l'hexadécimale ainsi que les opérations binaires. 
+	</xfr>
+</p>
+<p>
+	So the above code seems correct, but it does not compile in Java.
+	Try it yourself and look at the compilation error.
+	It does not compile because all the above operators
+	only work on integer values (32bits). So this means
+	that when you write this:
+	<xfr>
+		Le code semble correcte mais il ne compile pas en Java.
+		Essayez vous-même et regardez l'erreur de compilation.
+		Le code ne compile pas car toutes les opérations sont
+		faites sur des entiers de 32 bits en Java. Cela veut
+		dire que lorsque vous écrivez ceci:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+	short s2 = ((b1 &lt;&lt; 8) & 0xFF00) | b2;
+</pre>
+<p>
+	The Java compiler interprets what you wrote as this:
+	<xfr>
+		Le compilateur Java interprète ce que vous avez
+		écrit comme cela:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+	int i1 = (int)b1;
+	int i2 = (int)b2;
+	int i3 = ((i1 &lt;&lt; 8) & 0xFF00) | i2;
+	short s2 = i3;
+</pre>
+<p>
+	And of course, the compiler complains on the last line
+	since you may be loosing information when converting a
+	32-bit integer value into a smaller 16-bit integer value.
+	In other words, the Java compiler refuses the last assignment because
+	the right-hand-side expression is typed as an
+	<span class="java-keyword">int</span> while
+	the variable on the left-hand-side is typed as
+	<span class="java-keyword">short</span>.
+	Since this assignment may yield data loss,
+	the compiler rejects it and you have to insert
+	an explicit cast to tell the compiler that you
+	know what you are doing:
+	<xfr>
+		Le compilateur va donc se plaindre sur la dernière ligne
+		puisque vous pourriez perdre de l'information. Le
+		compilateur refuse la dernière assignation car le
+		type de l'expression à droite est le type 
+		<span class="java-keyword">int</span> alors que
+		le type de l'expression à gauche est le type
+		<span class="java-keyword">short</span>.
+		Comme un <span class="java-keyword">short</span>
+		est plus petit qu'un <span class="java-keyword">int</span>,
+		le compilateur se doit de refuser l'assignation.
+		Pour qu'il accepte, il faut introduire un cast
+		explicite:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+	short s2 = (short)i3;
+</pre>
+<p>
+	So let's discuss how you could/should write that code.
+	If you are looking at the smaller code, you would probably
+	write a single line of code, just like this:
+	<xfr>
+		Discutons de comment vous pourriez/devriez écrire ce code.
+		Si vous recherchez un code compacte, vous allez probablement
+		l'écrire en une ligne, comme ceci:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+	short s2 = (short)(((b1 &lt;&lt; 8) & 0xFF00) | b2);
+</pre>
+<p>
+	For better clarity, you may consider writing it in two steps.
+	<xfr>
+		Pour une meilleure lisibilité, vous pourriez l'écrire comme
+		ceci:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+	int i = ((b1 &lt;&lt; 8) & 0xFF00) | b2;
+	short s2 = (short)i;
+</pre>
+<p>
+	The first line shows that you understand
+	the right-hand-side	expression will be entirely
+	interpreted as manipulating <span class="java-keyword">int</span>.
+	The second line shows what you want, to cast the calculated
+	<span class="java-keyword">int</span> value into a
+	<span class="java-keyword">short</span> value.
+	<xfr>
+		La première ligne indique clairement que le calcul
+		se fera avec le type 
+		<span class="java-keyword">int</span> et la seconde
+		montre clairement la projection de la valeur calculée
+		vers le type <span class="java-keyword">short</span>.
+	</xfr>
+</p>
+<p>
+	Now that we have a snippet of code that compiles,
+	<b>the real question is this: does it work?</b>
+	<xfr>
+		Mais maintenant que le code compile,
+		la vrai question est la suivante:
+		est-ce que le code marche? 
+	</xfr>
+</p>  
+	Since we are asking the question, you can guess that it does not.
+	So go try it out, we gave you different coding in the
+	class
+	<span class="java-class">Snippets</span>.
+	Use the debugger and figure out what is going on.
+	<xfr>
+    Puisque nous vous posons
+		la question, vous vous doutez bien qu'il ne marche pas.
+		Pour aider, nous vous avons fourni une classe de
+		petits bouts de code, la classe
+		<span class="java-class">Snippets</span> que vous
+		devriez exécuter sous debugger.
+	</xfr>
+</p>
+<p>
+  To help you, know that you can ask Eclipse to show you the hexadecimal
+  value as well as the decimal values for variables. Just like this:
+	<xfr>
+		Pour vous aidez, sachez qu'Eclipse peut vous montrer les valeurs
+		des variables en décimal mais aussi en hexadécimal:
+	</xfr>
+</p>
+<img src="images/java-layout.png" width="60%" >
+<p>
+	To setup the debugger this way, go to the
+  <em>Variables</em> view in the <em>Debug</em> perspective,
+  and click the drop down menu
+  <img src="images/java-layout-drop-down.png">
+  on the right-hand side of the view.
+  Drop it down, select <em>Java</em> and then <em>Java Preferences</em>,
+  then <em>Primitive Java Options</em>, finally select to display
+  hexadecimal values.
+	<xfr>
+		Pour configurer le debugger de cette façon, allez dans la vue
+		<em>Variables</em> de la perspective <em>Debug</em> et cliquez
+		sur le menu déroulant 
+		<img src="images/java-layout-drop-down.png"> dans le coin
+		supérieur droit de la vue. Selectionnez
+		<em>Java</em> puis <em>Java Preferences</em> puis
+		<em>Primitive Java Options</em>, et finalement selectionnez
+		l'affichage des valeurs en hexadécimal.
+	</xfr>
+</p>
+<p>
+	Now that you can easily see the hexadecimal values,
+	you can debug the execution on the class
+	<span class="java-class">Snippets</span>,
+	single step through the different snipet methods
+	and understand what is going on with the help
+	of the debugger. Do no hesitate to play around
+	with the snippets in order to get a better understanding
+	of what is going on.
+	<xfr>
+		Maintenant que vous pouvez facilement voir les valeurs
+		en décimal et en hexadécimal, vous pouvez plus facilement
+		regarder la classe 	<span class="java-class">Snippets</span>
+		sous le debugger en pas-à-pas. N'hésitez pas à jouer avec
+		le code pour mieux appréhender ce qui se passe.
+	</xfr>
+</p>
+<p>
+  For your information, the Java <span class="java-keyword">double</span>
+  is a 64-bite value while the Java <span class="java-keyword">float</span>
+  is a 32-bit value. To encode and decode them into bytes, you need to
+	be able to translate
+  <span class="java-keyword">float</span> and
+  <span class="java-keyword">double</span> back and forth from
+  integer values. To do this, you would need these methods:
+	<xfr>
+    Pour votre information, sachez qu'une valeur de type
+		<span class="java-keyword">double</span> est encodé sur 64 bits
+		alors qu'une valeur de type <span class="java-keyword">float</span>
+		est encodée sur 32 bits. Pour pouvoir encoder et décoder
+		ces valeurs sur une séquence d'octets dans un stream, il faut
+		pouvoir convertir les valeurs <span class="java-keyword">float</span>
+		et  <span class="java-keyword">double</span> vers des valeurs
+		entières que vous pourrez déccomposer et re-composer comme expliquez
+		ci-dessus. Vous auriez besoin de ces méthodes:</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Float {
+    public static int floatToIntBits(float value);
+    public static native float intBitsToFloat(int bits);
+  }
+  class Double {
+    public static long doubleToLongBits(float value);
+    public static native double longBitsToFloat(long bits);
+  }
+</pre>
+
+<h3>Running Our Checks</h3>
+
+<p>
+  You learned and you coded your own data streams, great.
+  Of course, you tested your implementation to check that it
+  works. Remember, you are expected to test your own code
+  yourself, writing snippets of code to test the implemented
+  features. This is part of the learning process because it makes
+  you think about what is a correct usage as well as what is a correct
+  implementation. Once you believe your implementation works,
+  you can try to run our checks.
+  <xfr>
+    Vous avez appris les concepts et vous avez codé vos flux de
+    données, super. Bien sûr, vous avez aussi testé que votre
+    implémentation est correcte, qu'elle marche bien. N'oubliez pas
+    que vous êtes supposé tester votre code avec vos propres tests
+    avant d'utiliser les notres.
+  </xfr>
+</p>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="streams.step3.TestDataStream">
+  <banner>
+    When done with the implementation of the classes
+		<span class="java-class">DataInputStream</span> and
+		<span class="java-class">DataOutputStream</span>, 
+		let us check what you did.
+  </banner>
+  <hint>
+    Not quite. Try again.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<div name="check2_unfold" style="display:none;" >
+</div>  
+

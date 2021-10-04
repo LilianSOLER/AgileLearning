@@ -1,0 +1,2239 @@
+<vars>
+  sprint=object.collections
+  task=t5
+</vars>
+
+<p>
+  In this task, you will implement a hash table, an efficient
+  associative collection of pairs (key,value).
+  Hash tables are also called maps. 
+  You will apply what you have learned so far in this sprint,
+  meaning that we will
+  not guide you every step of the way. However, your collection will have
+  to implement a given interface and pass our tests. Hence, pay close
+  attention to what your collection is supposed to do, as opposed
+  to what you think it is supposed to do, otherwise, your code will
+  not pass our tests.
+  <xfr>
+    Dans cette tâche, vous allez implémenter une table de hachage,
+    c'est à dire une collection efficace de paires (clé,valeur).
+    Le terme de "map" est parfois aussi utilisé pour parler des
+    tables de hachage.
+    Vous allez appliquer ce que vous avez appris dans les tâches
+    précédentes de ce sprint, nous n'allons donc pas vous guider
+    à chaque pas. Cependant, votre implémentation devra implémenter
+    une interface donnée et passer nos tests. Il est donc important
+    que vous fassiez attention à cette interface et à ce que votre
+    collection est censée faire.
+  </xfr>
+</p>
+
+
+<h3>Overview</h3>
+
+<p>
+  The concept of a hash table is an associative collection, efficiently
+  associating keys with values. In other words, a hash table
+  contains a collection of pairs, each pair composed of a key
+  and a value. The collection is <em>associative</em> in
+  the sense that it <em>associates</em> each key to one and only
+	one value. The essence of the behavior is composed of
+  the following methods:
+  <xfr>
+    Le concept de table de hachage est d'avoir une collection qui
+    associe des clés à des valeurs. Autrement dit, une table de hachage
+    est une collection de paires, où chaque paire est composée
+    d'une clé et d'une valeur. La collection est associative dans le
+    sens que chaque clé est associée à une et une seule valeur.
+    Le coeur du comportement tient dans les méthodes
+    suivantes:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class HashTable {
+    public Object put(Object key, Object value);
+    public Object get(Object key);
+    public Object remove(Object key);
+  }
+</pre>
+<p>
+  The method <span class="java-method">put</span>
+	adds or updates a pair.
+  If the key is unknown, the pair is added, and the method returns
+  <span class="java-keyword">null</span>. If the key is known,
+  the value is updated with the given value and the replaced value
+  is returned.
+  <xfr>
+    La méthode <span class="java-method">put</span> ajoute
+    ou met à jour un paire. Si la clé est inconnu, alors la méthode
+    ajoute la nouvelle paire et retourne
+    <span class="java-keyword">null</span>.
+    Si la clé est connue, la méthode met à jour la valeur et retourne
+    l'ancienne.
+  </xfr>
+</p>
+<p>
+  The method <span class="java-method">get</span>
+	performs a lookup, it finds a value if the given key
+	is known. Otherwise
+  <span class="java-keyword">null</span> is returned.
+  <xfr>
+    La méthode <span class="java-method">get</span> cherche
+    la clé donnée en paramêtre et retourne la valeur associée
+    si la clé est trouvée, sinon elle retourne 
+    <span class="java-keyword">null</span>.
+  </xfr>
+</p>
+<p>
+  The method <span class="java-method">remove</span>
+	is fairly straightforward, it removes the pair
+  identified by the given key from the collection. If the pair was
+  unknown,
+  <span class="java-keyword">null</span> is returned.
+  Otherwise, the value associated with the given key is returned.
+  <xfr>
+    La méthode <span class="java-method">remove</span> recherche
+    la clé donnée et supprime la paire associée et retourne la
+    valeur qui était associée à cette clé. Sinon la clé n'est pas
+    trouvée, la méthode retourne 
+    <span class="java-keyword">null</span>.
+  </xfr>
+</p>
+
+<h3>Discussing Implementations</h3>
+
+<p>
+  Let's discuss some possible implementations so that we choose
+  an efficient one. This discussion should sound familiar as
+  we already discussed similar issues in the sprint "word.count".
+  <span style="color:red">
+    It is always important to design a solution before coding it
+  </span>. So let's do that together. So a first design could be
+  based on a linked list, just like this:
+  <xfr>
+    Discutons un peu des implémentations possibles afin de choisir
+    une implémentation efficace. Cette discussion devrait vous rappelez
+    des souvenirs puisque nous avions eu une discussion similaire à la
+    fin du sprint "word.count". 
+    <span style="color:red">
+      Il est très important de prendre l'habitude de concevoir avant
+      de coder</span>. Faisons le ensemble. Une première conception
+    pourrait être à base d'une liste chaînée, comme ceci:
+  </span>. 
+  </xfr>
+</p>
+<img src="images/hashtable-with-list.svg" width="60%" />
+<p>	
+  This corresponds to the class skeletons just below.
+</p>
+<pre class="prettyprint lang-java">
+  public class HashTable {
+    private Class Pair {
+      Object key;
+      Object value;
+    }
+    private List pairs;
+    public HashTable() {
+      pairs = new List();
+    }
+    public Object put(Object key, Object value);
+    public Object get(Object key);
+    public Object remove(Object key);
+  }
+</pre>
+<p>
+  But as you certainly recall, from our work in the spring "word.count",
+  a list-based implementation
+  is slow because a lookup may require a complete scan of the list.
+  We can do much better.
+  Remember that we touched on the idea of using a dictionary-like
+  design to improve performance. Well, a hash table is essentially
+  a dictionary, just expressed in a more generic way, working with any
+  kind of objects. Look below at the
+  object graph structure that we want to obtain:
+  <xfr>
+    Vous vous rappelez certainement que nous avions déjà discuté de la
+    mauvaise performance d'une liste pour ce genre de chose dans le
+    sprint "word.count". Mais vous vous rappelez certainement
+    que parcourir une liste encore et encore n'est pas très rapide.
+    Comme c'est ce que nous faisons pour rechercher une clé, on
+    peut faire mieux.
+    Rappelez vous que nous avions discuté de l'usage d'une conception
+    de dictionnaire dans le sprint "word.count". Et bien, une
+    table de hachage est un dictionnaire, plus générale car le concept
+    s'applique à n'importe quels objects. Voici le graphe d'objets
+    que nous souhaitons:
+  </xfr>
+</p>
+<img src="images/buckets.svg" width="60%"/>
+<p>
+  Like in the sprint "word.count", we need a hash function that,
+  given a key, will give us the bucket in
+  which to insert the pair (key,value). If we have that, given a key,
+  we know in which bucket to look for if we want to find that key.
+  We no longer have to scan the entire collection, we only have to scan
+  one bucket. So we need a way to compare keys
+  and to compute the hash code for a key.
+  <xfr>
+    Nous avons donc besoin d'une fonction de hachage sur la clé de notre
+    paire clé-valeur. Si nous avons cela, nous saurons dans quel seau
+    regarder si nous cherchons la clé. Nous avons donc besoin
+    de savoir calculer la valeur de hachage pour une clé et aussi de
+    comparer deux clés pour savoir si elles sont égales.
+  </xfr>
+</p>
+
+<h3>Hash codes and Equality for Java Objects</h3>
+
+<p>
+	In Java, all objects can compute a hash code for themselves and
+	two objects can be compared to know if they are equal or not.
+	The two methods are the following:
+	<xfr>
+		En Java,
+		tout objet peut calculer un nombre de hachage pour lui-même.
+		Aussi, deux objets peuvent se comparer pour savoir si ils
+		sont égaux ou pas. Les deux signatures des méthodes
+		correspondants sont les suivantes:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Object {
+    public int hashCode();
+    public boolean equals(Object o);
+  }
+</pre>
+<p>
+  So this raises the following question: how do we compare keys in the
+  implementation of our hash table?
+  <xfr>
+    Cela soulève la question suivante: comment devons nous comparer
+    les clés dans notre table de hachage?
+  </xfr>
+</p>
+<ol>
+  <li>
+    Should we compare two keys as being the same object and therefore
+    having the same identity?
+    To compare the identity of two objects, you already
+    known that you use <span class="java-keyword">==</span> on
+    references to the two objects.
+    <xfr>
+      Devons nous les comparer
+      comme étant les mêmes objects et donc comparer les identités
+      d'objets? Pour cela, vous savez qu'il faut utiliser
+      <span class="java-keyword">==</span> entre deux références
+      d'objets.
+    </xfr>    
+  </li>
+  <li>
+    Or should we compare them as having the
+    same value using the method
+    <span class="java-method">equals(Object)</span>?
+    <xfr>
+      Ou devons nous comparer les clés comme ayant les
+      mêmes valeurs et donc utiliser la méthode
+      <span class="java-method">equals(Object)</span>?
+    </xfr>
+  </li>
+</ol>
+<p>
+  Let's discuss this on an example:
+  <xfr>
+    Discutons en sur un exemple:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+1  String s1 = new String("Toto");
+2  String s2 = new String("Toto");
+3  if (s1 == s2)
+4    System.out.println("The same objects");
+5  else
+6    System.out.println("Not the same objects");
+7  if (s1.equals(s2))
+8    System.out.println("Different objects, but they are equal");
+</pre>
+<p>
+  In the code above, line 3, the test will fail and the code will
+  print that the two objects are not the same object. Right?
+  Line 7 however, the test will succeed. As human,
+  we can see however that the two objects have the <em>same value</em>,
+  that is, the same sequence of characters: <em>"Toto"</em>.
+  A corresponding implementation of the method 
+  <span class="java-method">equals(Object)</span>
+  on the class <span class="java-class">String</span> looks like this:
+  <xfr>
+    Dans le code ci-dessus, ligne 3, le test va échouer et le code
+    va afficher que les deux objets ne sont pas égaux. Vous êtes
+    d'accord? Line 7, au contraire, le test va réussir car les
+    deux objets ont la <em>même valeur</em>. En effet, on voit
+    bien que les deux objets contiennent la même séquence de charactères.
+    L'implémentation correspondante de la méthode
+    <span class="java-method">equals(Object)</span>
+    sur la classe <span class="java-class">String</span>
+    ressemble à cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public boolean equals(Word w) {
+    if (nchars != w.nchars)
+      return false;
+    for (int i=0;i &lt; nchars;i++)
+      if (chars[i] != w.chars[i])
+        return false;
+    return true;
+  }
+</pre>
+<p>
+  So we know how to compare string, but how do we compute the hash code
+  for a string?
+  In the spring "word.count", we did something really simple:
+  <xfr>
+    Nous savons comment comparer deux chaînes de caractères, mais comment
+    calculons nous le code hachage? Dans le sprint "word.count", nous
+    avions fait quelque chose de très simple:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public int hashCode() {
+    return (int)chars[0];
+  }
+</pre>
+<p>
+  But the class <span class="java-class">String</span> in Java has
+  a slightly more complex way of computing a hash code.
+  The idea is the same, it is just a better implementation that
+  speads different strings more evenly across buckets.
+  The hash code is computed as follows:
+  <xfr>
+    Mais la classe <span class="java-class">String</span> en Java
+    fait un calcul plus compliquée mais qui distribue les clés de façon
+    plus uniforme dans les seaux. Le calcul est le suivant:
+  </xfr>
+</p>
+<pre>
+  s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
+</pre>
+<p>
+  Using integer arithmetic, <em>s[i]</em> is the
+  <i>i</i><sup>th</sup> character of the string, <em>n</em> is the length of
+  the string, and the character '^' indicates exponentiation.
+  The corresponding code is below:
+  <xfr>
+    Cette formule est en arithmétique entière,
+    <em>s[i]</em> est le <i>i</i><sup>ième</sup> caractère de la chaîne,
+    <em>n</em> est la longueur de la chaîne, et le caractère '^' indique
+    la puissance. Le code correspondant est le suivant:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public int hashCode() {
+    int h = hash;
+    if (h == 0 && value.length &gt; 0) {
+      char val[] = value;
+      for (int i = 0; i &lt; value.length; i++) 
+        h = 31 * h + val[i];
+      hash = h;
+    }
+    return h;
+  }
+</pre>
+<p>
+  Now, there are important points to remember about these two methods
+  <span class="java-method">hashCode</span> and
+  <span class="java-method">equals</span>. The official specification
+  tells us:
+  <xfr>
+    Maintenant, il est important de préciser certains points de la
+    spécification des méthodes 
+    <span class="java-method">hashCode</span> et
+    <span class="java-method">equals</span>. 
+  </xfr>
+</p>
+<div style="margin-left: .0in;">
+  <em>
+    <ul>
+      <li>
+				Whenever the method <span class="java-method">hashCode</span>
+				is invoked on the same object more than once, the
+				method <span class="java-method">hashCode()</span>
+				must consistently return the same integer, provided no information
+				used in <span class="java-method">equals(Object)</span>
+				comparisons on the object is modified.
+				This returned value need not remain consistent from one execution of an
+				application to another execution of the same application.
+				<xfr>
+					Si la méthode <span class="java-method">hashCode</span>
+					est invokée plusieurs fois sur le même objet, elle doit
+					retourner toujours la même valeur. Cela ne reste vrai
+					que si aucune des valeurs utilisées dans la comparaison
+					d'objet n'est modifiée. Cela ne reste vrai aussi que durant
+					l'exécution d'une application Java, il n'y a aucune guarantie
+					d'une exécution à l'autre.
+				</xfr>				
+      </li>
+      <li>
+				If two objects are equal according to the method
+				<span class="java-method">equals(Object)</span>,
+				then calling the method <span class="java-method">hashCode()</span>
+				on each of the two objects <b>must</b> produce the same integer result.
+				<xfr>
+					Si deux objets sont déterminés égaux par la méthode
+					<span class="java-method">equals(Object)</span>,
+					alors l'invocation de la méthode
+					<span class="java-method">hashCode()</span>
+					sur chacun de ses objets devra retourner la même valeur.
+				</xfr>
+      </li>
+      <li>
+				It is <em>not</em> required that if two objects are unequal
+				according to the method
+ 				<span class="java-method">equals(Object)</span>,
+				then calling the
+				method <span class="java-method">hashCode()</span>
+				on each of the
+				two objects must produce distinct integer results.  However, the
+				programmer should be aware that producing distinct integer results
+				for unequal objects may improve the performance of hash tables.
+				<xfr>
+					Il n'est pas requis que deux objets qui ne sont pas considérés
+					comme égaux par la méthode
+					<span class="java-method">equals(Object)</span>
+					doivent retourer une valeur différente lorsque leur
+					méthode <span class="java-method">hashCode()</span> est
+					invoquée. Mais il est possible que de retourner des valeurs
+					différentes améliore les performances des tables de hachage.
+				</xfr>
+      </li>
+    </ul>
+  </em>
+</div>
+<p>
+  This may sound complicated, but it is in fact pretty straightforward
+  to understand in this context. We use the hash code of the key objects
+  to select the bucket where to insert a pair. Then, we also use the
+	hash code of the key to determine in which bucket to lookup for a
+	pair with that key. Since we use the method
+	<span class="java-method">equals(Object)</span> to compare keys,
+	we can easily see that the two methods must agree as described above.
+  <xfr>
+    Cela a l'air compliqué mais c'est en fait assez simple à comprendre
+    dans ce contexte ci. Nous utilisons le code de hachage de la clé
+    pour sélectionner le seau où insérer une paire clé-valeur. Et
+    comme nous utilisons aussi le code de hachage de la clé pour savoir
+    dans quel seau chercher, on voit bien que cela marche si les
+    valeurs de hachage des clés et le test d'égalité se comportent
+    comme décrit ci-dessus.
+  </xfr>
+</p>
+<p>
+  This means that if you need to implement the method
+  <span class="java-method">equals(Object)</span> for one of your classes,
+  you <b>must</b> also implement a corresponding method 
+  <span class="java-method">hashCode()</span>.
+  <span style="color:red">
+    Never, we mean <b>never</b>, implement one without the other.
+  </span>
+  If you do, you will spend hours debugging and wasting valuable
+  time you could spend with friends having fun...
+  <xfr>
+    La conséquence directe de cela est que si vous devez implémenter
+    la méthode 
+    <span class="java-method">equals(Object)</span> pour une de vos
+    classes, alors vous <b>devez</b> implémenter la méthode
+    <span class="java-method">hashCode()</span>.
+    Ne jamais, <b>jamais</b>, implémenter l'une sans l'autre. 
+    Sinon, guarantie, vous passerez des heures de debug pour trouver
+    le problème, alors que vous pourriez passer du bon temps entre amis...
+  </xfr>
+</p>
+
+<p>
+  <b>As an exercise</b>, you can verify that the implementation of the
+  methods <span class="java-method">hashCode()</span> and
+  <span class="java-method">equals(Object)</span> given above
+  for the class <span class="java-class">String</span> do respect
+  the above specification.
+  <xfr>
+    <b>Comme exercise</b>, vous pouvez vérifier que l'implémentation
+    des méthodes <span class="java-method">hashCode()</span> et
+    <span class="java-method">equals(Object)</span> données ci-dessus
+    pour la classe <span class="java-class">String</span> respectent
+    bien la spécification ci-dessus.
+  </xfr>
+</p>
+<p>
+  For completeness on the specification of the method
+  <span class="java-method">equals(Object)</span>, it is important
+  to mention that it implements an equivalence relation on non-null
+  object references, which means the following properties:
+</p>
+<ul>
+	<li>It is <b>reflexive</b>: <br>
+	  <pre class="prettyprint lang-java">
+	    assert(x.equals(x) == true);
+	  </pre>
+	</li>
+	<li>It is <b>symmetric</b>:
+	  <pre class="prettyprint lang-java">
+	    assert(x.equals(y) == y.equals(x));
+	  </pre>
+	</li>
+	<li>It is <b>transitive</b>:
+	  <pre class="prettyprint lang-java">
+	    if (x.equals(y) && y.equals(z))
+	    assert(x.equals(z));
+	  </pre>
+	</li>
+	<li>It is <b>consistent</b>:<br>
+	    multiple invocations of
+	  <pre class="prettyprint lang-java" style="display: inline">x.equals(y)</pre>
+	  consistently return
+	  <span class="java-keyword">true</span>
+	  or consistently return
+	  <span class="java-keyword">false</span>,
+	  provided no information used in the comparisons
+	  on the objects is modified.
+	</li>
+	<li>For any non-null reference value
+	  <span class="java-lvar">x</span>
+	  <pre class="prettyprint lang-java" style="display: inline">assert(x.equals(null) == false);</pre>
+	</li>
+</ul>
+
+<p>
+  <b>As an exercise</b>, you can verify that the implementation of the
+  methods <span class="java-method">hashCode()</span> and
+  <span class="java-method">equals(Object)</span> given above
+  for the class <span class="java-class">String</span> do respect
+  the above specification.
+  <xfr>
+    <b>Comme exercise</b>, vous pouvez vérifier que l'implémentation
+    des méthodes <span class="java-method">hashCode()</span> et
+    <span class="java-method">equals(Object)</span> données ci-dessus
+    pour la classe <span class="java-class">String</span> respectent
+    bien la spécification ci-dessus.
+  </xfr>
+</p>
+  
+<h3>Implementing the class <span class="java-class">HashTable</span></h3>
+
+<p>
+  So go ahead, implement the class
+	<span class="java-class">HashTable</span>,
+  in the Java package 
+	<span class="java-class">object.collections.step4</span>.
+  Make sure that your class implements the interface
+  <span class="java-class">IMap</span>.
+</p>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.collections"
+   classpath="bin;tests.jar"
+   classname="object.collections.step4.TestHashTable"> 
+  <banner>
+    Once you are done, you can run our tests.
+  </banner>
+  <hint>
+    Not quite right. Maybe you have regular bugs...<br>
+    Maybe, you forget to implement the interface
+    <span class="java-class">IMap</span>.<br>
+    Maybe, you did not ask yourself this very important
+    design question: <b>how should I compare keys?</b>
+    Did you compare the key objects using the object identity
+    equality
+    <span class="java-keyword">==</span> 
+    or did you use the method
+    <span class="java-method">equals(Object)</span>?
+    If the importance of this question is unclear to you,
+    it is really important that you ask.
+  </hint>
+  <success>
+    Great, your implementation seems to work.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+<div name="check1_unfold" style="display: none" >
+  <p>
+    Now, let's reflect on your implementation and
+    ask a few questions. The idea here is to give you
+    an opportunity to reflect on your work and your
+    work methodology.
+    <xfr>
+      Maintenant que votre code passe nos tests, posons-nous
+      quelques questions sur votre code. L'idée que nous poursuivons
+      ici est de vous donner l'opportunité de prendre du recul sur
+      votre code mais surtout de vous intéroger sur votre façon
+      de travailler.
+    </xfr>
+  </p>
+  <p>
+    <b>Did you write a class
+      <span class="java-class">Bucket</span>
+      from scratch to represent a bucket?
+    </b>
+    <xfr>
+      Avez-vous coder une toute nouvelle classe
+      <span class="java-class">Bucket</span>,
+      à partir de rien, pour représenter le
+      concept de seau de paires?
+    </xfr>
+  </p>
+  <p>
+    If it is the case, it seems that you did not understand
+    an important point about object-oriented programming:
+    reusability. Indeed, what is a bucket if not a list of
+    pairs? So? Since we just designed and coded a generic
+    list of objects, in a previous task, it would have been
+    wise to reuse that class. So ask yourself how is it possible
+    that you did not think of that? Maybe you missed this important
+    point about programming, which is fine. But perhaps, you are
+    still thinking like a student, just trying to do what we ask
+    and trying to get it done as quickly as possible? If this is
+    the case, you are not learning a trade, your trade. This is sad.
+    <xfr>
+      Si c'est le cas, il semblerait que vous avez raté un point
+      important de la programmation orientée-objet: la réutilisabilité.
+      En effet, un seau de paires est une liste de paires, n'est-ce pas?
+      Et ne venons nous pas de concevoir et implémenter une liste
+      d'objets dans la tâche précédente? Il aurait été efficace
+      de réutiliser cette classe, non? Alors demandez-vous comment
+      il est possible que vous en l'ayez pas fait? Peut-être le reflect
+      de réutiliser n'est pas ancré, ce n'est pas grave, cela viendra.
+      Mais peut-être que vous vous comportez encore comme un étudiant
+      qui essaie de faire ce qu'on lui demande et de s'en débarassé le
+      plus vite possible. Si c'est le cas, vous n'avez pas compris que
+      vous apprenez un métier et c'est triste.
+    </xfr>
+  </p>
+  <p>
+    <b>Did you reuse the class
+      <span class="java-class">object.collections.step3.List</span>
+      and appended new pairs to the end of the list?
+    </b>
+    <xfr>
+      Avez-vous réutilisé la classe
+      <span class="java-class">object.collections.step3.List</span>
+      et ajouté les nouvelles paires à la fin de la liste?
+    </xfr>
+  </p>
+  <p>
+    Well, you deserve a good point for reuse a class, but a bad point
+    for using it poorly. Did you think in terms of performance? Adding
+    at the end of the list requires scanning the entire list
+    for every new pair added. We specifically designed and coded
+    the class <span class="java-class">object.collections.step3.List2</span>
+    to solve this problem in a previous task. If you did this mistake of using
+    the class <span class="java-class">object.collections.step3.List</span>
+    and to append new pairs, you may need to
+    revisit how you work and how you master the skills we are
+    teaching.
+    <xfr>
+      Si vous avez fait cela, vous avez un bon point pour avoir pensé à
+      réutiliser la classe
+      <span class="java-class">object.collections.step3.List</span>
+      mais un mauvais point pour ne pas l'utiliser au mieux.
+      Avez-vous pensé en termes de performance?
+      En effet, l'ajout à la fin de la liste nécessite de parcourir
+      la totalité de la liste, ce qui est très inefficace. De plus, nous
+      avions discuté de ce point spécifique et nous avions implémenté la
+      classe <span class="java-class">object.collections.step3.List2</span>
+      pour résoudre ce problème. Si vous avez fait l'erreur d'utiliser
+      la classe <span class="java-class">object.collections.step3.List</span>
+      et de rajouter à la fin, vous devez vous intéroger sur votre façon
+      d'apprendre et de votre manière de maîtriser les compétences que nous
+      tentons de vous apprendre.
+    </xfr>
+  </p>
+  <p>
+    Also, if you used the
+    class <span class="java-class">object.collections.step3.List</span>,
+    why was it necessary to add at the end? There is no reason, you could
+    have prepended new pairs, which is an efficient operation on lists.
+    With the class
+    <span class="java-class">object.collections.step3.List</span>,
+    it was definitively the way to go.
+    <xfr>
+      Aussi, si vous avez utilisé la classe
+      <span class="java-class">object.collections.step3.List</span>,
+      pourquoi etait-il nécessaire de rajouter à la fin? Il n'y a aucune
+      bonne raison à cela. Ajouter les nouvelles paires en tête de liste
+      est une opération efficace quelque soit l'implémentation de la liste,
+      avec la classe
+      <span class="java-class">object.collections.step3.List</span>,
+      c'était ce qu'il fallait faire.
+    </xfr>
+  </p>
+  <p>
+    The point we are trying to make here is about your work methodology.
+    We are trying to make you realize that you are learning a trade and
+    that you are not supposed to do and forget. If your work methodology
+    is not the right one, becoming a software developer will be
+    harder rather than simpler. You will progress slower rather than faster.
+    And it will get worse as the semesters go by. If you realized that
+    already, great, this is fantastic. If not, you may want to take some
+    time and reflect on this.
+    <xfr>
+      Le point que nous essayons de faire passer concerne votre méthodologie
+      de travail. Nous esssayons de vous faire réaliser que vous n'êtes plus
+      au lycée mais que vous apprenez un métier et que vous n'êtes pas supposé
+      lire, comprendre, et oublier. Si votre méthodologie de travail
+      n'est pas la bonne, devenir un développeur logiciel sera un chemin de
+      croix, plus dure qu'il ne devrait l'être, et cela va aller en
+      s'empirant au fur et à mesure que les semestres vont s'écouler.
+      Si vous avez déjà compris cela, c'est super. Si ce n'est pas le cas,
+      nous vous suggérons de prendre le temps d'y réfléchir.
+    </xfr>
+  </p>
+</div>
+<p>
+  That's all folks for this task. But before we move on,
+  please make sure
+  that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.collections, Task5 completed"
+  $ git push --all
+</textarea>
+
+<!--
+
+
+<h3>List Implementation</h3>
+
+<p>
+  We could implement an associative collection with a list.
+  Just like this:
+</p>
+<img src="images/hashtable-with-list.svg" width="60%" />
+<p>	
+  This corresponds to the class skeletons just below.
+</p>
+<pre class="prettyprint lang-java">
+  public class HashTable {
+    private Class Pair {
+      Object key;
+      Object value;
+    }
+    private List pairs;
+    public AssociativeCollection() {
+      pairs = new List();
+    }
+    public Object put(Object key, Object value);
+    public Object get(Object key);
+    public Object remove(Object key);
+  }
+</pre>
+<p>
+  But in fact, we do not want to fix the implementation of the list
+  we use, right? So really we do not want to type the field
+  <span class="java-field">pairs</span> with a specific class,
+  such as <span class="java-class">List</span> or
+  <span class="java-class">List2</span>.
+  What we want is to use the interface
+  <span class="java-class">IList</span>.
+  <xfr>
+    Mais en fait, on ne veut pas fixer l'implémentation que nous
+    allons utiliser pour la liste des paires. N'est-ce pas?
+    On ne veut pas typer le champ 
+    <span class="java-field">pairs</span> avec une classe
+    spécifique telle que <span class="java-class">List</span> ou
+    <span class="java-class">List2</span>.
+    Ce que nous voulons, c'est utiliser l'interface 
+    <span class="java-class">IList</span>.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  private IList pairs;
+  public AssociativeCollection() {
+    pairs = new List();
+  }
+</pre>	
+<p>
+  But you are probably thinking: what did we gain since we are still
+  using a specific implementation in the constructor?
+  What you gained is that the rest of the code in the class
+  <span class="java-class">AssociativeCollection</span> is written
+  against the interface. So to change the implementation of the list,
+  you only need to change one line. Even better, you can pass the
+  list to the constructor, just like this:
+  <xfr>
+    Vous vous demandez peut-être la chose suivante: qu'avons nous gagné
+    à faire cela puisque nous devons mentionner l'implementation choisi
+    dans le constructeur
+    <span class="java-method">AssociativeCollection</span>.
+    Ce que vous avez gagné c'est que tout le reste du code de la
+    classe <span class="java-class">AssociativeCollection</span>
+    ne dépends que de <span class="java-class">IList</span>. Donc,
+    pour changer d'implémentation de la liste, il vous suffit maintenant
+    de changer une seule ligne. Encore mieux, vous pouvez passer la
+    liste au constructeur:
+  </xfr>	  
+</p>
+<pre class="prettyprint lang-java">
+  private IList pairs;
+  public AssociativeCollection() {
+    pairs = new List();
+  }
+  public AssociativeCollection(IList list) {
+    pairs = list;
+  }
+</pre>	
+<p>
+  Alright, let's code the basics of an associative collection,
+  using our basic list implementation of our earlier task.
+  To help you debug, you may want to add
+  <span class="java-method">toString</span> methods on the
+  class <span class="java-class">List</span> and
+  the class <span class="java-class">AssociativeCollection</span>.
+  Remember that the debugger invokes that
+  method on all objects referenced from local variables and
+  method arguments.
+  <xfr>
+    Aller, on se lance dans l'implémentation de notre collection
+    associative, en utilisant notre List, celle que nous avions
+    développée dans une tâche précédente. Pour vous aidez dans
+    votre implémentation, vous devriez sans doute rajouter une
+    méthode
+    <span class="java-method">toString</span> vos classes
+    <span class="java-class">List</span> et
+    <span class="java-class">AssociativeCollection</span>.
+    Rappelez vous que le debugger Java invoque la méthode
+    <span class="java-method">toString</span> pour afficher
+    un objet dans la vue <em>Variables</em>.
+  </xfr>
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.collections"
+   classpath="bin;tests.jar"
+   classname="object.collections.step4.TestAC0"> 
+  <banner>
+    When done with the implementation,
+    let us check what you did.
+  </banner>
+  <hint>
+    Not quite right.
+    We are running the same tests as the
+    class <span class="java-class">Test0</span>,
+    so use that class to test your implementation.
+    Ask for help, if you need to, from other students,
+    or the teaching staff. 
+  </hint>
+  <success>
+    Great, your implementation seems to work.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+
+<div name="check1_unfold" style="display: block" >
+
+  <h3>Equals or == </h3>
+  
+  <p>
+    You just implemented an associative structure,
+    associating keys to values. This is great, 
+    but we need to ask a very important design question:
+    <b>how should keys be compared?</b>
+    <xfr>
+      Vous venez d'implémenter une collection associative,
+      c'est super. Mais il nous faut vous poser une question
+      cruciale: <b>comment doivent être comparées deux clés?</b>
+    </xfr>
+  </p>
+  <p>
+    It is very likely that you compared keys using 
+    the Java <span class="java-keyword">==</span> operator,
+    right? The meaning of this is that the two key objects
+    must be the same objects. Using this operator,
+    the following code works just fine:
+    <xfr>
+      Il est assez probable que vous avez comparé les clés en
+      utilisant l'opérateur <span class="java-keyword">==</span> operator,
+      n'est-ce pas? Cet opérateur compare si l'objet à gauche et l'objet
+      à droite sont le même objet ou pas. Avec l'emploi de cet opérateur,
+      le code suivant marche:
+    </xfr>
+  </p>
+  <pre class="prettyprint lang-java">
+    String key = "One";
+    String value = "toto";
+    AssociativeCollection ac = new AssociativeCollection();
+    ac.put(key,value);
+    assert(value==ac.get(key));
+  </pre>
+  <p>
+    But the code below will not work:
+  </p>
+  <pre class="prettyprint lang-java">
+    String key = new String("One");
+    String value = "toto";
+    AssociativeCollection ac = new AssociativeCollection();
+    ac.put(key,value);
+    String key2 = new String("One");
+    assert(value==ac.get(key2));
+  </pre>
+  <p>
+    So what is going on here?
+    Let's look at the 
+    class <span class="java-class">Test1</span>
+    in the
+    package <span class="java-package">object.collections.step4</span>.
+    Look at 
+    method <span class="java-method">main</span>,
+    you will see the above code.
+    Launch an execution under debugger, the execution will throw
+    a runtime exception:
+    <xfr>
+      Mais que se passe-t-il alors?
+      Regardons le code de la classe 
+      <span class="java-class">Test1</span>
+      dans le paquet
+      <span class="java-package">object.collections.step4</span>.
+      Regardons la méthode
+      <span class="java-method">main</span> qui reprends le code
+      donné ci-dessus.
+      Aller, un petit coup de debugger pour voir ce qui se passe.
+      L'exécution va lever une exception. 
+    </xfr>
+  </p>
+  <img src="images/hashtable-with-indexed-lists.png" width="80%" />
+  <p>
+    Look at the <em>Variables</em> view and you will understand.
+    The two local variables
+    <span class="java-lvar">key</span> and
+    <span class="java-lvar">key2</span> are referencing two
+    different objects. Right? In the screen capture above, we
+    can see that the variable
+    <span class="java-lvar">key</span> refers to a string object
+    with an id=23, while the variable
+    <span class="java-lvar">key2</span> refers to a string object
+    with an id=27. So of course, since the two key objects are not
+    the same objects, we have the following:
+    <xfr>
+      Regardez la vue des <em>Variables</em> et vous allez vite
+      comprendre. Les deux variables
+      <span class="java-lvar">key</span> et
+      <span class="java-lvar">key2</span>
+      référencent deux objets distincts. N'est-ce pas?
+      Dans la capture d'écran ci-dessus, nous pouvons voir que
+      la variable
+      <span class="java-lvar">key</span> référence l'objet <em>string</em>
+      avec l'identifiant id=23, alors que la variable
+      <span class="java-lvar">key2</span> référence un objet <em>string</em>
+      avec l'identifiant id=27. D'où, puisque les deux objets ne sont pas
+      les mêmes, nous avons ceci:
+    </xfr>
+  </p>
+  <pre class="prettyprint lang-java">
+    assert(key==key2) &rarr; False
+    assert(key!=key2) &rarr; True
+  </pre>
+  <p>
+    Consequently, the lookup with <span class="java-lvar">key2</span>
+    failed in the associative collection, returned
+    <span class="java-keyword">null</span>, which is the value
+    of the variable
+    <span class="java-lvar">value2</span>.
+    So we explained the behavior of our test code,
+    which is a good thing.
+    <xfr>
+      Ce qui veut dire que la recherche avec pour
+      clé <span class="java-lvar">key2</span> échoue et
+      retourne <span class="java-keyword">null</span>,
+      valeur que nous retrouvons dans la variable 
+      <span class="java-lvar">value2</span>.
+      Nous avons donc expliqué le comportement de notre code
+      de test.
+    </xfr>
+  </p>
+  <p>
+    Now the question is the following: should it behave this way?
+    Because the two variables 
+    <span class="java-lvar">key</span> and the variable
+    <span class="java-lvar">key2</span> refers to two different
+    string objects, but the two strings are the same, they are
+    both <em>"One"</em>. This brings up the interesting question
+    of comparing objects as values, not comparing their identity.
+    In other words, we want to recognized if the two string objects
+    corresponds to the "same sequence of characters",
+    even though they are two different objects.
+    <xfr>
+      Maintenant la question est celle-ci: est-ce que notre code
+      doit se comporter comme cela? En effet, nos deux variables
+      <span class="java-lvar">key</span> et 
+      <span class="java-lvar">key2</span> référencent deux objets
+      différents, mais ces deux objets représentent la même chaîne
+      de caractères <em>"One"</em>. Cela amène la question de comparer
+      les objets sur leur valeur et non pas sur leur identité.
+      Autrement dit, on veut reconnaître que les deux strings sont
+      les mêmes, même si elles sont les valeurs de deux objets distincts.
+    </xfr>
+  </p>
+  <p>
+    Since this question occurs many many times, over and over,
+    Java has built in support for this. If you look at the
+    class <span class="java-class">Object</span> (use <b>Ctrl-Shift-T</b>
+    to navigate there), you will find it defines a method
+    <span class="java-method">equals</span> (use <b>Ctrl-o</b> to navigate
+    to that specific method). Its default implementation is the following
+    <xfr>
+      Puisque cette question se pose tout le temps, Java a préparé le
+      terrain pour cela. Regardez la classe
+      <span class="java-class">Object</span> (use <b>Ctrl-Shift-T</b>
+      to navigate there), vous allez trouver une méthode
+      <span class="java-method">equals</span> (use <b>Ctrl-o</b> to navigate
+      to that specific method). Son implémentation est la suivante:	      
+    </xfr>
+  </p>
+  <pre class="prettyprint lang-java">
+    public boolean equals(Object obj) {
+      return (this == obj);
+    }
+  </pre>
+  <p>
+    Hey, wait a minute, we didn't gain anything here! It is still comparing
+    if the two objects are the same object.
+    Yes, but the class <span class="java-class">String</span> has a different
+    implementation. Again use <b>Ctrl-Shift-T</b> and then <b>Crtl-o</b>
+    to navigate to the code of the method
+    <span class="java-method">equals</span>
+    on the class <span class="java-class">String</span>.
+    Let's look at the code:
+    <xfr>
+      Mais nous n'avions gagné ici! La méthode continue de comparer les
+      objets et non pas leur valeur. Oui, mais la classe 
+      <span class="java-class">String</span>
+      a une implémentation différente. Encore une fois,
+      utilisez <b>Ctrl-Shift-T</b> et <b>Crtl-o</b> pour naviguer
+      vers la méthode
+      <span class="java-method">equals</span> on
+      <span class="java-class">String</span>.
+      Regardons le code:
+    </xfr>
+  </p>
+  <pre class="prettyprint lang-java">
+  public boolean equals(Object anObject) {
+    if (this == anObject) {
+      return true;
+    }
+    if (anObject instanceof String) {
+      String anotherString = (String)anObject;
+      int n = value.length;
+      if (n == anotherString.value.length) {
+        char v1[] = value;
+        char v2[] = anotherString.value;
+        int i = 0;
+        while (n-- != 0) {
+          if (v1[i] != v2[i])
+            return false;
+          i++;
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+  </pre>
+  <p>
+    Alright then, that's more like it.
+    It is very simple to see that the code does check that the two
+    strings have the same sequence of characters. Note the optimization,
+    if the two string objects are the same object, then of course, they
+    represent the same sequence of characters and there is no need to do
+    the actual scan of the two arrays of characters and compare each
+    character.
+    <xfr>
+      Ca c'est bon, il est simple de voir que le code compare les
+      chaînes de caractères. Notez l'optimisation, si les deux objets
+      sont un seul et même objet, alors leur valeur sont égales.
+    </xfr>
+  </p>
+  <p>
+    So in fact, you can re-define the method
+    <span class="java-method">equals</span>
+    on any one of your classes
+    and most of the Java libraries will be able to compare your objects
+    as values. So let's modify our code, in our class
+    <span class="java-class">AssociativeCollection</span> to compare
+    keys as values and not as objects.
+    Your code for the method 
+    <span class="java-method">get(Object)</span> might look like
+    this, comparing keys as objects:
+    <xfr>
+      Nous pouvons donc redéfinir la méthode 
+      <span class="java-method">equals</span>
+      sur nos classes et ainsi être compatible avec les libraries
+      standards de Java. Mais surtout, nous pouvons adapter en
+      conséquence le code de notre classe
+      <span class="java-class">AssociativeCollection</span>
+      afin qu'elle compare les clés comme des valeurs
+      et non pas des objets. Le code de votre méthode
+      <span class="java-method">get(Object)</span> devrait
+      ressembler à cela.
+    </xfr>
+  </p>
+  <pre class="prettyprint lang-java">
+  public class AssociativeCollection {
+    ...
+    public Object get(Object key) {
+      IList.Iterator iter;
+      iter = pairs.iterator();
+      while (iter.hasNext()) {
+        Pair pair = (Pair)iter.next();
+        if (pair.key == key) 
+          return pair.value;
+      }
+      return null;
+    }
+  }
+  </pre>	  
+  <p>
+    You should modify it this way:
+  </p>
+  <pre class="prettyprint lang-java">
+  public class AssociativeCollection {
+    ...
+    public Object get(Object key) {
+      IList.Iterator iter;
+      iter = pairs.iterator();
+      while (iter.hasNext()) {
+        Pair pair = (Pair)iter.next();
+        if (pair.key == key || pair.key.equals(key)) 
+          return pair.value;
+      }
+      return null;
+    }
+  }
+  </pre>
+  <p>
+    But hey, let's make it an option.
+    So we introduce a field to remember if we need to use
+    the method <span class="java-method">equals(Object)</span>
+    on keys. We may add a parameter to the constructors,
+    so that we can specify that option. Of course, we still have
+    our regular constructor, and of course we do not want to
+    repeat the code of that constructor. So the new constructor
+    calls the old one. Remember, we already seen that possibility.
+  </p>
+  <pre class="prettyprint lang-java">
+  public class AssociativeCollection {
+    boolean useEquals;
+    AssociativeCollection() {
+      ...
+    }
+    AssociativeCollection(boolean useEquals) {
+      this();  // invoke the default contructor above
+      this.useEquals = useEquals;  
+    }
+    public Object get(Object key) {
+      IList.Iterator iter;
+      iter = pairs.iterator();
+      while (iter.hasNext()) {
+        Pair pair = (Pair)iter.next();
+        if (pair.key == key || (useEquals && pair.key.equals(key))) 
+          return pair.value;
+      }
+      return null;
+    }
+  </pre>
+  <check
+     silent="false"
+     blocking="false"
+     lang="java"
+     cwd="workspace/object.collections"
+     classpath="bin;tests.jar"
+     classname="object.collections.step4.TestAC1"> 
+    <banner>
+      When done with your changes, let's us check what you did.
+    </banner>
+    <hint>
+      We are running the same tests as the
+      class <span class="java-class">Test1</span>,
+      so use that class to test your implementation.
+      Ask for help, if you need to, from other students
+      or the teaching staff. 
+    </hint>
+    <success>
+			Works fine. Nice job.
+    </success>
+    <unfold name="check2_unfold">
+    </unfold>
+  </check>
+  <div name="check2_unfold" style="display: block">
+    <p>
+      Notice that we added the comparison by the method
+      <span class="java-method">equals</span>, but we kept
+      the comparison as objects, so to benefit from the
+      optimization that if two objects are the same objects,
+      then they must be equal. But how do we know they should?
+      We need to read the specification of the method
+      <span class="java-method">equals</span> on the
+      class <span class="java-class">Object</span>.
+      The specification (the JavaDoc in the source)
+      says:
+    </p>
+    <div style="margin-left: .3in;">
+      <em>
+	<p>
+	  The <span class="java-method">equals</span> method
+	  implements an equivalence relation
+	  on non-null object references:
+	</p>
+	<ul>
+	  <li>It is <b>reflexive</b>: <br>
+	    <pre class="prettyprint lang-java">
+	      assert(x.equals(x) == true);
+	    </pre>
+	  </li>
+	  <li>It is <b>symmetric</b>:
+	    <pre class="prettyprint lang-java">
+	      assert(x.equals(y) == y.equals(x));
+	    </pre>
+	  </li>
+	  <li>It is <b>transitive</b>:
+	    <pre class="prettyprint lang-java">
+	      if (x.equals(y) && y.equals(z))
+	      assert(x.equals(z));
+	    </pre>
+	  </li>
+	  <li>It is <b>consistent</b>:<br>
+	    multiple invocations of
+	    <pre class="prettyprint lang-java" style="display: inline">x.equals(y)</pre>
+	    consistently return
+	    <span class="java-keyword">true</span>
+	    or consistently return
+	    <span class="java-keyword">false</span>,
+	    provided no information used in the comparisons
+	    on the objects is modified.
+	  </li>
+	  <li>For any non-null reference value
+	    <span class="java-lvar">x</span>
+	    <pre class="prettyprint lang-java" style="display: inline">assert(x.equals(null) == false);</pre>
+	  </li>
+	</ul>
+	<p>
+	</p>
+      </em>
+    </div>
+    <p>
+      <b>Important:</b> So whenever you implement the method
+      <span class="java-method">equals</span> on one of your class,
+      you make sure that your code respect the above specification.
+      As an exercise, you may convince yourself that the
+      method <span class="java-method">equals</span>
+      on the class <span class="java-class">String</span>
+      does respect the above specification.
+      <xfr>
+	<b>Important:</b> à chaque fois que vous allez implémenter
+	la méthode
+	<span class="java-method">equals</span>
+	sur une de vos classes, vous avez la responsabilité qu'elle
+	respecte la spécification donnée sur la classe
+	<span class="java-class">Object</span>, que nous venons
+	de discuter.
+	Comme exercise, vous pouvez vous convaincre que le code
+	de la méthode <span class="java-method">equals</span>
+	sur la classe <span class="java-class">String</span>
+	respecte en effet cette spécification.
+      </xfr>
+    </p>
+
+    <h3>Collections of shapes</h3>
+
+    <p>
+      In an earlier sprint, we defined several classes for shapes.
+      As you can see, we provided you with some of them,
+      points and lines,
+      in the package <span class="java-method">object.collections.step4</span>.
+      We ask that you define a method <span class="java-method">equals</span>
+      on each of these classes. Make sure your implementation
+      does respect the above properties.
+    </p>
+    <check
+       silent="false"
+       blocking="false"
+       lang="java"
+       cwd="workspace/object.collections"
+       classpath="bin;tests.jar"
+       classname="object.collections.step4.TestAC2"> 
+      <banner>
+	When done, let's us check what you did.
+      </banner>
+      <hint>
+	Not quite there yet. Keep trying.
+	Ask for help, if you need to, from other students,
+	or the teaching staff. 
+      </hint>
+      <success>
+	Fantastic, everything looks fine.
+      </success>
+      <unfold name="check3_unfold">
+      </unfold>
+    </check>
+    <div name="check3_unfold" style="display: block">
+      <p>
+	Let's illustrate now a delicate case. Let's suppose we want to compare
+	points to an epsilon, that is, two points that are less than epsilon
+	apart are considered equals. Here is a simple implementation of the
+	method <span class="java-method">equals</span>:
+	<xfr>
+	  Nous allons discuté un point délicat de la spécification de l'égalité
+	  de la valeur de deux objets. Imaginons que nous voulions que deux points
+	  soient égaux à un epsilon près. Voici une implémentation simple de
+	  la méthode <span class="java-method">equals</span>:
+	</xfr>
+      </p>
+      <pre class="prettyprint lang-java">
+  class Point {
+    double x,y;	    
+    public static double epsilon = 1e-3;
+    public boolean equals(Object o) {
+      if (this == o)
+        return true;
+      if (o instanceof Point) {
+        Point p = (Point) o;
+        double dx = Math.abs(x-p.x);
+        double dy = Math.abs(y-p.y);
+        return (dx &lt; epsilon && dy &lt; epsilon);
+      }
+      return false;
+    }
+  }
+      </pre>
+      <p>
+	<b>Note</b> this is an example where two points may be equals, although
+	they do not have the same values in their respective fields.
+	So the equivalence relationship can be more complex than just
+	comparing the value of the fields are the same.
+	<xfr>
+	  <b>Notez</b> que c'est un exemple ou l'égalité de valeurs peut
+	  être vrai sur des valeurs qui sont distinctes. La notion d'égalité
+	  de deux valeurs en Java peut donc être plus compliquée qu'une simple
+	  égalité des valeurs.
+	</xfr>
+      </p>
+      <p>
+	Report the above implementation in the class
+	<span class="java-class">Point</span> and run the
+	third test (class <span class="java-class">Test3</span>).
+	It fails, right? Just at the last test, the transitive one.
+	<xfr>
+	  Reportez le code donné ci-dessus dans la classe
+	  <span class="java-class">Point</span> et lancez le test
+	  <span class="java-class">Test3</span>. Il échoue,
+	  n'est-ce pas? L'échec est au dernier test, celui qui test
+	  la transitivité. 
+	</xfr>
+      </p>
+      <quizz id="id_quizz1" name="Quizz1" style="display: block">
+	<question >
+	  <p>
+	    Is the test wrong?
+	  </p>
+	  <checkboxes>
+	    <checkbox>Yes</checkbox>
+	    <checkbox>No</checkbox>
+	  </checkboxes>
+	  <hints>
+	    <hint checks="C?">
+	      Not exactly, the test is correct, it checks that the
+	      method <span class="java-method">equals</span> respects
+	      its specification, it must be transitive.
+	    </hint>
+	  </hints>
+	  <answers>
+	    <answer checks="UC">
+	      Indeed, the test is correct.
+	    </answer>
+	  </answers>
+	  <finally>
+	    <b>Please ask for help</b>.
+	  </finally>
+	</question>
+	<question >
+	  <p>
+	    Is the equal method wrong?
+	  </p>
+	  <checkboxes>
+	    <checkbox>Yes</checkbox>
+	    <checkbox>No</checkbox>
+	  </checkboxes>
+	  <hints>
+	    <hint checks="?C">
+	      Not exactly, the 
+	      method <span class="java-method">equals</span>
+	      does not respect its specification.
+	      It asserts that p1 and p2 are equals,
+	      then it asserts that p2 and p3 are equals,
+	      but it considers p1 and p3 as non-equal.
+	    </hint>
+	  </hints>
+	  <answers>
+	    <answer checks="CU">
+	      Indeed, the equal method wrong.
+	    </answer>
+	  </answers>
+	  <finally>
+	    <b>Please ask for help</b>.
+	  </finally>
+	</question>
+	<question >
+	  <p>
+	    Is the equivalence relationship flawed?
+	    Two points are equals if they are less than espilon apart.
+	  </p>
+	  <checkboxes>
+	    <checkbox>Yes</checkbox>
+	    <checkbox>No</checkbox>
+	  </checkboxes>
+	  <hints>
+	    <hint checks="?C">
+	      In fact, it is kind of flawed, or at least imprecise
+	      enought that our coding of the
+	      method <span class="java-method">equals</span>
+	      turned out wrong.
+	    </hint>
+	  </hints>
+	  <answers>
+	    <answer checks="CU">
+	      Indeed, it is flawed.
+	    </answer>
+	  </answers>
+	  <finally>
+	    <b>Please ask for help</b>.
+	  </finally>
+	</question>
+	<unfold name="quizz1_unfold">
+	</unfold>
+      </quizz>	
+      <div name="quizz1_unfold" style="display: block">
+	<p>
+	  So what exacty is the problem with our implementation?
+	  Look at the code, you will see that p1 and p2 are distant
+	  on the x-axis by 0.66 of epsilon. Again p2 and p3 are
+	  distant on the x-axis by .66 of epsilon. So we see
+	  that p1 and p2 are less than epsilon apart, and so
+	  are the point p2 and p3. But p1 and p3 are 1.32 espilon
+	  apart and are therefore no considered equals. Hence the
+	  broken transitivity, as depicted below where we can see
+	  that p1 and p3 are more than epsilon apart.
+	  <xfr>
+	    Alors qu'elle est le problème avec notre implémentation?
+	    Regardez le code, vous verrez que les points p1 et p2 sont
+	    distant en abscisse de 0.66 epsilon. Les points p2 et p3
+	    sont quand à eux distant en abscisse de 0.66 epsilon.
+	    Aussi, p1 et p2 sont bien égaux puisque leur distance
+	    est inférieur à epsilon. Les points p2 et p3 sont aussi
+	    égaux pour la même raison. Mais les points p1 et p3 ne
+	    sont pas égaux car distant de 1.32 epsilon. Mais en cela,
+	    notre fonction d'égalité ne respecte pas la transitivité
+	    de la spécification.
+	  </xfr>
+	</p>
+	<img src="images/equals-epsilon-equivalence.svg" width=30% />
+	<p>
+	  How should we fix the code of the 
+	  method <span class="java-method">equals</span> then?
+	  We want to keep the idea of considering two points equal
+	  if they are less than epsilon apart, but we need to make
+	  it a transitive relationship. One possibility is to round
+	  the points to the nearest epsilon, which is in fact
+	  flooring the x and y coordinates to epsilon.
+	  Look again at the above figure, the dotted line shows the
+	  flooring on both x and y coordinates of the three points.
+	  In this case, p1 and p2 are equals, but they are not equal
+	  to p3.
+	  <xfr>
+	    Mais comment faire pour corriger notre code?
+	    Nous voulons garder la notion que deux points sont
+	    égaux à un espilon près, mais il va falloir adapter
+	    cette idée pour que la relation d'équivalence soit
+	    transitive. Une possibilité est d'arrondire les coordonnées,
+	    à epsilon près. Dans ce cas là, p1 et p2 sont égaux, mais ils
+	    ne sont pas égaux à p3.
+	  </xfr>
+	</p>
+	<p>
+	  Look at the method <span class="java-method">floor</span>
+	  on the class <span class="java-class">Point</span>.
+	  Then, you can write the
+	  method <span class="java-method">equals</span> in the following
+	  way:
+	</p>
+	<pre class="prettyprint lang-java">
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o instanceof Point) {
+      Point p = (Point) o;
+      return (floor(x) == floor(p.x) && floor(y) == floor(p.y));
+    }
+    return false;
+  }
+	</pre>
+	<p>
+	  If you run the 
+	  third test (class <span class="java-class">Test3</span>)
+	  again, it passes.
+	</p>
+	<check
+	   silent="false"
+	   blocking="false"
+	   lang="java"
+	   cwd="workspace/object.collections"
+	   classpath="bin;tests.jar"
+	   classname="object.collections.step4.TestAC3"> 
+	  <banner>
+	    When done, let's us check what you did.
+	  </banner>
+	  <hint>
+	    Not quite there yet. Keep trying.
+	  </hint>
+	  <success>
+	    Fantastic, everything looks fine.
+	  </success>
+	  <unfold name="check4_unfold">
+	  </unfold>
+	</check>
+      </div>
+    </div> <!-- "id_check3_passed"- ->
+  </div> <!-- "id_check2_passed"- ->
+</div> <!-- id_check1_passed - ->
+
+<h3>Hashed List Implementation</h3>
+
+<p>
+  Alright, we just seen a working implementation of an associative
+  collection, associating keys to values, using an implementation
+  based on a list. But as you certainly recall, a list-based implementation
+  is slow because a lookup may require a complete scan of the list.
+  In particular, this is the case to make sure that a key does not exist,
+  which is what we must do on every invocation of the
+	method <span class="java-method">put</span> or the
+	method <span class="java-method">get</span>.
+  <xfr>
+    Bon, nous venons de voir une implémentation d'une collection
+    associative, avec des paires clé-valeur, en utilisant une liste
+    comme structure interne. Mais vous vous rappelez certainement
+    que parcourir une liste encore et encore n'est pas très rapide.
+    Comme c'est ce que nous faisons pour rechercher une clé, on
+    pourrait vouloir faire mieux.
+  </xfr>
+</p>
+<p>
+  Remember, we discussed these performance issues when we counted
+  the occurances of words in a stream, using an array-based implementation.
+  We touched then on the idea of using a hash function to distribute
+  words on several buckets, hopefully reducing the lookup time. We are doing
+  the same trick here, but in a more generic way.
+  Look below at the
+  object graph structure that we want to obtain:
+  <xfr>
+    Vous vous rappelez, nous en avions discuté dans le sprint word.count
+    alors que nous parlions du comptage du nombre d'occurences des mots.
+    Nous avions évoqué l'idée d'une fonction de hachage pour distribuer
+    les mots sur plusieurs seaux (buckets), divisant ainsi la longeur de chaque
+    tableau et ainsi la longeur de la recherche. Nous allons faire la
+    même chose ici, mais d'une façon beaucoup plus générique.
+  </xfr>
+</p>
+<img src="images/buckets.svg" width="60%"/>
+<p>
+  So we need a hash function that, given a key, will give us the bucket in
+  which to insert the pair with that key. If we have that, given a key,
+  we know in which bucket to look for if we want to find that key.
+  We no longer have to scan the entire collection, we only have to scan
+  one bucket, that is, one list.
+  <xfr>
+    Nous avons donc besoin d'une fonction de hachage sur la clé de notre
+    paire clé-valeur. Si nous avons cela, nous serions dans quel seau
+    regarder si nous cherchons la clé. Nous n'avons plus à parcourir toute
+    la collection, seulement un seul des seaux.
+  </xfr>
+</p>
+<p>
+	In Java, all objects can compute a hash code for themselves and
+	two objects can be compared to know if they are equal or not.
+	The two method signatures are the following:
+	<xfr>
+		En Java,
+		tout objet peut calculer un nombre de hachage pour lui-même.
+		Aussi, deux objets peuvent se comparer pour savoir si ils
+		sont égaux ou pas. Les deux signatures des méthodes
+		correspondants sont les suivantes:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+	public int hashCode();
+	public boolean equals(Object o);
+</pre>	  
+<p>
+	Want to know how to implement these two methods on your class?
+	Well, you need first to read the documentation of these two methods.
+	Go look at the class <span class="java-class">Object</span>
+	(use <b>Ctrl-Shift-T</b> to navigate there),
+	you can easily find the two methods 
+  <span class="java-method">hashCode</span> and
+  <span class="java-method">equals</span> using
+	<b>Ctrl-o</b> to navigate to a specific method.
+  Look at the documentation of the
+	method <span class="java-method">hashCode</span>,
+  but the general contract is the following:
+	<xfr>
+		Vous voulez savoir comment faire pour implémenter ces
+		deux méthodes pour vos classes? Et bien il faut aller
+		voir la documentation de ces méthodes dans la classe
+		<span class="java-class">Object</span>. Vous pouvez
+		utiliser <b>Ctrl-Shift-T</b> pour y naviguer,
+		puis utiliser <b>Ctrl-o</b>  pour naviguer vers
+		les deux méthodes
+		<span class="java-method">hashCode</span> et
+		<span class="java-method">equals</span>.
+		Lisez la documentation de la méthode
+		<span class="java-method">hashCode</span>,
+		elle dit ceci:
+	</xfr>
+</p>
+
+<!--
+	Its default implementation is the following
+  method:
+  <xfr>
+    Encore une fois, Java a un support pour cela sur la classe
+    class <span class="java-class">Object</span> avec la méthode
+    <span class="java-method">hashCode</span>, dont la définition
+    ressemble à cela.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public native int hashCode();
+</pre>	  
+<p>
+  The qualifier <span class="java-keyword">native</span> means that
+  the method is not available in Java. The reason is usually that the
+  default implementation is to return an integer value derived from
+  the object identity, something that is not accessible in Java.
+  Indeed, you can use an object reference variable, which contains
+  an object identity, but you cannot <em>see</em> the object identity.
+  <xfr>
+    Le qualifier <span class="java-keyword">native</span> veut dire que
+    la méthode n'est pas implémentée en Java. La raison est que la
+    méthode retourne souvent un nombre entier en relation avec l'identité
+    de l'objet et que cette identité n'est pas disponible en Java.
+    En effet, vous pouvez définir une variable qui référence un objet
+    et qui donc contient l'identité de cet objet, mais vous ne pouvez
+    pas voir cette identité ni la manipuler en Java.
+  </xfr>
+</p>
+<p>
+  The method <span class="java-method">hashCode</span>
+  must provide a unique number that we can use as an index to select one bucket.
+  Look at the JavaDoc of the method <span class="java-method">hashCode</span>,
+  but the general contract is the following:
+  <xfr>
+    Néanmoins, la méthode <span class="java-method">hashCode</span>
+    fournit un nombre unique que nous pouvons utiliser comme index
+    pour selectioner notre seau où mettre une paire clé-valeur.
+    Allez regarder la documentation de la méthode
+    <span class="java-method">hashCode</span>, mais le contrat
+    est globalement celui-ci:
+  </xfr>
+</p>
+- ->
+<div style="margin-left: .3in;">
+  <em>
+    <ul>
+      <li>
+				Whenever the method <span class="java-method">hashCode</span>
+				is invoked on the same object more than once, the
+				method <span class="java-method">hashCode()</span>
+				must consistently return the same integer, provided no information
+				used in <span class="java-method">equals(Object)</span>
+				comparisons on the object is modified.
+				This returned value need not remain consistent from one execution of an
+				application to another execution of the same application.
+				<xfr>
+					Si la méthode <span class="java-method">hashCode</span>
+					est invokée plusieurs fois sur le même objet, elle doit
+					retourner toujours la même valeur. Cela ne reste vrai
+					que si aucune des valeurs utilisées dans la comparaison
+					d'objet n'est modifiée. Cela ne reste vrai aussi que durant
+					l'exécution d'une application Java, il n'y a aucune guarantie
+					d'une exécution à l'autre.
+				</xfr>				
+      </li>
+      <li>
+				If two objects are equal according to the method
+				<span class="java-method">equals(Object)</span>,
+				then calling the method <span class="java-method">hashCode()</span>
+				on each of the two objects <b>must</b> produce the same integer result.
+				<xfr>
+					Si deux objets sont déterminés égaux par la méthode
+					<span class="java-method">equals(Object)</span>,
+					alors l'invocation de la méthode
+					<span class="java-method">hashCode()</span>
+					sur chacun de ses objets devra retourner la même valeur.
+				</xfr>
+      </li>
+      <li>
+				It is <em>not</em> required that if two objects are unequal
+				according to the method
+ 				<span class="java-method">equals(Object)</span>,
+				then calling the
+				method <span class="java-method">hashCode()</span>
+				on each of the
+				two objects must produce distinct integer results.  However, the
+				programmer should be aware that producing distinct integer results
+				for unequal objects may improve the performance of hash tables.
+				<xfr>
+					Il n'est pas requis que deux objets qui ne sont pas considérés
+					comme égaux par la méthode
+					<span class="java-method">equals(Object)</span>
+					doivent retourer une valeur différente lorsque leur
+					méthode <span class="java-method">hashCode()</span> est
+					invoquée. Mais il est possible que de retourner des valeurs
+					différentes améliore les performances des tables de hachage.
+				</xfr>
+      </li>
+    </ul>
+  </em>
+</div>
+<p>
+  This may sound complicated, but it is in fact pretty straightforward
+  to understand in this context. We use the hash code of the key objects
+  to select the bucket where to insert a pair. Then, we also use the
+	hash code of the key to determine in which bucket to lookup for a
+	pair with that key. Since we use the method
+	<span class="java-method">equals(Object)</span> to compare keys,
+	we can easily see that the two methods must agree as described above.
+	Let's illustrate this with keys that are strings.
+  Look at the code below that inserts and then looks up a pair.
+  <xfr>
+    Cela a l'air compliqué mais c'est en fait assez simple à comprendre
+    dans ce contexte ci. Nous utilisons le code de hachage de la clé
+    pour sélectionner le seau où insérer une paire clé-valeur.
+    Maintenant, si nous disons que les clés sont des chaînes de caractères,
+    comme au paravent, un code d'insertion dans notre table associative
+    ressemblerait à cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String key = "toto";
+  String value = "Won't be found";
+  AssociativeCollection ac = new AssociativeCollection(true);
+  ac.put(key,value);
+  assert(value == ac.get(key));
+  key = new String(key);
+  assert(value == ac.get(key)); // WILL FAIL!
+</pre>
+<p>
+  So what is happening. We use a first string object to insert our value.
+  Then we used a second string object, to do a lookup. If the two string objects
+  do return the same hash code, we will look in the same bucket, and we will find
+  that key. If the two string objects, although they are representing the same string,
+  do return different hash codes, then we will scan the wrong bucket and we will not
+  find the pair we just inserted.
+  <xfr>
+    Que se passe-t-il ici? Nous utilisons un premier objet (une chaîne de caractère)
+    pour insérer notre valeur. Puis, nous utilisons un autre objet (une autre
+    chaîne de caractère) pour faire la recherche. Si les deux objets retournent le
+    même hashCode, alors la recherche fonctionnera, sinon elle échouera.
+  </xfr>
+</p>
+<p>
+  To put it in as few words as we can, you must design your methods
+  <span class="java-method">equals(Object)</span> and
+  <span class="java-method">hashCode()</span> together,
+  as a coherent unit. Look at the class
+  <span class="java-class">String</span> (use <b>Ctrl-Shift-T</b>,
+  you will see how the two methods
+  <span class="java-method">equals(Object)</span> and
+  <span class="java-method">hashCode()</span> do work together.
+  If two string objects are representing the same string, then
+  they are equals and the hash codes are the same. 
+  <xfr>
+    Pour dire ce qu'il faut faire succintement, vous devez concevoir
+    vos méthodes 
+    <span class="java-method">equals(Object)</span> et
+    <span class="java-method">hashCode()</span>
+    comme un ensemble cohérent.
+    Regardez la classe
+    <span class="java-class">String</span>,
+    vous verrez que ces deux méthodes 
+    <span class="java-method">equals(Object)</span> et
+    <span class="java-method">hashCode()</span> sont
+    conçues pour être cohérente.
+  </xfr>
+</p>
+<p>
+  This means that if you need to implement the method
+  <span class="java-method">equals(Object)</span> for one of your classes,
+  you <b>must</b> also implement a corresponding method 
+  <span class="java-method">hashCode()</span>.
+  Never, we mean <b>never</b>, implement one without the other.
+  If you do, you will spend hours debugging and wasting valuable
+  time you could spend with friends having fun...
+  <xfr>
+    La conséquence directe de cela est que si vous devez implémenter
+    la méthode 
+    <span class="java-method">equals(Object)</span> pour une de vos
+    classes, alors vous <b>devez</b> implémenter la méthode
+    <span class="java-method">hashCode()</span>.
+    Ne jamais, <b>jamais</b>, implémenter l'une sans l'autre. 
+    Sinon, guarantie, vous passerez des heures de debug pour trouver
+    le problème, alors que vous pourriez passer du bon temps entre amis...
+  </xfr>
+</p>
+
+<h3>Implementing the class <span class="java-class">HashTable</span></h3>
+
+<p>
+  The class <span class="java-class">HashTable</span> is
+  an associative collection,
+  using the <span class="java-method">equals(Object)</span> and
+  <span class="java-method">hashCode()</span>.
+  The name <em>HashTable</em> is the historical name for
+  an associative collection, using a hash-based implementation.
+  The usual name for an associative collection is a map.
+  So look in the package
+  <span class="java-package">object.collection.step4</span>,
+  we gave you both an interface and a class:
+  <xfr>
+    La classe
+    <span class="java-class">HashTable</span>
+    est une structure associative, utilisant les
+    méthodes <span class="java-method">equals(Object)</span> et
+    <span class="java-method">hashCode()</span>.
+    Le nom de <em>Table de Hachage</em> est historique,
+    parce que l'implémentation utilisait traditionnellement
+    un technique de hachage comme celle que nous discutons ici.
+    Le nom plus mathématique est une <em>map</em>.
+    Regardez le paquet Java 
+    <span class="java-package">object.collection.step4</span>,
+    nous vous avons donné une interface et une classe.
+  </xfr>
+</p>
+<ul>
+  <li>Interface <span class="java-class">IMap</span></li>
+  <li>Class <span class="java-class">HashTable</span></li>
+</ul>
+<p>
+  Look first at the interface <span class="java-class">IMap</span>,
+  you will recognize all the methods that you implemented for
+  the class <span class="java-class">AssociativeCollection</span>
+  and the class <span class="java-class">List</span>.
+  Nothing difficult, so the coding should be a walk in the park,
+  and not mission impossible.
+  <xfr>
+    Regardez d'abord l'interface <span class="java-class">IMap</span>,
+    vous allez reconnaitre les méthodes que vous aviez implémenté
+    sur la classe
+    <span class="java-class">AssociativeCollection</span>
+    et <span class="java-class">List</span>. Rien de difficile
+    en soit, une promenade dans le parc, plutôt qu'une mission
+    impossible.
+  </xfr>
+</p>
+
+<!--
+<p>
+  But only if you approach it right. Of course, you may start from
+  scratch. Recode everything. Rethink everything. Or, you may reuse
+  what you have already done. Sometimes by cutting and pasting code.
+  Sometimes by reusing classes that you already coded. It is important
+  that you start learning how to use object-oriented programming
+  to help you be more efficient. So let's think about this before
+  we start coding.
+  <xfr>
+    Mais encore faut-il s'y prendre correctement.
+    Bien sûr, vous pouvez repartir de rien, tout re-concevoir et
+    tout re-coder. Mais vous pouvez aussi réutiliser le code
+    que vous avez déjà écrit. La programmation objet s'adapte
+    parfaitement à la restructuration du code et il est important
+    que vous commenciez à savoir le faire. Alors réfléchissons
+    ensemble à comment faire.
+  </xfr>
+</p>
+<ol>
+  <li>An array of Buckets
+    <p>
+      We did implement an array of Buckets before, in the
+      class <span class="java-class">Vocabulary</span>.
+      So we can go back and look, especially the trick of
+      using the modulo on the hash code. <b>Be careful though</b>, 
+      the value <span class="java-class">Object.hashCode</span>
+      can be an <b>negative integer</b>.
+      <xfr>
+	Nous avions implémenté un tableau de seaux dans la
+	classe <span class="java-class">Vocabulary</span>.
+	Retournez dans votre code, regardez l'astuce du modulo
+	que nous avions employé. Cool mais soyez <b>attentif</b>,
+	la valeur de <span class="java-class">Object.hashCode</span>
+	peut être négative.
+      </xfr>
+    </p>
+  </li>
+  <li>Bucket
+    <p>
+      We do not really need a class
+      <span class="java-class">Bucket</span>,
+      we can reuse the
+      class <span class="java-class">List</span>. With this design,
+      each bucket is really a list of pairs. So we can reuse the
+      class <span class="java-class">List</span> as is.
+      We can cut-and-paste the class <span class="java-class">Pair</span>
+      from the class <span class="java-class">AssociativeCollection</span>.
+      <xfr>
+	Nous n'avons pas besoin d'une classe
+	<span class="java-class">Bucket</span>,
+	comme nous l'avions fait lors du sprint précédent. Ici,
+	nous pouvons réutiliser la classe
+	<span class="java-class">List</span>, sans aucune modification.
+	Avec cette conception,
+	chaque seau est une liste de paires.
+	Nous pouvons aussi récupérer notre classe
+	<span class="java-class">Pair</span>
+	de la classe <span class="java-class">AssociativeCollection</span>
+	et faire un jolie couper-coller dans notre classe
+	<span class="java-class">HashTable</span>	      
+      </xfr>
+    </p>
+  </li>
+  <li>The core methods
+    <p>
+      The core methods,
+      <span class="java-method">put</span>,
+      <span class="java-method">get</span>,
+      and <span class="java-method">remove</span>
+      have all been implemented in the 
+      class <span class="java-class">AssociativeCollection</span>,
+      using a list implementation internally.
+      Great, our buckets are lists, so once we select a bucket
+      with the hash code of the key, the code will be the same.
+      So all these methods are just two parts. One, select a bucket,
+      like we did in the 
+      class <span class="java-class">Vocabulary</span>.
+      Second, do the operation on the bucket list of pairs
+      like we did in the
+      class <span class="java-class">AssociativeCollection</span>.
+      <xfr>
+	Ce sont les méthodes
+	<span class="java-method">put</span>,
+	<span class="java-method">get</span>,
+	et <span class="java-method">remove</span>.
+	Elles ont toutes été implémentées dans la classe 
+	<span class="java-class">AssociativeCollection</span>,
+	en utilisant une liste. Super, nos seaux sont des listes,
+	donc encore une fois on peut réutiliser notre code.
+	Une fois le seau sélectionné avec le modulo sur le
+	hashCode, nous avons une liste et c'est le code que nous
+	avions fait dans la classe
+	<span class="java-class">AssociativeCollection</span>
+	dont nous avons besoin. Cool, un petit couper-coller
+	va aussi faire l'affaire ici.
+      </xfr>
+    </p>
+  </li>
+  <li>Iterators
+    <p>
+      We have to provide two map iterators, one for the keys
+      and one for the values. But let's think for a moment.
+      We use lists for buckets and lists provide an iterator.
+      Could we use this iterator?
+      <xfr>
+	Nous avons besoin de deux itérateurs, l'un pour itérer
+	sur les clés et l'autre pour itérer sur les valeurs.
+	Mais avant de se lancer, réfléchissons ensemble.
+	Pourrions nous réutiliser l'itérateur des lists
+	puisque nos seaux sont des listes?
+      </xfr>
+    </p>
+  </li>
+</ol>
+<p>
+  The iterator design deserves our attention, because it is
+  <b>a pattern of coding that you will need to learn and remember</b>.
+  It is called <em>aggregation</em>. You will implement your
+  iterators aggregating list iterators. So what does that mean?
+  It means that rather than reimplementing the iterators from scratch,
+  you will reuse an iterator from a list.
+  <xfr>
+    La conception de nos itérateurs doit retenir notre attention
+    car c'est un pattern de codage qui vous devez apprendre, comprendre,
+    et ne pas oublier. C'est le pattern de l'agrégation. Vous allez
+    implémenter vos itérateurs en agrégeant un itérateur de la liste.
+  </xfr>
+</p>
+<p>
+  How should we do this? We need an iterator on keys and one on values.
+  If we could have a list of pairs, we could use the iterator on the list
+  to do all the work for us. Right? Something like this.
+</p>
+<pre class="prettyprint lang-java">
+  private class _KeyIterator implements IMap.Iterator {
+    IList.Iterator iter;
+
+    _KeyIterator(IList.Iterator iter) {
+      this.iter = iter;
+    }
+
+    public boolean hasNext() {
+      return iter.hasNext();
+    }
+
+    public Object next() {
+      Pair pair = (Pair) iter.next();
+      return pair.key;
+    }
+  }
+</pre>	
+<p>
+  See how cool the aggregation pattern is? Saved us a lot of work.
+  This is all about reusing classes, avoiding to recode over and over.
+  Of course, this requires a bit of thinking when desiging classes
+  so that they can be reused in different context. This is exactly
+  what we are doing here, in this task, with collections. We are
+  designing and implementing collections that can be reused.
+  Cool, right?
+</p>
+<p>
+  So let's push the thinking a bit further here. We need two iterators,
+  one for keys and one for values. But really, they are almost identical,
+  since they will both rely on the list iterator, iterating on a list of
+  pairs, either returing the key or the value. So let's not have two
+  iterator classes, but only one that can either return the key or the
+  value.
+</p>
+<pre class="prettyprint lang-java">
+  private class _Iterator implements IMap.Iterator {
+    IList.Iterator iter;
+    boolean keys;
+
+    _Iterator(IList.Iterator iter, boolean keys) {
+      this.iter = iter;
+      this.keys = keys;
+    }
+
+    public boolean hasNext() {
+      return iter.hasNext();
+    }
+
+    public Object next() {
+      Pair pair = (Pair) iter.next();
+      if (keys)
+        return pair.key;
+      else
+        return pair.value;
+    }
+  }
+</pre>	
+<p>
+  Now you have everything you need. You have the specification
+  of the class <span class="java-class">HashTable</span>, indeed,
+  the interface <span class="java-class">IMap</span> defines what
+  it is supposed to do. You have the right methodology to avoid
+  unnecessary work. So let's do it.
+  <xfr>
+    Maintenant vous avez tout ce dont vous avez besoin. Vous
+    avez la spécification de la classe
+    <span class="java-class">HashTable</span>, puisque vous
+    avez celle de l'interface
+    <span class="java-class">IMap</span>.
+    Vous avez la bonne méthodologie de réutilisation, adaptation,
+    et agrégation, alors allons y, le temps de coder est là.
+  </xfr>
+</p>
+- ->
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.collections"
+   classpath="bin;tests.jar"
+   classname="object.collections.step4.TestAC4"> 
+  <banner>
+    When you are done implementing and testing your class,
+    let's us check you did.
+  </banner>
+  <hint>
+    Not quite there yet, keep at it and you will succeed.
+    Ask for help, if you need to, from other students
+    or the teaching staff. 
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check5_unfold">
+  </unfold>
+</check>
+<div name="check5_unfold" style="display: block">
+
+  <h3>Code Evaluation</h3>
+
+  <p>
+    There are a couple of points about the implementation
+    that we must discuss to make sure you made the best coding
+    decisions when it comes to performance. We have two points
+    to consider for the class <span class="java-class">HashTable</span>:
+    <xfr>
+      Cela dit, il nous faut discuter quelques points d'implémentation.
+      Nous avons deux points à discuter sur la classe
+      <span class="java-class">HashTable</span>:	      
+    </xfr>
+  </p>
+  <ol>
+    <li>The method <span class="java-class">put(Object,Object)</span></li>
+    <li>The method <span class="java-class">remove(Object)</span></li>
+  </ol>
+  <p>
+    Regarding the method
+    <span class="java-class">put(Object,Object)</span>, you first hash the key
+    in order to select a list (bucket), then you iterate over that list to search
+    for the key. When you did not find the key, you need to add a new pair to the
+    list. Right?
+    <xfr>
+      Pour ce qui concerne la méthode 
+      <span class="java-class">put(Object,Object)</span>, vous avez d'abord
+      haché la clé au moyen de hashCode, puis vous avez sélectionner le seau
+      par modulo, puis enfin vous avez parcouru le seau pour trouver la clé.
+      Si vous n'avez pas trouvé la clé, vous avez ajouté la paire à la liste.
+      N'est-ce pas?
+    </xfr>
+  </p>
+  <quizz id="id_quizz2" name="hashtable-put" style="display: block">
+    <question >
+      <p>
+	How did you do it? 
+      </p>
+      <checkboxes>
+	<checkbox>Inserting the new pair at the end</checkbox>
+	<checkbox>Inserting the new pair at the beginning</checkbox>
+      </checkboxes>
+      <hints>
+	<hint checks="CC">
+	  Really, you can insert one pair at both ends? Let's be serious.
+	</hint>
+      </hints>
+      <answers>
+	<answer checks="CU">
+	  OK. See, this works, but did you use
+	  the class <span class="java-class">List2</span>?
+	  Because if you used the class
+	  <span class="java-class">List</span>, this is not
+	  a good design. Indeed, inserting at the end requires to scan the
+	  entire list to find the last element.
+	  So in this case, this means scanning it to find if the key
+	  is not there and re-scanning it to insert at the end.
+	  A simpler design is to insert at the beginning of the list,
+	  which is always fast.
+	</answer>
+	<answer checks="UC">
+	  Fantastic, if you did it on purpose, meaning that you
+	  realized that inserting at the beginning of a list is
+	  always fast. Inserting at the end would have been
+	  costly if using 
+	  the class <span class="java-class">List</span>.
+	  Indeed, inserting at the end requires to scan the list
+	  to find the last element. Using
+	  the class <span class="java-class">List2</span> would solve
+	  this problem since insertions at the end of the list are
+	  as fast as insertions at the front of list.
+	</answer>
+      </answers>
+    </question>
+    <unfold name="quizz2_unfold">
+  </unfold>
+  </quizz>	
+  <div name="quizz2_unfold" style="display: block">
+  </div>
+
+  <!--
+      <h4>Relying on equals</h4>
+  <p>
+    We relied on the method
+    <span class="java-class">equals(Object)</span>,
+    defined on the class <span class="java-class">Object</span>
+    and re-implemented on the classes used as keys.
+    This is fairly standard in Java, so this is a good start.
+    But we like to push you to think a bit further.
+    What if the same keys are used in two hash tables
+    and you want two different equivalence functions?
+    <xfr>
+      Pour comparer nos clés, nous avons utilisé la méthode
+      <span class="java-class">equals(Object)</span>,
+      defined on the class <span class="java-class">Object</span>.
+      Bien sûr, cette méthode est redéfinie sur la classe
+      de la clé, comme c'est le cas pour la classe
+      class <span class="java-class">String</span>.
+      C'est tout à fait standard pour Java, c'est donc un
+      bon premier choix. Mais nous aimerions pousser la
+      réflexion un peu plus loin. Comment ferions nous
+      si la même classe de clé était utilisée dans deux
+      tables de hachages et que nous voulions deux
+      égalités et deux code de hachage différentes?
+    </xfr>
+  </p>
+  <p>
+    Not clear why? Let's discuss a concrete example.
+    You may use strings for keys,
+    but in one case, you want the keys to be compared in a
+    case-insensitive way (without differentiating lower or
+    upper cases for letters), and in the other case,
+    you want to compare keys in a case sensitive way.
+    Since you cannot implement the method
+    <span class="java-class">equals(Object)</span>
+    twice, you have a problem.
+  </p>
+  <p>
+    What you need is to use a comparator.
+    <span class="java-class">HashTable</span>.
+  </p>
+
+  <h4>Iterators and removals</h4>
+  There are a few other subjects of study for lists
+  that we suggest you explore.
+  <ul>
+    <li>
+      Iterator and removals in the collection, a classic error
+      depending on the implementation of the iterator and where
+      the removal happens.
+    </li>
+    <li>
+      <div>
+	Using for-loop based on list.length() but with removal
+	during the loop. This is unlikely to work.
+	<pre>
+	  for (int i=0; i &lt; list.length();i++) {
+	  Object o = list.removeAt(0);
+	  }
+	</pre>
+	<p>
+	  The above code will only remove half of the elements.
+	</p>
+      </div>
+    </li>
+  </ul>
+  - ->
+<p>
+  That's all folks for this task. But before we move on,
+  please make sure
+  that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.collections, Task5 completed"
+  $ git push --all
+</textarea>
+</div>
+-->

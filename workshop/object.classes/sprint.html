@@ -1,0 +1,202 @@
+<vars>
+  sprint=object.classes
+</vars>
+
+<p>
+  This sprint is about classes and all the main advanced
+  features of Java. So far, we have discussed object-oriented
+  programming from an object perspective, focusing on objects,
+  object references, and method invocations. But object-oriented
+  programming is really two fold. The first fold is about objects,
+  the second fold is about the hiearchy of classes and
+  all the associated language features to help with advanced software design.
+  This is where object-oriented programming really departs from
+  traditional imperative programming like in C, proving
+  you with powerful features that will help you handle
+  complex programming tasks.
+  <xfr>
+    Ce sprint est à propos des capacités avancées qu'offre Java
+    pour écrire des classes. Jusqu'à maintenant, nous avons
+    discuté de la programmation orientée-objet en se concentrant
+    sur la dimension du graphe d'objets. Nous
+    avons gardé l'écriture des classes au plus simple. Mais la
+    programmation orientée-objet a bien deux dimensions: celle
+    du graphe d'objets et celle de la hiérarchie des classes.
+    En ce qui concerne les classes, Java propose des mécanismes avancées
+    qui permettent d'aborder des conceptions logicielles plus
+    avancées. C'est vraiment là que la programmation orientée-objet
+    s'éloigne de la programmation impérative comme dans le langage C,
+    en vous offrant des mécanismes puissants qui vont vous aider
+    à mieux concevoir et mieux faire évoluer du code compliqué.
+  </xfr>
+</p>
+<p>
+  Like with everything that is new, it will feel a bit
+  complex at first. You can choose to think it is only
+  unnecessary complexity and choose to program with Java
+  without using these features efficiently.
+  But it would be like driving a race
+  car in first gear because you do not want to learn
+  how to stick shift. Learn the concepts, ask questions,
+  and then put them into practice. Soon, you will
+  wonder how you could have ever coded without these
+  features.
+  <xfr>
+    Comme en toutes choses, la nouveauté va vous paraître source
+    de complexité. Vous pouvez en rester là et ne voir que cette
+    complexité accrue et l'éviter lorsque vous programmez en Java.
+    Mais cela revient à conduire une voiture de course toujours en
+    première parce que vous ne voulez pas apprendre à passer les
+    vitesses. Mais si vous apprenez les concepts, posez des questions,
+    et que vous utilisez ces concepts dans vos programmes, alors
+    vous verrez rapidement ce qu'ils apportent et vous vous demanderez
+    comment vous avez fait pour programmer sans eux pendant si longtemps.
+  </xfr>
+</p>
+<p>
+  <b>Reminder:</b> do not forget to import the <em>object.classes</em>
+  project in your Eclipse workspace. You also need to add to the build path
+  the jar file that packaged your collections, the one you created
+  at the end of the sprint "object.collections".
+  <xfr>
+    Vous allez devoir importer le projet "object.classes" dans Eclipse.
+    Il faudra aussi rajouter au "build path" l'archive
+    de vos collections que vous avez créé à la fin du sprint "object.collections".
+  </xfr>
+</p>
+
+<!--
+<h2>Slideware</h2>
+
+<p>
+  If you are like us, you like coding, hands on. But it is not always
+  the best way to master complex concepts. It is usually a great way to
+  start, with the excitment of making something happen. But often,
+  a hands-on approach is best associated with a more traditional approach,
+  one that provides a global synthetic view  of the concepts.
+  So we prepared two courses, with slides, for you to read.
+  <xfr>
+    Si vous êtes comme nous, vous aimez coder, vous aimez la pratique. Mais
+    la pratique n'est pas toujours le meilleur moyen de maîtriser des concepts
+    un peu complexe. La pratique est un bon point de départ, c'est motivant
+    de construire quelque chose qui marche. Mais souvent, il est intéressant
+    d'associer à la pratique une approche plus traditionnelle de l'apprentissage,
+    une approche qui fournit une vue plus synthétique des concepts.
+    Aussi, nous vous avons préparé deux cours que nous vous demandons de lire.
+  </xfr>
+</p>
+<p>
+  The first <a href="/CheckOne.pdf">course</a>
+  is a summary of all the object-oriented programming concepts
+  that you should have learned and mastered
+  by now, following all the previous sprints in this workshop. Read it in details
+  and make sure you understand it all. Ask questions if some finer points still elude
+  you. Discuss it with others, it is a great way to learn and understand better
+  the concepts. Help someone, there is no better way to master a skill than
+  to try to explain it to someone who is struggling with that skill.
+  It is when you try to explain something to someone that you truly
+  see if you understand it or not.
+  <xfr>
+    Le premier <a href="/CheckOne.pdf">cours</a> est un résumé de tous les
+    concepts de la programmation orientée-objet que vous avez vu et
+    appris dans les sprints précédent. Lisez ce cours en détails et assurez
+    vous que vous maîtrisez ces concepts. Posez des questions si ce n'est
+    pas le cas. Echangez avec les autres étudians, c'est un excellent moyen
+    de vérifier si vous avez maîtrisé ces concepts ou pas. Si vous savez
+    expliquer un concept, vous l'avez compris.
+  </xfr>
+</p>
+<p>
+  The second <a href="/CheckTwo.pdf">course</a> introduces
+  the advanced Java features
+  about classes. We suggest that you make a first pass, reading it all and
+  trying to understand it. With this new global view on classes, you can
+  start the tasks below. Make sure you come back to the slides regularly,
+  making sure you understand every finer point that they illustrate.
+  Ask questions if you feel something is not clear.
+  <xfr>
+    Le deuxième <a href="/CheckTwo.pdf">cours</a> introduit les mécanismes
+    avancés de Java pour l'écriture de classes. Nous vous suggérons de
+    lire les transparents une première fois, de bout en bout. Cela vous
+    donnera une vue globale qui vous aidera lors de ce sprint. Mais faites
+    l'effort d'y revenir régulièrement pour revoir les détails et les
+    maîtriser.
+  </xfr>   
+</p>
+<p>
+  This is one of the ultimate situation where we ask that you to take charge
+  of your learning. Read the slides in details. Read the code and evolve it,
+  paying attention to details, not just trying to get it to pass our tests.
+  Focus on details. Make all possible attempts to understand the concepts
+  illustrated. But do not stop there, try them out, write your own code,
+  test your understanding,
+  check under the debugger.
+  This is work, we know, but this is what it takes to learn a new trade.
+  <xfr>
+    C'est vraiment l'une des situations où nous vous demandons de prendre
+    en charge votre apprentissage. Lisez les deux cours en détails.
+    Lisez le code, faite le évolution, mais en faisant attention aux détails,
+    pas avec la seule intention de le faire passer nos tests.
+    Faite vraiment attention aux détails. Ne vous limitez pas à comprendre
+    les concepts, il faut vous les approprier en les utilisant, en expérimentant.
+    C'est du travail, mais c'est ce qui est nécessaire pour apprendre
+    les bases de votre métier.
+  </xfr>
+</p>
+<p>
+  There will be a learning curve, it is an investment
+  that will deliver a great return on investment, if you do it properly.
+  This is not about getting a grade, this is about learning your craft.
+  A craft that you will use and reuse in the years to come.
+  Therefore, it is an investment for the years to come. Not only
+  will you earn better grades on your study projects at the school,
+  but you will have
+  a much better experience during your interships. Ultimately, you
+  will able to go for the job you really want, rather than accept
+  a job that is less interesting to you. Remember, in less than 18 months,
+  you will be looking for an internship. In less than 3 years, you will
+  be looking for a job. Well, the preparation starts now.
+  <xfr>
+    Il y aura une périod d'apprentissage, mais c'est un investissement
+    qui rapportera gros dans la durée. C'est investissement n'est pas
+    pour obtenir une note, le but est d'apprendre votre future métier.
+    Ce que vous apprenez dans ce cours vous servira pendant des années,
+    voir toute votre carrière. Mais cela vous aidera durant les années
+    Polytech à mieux faire vos projets, plus vite, et en ayant de meilleurs
+    notes. Dans moins de 18 mois, vous chercherez un stage. Dans moins de 3 ans,
+    vous chercherez un travail. Et bien, la préparation pour cela
+    commence aujourd'hui.
+  </xfr>
+</p>
+-->
+
+<h2>Tasks</h2>
+
+<tasks>
+  <task name="t1" label="Simple Examples" >
+  </task>
+  <task name="t2" label="File System -- First Design" >
+  </task>  
+  <task name="t3" label="File System -- Polymorphic Design" >
+  </task>  
+  <task name="t4" label="File System -- Extensible Design" >
+  </task>  
+  <task name="t5" label="File System -- Loop-back Design" >
+  </task>
+	<!--
+  <task name="t6" label="Wrapping the Linux file system" >
+  </task>  
+	-->
+</tasks>
+
+<p>
+  That's all folks for this sprint.
+  But before we move on, please make sure
+  that you commit and push your work to our server:
+</p>
+<textarea class="terminal" rows="" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.classes, completed"
+  $ git push --all
+</textarea>
+

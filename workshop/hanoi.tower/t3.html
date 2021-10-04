@@ -1,0 +1,314 @@
+<vars>
+  sprint=hanoi.tower
+  task=t3
+</vars>
+
+<p>
+  This task is about the fun part, getting to see the puzzle being solved.
+  We gave you everything you need for that:
+  the class <span class="java-class">Solver</span>
+  that contains the algorithmic solution to the puzzle
+	and the class <span class="java-class">HanoiTowerPuzzle</span>
+	with the entry point <span class="java-method">main</span>.
+  <xfr>
+ 		Cette tâche est l'aboutissement de votre travail, nous allons voir
+		le puzzle se résoudre sous nos yeux. Nous vous avons donné les deux
+		classes dont vous avez besoin: 	la classe
+		<span class="java-class">HanoiTowerPuzzle</span>
+		qui contient le point d'entrée <span class="java-method">main</span>
+		et la classe <span class="java-class">Solver</span> qui
+ 		contient la solution algorithmique du jeu.
+  </xfr>
+</p>
+
+<p>
+	To understand the code that we gave you, you can go back to Wikipedia:
+	<xfr>
+		Pour comprendre le code qui vous a été donné, vous pouvez retourner
+		sur Wikipedia:
+	</xfr>
+</p>
+<em>
+  <p style="margin-left: .3in;">
+    The Tower of Hanoi is a mathematical game or puzzle.
+    It consists of three rods, and a number of disks of different sizes
+    which can slide onto any rod. The puzzle starts with the disks in a neat stack
+    in ascending order of size on one rod,
+    the smallest at the top, thus making a conical shape.
+    <xfr>
+ 		Les tours de Hanoi est un jeu mathématique. Il comprend
+ 		trois piliers et un nombre de disques de différentes
+ 		tailles qui peuvent s'empiler sur les piliers. Le jeu commence
+ 		avec les disques sur un pilier dans l'ordre ascendant de leur
+ 		taille, le plus petit au sommet, formant un cone.
+  </xfr>
+  </p>
+</em>
+<p>
+  So we have a good start to define the needed fields
+	and the constructor	for the class <span class="java-class">Solver</span>:
+  <xfr>
+ 		Donc nous avons ce qu'il faut pour définir les attributs nécessaire
+		et le constructeur de la 
+ 		classe <span class="java-class">Solver</span>. 
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Solver {
+  // our three pegs
+  private Peg pegA, pegB, pegC;
+
+  // keep track of how many times we move a disk
+  private int nmoves;
+
+  // remember the number of disks
+  private int ndisks;
+
+  /*
+  * The constructor is pretty simple, create the three pegs and 
+  * initialize pegA as a neat stack of disk of decreasing size.
+  */
+  public Solver(int ndisks) {
+    pegA = new Peg(ndisks);
+    pegB = new Peg(ndisks);
+    pegC = new Peg(ndisks);
+
+    this.ndisks = ndisks;
+
+    int size = ndisks;
+    for (int i = 0; i < ndisks; i++, size--)
+      pegA.push(new Disk(size));
+  }	
+}
+</pre>
+<p>
+  You will notice that all the fields are private. Any instance of
+  the class <span class="java-class">Solver</span> is self-contained,
+  its implementation is an internal matter and so there is no need
+  for any public field. However, anyone may instantiate a puzzle,
+  so the constructor needs to be public.
+  <xfr>
+ 	Notez que tous les champs sont privés. Toute instance de la classe
+ 	<span class="java-class">Solver</span> sont cachés, son implémentation
+ 	est interne et il n'y a rien à rendre visible. Toutefois, n'importe
+ 	qui doit pouvoir instancier le jeu, donc le constructeur doit être 
+ 	public.
+  </xfr>
+</p>
+    
+<p>
+	Now it is about solving the puzzle, again, let's look at
+	Wikipedia:
+  <xfr>
+ 		Maintenant il s'agit de résoudre le puzzle, regardez Wikipedia
+ 		à nouveau:
+   </xfr>
+  </p>
+<em>
+  <p style="margin-left: .3in;">
+    The objective of the puzzle is to move the entire stack to another peg,
+    obeying the following simple rules:
+  </p>
+  <ol style="margin-left: .3in;">
+    <li> Only one disk can be moved at a time. </li>
+    <li>
+			Each move consists of taking the upper disk from one of the pegs
+			and placing it on top of another peg, i.e. a disk can only be moved
+			if it is the uppermost disk on a peg.
+    </li>
+    <li>
+			No disk may be placed on top of a smaller disk.
+    </li>
+  </ol>
+</em>
+<p>
+  Well, it is a puzzle, so it is supposed to be a challenge.
+  But we are not here to design a solution, we are here to understand
+	how to code one.
+  Wikipedia is kind enough to give us an iterative solution that is
+  real easy to translate into code.
+  <xfr>
+ 		Bien, c'est un jeu, donc un challenge. Mais nous ne sommes pas
+ 		là pour simplement concevoir une solution, nous sommes là pour
+ 		coder une solution. Wikipedia nous donne la solution itérative
+ 		qui est facile à coder.
+  </xfr>
+</p>
+<ul>
+  <li><b>Solution for an even number of disks:</b>
+    <ul>
+			<li>make the legal move between pegs A and B (in either direction)</li>
+			<li>make the legal move between pegs A and C (in either direction)</li>
+			<li>make the legal move between pegs B and C (in either direction)</li>
+			<li>repeat until the puzzle is completed, checking if complexted after each move.</li>
+    </ul>
+  </li>
+  <li><b>Solution for an odd number of disks:</b>
+    <ul>
+			<li>make the legal move between pegs A and C (in either direction)</li>
+			<li>make the legal move between pegs A and B (in either direction)</li>
+			<li>make the legal move between pegs B and C (in either direction)</li>
+			<li>repeat until the puzzle is completed, checking if complexted after each move.</li>
+    </ul>
+  </li>
+</ul>
+<p>
+  So how do we go about coding these two solutions?
+	<xfr>
+		Comment coder ces deux solutions?
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public void solve() {
+    boolean even = 2 * (ndisks / 2) == ndisks;
+    echo();
+    if (even)
+      evenSolution();
+    else
+      oddSolution();
+    System.out.println("Resolved in " + nmoves + " moves.");
+  }	
+</pre>
+<h4>First Question: odd or even?</h4>
+<p>
+  So let's comment on the line:
+</p>
+<pre class="prettyprint lang-java">
+  boolean even = 2 * (ndisks / 2) == ndisks;
+</pre>
+<p>
+  How does it work? Well, it relies on the fact that the division
+  is a division on integer numbers
+  (Java type <span class="java-keyword">int</span>),
+  not a division on real numbers
+  (Java type <span class="java-keyword">float</span> or
+  <span class="java-keyword">double</span>).
+  In other words, (3/2) is not equal to 1.5, it is equal to 1.
+  Hence, with ndisks=3, we have (2*(3/2)) that is equal to 2, not 3.
+	Note that the number 3 is an odd number. But with ndisks=4, an
+	even number, we have 2*(4/2)==4.
+  <xfr>
+    Comment cela fonctionne t-il? Bien, il faut considérer que la division 
+    est une division d'entiers
+    (Java type <span class="java-keyword">int</span>),
+    pas une division de réels
+    (Java type <span class="java-keyword">float</span> ou
+    <span class="java-keyword">double</span>).
+    Autrement dit, (3/2) n'est pas égal à 1.5, c'est égal à 1.
+    Donc, avec ndisks=3, nous avons 2*(3/2)==2, non pas 3.
+		Et 3 est impair. Mais, avec ndisks=4, nous avons
+		2*(4/2)==4, et 4 est pair.
+  </xfr>   
+</p>
+<p>
+  You could also use a modulo 2, like this:
+</p>
+<pre class="prettyprint lang-java">
+	boolean even = (ndisks % 2) == 0;
+</pre>
+
+<h4>Next Question: termination</h4>
+<p>
+	With either case, the 
+	<span class="java-method">evenSolution</span> or the
+	<span class="java-method">oddSolution</span>,
+	the next question 
+	is to know when the puzzle is completed.
+  Since we started with our disks on pegA, a puzzle
+  is complete when the pegA is empty and either one
+  of the two other pegs are empty. Which translates
+  immediately to a method like this:
+  <xfr>
+ 		Maintenant, regardez ces deux implémentations. Nous avons besoin de
+ 		savoir quand le jeu est fini. Comme nous avons démarré
+ 		avec les disques sur le pilier A, le jeu est fini quand le pilier
+ 		A est vide et au moins l'un des deux autres piliers est vide.
+ 		Ceci se traduit par la méthode suivante:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  boolean completed() {
+    return (pegA.size() == 0 && (pegB.size() == 0 || pegC.size() == 0));
+  }
+</pre>
+
+<h4>Next: odd and even solutions</h4>
+<p>
+	The code for the methods
+	<span class="java-method">evenSolution</span> and
+	<span class="java-method">oddSolution</span>
+	is quite straightforward, it is almost a direct translation
+	of the algorithmic solution described by Wikipedia,
+	the iterative one we just discussed above.
+	Just go through the code to check that you understand it.
+	Reading code is an efficient way to learn how to write code
+	yourself.
+	<xfr>
+		Le code pour les méthodes 
+		<span class="java-method">evenSolution</span> et
+		<span class="java-method">oddSolution</span>
+		est une traduction assez fidèle de l'algorithme de
+		résolution du puzzle donné par Wikipedia, dont nous
+		avons parlé ci-dessus. Parcourez le code pour
+		voir si vous le comprenez. Lire du code est un bon
+		moyen d'apprendre à en écrire.
+	</xfr>
+</p>
+<p>
+	Speaking of reading code, you should also read the
+	code of the method <span class="java-method">echo</span>.
+	You will notice different usages of the print abilities of Java.
+  One form is the more traditional Java way of printing stuff,
+  using <span class="java-method">println</span>.
+  The other form, using <span class="java-method">printf</span>,
+  is borrowed from C and helps with more complex printing
+  requirements. The code shows you that you can mix both,
+  as you deem fit.
+  <xfr>
+ 		En parlant de lire du code, vous devriez lire le code
+		de la méthode <span class="java-method">echo</span>.
+		Notez les différents usages du print de Java. 
+ 		L'usage traditionnel est basé sur <span class="java-method">println</span>.
+ 		L'autre usage, basé sur <span class="java-method">printf</span>,
+ 		est repris au langage C et permet d'afficher des formats
+ 		plus complexes. Le code vous montre que vous pouvez mixer les deux.
+  </xfr>     
+</p>
+<p>
+  Now it is time that you try the solver out, using different numbers of disks.
+	So go ahead, run the solver through the class
+	<span class="java-class">HanoitTowerPuzzle</span>
+	and make sure it works. Once it does, you need to
+	let us check that it does:
+  <xfr>
+    Maintenant il est temps que vous essayez de résoudre
+		des puzzles avec différents nombres de disques.
+		Une fois que tout marche, nous allons le vérifier avec
+		ce test:
+  </xfr>   
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/hanoi.tower"
+   classpath="bin;tests.jar"
+   classname="hanoi.tower.TestSolver2">
+  <banner>
+		OK, let us check that it all works smoothly.
+  </banner>
+  <hint>
+		Not quite, fix your code please.
+  </hint>
+  <success>
+		Real smooth... Well done.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<div name="check2_unfold" >
+</div>
+
+
+
+

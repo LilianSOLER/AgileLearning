@@ -1,0 +1,267 @@
+<vars>
+  sprint=java.basics
+  task=t6
+  step=t6-s3
+</vars>
+
+
+<p>
+  This second bug is an important one to track, understand, and fix.
+  <b>
+    If you have problems grasping what is going on, you must ask for help.
+  </b>
+</p>
+<p>
+  The bug is subtle, very common, and yet rarely discussed amongst developers.
+  It is also rarely discussed in coding courses, which, we think, is a mistake.
+  We know this will be a bit challenging for you, but we are confident that
+  you can grasp how <b>aliasing</b> is at the origin of the bug.
+  We already mentioned aliasing before, remember? Let's refresh our memory:
+  <xfr>
+    Le bug est subtile, très commun, et pourtant rarement discuté entre
+    développeurs et encore moins dans les cours de programmation.
+    Nous savons que ce bug sera un peu difficile pour vous, mais nous
+    sommes confiant que vous allez parfaitement comprendre comment
+    un manque de maîtrise de l'aliasing va être à la source du bug.
+  </xfr>
+</p>
+<div style="column-count: 2;column-gap: 40px; ">
+  <pre class="prettyprint lang-java">
+    Point p1 = new Point();
+    Point p2 = new Point();
+    Point p3 = p2;
+    p3.translate(10,20);
+  </pre>
+  <img style="margin-left: .5in;" src="images/four-variables.svg" />
+</div>
+<p>
+  Look at the variables <span class="java-lvar">p2</span> and
+  <span class="java-lvar">p3</span>, they are <b>aliasing</b>
+  the same object. Remember that <b>the assignment from p2 to p3 does not
+    copy the object, it copies the identity of the object</b>.
+  This means that both variables refer to the same
+  object, an instance of the class <span class="java-class">Point</span>.
+  So the translation applied to the object referenced by
+  <span class="java-lvar">p3</span> can be seen on the object referenced by
+  <span class="java-lvar">p2</span>. Of course, it can, they are the same object.
+  <xfr>
+    C'est un rappel et vous avez encore besoin de la traduction...
+    Il faut commencer à améliorer votre anglais. Profitez en.
+    Au fur et à mesure, nous traduirons de moins en moins...
+  </xfr>
+</p>
+<p>
+  Aliasing is not a <em>de facto</em> flaw in a design, in fact,
+  aliasing is a natural phenomenon
+  that cannot be avoided most of the time. Yet, aliasing must be understood
+  precisely. You must understand how objects are aliased throughout the object
+  graph your program creates.
+  Otherwise, you may be believing that you are modifying two objects
+  while in fact you are modifying the same object. Or the reverse situation,
+  you may think that an object is aliased where in fact you have two objects.
+  So for instance, in the code above, the translation of
+  <span class="java-lvar">p3</span> would in fact
+  also translate <span class="java-lvar">p2</span>,
+  since <span class="java-lvar">p2</span> and <span class="java-lvar">p3</span>
+  are referencing the same object.
+  <xfr>
+    Les alias ne sont ni mauvais ni bons, comme nous l'avons déjà dit.
+    Par contre, il faut savoir maitriser les alias. Sinon, vous
+    pouvez croire que vous modifiez deux objets alors que c'est le même,
+    ou bien penser modifier un alias d'un objet alors que vous avez
+    en réalité deux objets. Ainsi, dans le code ci-dessus, la translation
+    de <span class="java-lvar">p3</span> fait aussi la translation 
+    de <span class="java-lvar">p2</span> puisque
+    <span class="java-lvar">p2</span> et <span class="java-lvar">p3</span>
+    référence le même objet.
+  </xfr>
+</p>
+<p>
+  This is exactly the problem with the code that we gave you: there is some
+  unwanted aliasing going on. Remember that we discussed that a polygon is
+  a graph of objects; a graph that includes a polygon object, an array object,
+  and point objects.
+  If two polygons are sharing either their array object or point objects,
+  changing one polygon would affect the other and the other way around.
+  This is not what we expect here, we expect each polygon to be an independent
+  entity.
+  <xfr>
+    C'est exactement un problème similaire dans le code que nous vous avons
+    donné: il y a un aliasing non voulu. Vous vous rappelez qu'un polygon
+    est un graphe de plusieurs objets qui inclue le polygon, le tableau,
+    et les points. Si les graphes de deux polygones partagent des objets,
+    changer l'un des polygones va affecter le second.
+  </xfr>
+</p>
+<p>
+  Notice that it is possible that in other contexts, aliasing between
+  polygons could be desired. For instance, some mesh representation of
+  3D objects might want that polygons share points, because polygons
+  form a contiguous surface.
+  But in the code we gave you, we want polygons to be independent entities.
+  <xfr>
+    Notez qu'il est possible que dans d'autres contexte, on souhaite
+    faire de l'aliasing entre polygones. Par exemple, des représentations
+    non structurées d'objets 3D pourraient bénéficier de la capacité
+    de partager des points. Mais dans le code que nous vous avons donné,
+    nous voulons que les polygones soient des objets indépendants.
+  </xfr>
+</p>
+<p>
+  Please find the aliasing between the two polygons reachable from
+  the static variables <span class="java-lvar">poly1</span> and
+  <span class="java-lvar">poly2</span>.
+  <xfr>
+    Veuillez trouver l'aliasing non-voulu entre les polygons
+    référencés par les variables statiques
+    <span class="java-lvar">poly1</span> et
+    <span class="java-lvar">poly2</span>.
+  </xfr>
+</p>
+<p>
+  With that in mind, happy hunting... but let us give you a last advice.
+  Draw the object graph on a piece of paper, like we did earlier to show
+  that a polygon was in fact a small graph of objects. Reuse this approach,
+  when reading the code we gave you... Soon you shall see what we have done
+  wrong, with the help of the debugger.
+  <xfr>
+    Avec cela en tête, foncez... mais suivez un dernier conseil,
+    dessinez le graphe d'objets sur un papier, comme nous l'avons fait
+    précédemment pour voir qu'un polygone est en fait un petit graphe d'objets.
+    Réutilisez cette méthode lorsque vous lisez du code. Vous verrez très vite
+    ce qui est erroné dans ce code, avec l'aide du debugger.
+  </xfr>
+</p>
+<p>
+  <em>May the force be with you...</em>.
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/java.basics"
+   classpath="bin;tests.jar"
+   classname="basics.step6.TestPolygon2">
+  <banner>
+    Fixed?
+  </banner>
+  <hint>
+    If the check complains about the aliasing still being there,
+    look closely at how	    <span class="java-lvar">poly1</span> and
+    <span class="java-lvar">poly2</span> are sharing their array
+    of points. Do you think it is an aliasing by design or a bug?
+  </hint>
+  <success>
+    You did fix it.
+    Well done.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<div name="check2_unfold" style="display:none;" >
+  <p>
+    So you figured out the aliasing of the array of points, between
+    <span class="java-lvar">poly1</span> and
+    <span class="java-lvar">poly2</span>. 
+    If you draw it on a piece of paper, you should have drawn something
+    like this:
+  </p>
+  <img src="images/polygon-aliasing.svg"/>
+  <p>
+    The unwanted aliasing is depicted by the red arrows, showing that
+    two polygons are sharing the array of points. There is nothing
+    fundamentally or intinsically wrong there. It is just that we
+    wanted polygons without any aliasing, that is, an object graph
+    that would look like this:
+    <xfr>
+      L'aliasing non-voulu est montré par les flèches rouges,
+      montrant que les deux polygones partagent en fait leur
+      tableau de points. Il n'y a rien de fondamentalement
+      ou intrinsèquement faux ici, c'est juste que nous voulons
+      des polygones sans partages d'objets. Nous voulions ceci:
+    </xfr>
+  </p>
+  <img src="images/polygon-no-aliasing.svg"/>
+  <p>
+    Let's look back at the mistake we introduced in the code.
+    It was a small mistake, just forgetting to re-allocate an array.
+    Something easy to do and oversee.
+    Yet, it was a big mistake because it resulted in an incorrect
+    object graph. Worse, it resulted in a program than did not
+    crash, it ran, but it didn't do what it was supposed to do.
+    Look at the code below that summarizes the key four lines:
+    <xfr>
+      Regardez l'erreur, elle était toute petite et facile à faire,
+      juste oublier de ré-allouer un tableau. Quelque chose de
+      facile à faire et difficile à voir après coup.
+      Mais en fait cette petite erreur a de grosses conséquences.
+      Les polygones n'ont pas été construit correctement. Mais plus
+      grave, le programme tournait mais ne faisait pas ce qu'il fallait.
+      Le code ci-dessous montre les quatre lignes clés:
+    </xfr>
+  </p>
+  <pre class="prettyprint lang-java">
+    Point points[];
+    points = new Point[4];
+    ...
+    p1 = new Polygon(points);
+
+    points = new Point[4];
+    ...
+    p2 = new Polygon(points);
+  </pre>
+  <p>
+    Now we know that we needed to allocate two arrays, one for each polygon.
+    But this is nothing obvious, it all depends on the design of the
+    constructor of the class <span class="java-class">Polygon</span>.
+    And this is exactly the point we are making, the developer
+    who wrote the class <span class="java-class">Polygon</span>
+    must decide and he must communicate his design in the comments
+    of the constructor.
+    <xfr>
+      Maintenant nous savons qu'il faut allouer deux tableaux, un par
+      polygone. Mais ce n'était pas évident, tout dépend de la sémantique
+      du constructeur de la classe <span class="java-class">Polygon</span>.
+      <b>Et c'est exactement le point sur lequel nous voulons insister.</b>
+      Le développeur qui écrit le constructeur doit décider et doit
+      documenter le comportement. Le commentaire du constructeur doit
+      préciser si le constructeur fait une copie du tableau ou si le
+      tableau passé en paramêtre est aliasé.
+    </xfr>
+  </p>
+  <p>
+    As a developer using the
+    class <span class="java-class">Polygon</span>,
+    your responsability is to go read the comments of the constructor.
+    If they are missing or unclear, and it will be often the case,
+    go read the implementation if
+    the source is available. If it is not available, try writing some tests
+    to determine the design that was used.	      
+    <xfr>
+      En tant que développeur utilisant la classe
+      class <span class="java-class">Polygon</span>,
+      il est de votre responsabilité de rechercher la sémantique.
+      Si ce n'est pas écrit dans le commentaire (et cela le sera
+      rarement), aller regarder le source. Si le source n'est pas
+      disponible, faite de petits tests pour déterminer le comportement.
+    </xfr>
+  <p>
+    The key question is the following: is the Polygon constructor making a
+    copy of the array given as an argument or is the constructor aliasing
+    that array? In the code we gave you, the array is aliased and so
+    a new array must be allocated for each polygon. This is a key question
+    when coding, in Java or in C or in almost all programming languages.
+    <xfr>
+      La question que vous devez vous poser est la suivante:
+      est-ce que le constructeur d'un polygone fait une copie du
+      tableau passé en paramêtre ou non. Si il ne fait pas une copie,
+      le tableau sera référencé depuis le polygon. Dans le code que nous
+      vous avons donné, le tableau n'est pas copié et il faut donc créé
+      un tableau pour chaque polygon. Cette question est très importante,
+      en Java, en C, et dans presque tous les langages de programmation.
+    </xfr>
+  </p>
+  <p>
+    <b>Mastering aliasing is an integral part of being a good developer.</b>.
+  </p>  
+</div>

@@ -1,0 +1,141 @@
+<vars>
+  sprint=java.basics
+  task=t6
+  step=t6-s4
+</vars>
+
+<p>
+  <b>Mastering aliasing is a integral part of being a good developer.</b>.
+  In the previous step, we discussed how the current constructor of the class
+  <span class="java-class">Polygon</span> may lead to unwanted aliasing
+  regarding the array of points passed as an argument to the constructor.
+  Is it a bad thing?
+  <xfr>
+    Maitriser l'aliasing est un point essentiel pour être un bon
+    développeur. Dans l'étape précédente, nous avons discuté comment le
+    constructeur de la classe <span class="java-class">Polygon</span>
+    peut être la source d'un aliasing non-souhaité au niveau du tableau
+    des points. Mais est-ce un problème?
+  </xfr>
+</p>
+<p>
+	Not at all, as we already said, aliasing is never intrisincally good or evil.
+	It must be a concious decision on your part. So let's discuss this.
+	If the constructor of a polygon looks like this:
+  <xfr>
+    Pas du tout, comme nous l'avons déjà dit, avoir de l'aliasing n'est pas
+    intrinsèquement mauvais, il faut seulement que l'aliasing soit compris
+    et maitrisé. Donc reconsidérons la construction d'un polygon:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Polygon {
+  Point[] points;
+  Polygon(Point pts[]) {
+    points = pts;
+  }
+}  
+</pre>
+<p>
+	It is clear that the given array is referenced, not copied.
+	Therefore, one must understand that the array given as an argument
+  is really <b>given</b> to the polygon. Therefore, when creating polygons,
+  one has to create one array of points for each polygon, thereby avoiding
+  any aliasing of the arrays of points across polygons.
+  <xfr>
+    Il est clair que le tableau est référencé et non pas copié par
+    le constructeur. Donc, le tableau passé en paramêtre du l'appel
+    au constructeur est véritablement donné au polygon. Cela veut
+    dire que lorsque l'on crée plusieurs polygon, on se doit de créer
+    un tableau de points par polygon, évitant ainsi l'aliasing
+    qui était le bug dans l'étape précédente.
+  </xfr>
+<p>
+<pre class="prettyprint lang-java">
+  Point[] points = new Point[2];
+  points[0] = new Point(0,0);
+  points[1] = new Point(10,20);
+  Polygon p = new Polygon(points);
+</pre>
+<p>
+	Now, what about the points themselves? Would it make sense
+	to alias points between polygons? At first, one could think
+	that it does not make sense either. An overly protective
+  developer could write a polygon constructor like this
+  <xfr>
+    Maintenant, que se passe-t-il pour les points? Est-ce que
+    cela aurait du sens que les points soient aliasé entre des
+    polygons? En première analyse, on pourrait se dire que non.
+    Et donc, un développeur pour coder un constructeur comme ceci,
+    totalement sur la défensive vis-à-vis de l'aliasing des points:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Polygon {
+  Point[] points;
+  Polygon(Point pts[]) {
+    points = pts;
+    for (int i=0;i &lt; pts.length; i++) {
+      points[i] = new Point(pts[i]);
+    }
+  }
+}  
+</pre>
+<p>
+	But, like in real life, the one wanting security will often forego
+  freedom (freely adapted from Thomas Jefferson famous quote on
+  security and liberty).
+  So if you write the constructor this way, you protect against
+  aliasing but you also forbid it entirely. This coding would greatly
+  limit the usability of this polygon.
+	For instance, imagine that you want to represent a surface, divided
+	in polygons, sharing adjacent segments. Just like this:
+  <xfr>
+    Mais, comme dans la vrai vie, celui qui veut de la sécurité aura
+    à abandonner de la liberté (adaptation libre de la fameuse phrase
+    de Thomas Jefferson au sujet de la liberté et de la sécurité).
+    Si vous écrivez le constructeur de cette façon, vous vous protégez
+    totalement contre l'aliasing mais vous limitez grandement l'utilité
+    de cette classe. En effet, imaginer comment représenter une surface,
+    divisée en polygons qui partagent les segments adjacents. Comme ceci:
+  </xfr>
+</p>
+<img src="images/375px-Dolphin_triangle_mesh.png" />
+<p>
+	This is how games represent objects,
+	as surfaces modeled as triangles, see this Wikipedia
+	<a href="https://en.wikipedia.org/wiki/Triangle_mesh">page</a>
+	if you are interested.
+	In this case, you can see that any point is aliased across six triangles.
+	So in fact, the best constructor is the one given originally:
+  <xfr>
+    C'est ainsi que les jeux représentent les objets, comme des surfaces
+    modélisées en triangles, lisez cette 
+    <a href="https://en.wikipedia.org/wiki/Triangle_mesh">page</a>
+    Wikipedia si vous êtes intéressé. Avec cet usage, vous pouvez voir
+    que tout point est aliasé entre 6 triangles.
+    Et du coup, le meilleur constructeur est celui donné à l'origine:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Polygon {
+  Point[] points;
+  Polygon(Point pts[]) {
+    points = pts;
+  }
+}  
+</pre>
+<p>
+	But the documentation of that constructor must clearly state
+	that there is no copy, not of the given array and not of the given
+  points. That way, the one
+	creating polygons can decide how he or she wants to alias points.
+	Of course, he or she will make sure to create a different array
+	for each polygon.
+  <xfr>
+    Mais la documentation doit être très clair sur le fait que le
+    constructeur ne fera aucune copie, ni du tableau de points, ni
+    des points. Ainsi, la responsabilité de contrôller l'aliasing
+    revient à celui qui construit les polygons. 
+  </xfr>
+</p>

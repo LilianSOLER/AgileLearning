@@ -1,0 +1,225 @@
+<vars>
+  sprint=hanoi.tower
+  task=t2
+</vars>
+
+<p>
+  What do we know about the class <span class="java-class">Peg</span>.
+  Looking at the Wikipedia description, we know that:	  
+</p>
+<ul>
+  <li> Each peg represents a stack of disks. </li>
+  <li> We know the maximum number of disks a peg can have. </li>
+</ul>
+<p>
+  So this looks like we know enough to design the class
+  <span class="java-class">Peg</span>, we gave a skeleton
+  version of it in the package
+  <span class="java-package">hanoi.tower</span>.
+  Let's complete it together.
+</p>
+
+<h4>Fields and Constructor</h4>
+
+<p>
+  So you have to decide which fields you want and
+  you also have to implement the following constructor,
+  with the given argument being the maximum number of
+  disks a peg can stack up.
+  Remember to protect as private what needs to be
+  and declare public the rest.
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/hanoi.tower"
+   classpath="bin;tests.jar"
+   classname="hanoi.tower.TestPeg">
+  <banner>
+  </banner>
+  <hint>
+    Not quite, fix your code please.
+    The class <span class="java-class">Peg</span> should be public,
+    with the necessary public constructor, taking the maximum size as an
+    argument (typed as an <span class="java-keyword">int</span>).
+    Also, declare all fields as private.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+<div name="check1_unfold">
+</div>
+
+<h4> Adding push and pop methods </h4>
+
+<p>
+  Looking at Wikipedia again, we can see that a peg must
+  ensure some invariants:
+</p>
+<ul>
+  <li> A disk is on at most one peg at any one time. </li>
+  <li> A disk can only be added the top of a peg. </li>
+  <li> Only the top disk of a peg can be removed. </li>
+</ul>
+<p>
+  These invariants are the typical invariants of a stack.
+  You need to implement the two following methods:
+</p>
+<pre class="prettyprint lang-java">
+  class Peg {
+    public void push(Disk d) { ... }
+    public Disk pop(Disk d) { ... }
+  }
+</pre>
+<p>
+  The semantics of the methods are quite straightforward.
+  The method <span class="java-method">push</span> stacks
+  a disk on top of the peg.
+  The method <span class="java-method">pop</span> removes
+  the top disk from the peg.
+  But there are interesting questions:
+  <xfr>
+    La sémantique des méthodes est assez évidente.
+    La méthodes <span class="java-method">push</span> empile un disque
+    au sommet d'un pilier.
+    La méthode <span class="java-method">pop</span> enlève le disque
+    du dessus d'un pilier.
+    Il y a deux questions intéressantes:
+  </xfr>
+</p>
+<ol>
+  <li>
+    What should happen if the method
+    <span class="java-method">pop</span> is invoked on a
+    peg with no disk?
+  </li>
+  <li>
+    What should happen if the method
+    <span class="java-method">push</span> is invoked on a
+    peg that is full?
+    </li>
+  <li>
+    What should happen if the method
+    <span class="java-method">push</span> is invoked
+    with a disk not smaller than the one on the top?
+  </li>
+  <li>
+    What should happen if a disk is pushed on
+    more than one peg? And how would you know about that? 
+  </li>
+</ol>
+<p>
+  These questions are important to ask. You can decide
+  that you assume that a peg is handled properly and
+  that these situations never occur. Or you may prefer
+  to be safe than sorry. We will choose to be safe here,
+  you will make sure these special cases are detected
+  throw an exception. You can throw an IllegalStateException
+  or you can use asserts.
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/hanoi.tower"
+   classpath="bin;tests.jar"
+   classname="hanoi.tower.TestPegPushPop">
+  <banner>
+    This check will accept that your code either throws
+    IllegalStateExceptions or experiences failed asserts.
+  </banner>
+  <hint>
+    Please fix your code.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<div name="check2_unfold" style="display:none;" >
+</div>
+
+<h3> Adding some more methods </h3>
+
+<p>
+  Before we can complete the Hanoi Tower puzzle, we will need
+  to add some more methods on the class <span class="java-class">Peg</span>.
+</p>
+<pre class="prettyprint lang-java">
+  class Peg {
+    public int size() { ... }
+    public Disk peekAt(int depth) { ... }
+    public boolean legalMove(Peg dst) { ... }
+  }
+</pre>
+<ul>
+  <li>
+		<em>int size()</em>: this one is obvious, return the number of disks
+    stacked on the peg.
+  </li>
+  <li>
+		<em>Disk peekAt(int)</em>: returns the disk on the peg, at the given depth.
+		Depth zero is the bottom, the lowest disk underneath all the others.
+		<b>Warning:</b> peeking is not popping, disks are not removed,
+		it is just about knowing which disk is at a given depth. 
+  </li>
+  <li>
+			<em>Disk legalMove(Peg)</em>: returns true if the top disk of the source peg
+			can be moved to the given destination peg.
+    </li>
+</ul>
+<p>
+  So the one method that may be a bit challenging is the method
+  <span class="java-method">legalMove</span>. There are several points to
+  consider:
+</p>
+<ol>
+  <li> Returns false if the source peg is empty. </li>
+  <li> It is always possible to move a disk to an empty peg. </li>
+  <li> The top disk at the destination peg must be larger than the moving disk. </li>
+</ol>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/hanoi.tower"
+   classpath="bin;tests.jar"
+   classname="hanoi.tower.TestPegMisc">
+  <banner>
+		<b>TODO:</b> create the methods listed above on the
+		class class <span class="java-class">Peg</span>.
+		Let's check that everything is ok when you are done.
+  </banner>
+  <hint>
+		Please fix your code.
+  </hint>
+  <success>
+			Everything looks fine.
+  </success>
+  <unfold name="check3_unfold">
+  </unfold>
+</check>
+<div name="check3_unfold" style="display:none;" >
+  <p>
+		Although your implementation seems fine, let us share with
+		you one possible implementation for the method
+			<span class="java-method">legalMove</span>.
+  </p>
+  <pre class="prettyprint lang-java">
+  boolean legalMove(Peg dst) {
+    if (ndisks == 0)
+      return false;
+    if (dst.ndisks == 0)
+      return true;
+    Disk top = disks[ndisks - 1];
+    Disk dtop = dst.disks[dst.ndisks - 1];
+    return (top.size() &lt; dtop.size());
+  }
+  </pre>
+</div>
+

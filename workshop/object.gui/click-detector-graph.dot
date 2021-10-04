@@ -1,0 +1,10 @@
+digraph click_detector {
+	OUTSIDE -> INSIDE [label="enter"];
+
+	INSIDE -> INSIDE [label="up"];
+	INSIDE -> DOWN [label="down"];
+	INSIDE -> OUTSIDE [label="leave"];
+	
+  DOWN -> INSIDE [label="up"];
+  DOWN -> OUTSIDE [label="leave"];
+}

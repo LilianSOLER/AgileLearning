@@ -1,0 +1,143 @@
+<vars>
+  sprint=word.count
+  task=t4
+  step=t4-s2
+</vars>
+
+<p>
+  We will begin evolving our code, but we want to keep
+  the old and the new version, so that we can compare
+  our performance before and after.
+  So we are going to preserve the code we wrote in
+  the Java package <span class="java-class">word.count.step2</span>.
+  We will code our optimized vocabulary in 
+  the Java Package
+  <span class="java-class">word.count.step3</span>, with a
+  new outline for the implementation of the class
+  <span class="java-class">Vocabulary</span>.
+  <xfr>
+  	Nous allons modifier votre code, mais nous voulons
+  	conserver l'ancienne et la nouvelle version, de manière
+  	à pouvoir comparer leurs performances respectives.
+  	Donc vous allez préservez le code que vous avez écrit
+  	dans le package <span class="java-class">word.count.step2</span>.
+  	Nous allons coder la version optimisée du vocabulaire dans le 
+	package
+  	<span class="java-class">word.count.step3</span>, avec une
+  	nouvelle implementation de la classe
+  	<span class="java-class">Vocabulary</span>.
+  </xfr>
+</p>
+<p>
+  The new design for the class
+  <span class="java-class">Vocabulary</span>
+  adopts an array of buckets, each bucket being an array of words.
+  Look below at the outline of the bucket-based implementation
+  of the class <span class="java-class">Vocabulary</span>: 
+  <xfr>
+  	La nouvelle implementation de la classe
+  	<span class="java-class">Vocabulary</span>
+		utilise un tableau de buckets, chaque bucket étant un tableau de mots.
+  	Regardez ci-après l'aperçu de l'implémentation basée sur les buckets: 
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Bucket {
+  private static final int NWORDS = 16;
+  private Word words[];
+  private int nwords;
+
+  Bucket() {
+    words = new Word[NWORDS];
+    ...
+  }
+  public Word find(Word word) { ... }
+  public void add(Word word) { ... }
+}
+</pre>
+<pre class="prettyprint lang-java">      
+public class Vocabulary {
+
+  private static final int NBUCKETS = 256;
+
+  private Bucket buckets[];
+  private int nwords;
+  private int nadds;
+
+  public Vocabulary() {
+    buckets = new Bucket[NBUCKETS];
+    ...
+  }
+  ...
+}
+</pre>
+<p>
+  With this bucket-based implementation, a vocabulary object is really
+  encapsulating a complex graph of objects: 
+</p>
+  <img src="images/buckets.svg" >
+<p>
+  Notice also how the implementation of the class
+  <span class="java-class">Bucket</span> uses the same implementation
+  we used before: an array of words. Therefore, you can implement
+  the class <span class="java-class">Bucket</span> like you did
+  the class <span class="java-class">Vocabulary</span> earlier.
+  In particular, you can reuse the code of the following
+  methods:
+</p>
+<ul>
+  <li> public Word find(Word word); </li>
+  <li> public void add(Word word); </li>
+</ul>
+<p>
+  The method <span class="java-method">find(Word)</span> and
+  the method <span class="java-method">add(Word)</span> have
+  pretty similar signatures and keep the same specification.
+  It will be the same code that you had on the class
+  <span class="java-class">Vocabulary</span> in
+  the Java package <span class="java-class">word.count.step2</span>.
+</p>
+<p>
+  Last point before you can start implementing.
+  When searching for a word in a bucket, remember to use
+  the method <span class="java-method">equals(Word)</span>
+  on the class <span class="java-class">Word</span> to compare
+  two words. Again, we want to promote reuse and avoid recoding
+  the same algorithms	over and over.
+</p>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="word.count.step3.TestBucket"> 
+  <banner>
+    Once you have implemented the class
+    <span class="java-class">Bucket</span> and
+    tested on your own, you can try to pass this checkpoint.
+    Remember: it is important for your learning that you
+    only use our checks once you believe that
+    you have a working version of the class
+    <span class="java-class">Bucket</span>.
+  </banner>
+  <hint>
+    Not quite. Try again.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<div name="check2_unfold">
+	<h4>That's all folks</h4>
+  <p>
+    Please make sure that you commit and push your work to our server.
+  </p>
+  <textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint word.count, Task4, Step2 completed"
+  $ git push --all
+  </textarea>
+</div>

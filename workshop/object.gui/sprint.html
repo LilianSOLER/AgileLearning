@@ -1,0 +1,142 @@
+<vars>
+  sprint=object.gui
+</vars>
+
+<p>
+  This sprint is about graphical user interfaces for several
+	reasons. Of course, knowing about graphical user interfaces
+	is quite useful for any developers since so many applications
+	have one. But it is also interesting because 
+	it is a perfect usecase for advanced techniques
+	from object-oriented programming. Finally, it introduces
+	a very important programming model called <em>event-oriented
+	programming</em>. This is going to be so interesting.
+  <xfr>
+		Ce sprint est sur les interfaces graphiques et cela pour
+		différent raisons. Tout d'abord, savoir comment marche
+		une interface graphique est utile pour tout développeur
+		puisque une majorité d'applications en ont une.
+		Mais c'est aussi une programmation qui est parfaitement
+		adaptée à l'usage des techniques avancées de la programmation
+		orientée-objet. Enfin, les interfaces graphiques
+		utilise la programmation orientée-événement, un type
+		de programmation qu'il est important de comprendre
+		et de maîtriser.
+  </xfr>
+</p>
+<p>
+	<b>Reminder:</b> import the Eclipse project "object.gui" into your	workspace.
+</p>
+<!--
+<p>
+	So you should import the Eclipse project "object.gui" into
+	your workspace. You know how to do that by now.
+	But it is likely that the project will not compile and
+	Eclipse will show you a bunch of red stars. This is
+	because we have provided you with some tests to help you
+	but we have coded these tests using the JUnit framework,
+	the version4. If you want to learn more, you can
+	learn about that version of JUnit
+	<a href="https://junit.org/junit4/">here</a>, but
+	it can wait until we will actually start using
+	our JUnit tests.
+	<xfr>
+		Vous devez importer le projet Eclipse "object.gui" dans
+		votre espace de travail. Il est probable que le projet
+		importé ne compile pas, 
+	</xfr>
+</p>
+<p>
+	To fix the compilation errors, you need to update
+	the build path of the project. So go there and
+	select the tab "Libraries". Then click on "Add Library"
+	and select JUnit, <b>version 4</b> (<b>not</b>
+	the newer versions).
+	Click "Apply and Close"
+	and that is it. You do not need to know more
+	about JUnit right now, we will come back to it
+	in time.
+</p>
+
+1) object graph: as a population of cooperating individuals.
+  an object awaits to be invoked
+  when invoked, relies on his network of know objects to do what has been asked
+    - Point.translate
+    - Vector.translate
+
+  Revisiting objects -> event-oriented programming
+    letting go of the algorithmic view.
+    an object reacts
+  example: the button and button listener
+           button driven from a string of letter: EDMMMUL
+
+2) Graphic basics -> with my easy wrapping of Swing.
+   canvas, pixels, colors, graphic operations
+   mouse & keyboard
+
+  - draw points as mouse moves, when button down
+  - clear background or not at each repaint
+    easier to draw points, but what happens 
+    when "shadowing the window with another window"
+
+  - polyline rather than just points
+    with clearing background on repaint.
+    -> remembering the points of the polyline.
+  - letter 'z' for zap -> clear screen
+  - creating rectangle/circle
+	   - c -> circle
+     - r -> rectangle
+    both require two points
+    show the shape at each mouse move.  
+    skills: 
+      automata
+      understand repaint while progressing an automata
+  - select existing shapes by selecting near "points" of the shape.
+    hit 'd' for delete the selected shape.
+3) Graphic Components and Layouts
+  - layout tree vs inheritance tree (component vs container)
+    - warmup with tree
+    - warmup with component/container as both tree and class hierarchy
+  - repaint requests -> paint events -> graphics in local coordinate
+  - Canvas and button, label   
+  - layout manager: flow and border, given?
+  - mouse/keyboard listeners, dispatching mouse/keyboard events
+
+  worm game but as a central canvas, with a label on top
+  buttons on the left and a bottom panel with scores,life points,etc.
+
+  flickering? -> use double-buffering in swing...  
+-->
+
+<h3>Tasks</h3>
+
+<tasks>
+  <task name="t1" label="Revisiting Objects" >
+  </task>
+  <task name="t2" label="Basics of Graphics" >
+  </task>  
+  <task name="t3" label="Component Layout" >
+  </task>  
+  <task name="t4" label="Layout Managers" >
+  </task>  
+  <task name="t5" label="Basic Widgets" >
+  </task>  
+  <task name="t6" label="Timers" >
+  </task>  
+  <task name="t7" label="Event Queue" >
+  </task>  
+  <task name="t8" label="Space Duel Game" >
+  </task>  
+</tasks>
+
+<h3>That's all folks</h3>
+
+<p>
+  Please commit and push your work to our server:
+</p>
+<textarea class="terminal" rows="4" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.gui, completed"
+  $ git push --all
+</textarea>
+

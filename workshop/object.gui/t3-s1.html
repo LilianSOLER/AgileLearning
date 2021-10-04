@@ -1,0 +1,412 @@
+<vars>
+  sprint=object.gui
+  task=t3
+	step=t3-s1
+</vars>
+<p>
+	Painting components is a mechanism that needs
+	to be understood correctly. You have to understand
+	its asynchronous nature. Remember, you do not control
+	the execution. So your code will make <em>requests</em>
+	to repaint components and the actual <em>repainting</em>
+	will happen at some later time.
+	<xfr>
+		Peindre les composants est un mécanisme qui doit
+		être compris correctement. En particulier, vous devez
+		en comprendre la nature asynchrone. Rappelez vous,
+		vous ne contrôlez pas l'exécution. Votre code va faire
+		des demandes pour que l'arbre soit repeint et il le
+		sera plus tard.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public abstract class Component {
+  Container parent;        // the parent container
+  int x, y ;               // top-left corner location within the parent
+  int width, height ;      // dimension within the parent
+
+  public void repaint();
+  public void paint(Graphics g);
+}
+</pre>
+<p>
+	When your code invokes the method	
+	<span class="java-method">repaint</span>,
+	it is a request made to a component to repaint itself. 
+	You must understand it is only a request, the
+	method invocation will return quickly <b>without</b>
+	having repainted the component.
+	At some later time, the graphical toolkit
+	will grant your request and invoke the
+	method
+	<span class="java-method">paint(Graphics)</span>
+	on that particular component, which will actually
+	repaint that component.
+	<xfr>
+		Lorsque votre code invoque la méthode
+		<span class="java-method">repaint</span>,
+		il fait une requête pour que l'arbre des
+		composants soit repeint. Mais ce n'est qu'une
+		requête, l'appel de la méthode va être court,
+		et il n'y aura pas d'affichage de l'arbre.
+		Plus tard, la boîte à outils graphique va
+		décider de repeindre l'arbre et chaque composant
+		de l'arbre va s'afficher via l'exécution de sa méthode
+		<span class="java-method">paint(Graphics)</span>.		
+	</xfr>
+</p>
+<p>
+	So we have two crucial points to understand.
+	First, you must understand the asynchronous nature of
+	<span class="java-method">repaint</span>
+	requests. Second, you must understand that the
+	actual repainting happens when the
+	method 	<span class="java-method">paint(Graphics)</span>
+	executes.
+	<xfr>
+		Nous avons donc deux points cruciaux à comprendre.
+		Le premier est la nature asynchrone de l'affichage
+		de l'arbre des composants graphiques. L'autre est
+		que l'affichage d'un composant se fait par sa méthode
+		<span class="java-method">paint(Graphics)</span>.
+	</xfr>
+</p>	
+
+<h3>Requesting a repaint</h3>
+
+<p>
+	Look at the code in the method
+	<span class="java-method">repaint</span>,
+	on the class
+	<span class="java-method">object.gui.task3.Component</span>,
+	you can see that it requests a repaint of the window.
+</p>
+<pre class="prettyprint lang-java">
+public abstract class Component {
+  public void repaint() {
+    Window win = Window.getWindow();
+    win.repaint();
+  }
+}
+</pre>
+<p>
+	This requests an asynchronous repaint to the underlying windowing
+	system that will occur later on as a repaint event
+	on the class <span class="java-class">object.gui.task3.Toolkit</span>,
+	which implements the interface
+	<span class="java-class">object.gui.basics.WindowListener</span>.
+	Look at the code of the method <span class="java-method">paint</span>
+	on the toolkit:
+	<xfr>
+		Vous voyez que demander à un composant de se réafficher reviens
+		à faire une demande à la fenêtre. Cette demande se fera plus tard
+		par l'appel de la méthode 
+		<span class="java-method">paint</span> de l'interface
+		<span class="java-class">object.gui.basics.WindowListener</span>
+		implémentée par la classe
+		<span class="java-class">object.gui.task3.Toolkit</span>.
+	</xfr>	
+</p>
+<pre class="prettyprint lang-java">
+public class Toolkit implemens object.gui.window.WindowListener {
+  @Override
+  public void paint(Graphics g) {
+    m_frame.doPaint(g);
+  }
+</pre>
+<p>
+	As you can see, the painting will start with the frame,
+	that is, 
+	the top-level container, root of the layout tree.
+	That root is an instance of the
+	class <span class="java-class">Frame</span>.
+	The method <span class="java-method">doPaint</span>
+	will interate over the tree of containers and components,
+	asking each one to repaint itself by invoking
+	the method <span class="java-method">paint(Graphics)</span>.
+	<xfr>
+		Comme vous pouvez le voir, l'affichage de l'arbre va commencer
+		par la racine, un objet instance de la classe
+		<span class="java-class">Frame</span>.
+		La méthode <span class="java-method">doPaint</span> va
+		parcourir l'arbre en entier, demandant à chaque composant
+		de s'afficher en invoquant la méthode
+		<span class="java-method">paint(Graphics)</span>.
+	</xfr>
+</p>
+<p>
+	This means that by overriding the method
+	<span class="java-method">paint(Graphics)</span>
+	on your classes, extending the class
+	<span class="java-class">Component</span>
+	or  the class
+	<span class="java-class">Container</span>,
+	you will be able to write the actual code to paint
+	your components. By default, a component simply
+	paints its background color:
+	<xfr>
+		Cela veut dire qu'en redéfinissant (override) la méthode
+		<span class="java-method">paint(Graphics)</span>
+		sur vos classes qui étendent la classe
+		<span class="java-class">Component</span>
+		ou la classe
+		<span class="java-class">Container</span>,
+		vous pourrez écrire le code pour afficher
+		vos composants graphiques.
+		Par défault, un composant s'affiche comme
+		ceci:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+class Component {
+  public void paint(Graphics g) {
+    g.setColor(m_bgColor);
+    g.fillRect(0, 0, m_width, m_height);
+  }
+}
+</pre>
+<p>
+	It is important to understand that the <b>given
+	graphics works in local coordinates</b>. So the
+	point (0,0) is at the top-left corner of the component.
+	Drawing a line from (0,0) to (getWidth(),getHeight())
+	always draws a diagonal of the component, no matter
+	where that component is actually on the screen.
+	<xfr>
+		Il est important de comprendre que l'objet
+		"graphics" qui est donné fonctionne en coordonées locales.
+		Le point (0,0) est en haut à gauche. Tracer une ligne
+		de (0,0) à (getWidth(),getHeight()) tracera toujours
+		une diagonale du composant, où qu'il se trouve sur
+		l'écran.
+	</xfr>	
+</p>
+<p>
+	It is also important to know that the <b>given graphics is clipped
+		to the bounds of the component</b>, that is, clipped to
+		the area on the screen given to the component.
+		Clipping means that a component
+	can never paint outside of its bounds. Also, know that its bounds
+	are always contained within the bounds of its parent.
+	<xfr>
+		Il est aussi important de savoir que toute opération graphique
+		sur l'objet "graphics" est restreinte à la surface attribuée
+		au composant. Cela veut dire qu'en utilisant l'objet
+		"graphics" donné pour repeindre un composant, vous ne pouvez
+		pas afficher en dehors de la surface attribuée à ce composant.
+	</xfr>
+</p>
+
+<h3>Painting Components</h3>
+
+<p>
+	So you are up now, it is your job to implement the
+	overall paint mechanism. It all starts from the
+	toolkit, look at the class
+	<span class="java-class">Toolkit</span>
+	and the method 
+	<span class="java-method">paint(Graphics)</span>:
+	<xfr>
+		C'est à vous, nous vous demandons d'implémenter
+		la mécanique globale pour afficher un arbre de
+		composants. Tout démarre par la méthode 
+		<span class="java-method">paint(Graphics)</span>
+		sur la classe
+		<span class="java-class">Toolkit</span>:		
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  @Override
+  public void paint(Graphics g) {
+    m_frame.doPaint(g);
+  }
+</pre>
+<p>
+	Your job is therefore to implement the
+	method
+	<span class="java-method">doPaint(Graphics)</span>
+	on both the class
+	<span class="java-class">Component</span>
+	and the class 
+	<span class="java-class">Container</span>.
+	The purpose of these two methods 
+	<span class="java-method">doPaint(Graphics)</span>
+	is to walk down the tree of components,
+	invoking the method
+	<span class="java-method">paint(Graphics)</span>.
+	<xfr>
+		Vous devez donc implémenter la méthode
+		<span class="java-method">doPaint(Graphics)</span>
+		sur les classes
+		<span class="java-class">Component</span>
+		et
+		<span class="java-class">Container</span>.
+		Le but de ces deux méthodes est de parcourir
+		l'arbre des composants d'appeler leur méthode
+		<span class="java-method">paint(Graphics)</span>.
+	</xfr>
+</p>
+<p>
+	Notice the separation of concerns
+	here. The method
+	<span class="java-method">doPaint(Graphics)</span>
+	is about walking down the tree, from the root down
+	to the leaves, while the method
+	<span class="java-method">paint(Graphics)</span>
+	is about the actual painting of a component in that
+	tree.
+	For now, we will be happy with the basic painting
+	of components:
+	<xfr>
+		Notez la séparation des considérations, la méthode
+		<span class="java-method">doPaint(Graphics)</span>
+		parcoure l'arbre et la méthode
+		<span class="java-method">paint(Graphics)</span>
+		affiche les composants à l'écran.
+		Pour l'instant, on va se contenter de l'affichage
+		par défaut pour nos composants:
+	</xfr>	
+</p>
+<pre class="prettyprint lang-java">
+class Component {
+  public void paint(Graphics g) {
+    g.setColor(m_bgColor);
+    g.fillRect(0, 0, m_width, m_height);
+  }
+}
+</pre>
+<p>
+	Make sure that you respect these points:
+	<xfr>
+		Soyez sûr de respecter ces points:
+	</xfr>
+</p>
+<ul>
+	<li>
+		Each invocation of the method
+		<span class="java-method">paint(Graphics)</span> is
+		given its own Graphics object.
+		<xfr>
+			Chaque invocation de la méthode 
+			<span class="java-method">paint(Graphics)</span> se
+			voit donner son propre objet "Graphics".
+		</xfr>
+	</li>
+	<li>
+		Make sure that the given Graphics object works in
+		local coordinates. So the	point (0,0) is at the
+		top-left corner of the component.
+		<xfr>
+			Soyez sûr que l'objet Graphics donné fonctionne
+			bien en coordonnées locales, avec l'origine (0,0)
+			en haut à gauche.
+		</xfr>
+	</li>
+	<li>
+		Make sure that the given Graphics object is clipped
+		to the component, making sure a component can
+		never paint outside of its bounds or outside
+		of the bounds of its parent.
+		<xfr>
+			Assurez vous que l'objet Graphics est bien contraint
+			à la surface du composant, ne permettant pas aux opérations
+			graphiques de tracer en dehors de la surface allouée au
+			composant.
+		</xfr>
+	</li>
+	<li>
+		Make sure that you dispose of any Graphics object
+		that you create.
+		<xfr>
+			Soyez sûr de disposer proprement des objets Graphics
+			que vous avez créé.
+		</xfr>
+	</li>
+</ul>
+<p>
+	<b>Note:</b> look at the class
+	<span class="java-class">Graphics</span> in order
+	to know how to create or dispose of such objects.
+	Also look at that class to know how to translate
+	the coordinate system of graphics objects as well
+	as to set the clip of graphic objects.
+	<xfr>
+		<b>Note:</b> regardez la classe
+		<span class="java-class">Graphics</span> pour
+		comprendre comment créer et disposer des objets
+		Graphics.	Vous verrez de plus comment faire pour
+		translater le système de coordonnées et pour
+		indiquer le clip.
+	</xfr>
+</p>
+<p>
+	<b>Important:</b> once you implemented the method
+	<span class="java-method">doPaint(Graphics)</span>
+	on the classes
+	<span class="java-class">Component</span> and
+	<span class="java-class">Container</span>,
+	you can test your code with our 
+	class <span class="java-class">WindowTest</span>
+	in the Java package
+	<span class="java-package">object.gui.task3</span>.
+	The test 
+	creates and layout a simple window for you, it should
+	look like this:
+	<xfr>
+		<b>Important:</b> une fois que vous avez implémenté
+		la méthode 
+		<span class="java-method">doPaint(Graphics)</span>
+		sur les classes
+		<span class="java-class">Component</span> et
+		<span class="java-class">Container</span>,
+		vous pouvez tester votre code avec notre classe
+		<span class="java-class">WindowTest</span>
+		dans la paquet Java 
+		<span class="java-package">object.gui.task3</span>.
+		Le test crée une fenêtre dont l'apparence est celle-ci:
+	</xfr>
+</p>
+<img src="warmup-window.png" width="60%"> 
+<p>
+	You can see different surfaces painted with
+	different colors, each surface corresponding
+	to a different component. You can recognize a border-style layout.
+	<xfr>
+		Vous pouvez voir les différentes surfaces peintes
+		avec des couleurs différentes, chaque surface correspondant
+		à un composant différent. Vous pouvez reconnaître une
+		organization dite "border-style".
+	</xfr>
+</p>
+<img src="border-layout.png" width="100%">
+<p>
+	The <em>center component</em>(C) is dark gray.
+	The <em>north component</em>(N)
+	is green and the <em>south component</em>(S)	is red.
+	The <em>east component</em>(E) is magenta and the
+	<em>west component</em>(W) is blue.
+	Notice that
+	you see gaps in light gray, so you actually see the background
+	of the parent container showing in between the child components
+	(north, south, east, west, and center).
+	<xfr>
+		Le composant au centre est gris foncé. Le composant
+		au nord est vert et celui du sud est rouge.
+		Le composant à l'est est magenta alors que celui à
+		l'ouest est bleue. Notez qu'il y a des espaces
+		entre les composants, de couleur gris pâle, vous voyez
+		donc le container parent au travers de ces espaces.
+	</xfr>
+</p>
+
+<h3>That's all folks</h3>
+
+<p>	
+	Please do commit your work.
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.gui, Task3, Step1 completed"
+  $ git push --all
+</textarea>
+

@@ -1,0 +1,711 @@
+<vars>
+  sprint=prog.basics
+  task=t3
+  step=t3-s3
+</vars>
+
+<p>
+  We have discussed Java exceptions already, in different places,
+  as we needed to. It is time now to have a complete description
+  of what they are and how to use them. For some people, the concept
+  of exceptions comes naturally, for others, it is a difficult concept.
+  In any case, it is important to be engaged in this learning and
+  to understand the usefulness and importance of exceptions.
+  Exceptions are available in most modern languages.
+  <xfr>
+    Nous avons déjà discuté des exceptions en Java, à différent endroits,
+    en fonction des besoins. Nous pensons qu'il est temps d'en faire
+    le tour complet, précisant ce que sont les exceptions en Java
+    et comment les utiliser. Pour certains, l'apprentissage des exceptions
+    vient naturellement, pour d'autres, il est plus compliqué. Dans
+    tous les cas, cela demande de s'intéresser au sujet et de comprendre
+    l'utilité et l'importance des exceptions.
+    Les exceptions sont présentes dans 
+    la plupart des langages de programmation d'aujourd'hui.
+  </xfr>
+</p>
+<p>
+  So, what are exceptions about? As the name says, it is about something
+  exceptional, in the sense that it should not happen regularly, it should
+  only happens in <em>exceptional circumstances</em>. The idea here is to clearly
+  separate in your code the path that is the regular behavior and the path
+  that handles exceptional situations. So exceptions help write clearer and
+  simpler code, once you know what they are and how to use them properly.
+  <xfr>
+    Donc, que sont les exceptions? Comme leur nom l'indique, 
+    cela parle de chose exceptionnelle, dans le sens où une exception ne doit
+    pas être levée régulièrement, elle doit seulement arriver dans des
+    circonstances exceptionnelles.
+    L'idée est de séparer clairement le code qui effectue du traitement normal 
+    du code qui traite les cas exceptionnels, pour des raisons de lisibillité
+    et de simplification du code.
+  </xfr>
+</p>
+
+<h4>Throwing Exceptions</h4>
+
+<p>
+  Let's start with the beginning: how do you throw an exception in Java?
+  Nothing simpler, if you have an exception object:
+  <xfr>
+    Commençons pas le début: comment levons-nous une exception en Java?
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  void foo(Exception ex) {
+    throw ex;
+  }
+</pre>
+<p>
+  In most cases, you create a new object, just like this:
+  <xfr>
+    Dans la plupart des cas, vous allez créer un objet, comme ceci:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  throw new Exception("write here the reason");
+</pre>
+<p>
+  Exceptions are objects that are instances of different classes,
+  that is, they are different kinds of exceptions. In fact, the idea is that not
+  only an exception carries a message, but also that the kind of exception
+  tells you something about what happened. We have seen already different
+  kinds of exceptions:
+  <xfr>
+    Les exceptions sont des objets qui sont des instances de différentes
+    classes, autrement dit, elles sont de différents types. En fait,
+    l'idée est que le type de l'exception donne déjà des informations
+    sur la situation exceptionnelle qui a demandé à lever l'exception.
+  </xfr>
+</p>
+<ul>
+  <li> NullPointerException </li>
+  <li> IndexOutOfBoundsException </li>
+  <li> IOException </li>
+</ul>
+<p>
+  Let's illustrate a real use-case. We all know that, sometimes, functions
+  should test for illegal arguments. So let's
+  suppose that we want to write a function that divides two floating-point
+  values (real values in the mathematical sense):
+  <xfr>
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  static public float divide(float f1, float f2) {
+    return f1 / f2;
+  }
+</pre>
+<p>
+   We all know that a division by zero is not a regular case, since it cannot
+   return a number, it returns <em>infinity</em>.
+   So go ahead, let's try it. Write your own test, that is,
+   implement the method
+   <span class="java-class">divide</span> above on a test
+   class 
+   <span class="java-class">TestException</span>.
+  <xfr>
+    Nous savons tous qu'une division par zéro est un cas particulier,
+    puisque le résultat est l'infini. Essayez! Implémenter la méthode
+    <span class="java-class">divide</span> ci-dessus sur une classe
+    de test  <span class="java-class">TestException</span>.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+1   package oop.snippets;
+2   public class TestException {
+3
+4   static public float divide(float f1, float f2) {
+5     return f1 / f2;
+6   }
+7
+8   public static void main(String args[]) {
+9     float f1 = 1F;
+10    float f2 = 0F;
+11    float f = divide(f1,f2);
+12    System.out.println("f="+f);
+13  }
+14}
+</pre>
+<p>
+  Launch the execution and see the output in the console: "f=Infinity". Makes sense, right?
+  But now, let's assume we want to rule out a division by zero.
+  We would write something like this:
+  <xfr>
+    Lancez l'exécution et vous voyez que la sortie dans la console imprime bien "infinity".
+    Mais maintenant, faisons l'hypothèse que nous voulions éviter
+    ce cas. Nous écririons le code comme cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  static public float divide(float f1, float f2) {
+    if (f2==0)
+      throw new IllegalArgumentException("division by zero");
+    return f1 / f2;
+  }
+</pre>
+<p>
+  As you can see the code checks for the illegal value of the argument
+  <span class="java-lvar">f2</span> and throws an exception. The exception
+  thrown is an IllegalArgumentException, so its kind already tells you a lot
+  about why it was thrown. As the name of the exception tells you, it is about
+  an illegal argument. The message tells you more, the exception was thrown
+  because the illegal argument value was zero.
+  Try the execution again:
+ <xfr>
+   Comme vous pouvez le voir, le code vérifie les valeurs illégales de
+   l'argument <span class="java-lvar">f2</span> et lève une exception. 
+   L'exception levée est une IllegalArgumentException, ce type d'exception
+   indiquant que l'argument passé est illégal. Le message informe 
+   également que l'exception a été levée parce que l'argument passé
+   avait pour valeur zéro.
+ </xfr>
+</p>
+<pre>
+<span class="stderr">Exception in thread "main" <span class="fake-href">java.lang.IllegalArgumentException</span>: division by zero
+at oop.snippets.TestException.divide(<span class="fake-href">TestException.java:5</span>)
+at oop.snippets.TestExceptions.main(<span class="fake-href">TestException.java:11</span>)</span>
+</pre>
+<p>
+  Throwing an exception immediately suspend the normal execution and enters
+  a special mode where it searches for a catch block, that is, a place in your
+  code that handles that exception. If none is found, the program terminates.
+  This is what happens above.
+  <xfr>
+    Lever une exception suspend immédiatement l'exécution en cours,
+    qui entre dans un mode spécial ou un bloc de type catch est recherché
+    pour traiter l'exception levée. Si aucun bloc n'est trouvé, le
+    programme se termine. C'est ce qui s'est passé précédemment.
+ </xfr>
+</p>
+<p>
+  The output tells you a lot about what happened and why the execution stopped.
+  First, it tells you that an exception was thrown, which is good to know.
+  Then, it tells you that the exception was an IllegalArgumentException,
+  which is also good to know. Then it tells you the message, associated
+  with the exception: "Division by zero". All this is already so much better
+  than a silent crash of the program.
+  Even better, the output in the console tells you where the exception was
+  thrown and how the execution got there (the call stack).
+  <xfr>
+    La sortie du programme en dit beaucoup sur ce qu s'est passé et 
+    comment l'exécution s'est terminée. Premièrement, la sortie indique qu'une
+    exception a été levée, elle dit que l'exception est de type
+    IllegalArgumentException. Elle donne également un message associé
+    à l'exception: "Division by zero". Tout cela est déjà bien mieux 
+    qu'un crash silencieux du programme.
+    Même mieux, la sortie sur la console nous dit où était l'exécution
+    quand l'exception a été levée (la pile d'appel / call stack).
+ </xfr>
+</p>
+<p>
+  All this is already a lot of information and can even be sufficient to understand
+  the problem and correct the situation. Especially that the output is full of
+  hyperlinks to help you see where in the code things happened. Remembered that? 
+  So click on the various hyperlinks for the different lines
+  and watch Eclipse automatically navigate to the correct
+  line in that file. Just awesome!
+  <xfr>
+   Tout cela donne déjà beaucoup d'informations et peut être suffisant pour
+   comprendre le problème et corriger la situation. En particulier, la sortie
+   contient beaucoup d'hyperliens pour les différentes lignes. Voyez comment
+   Eclipse navigue automatiquement dans les lignes pour se positionner
+   sur la bonne ligne.
+ </xfr>
+</p>
+<p>
+  Remember also that you can also click on the hyperlink
+  <span class="stderr">	    
+    <span class="fake-href">java.lang.IllegalArgumentException</span>
+  </span>. Eclipse will pop up a dialog asking you if you want to setup
+  a breakpoint on that exception. We already discussed this powerful
+  debug tool, remember to use it.
+  <xfr>
+    Encore mieux, vous pouvez cliquer sur l'hyperlien
+    <span class="stderr">	    
+      <span class="fake-href">java.lang.IllegalArgumentException</span>
+    </span>.
+    Eclipse va ouvrir un popup vous demandant si vous voulez positionner
+    un point d'arrêt sur l'exception. Nous avons déjà discuté de cet outil
+    de debug fantastique, pensez à l'utiliser.
+ </xfr>
+</p>
+
+<h4>Catching Exceptions</h4>
+
+<p>
+  Now, rather than fixing the bug, let's handle the exception via
+  a try-catch block around the invocation of the method
+  <span class="java-method">divide</span> in the class
+  <span class="java-method">TestException</span>. 
+  <xfr>
+    Plutôt que de corriger le bug, essayons de traiter l'exception via 
+    un block de type try-catch autour de l'invocation de la
+    méthode   <span class="java-method">divide</span> dans la classe
+    <span class="java-method">TestException</span>. 
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class TestException {
+
+  public static void main(String args[]) {
+    float f1 = 1F;
+    float f2 = 0F;
+    try {
+      float f = divide(f1,f2);
+      System.out.println("f="+f);
+    } catch (IllegalArgumentException ex) {
+      System.err.println("An illegal argument was caught:");
+      ex.printStackTrace(System.err);
+      System.exit(-1);
+    }
+  }
+}
+</pre>
+<p>
+  So we are catching the exception now, but since we do not know what to
+  do about it, we simply and cleanly exit, with an error code (-1).
+  <span style="color:red;">
+    Never try to ignore an exception
+  </span>, but instead do one of the following:
+ <xfr>
+   Donc nous attrapons l'exception maintenant. Comme nous n'avons pas encore
+   décidé quoi faire avec, nous faisons simplement en sorte de stopper l'exécution,
+   avec un code d'erreur (-1). N'essayez jamais de cacher une exception,
+   agissez en conséquence comme ceci:
+ </xfr>
+</p>
+
+<ul>
+  <li>
+    If you know how to handle it, do it and let the program continue
+    its execution.
+    <xfr>
+      Si vous savez comment la traiter, traitez la et laissez
+      le programme poursuivre son exécution.
+    </xfr>
+  </li>
+  <li>
+    If you do not know how to handle the exception, let the program fail.
+    <xfr>
+      Si vous ne savez pas comment la traiter, laissez le programme se
+      terminer.
+    </xfr>
+  </li>
+</ul>
+
+<p>
+  Of course, the above example does not do much, the try-catch does
+  nothing and could therefore be avoided entirely. So let's look at
+  an example of a useful try-catch. But let's start with the code
+  without the try-catch:
+  <xfr>
+    Bien sûr, l'exemple ci-dessus ne fait pas grand chose d'intéressant,
+    le try-catch ne fait rien et il pourrait ne pas être là. Regardons
+    alors un exemple ou le try-catch sera utile. Tout d'abord le programme
+    sans try-catch:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class TestException {
+
+  public static void main(String args[]) {
+      compute(1F,0F,4F);
+  }
+
+  public static float compute(float f1, float f2, float f3) {
+    return f3*divide(f1,f2);
+  }
+}
+</pre>
+<p>
+  Try it under debugger, it throws an illegal argument exception,
+  as expected. Now, let's suppose the developer who writes the
+  method <span class="java-method">compute</span> knows that
+  the computation must return 1 if there is a division by zero.
+  The code could be written like this:
+  <xfr>
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static float compute(float f1, float f2, float f3) {
+    try {
+      return f3*divide(f1,f2);
+    } catch(IllegalArgumentException ex) {
+      return 1;
+    }
+  }
+</pre>
+<p>
+  This is of course a simplistic example just to illustrate
+  that a try-catch can be used to correct the situation and
+  let the program continue its execution normally.
+  <xfr>
+    C'est un exemple simpliste bien sûr qui n'est là que pour
+    vous montrez que l'on peut utiliser un try-catch pour corriger
+    le problème et laissez le programme continuer son exécution.
+ </xfr>
+</p>
+
+<h4>Real Example</h4>
+<p>
+  Let's consider a more realistic example.
+  We already seen the code to split a string, such as a full name being
+  split in the first and last names. We already discussed that this code
+  was fragile if the given line didn't include a space. 
+  <xfr>
+    Regardons un exemple plus réaliste.
+    Nous avons déjà vu le code pour partitioner une chaîne, par exemple
+    partitioner un nom complet en un nom et prénom. Nous avons déjà discuté du fait
+    que ce code était fragile si la ligne donnée n'incluait pas d'espace.
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String split(String line) {
+    String[] names;
+    int index = line.indexOf(' ');
+    names = new String[2];
+    names[0] = line.substring(0, index);
+    names[1] = line.substring(index);
+    return names;
+  }
+</pre>
+<p>
+  We could use a conditional statement to protect the code, like we did
+  earlier. Something like this:
+  <xfr>
+    On pourrait bien sûr utiliser un test pour se protéger, comme ceci:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String split(String line) {
+    String[] names;
+    int index = line.indexOf(' ');
+    if (index!=-1) {
+      names = new String[2];
+      names[0] = line.substring(0, index);
+      names[1] = line.substring(index);
+    } else {
+      names = new String[1];
+      names[0]= line;
+    }
+    return names;
+  }
+</pre>
+<p>
+  We could also use exceptions to protect this code, rather than testing
+  if the index was equal to -1, which indicates that the string does
+  not contains a space (the character ' ').
+  Here is how to do it:
+  <xfr>
+  Nous pouvons utiliser les exceptions pour protéger ce coden plutôt que de tester
+  si l'index était égal à -1, ce qui indique que la chaîne ne contient pas
+  de caractère espace. Voici comment faire:
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String split(String line) {
+    String[] names;
+    try {
+      int index = line.indexOf(' ');
+      names = new String[2];
+      names[0] = line.substring(0, index);
+      names[1] = line.substring(index);
+    } catch (IndexOutOfBoundsException ex) {
+      names = new String[1];
+      names[0]= line;
+    }
+    return names;
+  }
+</pre>
+<p>
+  <b>
+    Warning: let's reflect on when to use exceptions
+  </b>.<br>
+  Using exceptions in this case is only a good idea if you expect that
+  most strings will contain a space.  Remember, this is exactly what
+  exceptions should be about---exceptional conditions.
+  <br>
+  Otherwise, using a conditional statement is cleaner and performs better. Indeed,
+  throwing an exception is far from cheap, performance-wise. The goal when using
+  a try-catch-based coding is to separate concerns, that is, separate the code
+  that handles the standard expected case and the code that handles the exceptional
+  unexpected case. This separation of concerns yields clearer and cleaner code.
+  <xfr>
+    Utiliser les exceptions ici n'est une bonne idée que si, et seulement si, vous
+    supposez que le cas normal est que les chaînes contiennent un espace.
+    En effet, les exceptions sont là pour traiter les
+    cas exceptionnels!
+    Sinon, une instruction conditionnelle est plus adaptée.
+    En effet, lever une exception prends du temps, il faut donc en réserver l'usage
+    aux cas exceptionels. L'intérêt est alors de séparer le traitement du cas standard
+    du traitement du cas exceptionel, pour plus de lisibilité du code.
+ </xfr>
+</p>
+
+
+<!--
+
+
+
+
+<h3>Exception Examples</h3>
+
+<p>
+  The motivation and the usefulness of exceptions may not strike
+  you right now, especially if you are a beginner, but trust us,
+  it is an important mechanism to understand.
+  As we will code more complex programs together,
+  you will see more exceptions and more reasons to handle them
+  via try-catch statements. For now, you need to understand
+  what exceptions are and what happens at runtime when one is thrown,
+  with or without a corresponding try-catch statement.
+  <xfr>
+  La motivation et l'utilité des exceptions peuvent ne pas vous 
+  apparaitre majeures, spécialement si vous êtes débutant, mais
+  faites nous confiance, c'est un mécanisme important à comprendre.
+  Comme nous allons coder des programmes plus complexes ensembles,
+  vous verrez beaucoup de cas d'exceptions et de raisons pour les
+  traiter avec un bloc try-catch. Pour l'instant, vous devez
+  comprendre ce que sont les exceptions et ce qu'il se passe au niveau
+  du runtime Java lorsqu'elles sont levées, avec ou sans
+  bloc try-catch associé.
+ </xfr>
+</p>
+<p>
+  Nevertheless, we thought that a few examples might be useful
+  to illustrate certain patterns when coding with exceptions in
+  mind.
+  <xfr>
+  Cependant, nous pensons que quelques exemples sont utiles pour
+  illustrer comment coder avec les exceptions.
+ </xfr>
+</p>
+
+<h4>Scanning an array</h3>
+
+<p>
+  Let suppose you want to scan an array of strings, in order
+  to find the largest string. You are
+  not expecting to find
+  <span class="java-keyword">null</span> references in the array.
+ <xfr>
+  Supposons que vous voulez scanner un tableau de chaînes, pour trouver
+  la chaîne la plus longue. Vous faites l'hypothèse de ne pas trouver
+  de références <span class="java-keyword">null</span> dans le tableau.
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String search(String[] array) {
+    int max = 0;
+    String r=null; 
+    for (int i=0;i &lt; array.length;i++) {
+      String s = array[i];
+      if (s.length()>max) {
+        max = s.length();
+        r = s;
+      }
+    }
+    return r;
+  }
+  public static void main(String[] args) {
+    String s = search(args);
+    System.out.println("The largest string is "+s);
+  }
+</pre>
+<p>
+  How does the above program behaves if given an array
+  with null references? Something like this:
+  <xfr>
+  Comment se comporte le programme s'il tombe sur un tableau
+  contenant des références nulles?
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String[] array = new String[] { "un", null, "trois" };
+  String s = search(args);
+</pre>
+<p>
+  Well, an NullPointerException will be raised, which is
+  a very anonymous exception, not telling much about what
+  happened and why it happened. So let's say that we would
+  like to say to the developer that it provided a boggus array.
+  Here is how to do it.
+  <xfr>
+  Bien, une exception de type NullPointerException sera levée, ce qui
+  est une exception très anonyme, ne disant pas énormément sur ce qui
+  est arrivé. Supposons que ous voulons dire au développeur qu'il
+  a donné en entrée un tableau erroné. Voici comment faire.
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String search(String[] array) {
+    int max = 0;
+    String r=null;
+    try {
+      for (int i=0;i &lt; array.length;i++) {
+        String s = array[i];
+        if (s.length()>max) {
+          max = s.length();
+          r = s;
+        }
+      }
+    } catch (NullPointerException ex) {
+      throw new IllegalArgumentException("Bogus array. Null references are not accepted");
+    }
+    return r;
+  }
+</pre>
+<p>
+  <b>
+    Take charge of your learning, try the above code to see how it works.
+  </b>
+</p>
+
+<h4>Splitting a string</h4>
+
+<p>
+  We already seen the code to split a string, such as a full name being
+  split in the first and last names. We already discussed that this code
+  was fragile if the given line didn't include a space. 
+  <xfr>
+  Nous avons déjà vu le code pour partitioner une chaîne, par exemple
+  partitioner un nom complet en un nom et prénom. Nous avons déjà discuté du fait
+  que ce code était fragile si la ligne donnée n'incluait pas d'espace.
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String split(String line) {
+    String[] names;
+    int index = line.indexOf(' ');
+    names = new String[2];
+    names[0] = line.substring(0, index);
+    names[1] = line.substring(index);
+    return names;
+  }
+</pre>
+<p>
+  We could use a conditional statement to protect the code, like we did
+  earlier. Something like this:
+</p>
+<pre class="prettyprint lang-java">
+  String split(String line) {
+    String[] names;
+    int index = line.indexOf(' ');
+    if (index!=-1) {
+      names = new String[2];
+      names[0] = line.substring(0, index);
+      names[1] = line.substring(index);
+    } else {
+      names = new String[1];
+      names[0]= line;
+    }
+    return names;
+  }
+</pre>
+<p>
+  We could also use exceptions to protect this code, rather than testing
+  if the index was equal to -1, which indicates that the string does
+  not contains a space (the character ' ').
+  Here is how to do it.
+  <xfr>
+  Nous pouvons utiliser les exceptions pour protéger ce coden plutôt que de tester
+  si l'index était égal à -1, ce qui indique que la chaîne ne contient pas
+  de caractère espace. Voici comment faire.
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String split(String line) {
+    String[] names;
+    try {
+      int index = line.indexOf(' ');
+      names = new String[2];
+      names[0] = line.substring(0, index);
+      names[1] = line.substring(index);
+    } catch (IndexOutOfBoundsException ex) {
+      names = new String[1];
+      names[0]= line;
+    }
+    return names;
+  }
+</pre>
+<p>
+  <b>
+    Note:
+  </b>
+  this is only a good idea if you expect the most strings will contain a space.
+  Remember, this is exactly what exceptions should be about---exceptional conditions.
+  Otherwise, use a conditional statement is cleaner and performs better.
+  <xfr>
+  C'est une bonne idée seulement si vous supposez que quasiment toutes les
+  chaînes contiendrons un espace. Les exceptions sont là pour traiter les
+  cas exceptionnels! Sinon, une instruction conditionnelle est plus adaptée.
+ </xfr>
+</p>
+<p>
+  <b>
+    Take charge of your learning, try the above code to see how it works.
+  </b>
+</p>
+
+<h4>Handling exceptions</h4>
+
+<p>
+  Sometimes, a developer needs to handle exceptions.
+  Let's look at the following code, that we have seen previously:
+  <xfr>
+ Parfois, un développeur a besoin de traiter des exceptions.
+ regardons le code suivant, que nous avons déjà considéré précédemment:
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static String[] readFullName(InputStream is) throws java.io.IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+    String line = br.readLine();
+    return line;
+  }
+  public static void main(String[] args) throws java.io.IOException {
+    String s = readFullName(System.in);
+    System.out.println("Hello "+s);
+  }
+</pre>
+<p>
+  Coded like this, every code that invokes that method has to handle
+  the IOException or it has to keep on declaring that it throws
+  IOExceptions. This is not always a good idea.
+  Let suppose that we are happy to return a
+  <span class="java-keyword">null</span> reference, if for any reason,
+  we could not read from the given input stream.
+  <xfr>
+  Codé comme cela, chaque code qui invoque cette méthode doit traiter
+  l'exception IOException, ou bien il doit déclarer qu'il émet des
+  exceptions de type IOException. Ce n'est pas toujours une bonne idée.
+  Supposons que nous souhaitons retourner une référence, si pour une raison
+  quelconque, nous ne pouvons pas lire depuis le flôt d'entrée.
+  <span class="java-keyword">null</span>
+ </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static String[] readFullName(InputStream is)  {
+    try {
+      BufferedReader br = new BufferedReader(new InputStreamReader(is));
+      String line = br.readLine();
+      return line;
+    } catch(java.io.IOException ex) {
+      return null;
+    }
+  }
+</pre>
+<p>
+  <b>
+    Take charge of your learning, try the above code to see how it works.
+  </b>
+  <xfr>
+   <b>
+   Soyez responsable de votre apprentissage, essayez le code ci-dessus pour
+   voir et comprendre comment il s'exécute.
+    </b>
+    </xfr>
+</p>
+-->
+

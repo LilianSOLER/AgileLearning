@@ -1,0 +1,147 @@
+<vars>
+  sprint=word.count
+  task=t4
+</vars>
+<p>
+  A code is something that lives, you give it birth but it needs
+  to be nurtured, debugged, evolved, and improved. A good part of
+  this is to evaluate the performance of your program and to
+  see how you could improve that performance.
+  This is one important part of a developer's job.
+</p>
+
+<steps>
+  <step name="t4-s1" label="Evaluating performance">
+  </step>
+  <step name="t4-s2" label="The class Bucket">
+  </step>
+  <step name="t4-s3" label="The class Vocabulary">
+  </step>
+</steps>
+
+<p>
+  That's all folks for this task. 
+  Please make sure that you commit and push your work to our server.
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint word.count, Task4 completed"
+  $ git push --all
+</textarea>
+
+<!--
+  <h4>Discussing hash codes</h4>
+  
+  <p>
+    One may question how we compute the hash code. Afterall, using the
+    first letter works for dictionaries in the real world, but on limited
+    alphabets. Also, as we all know, not all the sections of a dictionary
+    have the same size. Some are small, others are larger. Therefore,
+    searching for certain words may be longer than the search for other words.
+  </p>
+  <p>
+    In the worst case, all words could go in bucket 0, with the pretty
+    stupid method <span class="java-method">hashCode</span> given below:
+  </p>
+  <pre class="prettyprint lang-java">
+  public int hashCode() {
+    return 0;
+  }
+  </pre>
+  <p>
+    If all word objects go to the same bucket, scanning that bucket
+    0 would be as costly as the original solution. But if we spread words evenly
+    across buckets, we can hope to divide the cost of looking for a word down
+    to the number of known words divided by the number of buckets. As explained
+    earlier, if we
+    have 1000 words evenly spread over 10 buckets,
+    each lookup would scan only one bucket with only 100 words.
+    We would gain a factor of 10 in performance. 
+  </p>
+  <p>
+    So the question of an effective hash code comes to play.
+    To tell the truth, it is something that is complex in the general
+    case. But matematicians have shown that the following
+    hash code works well with sequence of integer values, which
+    therefore works on sequence of characters:
+  </p>
+  <pre class="prettyprint lang-java">
+  public int hashCode() {
+    int h = 0;
+    for (int i=0;i &lt; nchars;i++)
+      h = h ^ chars[i];
+    return h; 
+  }
+  </pre>
+  <p>
+    Notice that we do not use a sum of the integer values of each character,
+    we use the eXclusive-OR (XOR) operator. Why? Because the XOR operator
+    gives a much better distribution of words onto buckets. Just trust us
+    here or do your own research on the subject. Now, let's consider a few
+    design questions on the code given earlier:
+  </p>
+  <pre class="prettyprint lang-java">
+  Word find(Word word) {
+    int index = word.hashCode() % buckets.length;
+    return buckets[index].find(word); 
+  }
+  </pre>
+  
+  <quizz name="s4.t5.q1" >
+    <question>
+      <p>
+	Do you risk an <em>IndexOutOfBoundsException</em> or not?
+      </p>
+      <checkboxes>
+	<checkbox>Yes</checkbox>
+	<checkbox>No</checkbox>
+      </checkboxes>
+      <hints>
+	<hint checks="CC">Check only Yes or No.</hint>
+	<hint checks="UC">
+	  Really? What about if the hash code is negative?
+	</hint>
+      </hints>
+      <answers>
+	<answer checks="CU">
+	  Indeed, the modulo of a negative value is negative.
+	  So unless you are sure that your characters are encoded
+	  using only positive values, your code is at risk.
+	</answer>
+      </answers>
+      <finally>
+	Are you having difficulties?
+	<b>Please, ask for help</b>.
+      </finally>
+    </question>
+    <question>
+      <p>
+	Do you risk a <em>NullPointerException</em> or not?		
+      </p>
+      <checkboxes>
+	<checkbox>Yes</checkbox>
+	<checkbox>No</checkbox>
+      </checkboxes>
+      <hints>
+	<hint checks="CC">Check only Yes or No.</hint>
+	<hint checks="CU">
+	  Really? Why would you? The bucket array is fully initialized.
+	</hint>
+      </hints>
+      <answers>
+	<answer checks="UC">
+	  Indeed, the bucket array is fully initialized
+	  so there is no risk of a  <em>NullPointerException</em>
+	  being thrown.
+	</answer>
+      </answers>
+      <finally>
+	Are you having difficulties?
+	<b>Please, ask for help</b>.
+      </finally>
+    </question>
+    <unfold name="quizz1_unfold">
+    </unfold>
+  </quizz>
+  <div name="quizz1_unfold" style="display: none">
+-->

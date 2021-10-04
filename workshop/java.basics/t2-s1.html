@@ -1,0 +1,184 @@
+<vars>
+  sprint=java.basics
+  task=t2
+  step=t2-s1
+</vars>
+
+<!-- Object References and Aliasing -->
+
+<p>
+  Aliasing is a fact of life with object-oriented programming,
+  it is neither good not bad, but it must be understood and
+  controled. Let's discover incrementally what aliasing means.
+  First, let's start with a situation where there is no aliasing.
+  <xfr>
+    Les alias sont une réalité incontournable de la programmation
+    orientée-objet. Ce n'est ni une bonne chose, ni une mauvaise
+    chose, mais l'aliasing doit être compris et maitrisé. Revenons
+    sur ce concept d'alias.
+  </xfr>
+</p>
+<p>
+  The code below will
+  create two objects, both instances of the
+  same class <span class="java-class">Point</span>:
+</p>
+<pre class="prettyprint lang-java">
+  Point p1 = new Point();
+  Point p2 = new Point();
+</pre>
+<p>
+  The two local variables <span class="java-lvar">p1</span> and
+  <span class="java-lvar">p2</span> are <b>reference variables</b>,
+  they reference objects. In this case, the variable
+  <span class="java-lvar">p1</span> and
+  <span class="java-lvar">p2</span> reference two different objects.
+  Look at the figure below and see the two variables and the two objects,
+  as they are seen by the Java runtime that executes the code:
+  <xfr>
+    Les deux variables <span class="java-lvar">p1</span> et
+    <span class="java-lvar">p2</span> sont des <b>références</b>,
+    elles référencent des objets. Dans ce cas, la variable
+    <span class="java-lvar">p1</span> et la variable
+    <span class="java-lvar">p2</span> référencent deux objets différents.
+    Regardez la figure ci-dessous, voyez les deux variables et les deux objets,
+    comme la plateforme Java les voient à l'exécution du code:
+  </xfr>
+</p>
+<img style="margin-left: .5in;box-shadow: 2px 2px 5px #888888;"
+     src="images/two-variables.svg" />
+<p>
+  <b>Very important:</b> a reference variable does not contain
+  an object, it contains the identity of an object. This is depicted
+  by the arrow from a variable to an object. The identity
+  of an object is something that uniquely identify an object;
+  two objects can never have the same identity. The identity
+  of an object is a value, very much like an integer or a float value,
+  except that the identity of an object is a value that does not make
+  much sense to humans. For C developers, it may help to relate
+  a reference variable to a pointer and the identity held in a reference
+  variable to an address held in a pointer. But it is better to think
+  in terms of reference variables and unique identities in Java.
+  <xfr>
+    <b>TRES IMPORTANT:</b> une variable qui est une référence ne
+    contient pas l'objet, elle contient l'identité de l'objet.
+    Cela est représenté pas la flèche allant de la variable à l'objet.
+    L'identité de l'objet est, comme son non l'indique, une valeur
+    qui identifie cet objet de façon unique. Aussi, deux objets ne peuvent
+    jamais avoir la même identité. L'identité d'un objet est une valeur,
+    tout à fait comme les valeurs entières ou réelles, mais c'est 
+    une valeur un peu opaque pour les êtres humains. Pour les développeurs
+    en C, cela peut vous aidez de correler reference et pointeur et
+    donc identité et adresse mémoire. 
+  </xfr>
+</p>
+<p>
+  Now, let's create some aliasing. Look at the following
+  code snippet, with the corresponding figure depicting the runtime
+  view of the variables and objects: 
+</p>
+<div style="column-count: 2;column-gap: 40px; ">
+  <pre class="prettyprint lang-java">
+    Point p1 = new Point();
+    Point p2 = new Point();
+    Point p3 = p2;
+    Point p4 = null;
+  </pre>
+  <img style="margin-left: .5in;box-shadow: 2px 2px 5px #888888;"
+       src="images/four-variables.svg" />
+</div>
+<p>
+  Notice that a reference variable, like <span class="java-lvar">p4</span>,
+  may refer to no object at all, when assigned
+  <span class="java-keyword">null</span>.
+  Also notice that two variables may refer to the same object, like
+  p3 and p2. This means that
+  <b>
+    the assignment from p2 to p3 does not
+    copy the object, it copies the identity of the object
+  </b>.
+  It is very important that you understand and remember that.
+  If you have difficulties grasping that, <b>please ask for help</b>.
+  <xfr>
+    Vous noterez qu'une variable peut contenir 
+    <span class="java-keyword">null</span> et donc ne référencer aucun
+    objet.
+    Vous noterez que deux variables peuvent référencer le même objet,
+    comme les variables p3 et p2. Cela veut bien dire que l'assignation
+    de p2 dans p3 ne copie pas l'objet, elle copie l'identité de l'objet.
+    Il est cruciale que vous compreniez cela et que vous le mémorisiez.
+  </xfr>
+</p>
+
+<h3>Learning via the Eclipse debugger</h3>
+
+<p>
+  Again, there is nothing better than the debugger to understand these things.
+  Set a breakpoint in the method <span class="java-method">main</span>
+  in the class <span class="java-class">JavaBasicsStep2</span>. 
+  Launch the execution under the control of the Java debugger.
+  Once suspended in the method <span class="java-method">main</span>,
+  single step through the code (using <b>F6</b>) until you reach
+  line 42. It should look like this:
+  <xfr>
+    A nouveau, il n'y a rien de mieux que le debugger pour comprendre cela.
+    Positionnez un breakpoint dans la méthode <span class="java-method">main</span>
+    de la classe <span class="java-class">JavaBasicsStep2</span>. 
+  	Lancez l'exécution sous le controle du debugger.
+  	Une fois suspendu dans la méthode <span class="java-method">main</span>,
+  	exécutez en pas à pas le code (en utilisant <b>F6</b>) jusqu'à atteindre la
+  	ligne 42. Cela doit ressembler à cela:
+  </xfr>
+</p>
+<img src="images/JavaBasicsStep2-at-main.png" width=100%>
+<p>
+  Look at the
+  variables in the <em>Variables</em> view. 
+  See the ids printed by the debugger for the four reference variables
+  <span class="java-lvar">p1</span>,
+  <span class="java-lvar">p2</span>,
+  <span class="java-lvar">p3</span>,
+  <span class="java-lvar">p4</span>?
+  The debugger is nice, it prints nice-looking identities for the objects,
+  they are printed in between parenthesis, right next to the class names.
+    <xfr>
+  	Regardez les variables dans la vue <em>Variables</em>. 
+ 	Regardez les ids affichés par le debugger pour les 4 variables
+  	de type reference:
+  	<span class="java-lvar">p1</span>,
+  	<span class="java-lvar">p2</span>,
+  	<span class="java-lvar">p3</span>,
+  	<span class="java-lvar">p4</span>?
+  	Le debugger affiche les identités des objets, entre parenthèses, juste
+  	à coté des noms de classes.
+  </xfr>
+</p>
+<p>
+  So the debugger is indeed
+  telling you that the variable <span class="java-lvar">p2</span>
+  and <span class="java-lvar">p3</span> are aliasing
+  the same object. In the screen capture above, the object aliased
+  by the variables <span class="java-lvar">p2</span>
+  and <span class="java-lvar">p3</span> has the identiry 21 (id=21).
+  Of course, the values of the ids may be different in your Eclipse.
+  See that the debugger also shows you
+  that the <span class="java-lvar">p4</span> contains
+  <span class="java-keyword">null</span>, which refers to no object
+  at all.
+  <xfr>
+    Le debugger vous montre bien que la variable
+    <span class="java-lvar">p2</span> et
+    <span class="java-lvar">p3</span> sont des alias du même objet.
+    Dans la capture d'écran ci-dessus, l'objet aliasé par les deux
+    variables
+    <span class="java-lvar">p2</span> et
+    <span class="java-lvar">p3</span>
+    à l'identité 21 (id=21).
+    Bien sûr, la valeur peut être différente dans votre Eclipse.
+    Notez aussi que le debugger vous montre que la variable
+    <span class="java-lvar">p4</span> contient l'identité
+    <span class="java-keyword">null</span> qui ne correspond à
+    aucun objet.
+  </xfr>
+</p>
+

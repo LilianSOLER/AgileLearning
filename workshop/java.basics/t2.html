@@ -1,0 +1,88 @@
+<vars>
+  sprint=java.basics
+  task=t2
+</vars>
+<p>
+  In the previous task, you learned how to create objects
+  and use object references to interact with them.
+  In this task, we will discuss the concept of references
+  in more depth. For classes, look in the source folder
+  <em>step2</em> in the project <em>java.basics</em>.
+  <xfr>
+    Dans la tâche précédente, vous avez appris comment créer
+    des objets et utiliser des références sur ces objets.
+    Dans cette tâche, nous allons appronfondir le sujet.
+    Les exemples sont dans le dossier source <em>step2</em>
+    dans le projet <em>java.basics</em>.
+  </xfr>
+</p>
+
+<h3>Steps</h3>
+<steps>
+  <step name="t2-s1" label="Aliasing -- Part One">
+  </step>
+  <step name="t2-s2" label="Aliasing -- Part Two">
+  </step>
+</steps>
+
+
+<h3>Is Aliasing a Java Problem?</h3>
+
+<p>
+  We are often asked by students if aliasing is a problem
+  specific to Java or object-oriented programming. 
+  <b>It is absolutely not a Java-specific challenge and
+    not specific to object-oriented programming!</b>
+  As soon as you have references or pointers in a programming
+  language, you have to consider aliasing. So developers
+  in C or JavaScript or Python or C++ or C# all have to pay
+  attention to aliasing. Unfortunately, aliasing is rarely
+  taught and rarely understood properly.
+  <xfr>
+    Nos étudiants nous demandent souvent si l'aliasing
+    est un problème spécifique à Java ou la programmation
+    orientée-objet. 
+    <b>
+      Ce n'est absolument pas le cas!
+    </b>
+    Dès que vous avez des références ou des pointeurs dans un
+    langage de programmation, vous devez maitriser
+    l'aliasing. Malheureusement, l'aliasing n'est que trop
+    rarement enseigné et trop souvent mal compris.
+  </xfr>
+</p>
+<p>
+  Also, remember that aliasing is not a problem. It is
+  neither good or bad. Sometimes, aliasing is wanted,
+  so much so that it would be really hard to do without.
+  Think in terms of passing an object reference to a
+  method. Of course you want aliasing between the caller
+  and the callee. Think in terms of a list with double
+  links (previous and next elements), aliasing is unavoidable
+  there too.
+  But sometimes, aliasing is the kiss of death because it is
+  the source of some of the worst bugs. 
+  <xfr>
+    Rappelez vous, l'aliasing n'est ni bon ni mauvais.
+    Parfois, il est important d'avoir des alias, parfois
+    c'est un problème. Pensez au cas de passer un objet
+    en argument à une méthode. Dans la majorité des cas,
+    vous voulez avoir un alias et pas une copie. Si
+    vous souhaitez une copie, vous pouvez toujours la faire
+    avant l'appel. Pensez à des listes doublement chaînées,
+    là encore, heureusement que l'aliasing est possible.
+    Mais parfois, les problèmes d'aliasing sont la cause
+    de bugs parmi les pires bugs qui soient.
+  </xfr>
+</p>
+<p>
+<p>
+  That's all folks for this task.
+  Please make sure that you commit and push your work to our server.
+  Let us remind you how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -a -m "Sprint java.basics, task2 completed"
+  $ git push --all
+</textarea>

@@ -1,0 +1,426 @@
+<vars>
+  sprint=java.basics
+  task=t4
+  step=t4-s2
+</vars>
+
+<p>
+  In the <em>step4</em> source folder, we ask
+  that you add constructors to the class
+  <span class="java-class">Point</span> and
+  class <span class="java-class">Line</span>.
+  You must respect the following signatures:
+  <xfr>
+  Dans le <em>step4</em>, nous vous avons demandé d'ajouter des
+  constructeurs dans les classes  <span class="java-class">Point</span> et
+  <span class="java-class">Line</span>.
+  Vous devez respecter les signatures:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Point()
+  Point(int,int)
+  Point(Point)
+  Line()
+  Line(Point, Point)
+  Line(Line l)
+</pre>
+<p>
+  Notice that it does not break the code, you should not
+  get any compilation error in the class
+  <span class="java-class">JavaBasicsStep4</span>.
+  <xfr>
+  Remarquez que cela ne casse pas le code, vous ne devez
+  pas avoir d'erreurs de compilation dans la classe
+  <span class="java-class">JavaBasicsStep4</span>.
+  </xfr>
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/java.basics"
+   classpath="bin;tests.jar"
+   classname="basics.step4.TestConstructors">
+  <banner>
+    Let's see if you added the right constructors.
+  </banner>
+  <hint>
+    Please fix your code.
+  </hint>
+  <success>
+    Cool.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+<div name="check1_unfold" style="display:none;" >
+  <p>
+    Let's try to execute the <em>step4</em>,
+    launching the execution on the class
+    <span class="java-class">JavaBasicsStep4</span>.
+    Unfortunately, compiling without errors does not mean
+    no bugs, but you already knew that, right?
+  <xfr>
+    Essayez d'exécuter le <em>step4</em>,
+    en lançant l'exécution de la classe
+    <span class="java-class">JavaBasicsStep4</span>.
+    Malheureusement, pas d'erreurs à la compilation ne signifie pas
+    qu'il n'y a pas de bug, n'est ce pas?
+  </xfr>
+  </p>
+  <p>
+    So you got an exception at runtime, a NullPointerException
+    to be precise. The execution printed something like this
+    in the console:
+    <xfr>
+    Donc vous avez une exception à l'exécution, de type
+    NullPointerException. L'exécution affiche quelquechose
+    comme cela à la console:
+    </xfr>
+  </p>
+  <pre class="prettyprint lang-java">
+Exception in thread "main" java.lang.NullPointerException
+	at basics.step4.Line.translate(Line.java:23)
+	at basics.step4.JavaBasicsStep4.main(JavaBasicsStep4.java:52)
+  </pre>
+  <p>
+    The first problem comes from the variable
+    <span class="java-lvar">p3</span> being
+    <span class="java-keyword">null</span>
+    in the following code:
+  </p>
+  <pre class="prettyprint lang-java">
+    Line l2 = new Line();
+    l2.start = p2;
+    l2.end = p3;
+    l2.translate(54, -12);
+  </pre>
+  <p>
+    So as the execution tries to translate the line
+    <span class="java-lvar">l2</span>, but the field
+    <span class="java-field">end</span> is
+    <span class="java-keyword">null</span>.
+    <xfr>
+      L'exécution essaie de translater la ligne
+      <span class="java-lvar">l2</span>, mais le champs
+      <span class="java-field">end</span> est 
+      <span class="java-keyword">null</span>.
+    </xfr>
+  </p>
+  <p>
+    You might rework the code to a cleaner
+    version, since we added constructors,
+    something like this:
+    <xfr>
+      Vous pouvez retravailler le code pour obtenir
+      une version plus propre, puisque nous avons des 
+      constructeurs, quelque chose comme cela:
+    </xfr>
+  </p>
+  <pre class="prettyprint lang-java">
+    Line l2 = new Line(p2,p3);
+    l2.translate(54, -12);
+  </pre>
+  <p>
+    But even though it is cleaner, the NullPointerException
+    remains since the variable
+    <span class="java-lvar">p3</span> is
+    <span class="java-keyword">null</span>.
+    So let's fix the problem with creating
+    a point for the variable
+    <span class="java-lvar">p3</span>,
+    like we did for the other local variables
+    <span class="java-lvar">p1</span>
+    and
+    <span class="java-lvar">p2</span>: 
+  </p>
+  <pre class="prettyprint lang-java">
+    Point p3 = new Point();
+  </pre>
+  <p>
+    Now, depending on how you wrote the default constructor
+    of the class
+    <span class="java-class">Line</span>,
+    you might encounter another NullPointerException
+    later with the following code:
+  </p>
+  <pre class="prettyprint lang-java">
+    Line l3 = new Line();
+    l3.translate(1, 3);
+  </pre>
+  <p>
+    You are getting a NullPointerException if you wrote
+    the default constructor like this:
+  </p>
+  <pre class="prettyprint lang-java">
+    Line() {}
+  </pre>
+  <p>
+    Of course, you should have written it like this:
+  </p>
+  <pre class="prettyprint lang-java">
+  Line() {
+    start = new Point();
+    end = new Point();
+  }
+  </pre>
+  <p>
+    But in this case, we may question the necessity of
+    having that default constructor entirely. Right?
+    Since we have a constructor with two points,
+    a default constructor like above is a bit unnecessary,
+    since we could write this:
+    <xfr>
+      Mais dans ce cas, on peut questionner la nécessité
+      d'avoir une constructeur par défaut. En effet,
+      puisque nous avons un constructeur qui prends deux points,
+      on peut écrire ceci:
+    </xfr>
+  </p>
+  <pre class="prettyprint lang-java">
+    Line l = new Line(new Point(),new Point());
+  </pre>
+  <p>
+    and do without a default constructor. 
+    But anyway, we may leave it in.
+    <xfr>
+      et éviter d'avoir un constructeur par défault.
+      Mais nous allons le laisser.
+    </xfr>
+  </p>
+  <p>
+    We may also consider that the points of a line
+    may be a private matter.
+    The way to do this in Java is to use the
+    concepts of <em>private fields</em>.
+    In fact, in Java, a field, a method, or
+    a class can be considered a private or
+    public entity. Like in real life,
+    a public thing is available to everyone
+    while a private thing remains private
+    to its owner.
+    <xfr>
+      On pourrait aussi considérer que les points
+      d'une ligne sont une connaissance qui devrait
+      être privée et non publique.
+      La manière de faire en Java est de
+      rendre les <b>champs privés</b>.
+      En fait, un champ, une méthode, ou
+      une classe peuvent être soit privé
+      ou publique. Comme dans la vrai vie,
+      une chose publique est connue de tous
+      alors que les choses privées restent
+      privées (normalement...).
+    </xfr>	    
+  </p>
+  <p>
+    A class may therefore define fields
+    that are public or private. A class
+    may also define methods that are public
+    or private. The choice is yours,
+    as a Java developers.
+    So let's consider this for our class
+    <span class="java-class">Line</span>
+    Add the keyword
+    <span class="java-keyword">private</span>
+    to both fields and the keyword
+    <span class="java-keyword">public</span>
+    to constructors and methods.
+    As you do so, it may generate some compilation
+    errors, please understand them and then fix them.
+    <xfr>
+      Une classe peut donc définir des champs qui sont
+      public ou private. Une classe peut aussi
+      définir des méthodes qui sont public
+      ou private. C'est à vous de choisir,
+      en tant que développeur.
+      Considérons notre classe
+      <span class="java-class">Line</span>.
+      Ajoutez le mot-clé
+      <span class="java-keyword">private</span>
+      à chaque champ et le mot-clé 
+      <span class="java-keyword">public</span>
+      aux constructeurs et méthodes.
+      Lorsque vous faites cela, des erreurs de compilation
+      apparaissent, résolvez les.
+    </xfr>	    
+  </p>
+  <p>
+    Let's consider our class
+    <span class="java-class">Point</span>, should we
+    also qualify the fields
+    <span class="java-field">x</span>
+    and
+    <span class="java-field">y</span>
+    as private?
+  </p>
+  <p>
+    We certainly could, but this would mean that the
+    coordinates of a point would not longer be accessible.
+    This seems a bit extreme in this situation, since
+    it is legitimate to access the coordinates of a point.
+    So let's turn the fields
+    <span class="java-field">x</span> and
+    <span class="java-field">y</span>
+    as 
+    <span class="java-keyword">public</span>
+    fields.
+    <xfr>
+      On pourrait, mais cela voudrait dire que les
+      coordonnées d'un point ne serait plus visible.
+      Cela semble un peu extrême ici, puisqu'il est
+      légitime de connaitre les coordonnées d'un point
+      et de pouvoir les changer.
+      Donc passons les champs 
+      <span class="java-field">x</span> et
+      <span class="java-field">y</span>
+      comme des champs
+      <span class="java-keyword">public</span>.
+    </xfr>
+  </p>
+  <p>
+    So what is the visibility of a field that
+    is neither public nor private? Indeed,
+    all the fields we manipulated so far
+    have had no qualified scope.
+    Well, do you remember that introduced the concept of Java packages
+    earlier? A field that is not public and not private
+    is "public" at the scope of the package of its class.
+    To summarize the rules:
+    <xfr>
+      Quel est la visibilité d'un champ qui n'est
+      ni public, ni privé. En effet, tous les champs
+      que nous avons vu jusqu'à présent n'avait
+      aucun qualifier. Vous vous rappelez des paquets
+      en Java? Un champ qui n'est ni public ni privé
+      est un champ dont la visibilité est celle
+      du paquet Java de sa classe.
+      Pour résumer les règles:
+    </xfr>
+  </p>
+  <ol>
+    <li><span class="java-keyword">public</span>
+      <br>
+      The field/method is visible from any class
+      in any package.
+    </li>
+    <li>No qualifier
+      <br>
+      The field/method is visible from any class
+      in the <b>same package</b>.
+    </li>
+    <li><span class="java-keyword">private</span>
+      <br>
+      The field/method is only visible within the
+      class that defines it.
+    </li>
+  </ol>
+  <p>
+    Since we put the fields in the class
+    <span class="java-class">Line</span>
+    as <span class="java-keyword">private</span>,
+    we may need to add methods to access them.
+    Indeed, it is legitimate to want to access
+    the point at either end of a line.
+    So let's add <em>accessor
+      methods</em> on the class
+    <span class="java-class">Line</span>,
+    following these signatures:
+    <xfr>
+    Puisque nous avons défini les champs
+    <span class="java-class">Line</span>
+    comme <span class="java-keyword">private</span>,
+    nous avons besoin d'ajouter des méthodes pour les accéder.
+    En effet, il est légitime de vouloir accéder aux points
+    à chaque bout d'une ligne.
+    Donc ajoutons des méthodes <em>accessor
+    </em> dans la classe
+    <span class="java-class">Line</span>,
+    suivant ces signatures:
+    </xfr>
+  </p>
+  <pre class="prettyprint lang-java">
+    public Point getStartPoint();
+    public Point getEndPoint();
+  </pre>
+
+  <check
+     silent="false"
+     blocking="false"
+     lang="java"
+     cwd="workspace/java.basics"
+     classpath="bin;tests.jar"
+     classname="basics.step4.TestEncapsulation">
+    <banner>
+      Let's check these modifications.
+    </banner> 
+   <hint>
+      <p>
+	Please fix your code, there are several things
+	to consider.
+      </p>
+      <ol>
+	<li>Respect the given signatures exactly.</li>
+	<li>Return the points, not copies of the points.</li>
+      </ol>
+    </hint>
+    <success>
+      Cool.
+    </success>
+    <unfold name="check2_unfold">
+    </unfold>
+  </check>
+  <div name="check2_unfold" style="display:none">
+    <p>
+      Just one last point, let's consider the differences
+      between public fields in the class
+      <span class="java-class">Line</span>
+      or the use of private fields with
+      <em>accessor methods</em>.
+      In the later design, 
+      a line is constructed with two points
+      and will keep those two points throughout
+      its lifetime. The points may be translated,
+      but the line will always keep the same two
+      points.
+      <xfr>
+	      Juste un dernier point de discussion.
+	      Considérons les différences entre
+	      les champs publics et l'usage de champs
+	      privés avec des méthodes accesseurs.
+	      Dans notre dernière conception, une ligne
+	      est construite avec deux points.
+	      Elle va conserver ses deux points,
+	      l'association ne pourra pas être modifiée.
+	      Par contre, ces points pourront être accédés
+	      et donc translatés.
+      </xfr>
+    </p>
+    <p>
+      If the fields
+      <span class="java-field">start</span>
+      and
+      <span class="java-field">end</span>
+      are public, they can be assigned with
+      new points at any time. Is this bad?
+      Not always, there is no general clear-cut
+      answer here. It is a design decision
+      that developers have to make, depending
+      on the pros and cons of each specific case.
+      <xfr>
+	      Si les champs 
+	      <span class="java-field">start</span>
+	      and
+	      <span class="java-field">end</span>
+	      sont publics, alors il est possible
+	      d'en changer la valeur, d'assigner de
+	      nouveaux points. Est-ce mal?
+	      Pas toujours, il n'y a pas de réponse
+	      absolue en la matière. C'est une décision
+	      de conception et en tant que développeur,
+	      vous devez peser le pour et le contre.
+      </xfr>
+    </p>
+  </div>
+</div>

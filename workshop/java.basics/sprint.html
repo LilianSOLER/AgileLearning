@@ -1,0 +1,252 @@
+<vars>
+  sprint=java.basics
+</vars>
+<p>
+  This sprint is about getting you started with object-oriented
+  programming in Java.
+  You already know how to compile and debug a Java program.
+  You have already realized that a lot of the Java syntax is
+  inherited from the syntax of the C programming language and
+  is common with other programming languages, such as JavaScript
+  for example. So we hope that you feel already at home for writing simple
+  programs.
+  <xfr>
+    Ce sprint sera vos premiers pas en programmation Java.
+    Vous savez déjà compiler et debugger un programme Java.
+    Vous avez déjà réalisé que la syntaxe de Java était proche
+    de celle du langage C, mais aussi assez proche d'autres
+    langages, comme JavaScript par exemple. Nous espérons
+    donc que vous vous sentez déjà à l'aise dans l'écriture
+    de programme simple en Java.
+  </xfr>
+</p>
+<p>
+  But what makes Java special is object-oriented programming.
+  At first, object-oriented programming will feel like more
+  concepts to learn. It may feel like a bit complex. But in
+  the end, object-oriented programming will become more natural
+  and it will improve your coding practice.
+  Object-oriented concepts are just great to help you
+  master most coding challenges, but not all.
+  Object-oriented programming is not the absolute solution
+  to all coding problems, but it is a powerful programming
+  paradigm, one that you must master, which will help you
+  become a better developer.
+  <xfr>
+    Mais ce qui rends Java spéciale, c'est son orientation
+    objet. A prime abord, la programmation orientée objet
+    vous semblera juste ajouter des concepts et vous sembler
+    un peu compliquée. Mais avec le temps et la pratique,
+    la programmation objet deviendra naturelle et améliorera
+    grandement votre activitée de programmation.
+  </xfr>
+</p>
+<p>
+  At the heart of object-oriented programming, you will
+  find essentially two concepts: <b>classes</b> and <b>objects</b>.
+  We will cover these two concepts in details in this sprint.
+  <xfr>
+    Au coeur de la programmation orientée-objet, vous trouverez
+    deux concepts clés: <b>classes</b> et <b>objets</b>.
+    Ce sprint présente ces deux concepts en détails.
+  </xfr>
+</p>
+
+<h3>Object Paradigm</h3>
+
+<p>
+  We are entering the real object paradigm with this sprint. So far,
+  we have done mostly procedural programming, via static methods and fields.
+  This means we have been writing code almost like we would in C,
+  with just a splash of object-oriented programming. This was a necessary
+  first learning step, allowing to master Eclipse and some of the
+  procedural basics of the Java programming languages.
+  <xfr>
+    Nous entrons de plein pied dans la programmation orientée-objet avec
+    ce sprint. Jusqu'à présent, nous avons écrit du code procédural, via
+    des méthodes statiques et des champs statiques. Cela veut dire que nous
+    avons écrit du code comme si nous utilisions le langage C, avec juste
+    une pointe d'orientée-objet. Mais c'était une première étape nécessaire
+    pour maitriser Eclipse et découvrir les bases de Java.
+  </xfr>
+</p>
+<p>
+  But object-oriented programming is really a different paradigm than your
+  regular procedural programming with functions and types like in C. In fact,
+  we would discourage the use of static methods and fields as much as possible
+  in the future in order to benefit fully from the object paradigm, a paradigm
+  that will help you master larger and more complex software. Of course, if
+  the object paradigm is more powerful, it is also more complex to master than
+  regular procedural programming, even though its concepts are quite simple in
+  reality and know by all. To achieve mastery of the object paradigm will be
+  our goal from now on.
+  <xfr>
+    Mais la programmation orientée-objet est très différente en réalité de la
+    programmation procédurale avec des fonctions et des types comme en C.
+    En fait, nous découragerons l'usage des méthodes et des champs statiques
+    dans le future pour pouvoir vraiment bénéficier pleinement de la
+    puissance d'expression du paradigme objet. Bien sûr, parce ce paradigme
+    est puissant, il est aussi plus difficile à maîtriser même si les concepts
+    sont en réalité très simple et connu de tous. Achevez la maîtrise du
+    paradigme object sera donc notre objectif à l'avenir.
+  </xfr>
+</p>
+<p>
+  The object paradigm is inspired by real life. An object is an entity, with
+  an identity, a state, and a behavior. The identity is what sets one object
+  apart from others. The state is what the entity knows, including references
+  to other objects. The behavior is what it can do. So in some sense, you could
+  imagine objects being persons, cooperating within an explicit social organization.
+  Within a social organization, people organize themselves
+  into groups to perform tasks, cooperating together. In coding terms, 
+  we are speaking of the object graph, with objects linked via the references
+  they have in their state. The behavior of objects is expressed in terms
+  of methods and objects cooperate via invoking methods on objects they
+  know. 
+  <xfr>
+    Le paradigme objet est inspiré de la vrai vie: un objet est une entité
+    avec une identité, un état, et un comportement. L'identité d'un objet
+    est ce qui le rends unique, différent de tous les autres objets. L'état
+    d'un objet est ce qu'il connaît, incluant l'identité d'autres objets.
+    Le comportement d'un objet est ce qu'il sait faire. En quelque sorte,
+    vous pourriez pensé en termes de personnes, coopérant au sein d'une
+    organisation sociale explicite. Au sein de cette organisation,
+    les individus s'organize pour effectuer les tâches à faire.
+    En terme de programmation, nous parlons du graphe d'objets où les
+    objets sont liés par les références qu'ils contiennent dans leur état.
+    Le comportement d'un objet est exprimé en méthodes et les objets
+    coopèrent en invoquant des méthodes sur les objets qu'ils connaissent.
+  </xfr>
+</p>
+<p>
+  In real life, complex social organizations call for the concept of
+  class of people.
+  Indeed, humans need to categorize entities to help understand the world
+  around them. We use classes for that all the time, for example, in 
+  social organizations, we have the generic concept of a doctor, a student,
+  a carpenter, or a baker. Each category is really a class of people
+  that have the same knowledge and have the same skills, playing the
+  same rôles within the social organization.
+  All carpenters know how to work wood for exemple. We also have classes
+  for animals like mammals versus birds. In coding terms, a class
+  describes its instances, that is, the objects it created.
+  So a class is a factory for objects that have a state and
+  a behavior that corresponds to that class description of a state
+  and behavior.
+  <xfr>
+    Dans la vraie vie, les organisations sociales demande rapidement
+    de penser en termes de classes d'individus. En effet, les humains
+    ont besoin de categoriser ce qui les entourent, par exemple, nous
+    avons le concept générique d'un médecin, d'un étudiant, d'un
+    ébéniste, ou encore d'un boulanger. Chaque catégorie est une classe
+    d'individus ayant les mêmes connaissances, le même comportement,
+    jouant le même rôle au sein de l'organisation. Par exemple,
+    tous les ébénistes savent travailler le bois. Nous utilisons
+    les classes pour décrire le monde animal avec des classes pour
+    les mammifères et pour les oiseaux par exemple. En termes de
+    programmation, une classe décrit ses instances, i.e., les
+    objets qu'elle a créé. Donc une classe est une fabrique d'objets
+    qui ont un état et un comportement qui corresponds à la description
+    qu'en fait cette classe.
+  </xfr>
+</p>
+<p>
+  So what is object-oriented programming? It is about designing a
+  population of objects described by classes. In other
+  words, it is about organizing a population of objects into an object
+  graph, where the nodes are the objects and the edges are object references.
+  It is also about designing classes that describe these objects in terms
+  of fields and methods. It is finally about writing the body of these methods,
+  with the body of a method being the actual code that will execute when that
+  method is invoked.
+  <xfr>
+    Qu'est-ce donc que la programmation orientée-objet? C'est la
+    conception d'une population d'objets qui collaborent, objets
+    qui sont décrit par un ensemble de classes. En d'autres termes,
+    il est question d'organiser une population d'objet en un graphe
+    d'objets, où les objets sont les noeuds et les arêtes les références
+    entre les objets. Et du coup, il est question aussi de concevoir les
+    classes qui décrivent ses objets, en terms de champs et de méthodes.
+    Puis enfin, il est question d'écrire le code des méthodes.
+  </xfr>
+</p>
+<p>
+  OK, so let's get started on our journey towards mastering
+  object-oriented programming...
+  <xfr>
+    Et bien, c'est parti, engageons nous sur le chemin vers la
+    maîtrise de la programmation orientée-objet...
+  </xfr>
+</p>
+
+<h3>Tasks</h3>
+
+<tasks>
+  <task name="t1" label="Your first classes and objects">
+    This task will introduce the very basics about classes and objects,
+    using a very simple example. It will show you how to
+    define a class, with fields and methods. It will also show
+    you how to instantiate a class, creating objects.
+  </task>
+  <task name="t2" label="Discussing object references">
+    This task will introduce the concept of object references.
+    Object references are the Java equivalent to C pointers.
+    Therefore, object references are essential in organizing
+    objects in meaningful organizations where they
+    can cooperate to provide useful behaviors.
+  </task>
+  <task name="t3" label="Discussing static fields and methods">
+    This task will explore the concept of static fields and methods
+    and how they differ from regular fields and methods. We will
+    highlight also important points about references.
+  </task>
+  <task name="t4" label="Discussing constructors">
+    Constructors are one of the very nice features of
+    object-oriented programming, a feature that really helps
+    developer write cleaner and simpler code, code that becomes
+    easier to understand and evolve. Sounds exciting?
+    Let's get started then!
+  </task>
+  <task name="t5" label="Coding style -- C vs Java">
+    This task is an exercise in coding style, we will be 
+    contrasting object-oriented programming with regular imperative
+    programming, C-style. Do not worry if you are not a C expert,
+    you will be able to follow and learn from this exercise.
+  </task>
+  <task name="t6" label="More on Aliasing">
+    This task introduces the concept of arrays in Java,
+    which should feel pretty familiar to any developer.
+    But we will use this opportunity to get you to debug
+    a bit more, bugs that are more subtle to understand.
+    It will be mostly about unmastered aliasing in the
+    object graph.
+  </task>
+  <task name="t7" label="Evaluating and Improving code">
+    Code is not something you do once, execute, and then forget.
+    Code is a living entity, changing over time.
+    Sometimes, you start from scratch, in which case you design the code,
+    then you debug it, and then you improve it.
+    Sometimes, you start from existing code, which is the case in this task.
+    This means understanding the code first and then improve it. But to
+    improve it, you need to know what is there to improve.
+    <br>
+    This is exactly what we will do in this task. You will first
+    understand the code given to you and you will setup an evaluation
+    of its quality in terms of the number of objects created and
+    the efficiency of the algorithms in place.  
+    <br>
+    Based on the evaluation of the previous task, you will improve
+    the code and evaluate the impacts of the improvements you
+    did.
+  </task>
+</tasks>
+<p>
+  Congratulations, you have gone through all the tasks.
+  Please make sure that you commit and push your work to our server.
+  Let us remind you how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -a -m "Sprint java.basics completed"
+  $ git push --all
+</textarea>

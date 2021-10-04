@@ -1,0 +1,207 @@
+<vars>
+  sprint=object.calculator
+  task=t4
+	step=t4-s3
+</vars>
+
+<p>
+  In most programming languages, you have comparison operators
+  used in writing conditions to if-then-else statements or loop
+  statements. We will introduce such statements shortly,
+  so we will prepare by introducing comparison operators
+  first. It will also be a way for you to check if you understood
+  the above mechanisms.
+  <xfr>
+    Dans la plupart des langages de programmation, vous avez
+    des opérateurs de comparaison que vous utilisez dans l'écriture
+    des conditions des boucles et des tests. Puisque nous allons
+    introduire ces constructions dans notre language sous peu,
+    nous allons préparer le terrain avec l'introduction des
+    opérateurs de comparaison. Cela va aussi vous permettre de
+    valider votre compréhension des mécanismes dont nous venons
+    de parler.
+  </xfr>
+</p>
+<p>
+  Let's look at the classes
+  <span class="java-class">Value</span> and
+  <span class="java-class">ArithValue</span>.
+</p>
+<pre class="prettyprint lang-java">
+public class Value extends Expression {
+
+  /*
+   * These are the supported comparison operators:
+   *    eq: '==' : equal
+   *    ne: '!=' : not equal
+   * Examples:
+   *    (x == y)
+   *    (x != y)
+   */
+  public abstract BoolValue eq(Value v) throws CastException;
+  public abstract BoolValue ne(Value v) throws CastException;
+}
+</pre>
+<p>
+  Here we see that any value can be compared to any other value,
+  if their types are comparable, otherwise, a CastException is
+  thrown. Again, let's look at the class
+  <span class="java-class">BoolValue</span> to see how this
+  behavior is implemented:
+</p>
+<pre class="prettyprint lang-java">
+class BoolValue extends Value {
+  @Override
+  public BoolValue eq(Value v) throws CastException {
+    return new BoolValue(val == v.toBool());
+  }
+  @Override
+  public BoolValue ne(Value v) throws CastException {
+    return new BoolValue(val != v.toBool());
+  }
+}
+</pre>
+<p>
+	We remind you that the method
+	<span class="java-method">toBool</span> will throw
+	a <span class="java-class">CastException</span> if the
+	cast is illegal. So this is all clear? If not, ask
+	questions.
+</p>
+<p>
+  Now, let's consider arithmetic values, they can be
+  compared in more ways than other values:
+  <xfr>
+    Les valeurs arithmétiques peuvent être comparées
+    de plus de façon que les autres valeurs:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class ArithValue extends Value {
+  /*
+   * These are the supported comparison operators:
+   *    lt: '&lt;'  : less than
+   *    le: '&lt;=' : less than or equal
+   *    gt: '&gt;'  : greater than
+   *    ge: '&gt='  : greater than or equal
+   * Examples:
+   *    (x &lt; y)
+   *    (x &lt;= y)
+   *    (x &gt; y)
+   *    (x &gt;= y)
+   */
+  public abstract BoolValue lt(ArithValue v) throws CastException;
+  public abstract BoolValue le(ArithValue v) throws CastException;
+  public abstract BoolValue gt(ArithValue v) throws CastException;
+  public abstract BoolValue ge(ArithValue v) throws CastException;
+}
+</pre>
+<p>
+  Now you are up, <b>finish the code</b> of the classes 
+  <span class="java-class">IntValue</span>
+  and
+  <span class="java-class">FloatValue</span>
+  and then implement the method
+  <span class="java-method">eval</span>
+  on the corresponding class
+  <span class="java-class">CompOp</span>.
+  In that class 
+  <span class="java-class">CompOp</span>
+  and in its method
+  <span class="java-method">eval</span>,
+  notice the use of 
+  <span class="java-keyword">switch</span>
+  statements and a Java enumeration 
+  (<span class="java-keyword">enum</span> OPS).
+  See, never have
+  a religious position when it comes to engineering,
+  it is all about to know your trade and use the
+  right mechanism.
+  <xfr>
+    <b>C'est à vous de finir le code</b> des classes
+    <span class="java-class">IntValue</span>
+    et
+    <span class="java-class">FloatValue</span>
+    et d'implémenter la méthode 
+    <span class="java-method">eval</span>
+    sur la 
+    <span class="java-class">CompOp</span>.
+    Dans cette classe
+    <span class="java-class">CompOp</span>
+    et sa méthode 
+    <span class="java-method">eval</span>,
+    notez l'usage de
+    <span class="java-keyword">switch</span>
+    et d'une énumération Java
+    (<span class="java-keyword">enum</span> OPS).
+    Vous voyez il ne faut jamais avoir des points
+    de vue religieux en tant qu'ingénieur,
+    il faut connaître son métier et choisir
+    les méchanismes les plus adaptés.    
+  </xfr>
+</p>
+
+<h3>Testing</h3>
+
+<p>
+  You can test your code by trying out comparison
+  expressions when running the class
+  <span class="java-class">CalcMainV4</span>.
+  Of course, use the debugger to single step
+  the execution, it is the best way to learn.
+  <xfr>
+    Vous pouvez tester votre code via 
+    différentes expressions de comparaisons
+    en lançant la classe
+    <span class="java-class">CalcMainV4</span>.
+    Bien sûr, utilisez le debugger pour suivre
+    l'evaluation pas à pas, c'est le meilleur
+    moyen d'apprendre.
+  </xfr>
+</p>
+<pre class="terminal">
+  > (1==2);
+  OK: (1 == 2)
+  -> false
+  > (2&lt;3);
+  OK:(2 &lt; 3)
+  -> true
+  > (2 == 2.1);
+  OK: ((float)2 == 2.1)
+  -> false
+  > (2.4==2.4);
+  OK: (2.4 == 2.4)
+  -> true  
+  > (2.4!=2.4);
+  OK: (2.4 != 2.4)
+  -> false
+</pre>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.calculator"
+   classpath="bin;tests.jar;parser.jar;../object.collections/edu-polytech-ricm-oop-collections.jar"
+   classname="calculator.TestCalcV4_03"> 
+  <banner>
+    Once you think your tested your entire code and
+    it works, then you can try to run our tests.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check4_03_unfold">
+  </unfold>
+</check>
+
+<h3>That's all folks</h3>
+
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint calculator, Task4, Step3 completed"
+  $ git push --all
+</textarea>

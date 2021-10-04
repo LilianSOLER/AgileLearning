@@ -1,0 +1,110 @@
+<vars>
+  sprint=prog.basics
+  task=t4
+</vars>
+
+<p>
+  This task is about programming simple games in Java;
+  it is your reward for all the hard work you put in previous
+  tasks, learning the basics of programming in Java.
+  This time, you will be only minimally guided throughout this
+  task. It will be about reusing most of the concepts we have seen
+  so far. So if you get lost, do not hesitate to go back to previous
+  tasks.
+ <xfr>
+  Cette tâche concerne la programmation de jeux simples en Java.
+  C'est votre récompense pour tout le dur travail que vous avez réalisé
+  au cours des tâches précédentes.
+  Cette fois, vous allez être guidé de manière minimale dans cette tâche,
+  qui va consister à réutiliser la plupart des concepts que nous avons 
+  vu jusque-là. Donc si vous êtes perdu, n'hésitez pas à revenir aux tâches 
+  précédentes.
+  </xfr>
+</p>
+<p>
+  If you have not done so already, launch Eclipse manually, from a terminal.
+  This is really important, do follow <b>exactly</b> the instructions below.
+  Remember to always start Eclipse this way, for this workshop.
+  <xfr>
+ Si vous ne l'avez pas encore fait, lancez Eclipse manuellement, depuis
+ un terminal. Ceci est vraiment important, suivez <b>exactement</b> les
+ instructions ci-après. Rappelez-vous de démarrer Eclipse comme cela, pour
+ tout ce workshop.
+  </xfr>
+</p>
+<pre class="terminal">
+  ~$ cd ~/AgileLearning/workshops/oop
+  oop$ source setenv.sh 
+  oop$ eclipse -data workspace/
+</pre>
+<p>
+  Then, switch to the Java perspective, if you are not already there.
+  Under the Java perspective, in the <em>Package Explorer</em> view,
+  on the left-hand side of the window, you can see the
+  <em>prog.basics</em> project into your Eclipse workspace.
+  Indeed, you imported that project earlier.
+  This step will take place in this.
+ <xfr>
+  Allez sur la perspective Java, si vous n'y êtes pas déjà.
+  Sous cette perspective, dans la vue <em>Package Explorer</em>, 
+  sur le coin gauche de la fenêtre, vous pouvez voir le projet
+  <em>prog.basics</em> dans votre workspace.
+  En effet, vous avez importé ce projet précédemment. 
+  Cette étape concerne ce projet.
+  </xfr>
+</p>
+<p>
+  Browse the <em>prog.basics</em> project to find the Java package
+  <span class="java-package">ricm3.oop.games</span>. You can see three games:
+  <span class="java-class">HangedMan</span>, and
+  <span class="java-class">TicTacToe</span>.
+  The class
+  <span class="java-class">GameMain</span> is the
+  entry point, with the method
+  <span class="java-method">main</span> that allows
+  to choose which game to play.
+</p>
+<p>
+  Read and understand the class
+  <span class="java-class">GameMain</span>, it is an easy read.
+  It illustrates how you can setup a simple command-line menu
+  and ask for the end user to input his choice.
+  As you can see, it expects certain methods on each game.
+  You job is to implement those methods.
+  You will notice that, for the TicTacToe games, it is
+  possible for two human players to play but it also
+  possible for one human player against the machine.
+  <xfr>
+  Lisez et comprenez la classe  <span class="java-class">GameMain</span>, 
+  elle est facile à comprendre.
+  Elle illustre comment mettre en place un simple menu,
+  demandant à l'utilisateur final d'entrer un choix. 
+  Comme vous pouvez le voir, certaines méthodes sont attendues
+  pour chaque jeu. Votre travail est d'implémenter ces méthodes.
+  remarquez que, pour le jeu TicTacToe, il est possible de jouer
+  à deux joueurs mais également de jouer à un joueur contre la
+  machine.
+  </xfr>
+</p>
+
+<h3>Steps</h3>
+
+<steps>
+  <step name="t4-s1" label="HangedMan Game">
+  </step>
+  <step name="t4-s2" label="TicTacToe Game">
+  </step>
+  <step name="t4-s3" label="Passing our checks">
+  </step>
+</steps>
+
+<p>
+  That's all folks for this task. 
+  Please make sure that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint prog.basics, Task4 completed"
+  $ git push --all
+</textarea>

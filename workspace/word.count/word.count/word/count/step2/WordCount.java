@@ -1,0 +1,79 @@
+package word.count.step2;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+public class WordCount {
+
+  private int charCount;
+  private int wordCount;
+  private int lineCount;
+
+  private InputStreamReader reader;
+  private Vocabulary vocabulary;
+
+  public WordCount(InputStreamReader reader) {
+    this.vocabulary = new Vocabulary();
+    this.reader = reader;
+  }
+
+  public int charCount() {
+    return charCount;
+  }
+
+  public int wordCount() {
+    return wordCount;
+  }
+
+  public int lineCount() {
+    return lineCount;
+  }
+
+  public int vocabCount() {
+    return 0;
+  }
+
+  public Vocabulary getVocabulary() {
+    return vocabulary;
+  }
+
+  /**
+   * Reads from the aggregated input stream, parsing
+   * the read characters in order to count the number
+   * of characters, words, and lines.
+   * @throws IOException
+   */
+  public void parse() throws IOException {
+    char c;
+    int r;
+    // variable that tells if the last character, read from the stream,
+    // was a separator character or any other character
+    boolean lastCharNotSeparator = false;
+    r = reader.read();
+    while (r != -1) {
+      c = (char) r;
+      switch (c) {
+      // characters that are word separators:
+      case '(':
+      case ')':
+      case '.':
+      case ',':
+      case ':':
+      case ';':
+      case ' ':
+        lastCharNotSeparator = false;
+        break;
+      // character that marks the end of a line, also a separator
+      case '\n':
+        lastCharNotSeparator = false;
+        break;
+      // all other characters are not separators, 
+      // they are making up words
+      default:
+        lastCharNotSeparator = true;
+      }
+      r = reader.read();
+    }
+  }
+}

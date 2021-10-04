@@ -1,0 +1,593 @@
+<vars>
+  sprint=word.count
+  task=t3
+</vars>
+
+<p>
+  In this task, we are going to count the number of occurrences of words,
+  that is, the number of times the same word appears in a text.
+  This requires to build
+  the vocabulary of the parsed text, that is, the list of words that
+  are used in that text. Then, per word, we will maintain a count
+  of the number of times we parsed that word, which is the number of
+  occurrences for that word in the text.
+  <xfr>
+    Nous allons compter maintenant les occurances de mots, c'est
+    à dire le nombre de fois qu'un même mot apparait dans un texte.
+    Cela nécessite de construire le vocabulaire des mots rencontrés
+    lors du parsing du texte. Pour chaque mot de ce vocabulaire, nous
+    allons maintenir un compteur d'occurance. 
+  </xfr>
+</p>
+<p>
+  Go have a look at the source folder <em>word.count</em>
+  and the Java package <span class="java-package">word.count.step2</span>.
+  You will see a few classes there, classes that are incomplete.
+  <xfr>
+ 		Allez voir le source folder <em>word.count</em>
+  	et le package <span class="java-package">word.count.step2</span>.
+  	Vous y verrez quelques classes qui sont incomplètes.
+  </xfr>
+</p>
+
+<h3>Class <span class="java-class">WordCount</span></h3>
+
+<p>
+  You will recognize the class
+  class <span class="java-class">WordCount</span>. Please cut and paste
+  your implementation of the method 
+  <span class="java-method">parse</span> from the previous task.
+  <xfr>
+  	Vous allez reconnaitre la classe
+  	<span class="java-class">WordCount</span>. Veuillez copier et coller
+    le code de la méthode 
+    <span class="java-method">parse</span> que vous aviez écrit lors
+    d'un tâche précédente.
+  </xfr>
+</p>
+
+<p>
+  <b>Warning:</b> only cut and paste the method
+  <span class="java-method">parse</span>, not the source for the
+  entire class. Indeed, notice that the class is slightly different,
+  it references a new object, instance of the class
+  <span class="java-class">Vocabulary</span> and it has a new method
+  <span class="java-method">getVocabulary</span>.
+  <xfr>
+    <b>Attention:</b> copiez seulement la méthode
+    <span class="java-method">parse</span>, et non pas le source
+    de toute la classe <span class="java-class">WordCount</span>.
+    En effet, cette nouvelle classe <span class="java-class">WordCount</span>
+    est differt légèrement de la précédente.
+  </xfr>
+</p>
+
+<!-- p>
+  <b>WARNING</b>: if you get compilation errors right after
+  any cut-and-paste operation, please verify the imports
+  in your class at the top of the source file.
+  Indeed,
+  Eclipse is smart and it preserves the full class names
+  when cutting and pasting code. So when you cut and paste
+  code from the Java package
+  <span class="java-package">word.count.step1</span>
+  to the package
+  <span class="java-package">word.count.step2</span>,
+  Eclipse adds imports for the classes from
+  the package 
+  <span class="java-package">word.count.step1</span>
+  in the source of the classes in the package
+  <span class="java-package">word.count.step2</span>.
+  Not really what you want.
+  <b>
+    So make sure that your imports are in order after
+    any cut-and-paste of code.
+  </b>
+    <xfr>
+ 	<b>WARNING</b>: si vous avez des erreurs de compilation
+  	juste après un copier-coller, vérifiez les imports
+  	dans votre classe (au sommet du fichier source).
+  	En effet,
+  	Eclipse préserve le nom complet lors des copier-coller 
+  	de code.  
+  	Donc quand vous copiez-collez du code du package
+  	<span class="java-package">word.count.step1</span>
+  	vers le package
+  	<span class="java-package">word.count.step2</span>,
+  	Eclipse ajoute les imports pour les classes depuis le
+	package 
+  	<span class="java-package">word.count.step1</span>
+  	dans le source des classes dans le package
+  	<span class="java-package">word.count.step2</span>.
+  	Pas vraiment ce que vous voulez.
+  	<b>
+    	Donc vérifiez que vos imports sont corrects après
+    	tout copier-coller de code.
+  	</b>
+  </xfr>
+</p-->
+
+<h3>Class <span class="java-class">Word</span></h3>
+
+<p>
+  The class <span class="java-class">Word</span>
+  represents the words parsed from the input stream..
+  You must follow the outline given below:
+</p>
+<pre class="prettyprint lang-java">
+  public class Word {
+    private char chars[];
+    private int nchars;
+    public  int noccurrences;
+  
+    public Word();
+    public Word(Word c);
+  
+    public void add(char c);
+    public String toString();
+    public boolean equals(Word w);
+  }
+</pre>
+<p>
+  The code above is pretty much self-explanatory. 
+  Notice that some fields are private and others are public.
+  Again, it is a matter of what needs to be public versus
+  what can be private matters. The number of occurrences of
+  a word is part of the public matters, since it will be
+  accessed from other places in the code. We could have gone
+	with a private field and a getter/setter pair of methods,
+	but why bother here?
+  <xfr>
+ 		Le code précédent s'explique plus ou moins par lui-même.
+ 		Notez que certains champs sont private et d'autres public.
+ 		A nouveau, c'est une question de qu'est ce qui doit être 
+ 		publique ou privé. Le nombre d'occcurances d'un mot est
+ 		publique, puisqu'il va être accédé depuis différents endroits
+ 		dans le code. Nous aurions pu choisir d'avoir un champs
+		privé et de fournir une paire de méthode getter/setter,
+		mail il n'y a pas vraiment de justification pour cela.
+  </xfr>
+</p>
+<p>
+  It is likely that the characters will be accessed too,
+  for example to print a word. But we would like to hide
+  the implementation details here. It is nobody's business
+  to know that we use an array and how we use it.
+  We have worked with this implementation before, using
+  an array (<span class="java-field">chars</span>)
+  that we can grow dynamically, keeping the
+  effective number of characters in that array
+  (<span class="java-field">nchars</span>).
+  <xfr>
+ 	Il est probable que les caractères seront accédés aussi, 
+ 	par exemple pour afficher un mot. Mais nous voulons cacher
+ 	les détails d'implémentation ici. Personne n'a besoin de
+ 	savoir que nous utilisons un tableau et comment nous 
+ 	l'utilisons.
+ 	Nous avons travaillé avec cette implémentation précédemment,
+ 	en utilisant un tableau (<span class="java-field">chars</span>)
+ 	que nous pouvons faire grandir dynamiquement,
+ 	maintenant ke nombre effectif de caractères dans ce tableau.
+  </xfr>
+</p>
+<p>
+  The method
+  <span class="java-method">toString</span> creates
+  a string object. A string object is the official way in
+  Java to represent a string of characters.
+  The method <span class="java-method">toString</span> creates
+  a new string object with the characters of the word it is
+  invoked on. Look at the class <span class="java-class">String</span>,
+  in the package <span class="java-package">java.lang</span>,
+  and search for an adequate constructor to construct a string
+  object from an array of characters.
+  <xfr>
+	La méthode <span class="java-method">toString</span> crée
+	un objet chaine. Un objet chaine est le moyen en Java de représenter
+	une chaine de caractères.
+	La méthode <span class="java-method">toString</span> crée un
+	nouvel objet chaine avec les caractères du mot sur lequel
+	elle est invoquée. Regardez la classe 
+	<span class="java-class">String</span>,
+  	dans le package <span class="java-package">java.lang</span>,
+  	et cherchez un constructor adéquat pour construire un objet chaine
+  	depuis un tableau de caractères.
+  </xfr>
+</p>
+<p>
+  <b>Remember:</b> <b>Ctrl-Shift-T</b> allows you to search quickly
+  for a class, any class. We are speaking of 
+  the class <span class="java-class">String</span>,
+  in the package <span class="java-package">java.lang</span>.
+  Then <b>Ctrl-Shift-O</b> shows you the outline quickly and
+  allows you to navigate quickly to any method or constructor.
+  Remember, the more you master the tools you use, Eclipse in this case,
+  the easier and faster it is to get the job done.
+  <xfr>
+	Rappelez-vous, <b>Ctrl-Shift-T</b> permet de chercher rapidement
+  	une classe, n'importe laquelle. Nous parlons de la classe
+  	<span class="java-class">String</span>,
+  	dans le package <span class="java-package">java.lang</span>.
+  	Alors <b>Ctrl-Shift-O</b> vous montre l'outline rapidement et 
+  	vous permet de naviguer rapidement vers toute méthode ou constructeur.
+    Rappelez vous que plus vous maitrisez vos outils, plus le travail est
+    facile et rapide.
+  </xfr>
+</p>
+<p>
+  Also notice on the
+  class <span class="java-class">Word</span>
+  that we have two constructors. We can create an empty
+  word and add characters later, incrementally. We can also
+  create a word from an existing word. Of course, it is important
+  to avoid any aliasing between the two words, which means no
+  sharing of the array of characters between words.
+  <xfr>
+	Notez aussi que la classe class <span class="java-class">Word</span>
+	a deux constructeurs. Nous pouvons créer un mot vide et ajouter des
+	caractères ensuite, incrémentalement. Nous pouvons aussi
+	créer un mot depuis un mot existant. Bien sûr, il est
+	majeur d'éviter tout aliasing entre deux mots, ce qui signifie
+	pas de partage de tableaux de caractères entre mots.
+  </xfr>
+</p>
+<p>
+  The method <span class="java-method">equals</span> compares
+  two words. It returns true if the two words have the same
+  characters and in the same order, that is,
+  they both represent the same sequence of characters.
+  <xfr>
+	La méthode <span class="java-method">equals</span> 
+	compare deux mots. Elle retourne vrai si les deux mots
+	ont les même caractères et dans le même ordre,
+	c'est à dire qu'ils représentent la même séquence
+	de caractères.
+  </xfr>
+</p>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="word.count.step2.TestWord"> 
+  <banner>
+    So go ahead, give it a try, implement
+    the class <span class="java-class">Word</span>.
+    When done, check what you did.
+  </banner>
+  <hint>
+    Not quite. Try again.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+<div name="check1_unfold" style="display:none;" >
+</div>
+
+<h3>Class <span class="java-class">Vocabulary</span></h3>
+
+<p>
+  Now, let's look at the class <span class="java-class">Vocabulary</span>,
+  in the same package <span class="java-package">word.count.step2</span>.
+	That class keeps track of the <em>vocabulary</em> used in a parsed
+  stream of characters, that is, the set of all the words seen.
+  Notice we are talking about
+	a <b>set</b>, so <b>each word is present only once in the set</b>.
+	The class outline looks like this:
+	<xfr>
+		Regardons maintenant la classe <span class="java-class">Vocabulary</span>,
+		dans le paquet Java <span class="java-package">word.count.step2</span>.
+		Cette classe mémorise l'extension de l'ensemble des mots parsés dans
+		le flux d'entrée. Notez que nous parlons d'un ensemble, donc chaque mot
+		n'est présent qu'une seule fois. La classe ressemble à cela:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class Vocabulary {
+
+    private Word words[];
+    private int nwords;
+
+    public Vocabulary();
+
+    public Word find(Word word);
+    public Word add(Word word);
+
+    public int getWordCount();
+    public Word[] getWords();
+  }
+</pre>
+<p>
+  The class <span class="java-class">Vocabulary</span> will remember
+  the words of the known vocabulary in an array, an implementation
+  that you are already familiar with. As before, you will grow
+  the array to accomodate new words as they are added.
+  Let's discuss the different methods.
+  <xfr>
+    La classe <span class="java-class">Vocabulary</span> va contenir
+    le vocabulaire et le gérer avec un tableau, un choix d'implémentation
+    que vous connaissez bien maintenant. Vous devrez grossir votre
+    tableau si cela est nécessaire pour mémoriser tous les mots
+    du vocabulaire. Les méthodes de la classe
+    <span class="java-class">Vocabulary</span> sont les
+    suivantes:
+  </xfr>
+</p>
+
+<h4>Method <span class="java-method">find(Word)</span></h4>
+
+<p>
+  The method <span class="java-method">find(Word)</span> searches
+  for a word in the array of known words. It returns null if
+  the given word is not found in the known vocabulary or
+  it returns the word that was found. You will implement the
+  search via a simple scan of the array of words. Beware,
+  choose wisely between using "==" or "equals" when comparing
+  words. Make a concious and justified choice before you write
+  the code and before you test it.
+  <xfr>
+    La méthode <span class="java-method">find(Word)</span>
+    cherche le mot dans le vocabulaire, en itérant sur le
+    tableau de mots. La méthode retourne null si le mot
+    n'a pas été trouvé ou le mot trouvé (celui connu
+    du vocabulaire, pas celui donné en paramêtre).
+    Faite attention à bien choisir entre l'usage de "=="
+    et "equals" pour la comparaison des mots. Prenez une
+    décision avant de coder et de tester.
+  </xfr>
+</p>
+
+<h4>Method <span class="java-method">add(Word)</span></h4>
+
+<p>
+  The method <span class="java-method">add(Word)</span>
+  adds a word to the known vocabulary, but only if it is not
+  already known. This requires that you first search for the
+  word before actually adding it in the array of known words,
+  calling the method <span class="java-method">find(Word)</span>.
+  <xfr>
+    La méthode <span class="java-method">add(Word)</span>
+    ajoute le mot passé en paramêtre au vocabulaire, mais
+    seulement si le mot n'y ai pas déjà. Cela nécessite
+    la recherche du mot avant de la rajouter, en appelant
+    la méthode <span class="java-method">find(Word)</span>.
+  </xfr>
+</p>
+<p>
+  <b>
+    Note:
+  </b> the fact that the method
+  <span class="java-method">add(Word)</span> relies on
+  the method
+  <span class="java-method">find(Word)</span> is <b>NOT</b>
+  optional. <b>NEVER</b> write the same code twice!
+  Since you already coded the ability to find a given word,
+  use that code when adding a given word to make sure
+  the given word is not already in the vocabulary.
+	<xfr>
+		Le fait que la méthode
+		<span class="java-method">add(Word)</span> appelle
+		la méthode 
+		<span class="java-method">find(Word)</span> n'est 
+		<b>pas négociable</b>, en aucun cas vous écrivez
+		le même code deux fois. Puisque vous avez déjà
+		une méthode pour savoir si un mot fait parti du
+		vocabulaire, vous devez l'utiliser dans l'implémentation
+		de la méthode <span class="java-method">find(Word)</span>.
+	</xfr>
+</p>
+<p>
+  Next, you need to ask yourself which word object should the
+  method <span class="java-method">add(Word)</span> return?
+  Indeed, you have potentially two word objects, the one
+  passed as a parameter and the one in the vocabulary.
+  Your choice must be motivated by how you intend to
+  use the class <span class="java-class">Vocabulary</span>.
+  Meaning, put yourself in the shoes of the developer that will
+  use the class <span class="java-class">Vocabulary</span>,
+  what is useful to that developer?
+  <xfr>
+    Vous devez vous demander quel objet "word" la méthode
+    <span class="java-method">add(Word)</span> doit retourner?
+    En effet, vous avez le plus souvent deux objets, le
+    premier étant celui passé en paramêtres et l'autre
+    qui est dans le vocabulaire.
+    Votre choix doit être motivé et donc adapté à
+    l'usage envisagé de la classe <span class="java-class">Vocabulary</span>.
+    Mettez vous dans les chaussures du développeur qui utilise la
+    classe <span class="java-class">Vocabulary</span>, qu'est-ce qui
+    est utile pour lui?
+  </xfr>
+</p>
+<ul>
+  <li> Return the given word object? </li>
+  <li> Return the found word object if one was found? </li>
+  <li> Should adding a new word alias that word or not?</li>
+</ul>
+<p>
+  See, <span style="color: red;">these questions are vital</span>.
+  As we already discussed,
+  aliasing must be considered before writing code. Your decisions
+  must be clear and justified, before you write the code and before
+  you run tests... because without clear answers, what tests can you
+  possibly write since you haven't decided what the program should do?
+  <br>
+  <u>To get you thinking before coding is the whole purpose of this task</u>.
+  <xfr>
+    Vous voyez, ces questions sont vitales. Comme nous l'avons déjà
+    discuté, la gestion de l'aliasing des objets doit être considéré
+    avant d'écrire le code, pas après. Vos décisions doivent être claires
+    et motivés, avant d'écrire le code et avant d'écrire les tests. En
+    effet, sans réponses claires et motivés, quels tests allez-vous
+    écrire puisque vous n'avez pas décidé ce que le programme devait faire.
+    Tout le propos de cette tâche est de vous faire réfléchir avant de
+    coder.
+  </xfr>
+</p>
+<h4>
+  Methods
+  <span class="java-method">getWordCount</span>
+  and
+  <span class="java-method">getWords</span>
+</h4>
+<p>
+  The method <span class="java-method">getWordCount()</span>
+  returns the number of known  words in the vocabulary.
+	<xfr>
+		La méthode <span class="java-method">getWordCount()</span>
+		retourne le nombre de mots connus dans le vocabulaire.
+	</xfr>
+</p>
+<p>
+  The method <span class="java-method">getWords()</span>
+  returns the known words, using an array. You need to think about
+	aliasing here:
+	<xfr>
+		La méthode <span class="java-method">getWords()</span>
+		retourne un tableay des mots connus. Il vous faut réfléchir
+		à l'aliasing ici:
+	</xfr>
+</p>
+<ol>
+	<li>
+		Can you alias the array of words used by the class
+		<span class="java-class">Vocabulary</span> internally?
+		<xfr>
+			Pouvez vous faire un alias sur le tableau de mots que la
+			class <span class="java-class">Vocabulary</span> utilise
+			en interne?
+		</xfr>
+	</li>
+	<li>
+		Can you alias the words?
+		<xfr>
+			Pouvez vous faire un aliasing des mots du vocabulaire?
+		</xfr>
+	</li>
+</ol>
+
+<h4>Our checks</h4>
+
+<p>
+  You have implemented the above methods on the class
+  <span class="java-class">Vocabulary</span>. You wrote
+  your own tests and debugged your code. You think it
+  works. Well, submit it to our checks to see if we
+  agree that it works. <b>If your code fails our tests</b>,
+  it is likely
+  that our test expects a different answer to the questions
+  above. If it is the case, discuss these questions with
+  other students and with the teaching staff, making sure
+  to understand the pros and cons.
+  <xfr>
+		Vous avez implémenté les méthodes précédentes dans la
+		classe <span class="java-class">Vocabulary</span>. Vous
+		avez écrits vos propres tests et débuggé votre code. Vous pensez
+		qu'il fonctionne. Bien, soumettez-le à nos tests.
+    Si le test ne fonctionne pas, il est probable que notre test
+    s'attends à des réponses différentes aux questions précédentes.
+    Si c'est le cas, discutez de ces questions avec les autres étudiants
+    et avec vos enseignants, il est très important que vous en compreniez
+    les tenants et les aboutissants.
+  </xfr>
+</p>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="word.count.step2.TestVocabulary"> 
+  <banner>
+  </banner>
+  <hint>
+    Not quite. Try again.
+    Remember that you can debug our tests.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<div name="check2_unfold" style="display:none;" >
+</div>
+
+<h3>Putting it all together</h3>
+
+<p>
+  Great, we just implemented the class
+  <span class="java-class">Vocabulary</span>,
+  so let's use it in our class
+  <span class="java-class">WordCount</span> so that
+  we can finally keep track of the occurring words
+  during the parsing of a stream of characters.
+  <xfr>
+  	Nous avons juste implémenté la classe
+  	<span class="java-class">Vocabulary</span>,
+  	donc utilisons-là dans notre classe
+  	<span class="java-class">WordCount</span> de manière
+  	à conserver les occurances de mots 
+  	lors de l'analyse d'un flot de caractères.
+  </xfr>
+</p>
+<p>
+  For this, you need to modify the class
+  <span class="java-class">WordCount</span>. 
+  As you parse the input stream, any character that is not a separator
+  is a character of a word. You need to have a current word, an instance
+  of the class Word, and you need to add each character to that current word.
+  A separator means the end of the current word, a new word that must be added to
+  the vocabulary if it is not already in that vocabulary.
+  <xfr>
+		Pour cela, vous devez modifier la classe
+		<span class="java-class">WordCount</span>. 
+		Quand vous analysez le flot d'entrée, tout caractère qui n'est
+		pas un séparateur est un caractère d'un mot. Vous devez avoir
+		un mot courant, une instance de la classe Word, et vous devez
+		ajouter tout caractère à ce mot courant.
+		Un séparateur signifie la fin du mot courant, c'est donc un nouveau
+    mot qui doit être ajouté au vocabulaire si il n'y est pas déjà.
+  </xfr>
+</p>
+<p>
+  <b>Warning:</b> a stream may start with separators.
+  <br>
+  <b>Warning:</b> you must not add empty words to your vocabulary.
+</p>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="word.count.step2.TestWordCount"> 
+  <banner>
+    So go ahead and when ready, check your work.
+  </banner>
+  <hint>
+    Not quite. Try again.
+    Remember that you can debug our tests.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check3_unfold">
+  </unfold>
+</check>
+<div name="check3_unfold" style="display:none;" >
+<p>
+  That's all folks for this task. 
+  Please make sure that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint word.count, Task3 completed"
+  $ git push --all
+</textarea>
+</div>

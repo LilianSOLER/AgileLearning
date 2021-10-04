@@ -1,0 +1,847 @@
+<vars>
+  sprint=prog.basics
+  task=t2
+  step=t2-s7
+</vars>
+
+<p>
+  From now on, testing and debugging will be an integral
+  part of your life as a developer. During the rest of this workshop,
+  you will write more code, write your own tests, and debug
+  your code until it does what it is supposed to do.
+  We will also run tests on your code, from time to time.
+  Sometimes, it will take the form of a check button,
+  as you experienced it already. Sometimes, it will be
+  automated testing launched on your code.
+  <xfr>
+	A partir de maintenant, tester et débugger sera une partie
+	intégrale de votre vie de développeur.
+	Durant le reste de ce workshop, vous allez écrire votre 
+	propre code, écrire vos propres tests, et debugger votre code
+	jusqu'à ce qu'il fasse ce qu'il est supposé faire.
+	Nous allons aussi tester votre code de notre coté,
+	à certains moments. Parfois, cela sera explicite, ce sera
+	déclenché par vous, en cliquant sur un bouton check. Parfois,
+  des tests seront lancés automatiquement.
+  </xfr>
+</p>
+
+<h4>Test Jar File</h4>
+
+<p>
+  In each Eclipse project in your workspace, you will find a
+  Java archive that contains our tests. It is in the file named <em>tests.jar</em>.
+  You can launch all the tests it contains from a shell prompt:
+  <xfr>
+    Dans chaque projet Eclipse dans vote espace de travail (workspace),
+    vous trouverez l'archive de nos tests pour ce projet. Cette
+    archive s'appelle <em>tests.jar</em>.
+    Vous pouvez lancer tous les tests comme ceci depuis le prompt de
+    votre interpreteur de commande Linux:
+  </xfr>
+</p>
+<textarea class="terminal" rows="4">
+  $ cd ~/AgileLearning/workshops/oop/workspace/prog.basics
+  $ java -jar tests.jar tests.AllTests
+  ...
+</textarea>
+<p>
+  You can also launch all the tests from Eclipse.
+  Make sure the resource <em>"tests.jar"</em> is part of
+  the project build path. If it is not, right-click on it
+  and select "Add to build path".
+  If it is, the archive appears
+  under the folder "Referenced Librairies" in your project.
+  You can open a referenced library and see all the classes
+  it contains. Like with any other class, you can right-click
+  a class and then select 
+  either <em>"Run as"</em> or <em>"Debug As"</em>.
+  If you choose the class
+  <span class="java-class">AllTests</span>, all the tests
+  will be executed but you will not be able to debug individual
+  tests. To debug an individual test, launch that test under
+  the control of the debugger.
+  <xfr>
+	  Vous pouvez aussi lancer les tests depuis Eclipse.
+    Assurez vous d'abord que l'archive fait partie du build path
+    de votre projet. Si ce n'est pas le cas, selectionnez l'archive
+    avec un clique droit et choississez l'ajout au build path.
+    Si c'est le cas, elle sera visible dans
+    le dossier "Referenced Libraries". Vous pouvez alors ouvrir
+    la librairie et voir les classes qu'elle contient. Comme
+    pout toute classe, vous pouvez via un clique-droit sélectionner
+  	soit <em>"Run as"</em> soit <em>"Debug As"</em>.
+    Si vous choisissez la classe
+  	<span class="java-class">AllTests</span>, tous les tests
+    de l'archive seront exécutés mais vous ne pourrez pas les
+    debugger individuellement. Pour cela, il faut exécuter
+    un test individuellement sous le contrôle du debugger.
+  </xfr>
+</p>
+<p>
+  If you are not sure what the build path of your project and
+  what it is for, you really should read our
+  <a href="/eclipse/eclipse.htm">Eclipse Guided Tour</a>,
+  especially the page about Java projects.
+  <xfr>
+    Si vous n'êtes pas sûr de savoir ce qu'est le build path
+    et à quoi il sert, il serait une bonne idée de lire 
+    notre tour rapide sur 
+    <a href="/eclipse/eclipse.html">Eclipse</a>
+    et en particulier la page sur les projets Java.
+  </xfr>
+</p>
+<p>
+  Our tests provide both Java
+  classes and the corresponding sources. This means that
+  you will be able to read the source code of the tests.
+  As we said, Agile Learning is all about <b>transparency</b>
+  and what goes for you also goes for the teaching staff.
+  So nothing about our tests is hidden. That being said,
+  they may be hard for you to read and understand early
+  on in this workshop. But as you get better, it will be easier.
+  You can also always ask for help. Reading and understanding
+  our tests will be part of your learning experience,
+  it will be a great way to learn faster.
+  Ask for help if you need to.
+  <xfr>
+    Notre archive de tests contient nos classes de tests,
+    et leur source. Pas de secret, vous pourrez lire nos
+    tests pour mieux comprendre pourquoi votre code ne passe
+    pas tel ou tel test. Par contre, si la transparence
+    de l'Agile Learning s'applique à nous autant qu'à vous,
+    et que donc nos tests sont disponibles, ils ne sont pas
+    pour autant facile à lire et à comprendre, surtout au
+    début de ce atelier. Mais avec le temps, cela deviendra
+    plus facile, de plus, lire et comprendre les tests font
+    parti de votre apprentissage et vous fera progresser.
+    Demandez de l'aide si vous en avez besoin.
+  </xfr>
+</p>
+
+<h4>Check Buttons</h4>
+
+<p>
+  Your first experience with a failing tests is probably
+  through pressing a check button.
+  When the corresponding check fails,
+  it outputs relevant information to help
+  you understand what is not working, right there in the HTML
+  page you are reading. We know, you do not like
+  to read error messages, but you will have to.
+  Here is an example:
+  <xfr>
+	Votre première expérience avec un tests qui échoue arrive
+	probablement via un bouton check. Quand un check échoue, 
+	il affiche des informations sur la raison de l'échec
+	pour vous aider à comprendre ce qui ne marche pas. 
+	Nous savons, vous n'aimez pas lire les messages d'erreur,
+	mais là, il va falloir le faire. Voici un exemple:
+  </xfr>
+</p>
+<pre style="color:white; background-color:black; border:8px solid red;">
+Java Test: tests.prog.basics.task2.Check4
+  Classpath:
+    workshops/oop/workspace/prog.basics/bin/
+    workshops/oop/workspace/prog.basics/tests.jar
+  Directory:
+    workshops/oop/workspace/prog.basics/
+----------------------------------------
+FAILED
+---------------------------------------
+Test: tests.prog.basics.task2.Check4
+Test1:
+Greetings!
+Test2:
+Greetings!
+Test3:
+Some tests failed.
+cursus.tests.TestUtils$FailedException: Some tests failed.
+	at cursus.tests.TestUtils.failed(TestUtils.java:127)
+	at tests.prog.basics.task2.Check4.runHalGreetings2Tests(Check4.java:53)
+	at tests.prog.basics.task2.Check4.run(Check4.java:32)
+	at cursus.tests.TestHarness.run(TestHarness.java:212)
+	at tests.prog.basics.task2.Check4.main(Check4.java:19)
+      FAILED.
+</pre>
+<p>
+  So let's decipher it together. You will see, it is actually
+  rather simple.
+  The few first lines are about the test itself.
+  In this case, the test is the class
+  <span class="java-class">Check4</span> in the package
+  <span class="java-class">tests.prog.basics.task2</span>.
+  So it is a test that is part of the Task2 in the sprint
+  "prog.basics".
+  <xfr>
+    Nous allons décoder ensemble ce que tout cela veut dire,
+    ce n'est pas si difficile, vous allez voir.
+    Les premières lignes décrivent le test qui a échoué.
+    Vous pouvez voir la classe et son paquet:
+    <span class="java-class">Check4</span> dans le paquet
+    <span class="java-class">tests.prog.basics.task2</span>.
+    On voit donc que c'est un test de la tâche 2 du sprint
+    "prog.basics". 
+  </xfr>
+</p>
+<p>
+  Next, look at the extract below, you can find information about the class path
+  and the current directory, notions that you are already
+  familiar with. The class path tells you
+  where classes will be loaded from by the Java Runtime Environment.
+  The current directory tells you where the test was launched from,
+  which important because any file name used in the test will be
+  a relative path to that current directory.
+  <xfr>
+    Ensuite, regardez l'extrait ci-dessous,
+    vous pouvez trouver des informations sur le "class path"
+    et le dossier courant, des notions que vous connaissez déjà.
+    Le "class path" donne les dossiers depuis lesquels le runtime Java
+    va essayer de charger vos classes. Le dossier courant est le dossier
+    depuis lequel l'exécution du test est lancée, ce qui est important
+    car tous les noms de fichiers de le test seront des chemins relatifs
+    à ce dossier courant.
+  </xfr>
+<pre>
+Java Test: tests.prog.basics.task2.Check4
+  Classpath:
+    workshops/oop/workspace/prog.basics/bin/
+    workshops/oop/workspace/prog.basics/tests.jar
+  Directory:
+    workshops/oop/workspace/prog.basics/
+</pre>
+<p>
+  So what is saying the <em>Classpath</em> above? It
+  tells you that classes will searched for in your
+  workspace of the <em>"oop"</em> workshop,
+  in the project <em>"prog.basics"</em>, and
+  in either the directory "bin" or the
+  Java ARchive file called <em>tests.jar</em>.
+  <xfr>
+	  Que nous dit donc ce classpath? Il nous dit que le runtime Java
+    va chercher les classes dans le workspace de votre atelier <em>"oop"</em>,
+    dans le projet <em>"prog.basics"</em> et dans soit le dossier "bin"
+    soit dans l'archive Java appelée <em>tests.jar</em>.
+  </xfr>
+</p>
+<p>
+  Let's continue deciphering the output of the failed test.
+  After the failure statement (<em>FAILED</em>), you have
+  the output produced by the execution of the test.
+  If there was a failure, the output ends with a stack
+  trace:
+  <xfr>
+    Continuons de déchiffrer la sortie de notre test qui a échoué.
+    Après la ligne <em>FAILED</em>, vous pouvez voir la sortie
+    de l'exécution, c'est à dire ce que a affiché le test durant son
+    exécution. Si il y a une erreur lors de l'exécution, alors vous
+    trouverez à la fin la trace d'une pile d'appels:
+  </xfr>
+</p>
+<pre style="color:white; background-color:black; border:8px solid red;">
+----------------------------------------
+FAILED
+---------------------------------------
+Test: tests.prog.basics.task2.Check4
+Test1:
+Greetings!
+Test2:
+Greetings!
+Test3:
+Some tests failed.
+cursus.tests.TestUtils$FailedException: Some tests failed.
+	at cursus.tests.TestUtils.failed(TestUtils.java:127)
+	at tests.prog.basics.task2.Check4.runHalGreetings2Tests(Check4.java:54)
+	at tests.prog.basics.task2.Check4.run(Check4.java:32)
+	at cursus.tests.TestHarness.run(TestHarness.java:212)
+	at tests.prog.basics.task2.Check4.main(Check4.java:19)
+      FAILED.
+</pre>
+<p>
+  You know how to read a stack trace by now.
+  This one has been produced from an exception being thrown,
+  the exception was a <em>FailedException</em>. It was
+  thrown in class
+  <span class="java-class">cursus.tests.TestUtils</span>,
+  in the method
+  <span class="java-method">failed</span>, line 127.
+  So you can navigate there, in Eclipse, and no surprise there,
+  the code throws an exception (<em>FailedException</em>),
+  just like that:
+  <xfr>
+  	Vous savez comment lire une pile d'appels maintenant.
+  	Celle-ci a été produite depuis l'exception levée, 
+  	l'exception étant de type <em>FailedException</em>. Elle
+  	a été émise dans la classe
+  	<span class="java-class">cursus.tests.TestUtils</span>,
+  	dans la méthode
+  	<span class="java-method">failed</span>, ligne 127.
+  	Donc vous pouvez naviguer à cet endroit avec Eclipse, pas de surprise, 
+  	le code lève cette exception, comme ceci:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+     package cursus.tests;
+       public class TestUtils {
+125      ...
+126      public static void failed(String msg) {
+127        throw new FailedException(msg);
+128      }
+129    ...
+     }
+</pre>
+<p>
+  A bit more interesting, let's walk up the call stack, the next
+  location is in the class
+  <span class="java-class">Check4</span>,
+  in the method
+  <span class="java-method">runHalGreetings2Tests</span>, line 54.
+  It looks like this:
+  <xfr>
+    Un peu plus informatif, remontons la pile d'appels, dans la
+    classe <span class="java-class">Check4</span> et
+    dans la méthode 
+    <span class="java-method">runHalGreetings2Tests</span>, line 54.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+37  private static void runHalGreetings2Tests() {
+38
+39    LinkedList<String> cmdline = new LinkedList<String>();
+40    cmdline.add("java");
+41    cmdline.add("-cp");
+42    cmdline.add("./bin");
+43    cmdline.add("greetings.Tests");
+44    String directory = ".";
+45    List output;
+46    output = TestHarness.exec(cmdline, directory);
+47    if (output==null) 
+48      TestUtils.failed("Your class Tests does not execute properly.");
+49    Iterator iter = output.iterator();
+50    String line =null;
+51    while (iter.hasNext()) {
+52      line = (String)iter.next();
+53      if (line.contains("null"))
+54        TestUtils.failed("Some tests failed.");
+55      System.out.println(line);
+56    }
+57    if (line==null || !line.contains("PASSED."))
+58      TestUtils.failed("Some tests failed.");
+59  }
+</pre>
+<p>
+  The line 53 and 54 are pretty easy to understand.
+  The test looks at all the lines, printed by the execution of
+  you code, in the class
+  <span class="java-class">greetings.Tests</span>
+  that runs tests on the class
+  <span class="java-class">HalGreetings2</span>.
+  If one of them contains the word "null", it considers this as
+  a failure. 
+  <xfr>
+  	Les lignes 53 et 54 sont faciles à comprendre.
+  	Le test regarde toutes les lignes affichées par l'exécution de
+  	votre code, voir la classe
+  	<span class="java-class">greetings.Tests</span>
+  	qui exécute des tests sur la classe
+  	<span class="java-class">HalGreetings2</span>.
+  	Si l'une d'entre eux contient le mot "null", il considère que c'est
+  	un échec. 
+  </xfr>
+</p>
+<p>
+  Why? Because the tests are designed to validate that you handled
+  <span class="java-keyword">null</span> correctly. If the word
+  "null" appears in the output, it means you printed a variable
+  that contains <span class="java-keyword">null</span>, which
+  means you still have a bug in your class
+  <span class="java-class">HalGreetings2</span>.
+  <xfr>
+  	Pourquoi cela? Parce que les tests sont conçus pour valider
+  	que vous traitez 
+  	<span class="java-keyword">null</span> correctement. Si le mot
+  	"null" apparait dans la sortie, cela signifie que vous avez affiché 
+  	une variable qui contiens <span class="java-keyword">null</span>, ce qui
+  	signifie que vous avez encore un bug dans votre classe
+  	<span class="java-class">HalGreetings2</span>.
+  </xfr>
+</p>
+<p>
+  So see, you did not have to understand every single lines
+  of code. Most of the time, it will be as simple as this.
+  If it gets to be too much for you, just ask for help.
+  <xfr>
+  	Vous voyez, vous n'avez pas à comprendre chaque ligne de code
+    des tests, surtout ceux avec des lignes compliquées pour vous. 
+  	La plupart du temps, cela sera simple. Mais si vous vous trouvez
+    dans une impasse, demandez de l'aide.
+  </xfr>
+</p>
+
+<h4>The overall architecture of a test</h4>
+
+<p>
+  Let's look at an example. You have created a class
+  <span class="java-class">HelloWorld</span> and you passed
+  checks on that class. One of the checks that was executed
+  was the class <span class="java-class">tests.prog.basics.task1.Check2</span>.
+  <xfr>
+    Regardons un exemple. Vous avez créé une class
+    <span class="java-class">Greetings</span> et vous
+    avez passé des tests sur cette classe. Le test qui nous
+    intéresse est implémenté
+    dans une classe appelée
+    <span class="java-class">tests.prog.basics.task1.Check2</span>.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  package tests.prog.basics.task2;
+  public class Check2 implements ITest {
+    public static void main(String args[]);
+    public void run(PrintStream ps);
+  }
+</pre>
+<p>
+  As you can see, the class has a main method, it means that you
+  can launch it as a standalone program. Therefore, you can
+  create a debug configuration in Eclipse that will allow you
+  to debug the execution of that test. Put a breakpoint in the method
+  <span class="java-method">run</span> and launch the execution
+  under the control of the debugger. The execution will stop in the
+  method <span class="java-method">run</span> and you can debug normally
+  from there.
+  <xfr>
+    Comme vous pouvez le voir, cette classe a une méthode main,
+    donc vous pouvez la lancer depuis Eclipse comme une application
+    Java. Donc vous pouvez créer une configuration de debug sous
+    Eclipse qui va vous permettre de debugger le test. Mettez
+    un point d'arrêt sur la méthode
+    <span class="java-method">run</span> et lancez l'exécution
+    sous debugger. L'exécution va s'arrêter dans la méthode
+    <span class="java-method">run</span> et vous pourrez debugger
+    normalement.
+  </xfr>
+</p>
+<p>
+  Remember that you can search for any class with Ctrl-Shift-T.
+  Then, you can right-click on the method
+  <span class="java-method">main</span> of any class
+  and ask to debug it as a Java application. This will
+  automatically create a debug configuration and launch
+  a debug session.
+  Let's look at the code
+  in the method <span class="java-method">run</span> in the class
+  <span class="java-class">tests.prog.basics.task1.Check2</span>.
+  <xfr>
+    Rappelez vous que pour lancer une exécution, vous
+    pouvez tout simplement faire un clique droit sur
+    la méthode <span class="java-method">main</span>
+    et demander le debug comme une application Java.
+    Cela va lancer l'exécution sous le contrôle du debugger.
+    Nous pouvons donc regarder
+    le code maintenant, celui de la méthode
+    <span class="java-method">run</span> dans la classe
+    <span class="java-class">tests.prog.basics.task1.Check2</span>.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+01  public void run(PrintStream ps);
+02    if (!TestUtils.isDirectory("src")) {
+03      TestUtils.silentFail("You are missing the src directory");
+04    }
+05    if (!TestUtils.isDirectory("bin")) {
+06      TestUtils.silentFail("You are missing the bin directory");
+07    }
+08
+09    if (!TestUtils.isFile("src/HelloWorld.java")) {
+10      TestUtils.silentFail("You are missing src/HelloWord.java");
+11    }
+12    if (!TestUtils.isFile("bin/HelloWorld.class")) {
+13      TestUtils.silentFail("You are missing bin/HelloWord.class");
+14    }
+15    ...
+</pre>
+<p>
+  These checks are pretty much self-explanatory, aren't they?
+  First, line 02 and line 05, we check that you have in the project
+  the folders "src" and "bin". Then, line 09,
+  we check that you have created a class 
+  <span class="java-class">HelloWorld</span> in the file "src/HelloWorld.java".
+  Line 12, we check that it was compiled successfully (there is
+  a class file for it as bin/HelloWorld.class).
+  Remember, we discussed all this
+  already, when we discussed creating Java project in Eclipse
+  and having a source folder "bin" and a class-file folder "bin".
+  <xfr>
+    Ce code se lit facilement, n'est-ce pas?
+    Ligne 2 et 5, nous vérifions que les dossiers "src" et "bin"
+    sont bien présent dans le projet. Puis, ligne 9, nous vérifions
+    que vous avez bien créé une
+    classe <span class="java-class">HelloWorld</span>
+    et puis, ligne 12, nous vérifions qu'elle a été compilée correctement.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+01  public void run(PrintStream ps);
+02    ...
+03    Class cls = null;
+04    ClassLoader cl = this.getClass().getClassLoader();
+05    try {
+06      cls = cl.loadClass("HelloWorld");
+07    } catch (ClassNotFoundException ex) {
+08    TestUtils.failed(ex, "Could not find the class Greetings ");
+09  }
+</pre>
+<p>
+  This code is a bit harder to read, but even without knowing
+  what a class loader is, you can easily understand that,
+  line 6, the code tries to load your class
+  <span class="java-class">Greetings</span>.
+  Remember what we said about the Java Platform loading
+  classes to be able to execute them.
+  This is what we are doing here, loading your class,
+  so that we can use it to test it.
+  <xfr>
+    Ce code est un peu plus dure à lire, mais sans savoir
+    ce qu'est un chargeur de classe, vous pouvez facilement
+    comprendre que, ligne 6, le code essaie de charger la classe
+    <span class="java-class">Greetings</span>.
+    Mais rappelez vous, nous avions parlé du chargement
+    des classes par la plate-forme Java pour pouvoir
+    les exécuter. C'est ce que nous faisons ici,
+    charger la classe
+    <span class="java-class">Greetings</span>,
+    pour que notre test puisse l'utiliser.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+01  public void run(PrintStream ps);
+02    ...
+03    String name = "main";
+04    Class[] parameterTypes = new Class[1];
+05    parameterTypes[0] = String[].class;
+06    Class type = Void.TYPE;
+07    int mods = Modifier.STATIC | Modifier.PUBLIC;
+08    int nmods = 0;
+09    Method m = null;
+10    try {
+11      m = TestUtils.checkMethod(cls, name, parameterTypes, type, mods, nmods);
+12    } catch (NoSuchMethodException ex) {
+13    TestUtils.failed("Could not find the method main, or it is no public and static.");
+14  }
+</pre>
+<p>
+  Again, a bit of a tricky reading, since this is Java code
+  introspecting your class. Indeed, once the Java Platform
+  has loaded a class, it has a full description of that class.
+  Therefore, our test program uses that available description
+  to verify that your class has the proper methods and fields.
+  Here, line 11, we are testing that your class has a method "main",
+  with one parameter of type <span class="java-class">String[]</span>,
+  and returns  <span class="java-keyword">void</span>,
+  and is declared
+  <span class="java-keyword">public</span> and
+  <span class="java-keyword">static</span>.
+  You can see that looking at
+  the lines 3 through 7. Line 3, we see the name "main".
+  Line 4, we see we will want only one parameter. Line 5, we
+  see that the parameter's type will be an array of strings.
+  Line 6, the return type is set to be
+  <span class="java-keyword">void</span>. And finally,
+  line 7, we can see we are selecting the qualifiers
+  <span class="java-keyword">public</span> and
+  <span class="java-keyword">static</span>.
+  Oh, what a surprise, we are checking that your class
+  define the classical method
+  <span class="java-method">main</span>.
+  <xfr>
+    De nouveau, un bout de code un peu dure à lire, puisque
+    c'est du code Java qui introspecte votre classe
+    <span class="java-class">HelloWorld</span>.
+    En effet, une fois que la plate-forme Java a chargé
+    une classe, elle en a une description complète qu'il
+    est possible d'introspecter. Notre test utilise cette
+    description pour vérifier que votre classe définie
+    les bonnes méthodes et les bons champs.
+    Ici, le code test si votre classe définie une
+    méthode main avec un paramêtre de type String[],
+    retourne void, et est déclarée static et public...
+    Quelle surprise, notre test vérifie que vous avez
+    bien défini le point d'entrée "main" sur votre classe.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static void main(String args[]);
+</pre>
+<p>
+  A final step is to actually invoke your method
+  <span class="java-method">main</span>, this is
+  done with the following code:
+  <xfr>
+    Une dernière étape est d'invoquer la méthode
+    <span class="java-method">main</span>, ce qui est
+    fait avec le code suivant à la ligne 6:
+  </xfr>
+</p>  
+<pre class="prettyprint lang-java">
+01  public void run(PrintStream ps);
+02    ...
+03    Object[] args = new Object[1];
+04    args[0] = new String[0];
+05    try {
+06      m.invoke(null, args);
+07    } catch (Throwable ex) {
+08      TestUtils.silentFail("Could not execute your method main on the class HelloWorld.");
+09    }
+10  }
+</pre>
+<p>
+  Again, the details might be hard for you, but the overall
+  understanding is quite simple. See, we just invoke the
+  method we found with some arguments. Nothing really new
+  here, you know about invoking methods with arguments,
+  this is just another syntax for that. That syntax is not
+  important to remember here, just understand that it
+  invokes your method
+  <span class="java-method">main</span> with an array of
+  strings with zero elements.
+ <xfr>
+  	A nouveau, les détails peuvent être compliqués pour vous,
+  	mais la compréhension globale est simple. Regardez,
+  	nous avons juste invoqué la méthode avec des arguments.
+  	Rien de nouveau ici. C'est juste une nouvelle syntaxe. Cette
+  	syntaxe n'est pas à mémoriser, rappelez-vous juste que 
+  	cela invoque votre méthode 
+  	<span class="java-method">main</span> avec un tableau
+    de chaînes de caractères ayant zéro élément.
+  </xfr>
+</p>
+
+<h3>A Word of Advice</h4>
+
+<p>
+  Throughout this workshop, we will run tests on your code.
+  First,
+  it is a way to provide you with immediate feedback
+  about how well you are doing. If your code passes our
+  tests, it is a good sign. Understand it is only a good
+  sign, no test can be complete and our tests do not
+  provide an absolute evaluation of your work, just a feedback.
+  <xfr>
+  	Au travers de ce workshop, nous allons tester votre code.
+  	Premièrement, c'est un moyen de vous fournir du feedback 
+  	sur votre code. S'il passe nos tests, c'est bon signe. 
+  	Il faut comprendre que c'est seulement bon signe, les tests
+  	ne sont pas complets et nos tests  ne fournissent pas une
+  	évaluation absolue de votre travail.
+  </xfr>
+</p>
+<p>
+  The quality of your work ultimately resides in your
+  attitude, your attention to detail, and your desire
+  to learn and improve your skills. Do not just click
+  on the checks, just to see if your code passes our
+  checks. <b>Do your part and do it well</b>.
+  Try to code correctly, write your own tests,
+  and run our tests once you feel that your code is looking
+  good.
+  <xfr>
+	  La qualité de votre travail réside grandement dans votre
+	  attitude, votre attention aux détails et votre désir d'apprendre
+	  et d'améliorer vos compétences.
+	  Ne vous limitez pas à passer les checks.
+	  <b>Do your part and do it well</b>.
+	  Essayez de coder correctement, écrivez vos propres tests
+	  et exécutez vos tests une fois que vous pensez que votre
+	  code est correct.
+  </xfr>
+</p>
+<p>
+  Not only will you learn much more that way, but it
+  will also be much easier on you. Indeed, you may find
+  that trying to debug our tests directly may prove difficult.
+  This may be the case because some of our tests will be
+  advanced tests. You will be better off starting with your
+  own simpler tests. Indeed, if you write your own tests, you can start
+  small and simple, helping improve your code before you
+  submit it to our more advanced and rigorous testing.
+  <xfr>
+	  Non seulement vous apprendrez mieux comme cela, mais
+	  cela sera aussi plus facile. En effet, vous pouvez
+	  trouver que debugger nos tests est difficile.
+	  ceci peut être le cas parce que nos tests sont assez
+	  avancés. Vous aurez plus de facilité pour commencer
+	  avec vos propres tests. En effet, si vous écrivez vos tests,
+	  vous pouvez commencer simple et petit. 
+  </xfr>
+</p>
+<p>
+  There is a second reason for us to run our own tests
+  on your work, it is to monitor your progress. As you
+  commit and push your work through git on our server,
+  we will submit your pushed work to our tests. The tests
+  will be same as the one available to you locally. So
+  no surprise there, if your code passes our tests locally,
+  it will pass them on our servers.
+  <xfr>
+	  Il y a une deuxième raison pour nous de tester votre code,
+	  c'est pour observer vos progrès. Lorsque vous committez 
+	  votre travail sur notre serveur git, nous exécutons des
+	  tests automatiques. Ces tests sont les mêmes que ceux 
+	  qui vous sont rendus disponibles localement. Donc pas de
+	  surprise pour vous, si votre code passe les tests localement,
+	  il passera les tests sur notre serveur.
+  </xfr>
+</p>
+<p>
+  Based on these tests, we will show your progress on
+  the public dashboard. That way, everyone knows how everyone
+  else is doing. Those moving faster can then help those
+  that are lagging a bit behind. Remember, Agile Learning
+  is a team learning, it is a team effort to learn better,
+  to learn more and faster.
+  <xfr>
+	  A partir des tests, nous allons montrer les progrès de chacun
+	  sur un tableau (dashboard) public. Chacun connaitra donc les
+	  progrès de tous. Ceux avançant vite peuvent alors identifier
+	  ceux en difficulté et les aider. Rappelez-vous, l'apprentissage
+    agile est une stratégie d'équipe pour apprendre mieux, plus
+    et plus vite.
+  </xfr>
+</p>
+
+<h4>What to do when checks fail</h4>
+
+<p>
+  We have done our best to have meaningfull messages
+  so that the reason for the failure is easy to understand
+  and that it guides you towards the fix in your code.
+  Unfortunately, we cannot always have anticipated
+  all possible errors and sometimes it will be
+  just about a failed assertion. It is important
+  that you learn how to understand the failed
+  assertion so that you get along with fixing your code.
+  <xfr>
+    Nous avons fait de notre mieux pour vous donner des
+    messages d'échec qui soient clairs et qui indiquent
+    le problème à corriger dans votre code.
+    Malheureusement, il est impossible pour nous d'anticiper
+    tous les cas de figure possible et parfois la
+    sortie d'un test en échec peut ne pas être si claire
+    que cela à la première lecture.
+  </xfr>
+</p>
+<p>
+  When a test fails, it can be for many reasons, but the
+  most common ones are the following:
+  <xfr>
+    Lorsqu'un test échoue, cela peut être pour beaucoup de
+    raisons, mais les plus communes sont les suivantes:
+  </xfr>
+</p>
+<ul>
+  <li>Compilation problems</li>
+  <li>Changed or incorrect signatures</li>
+  <li>Bugs and hangs</li>
+</ul>
+
+<p>
+  <b>Compilation Problems:</b>
+  maybe, your code does not compile entirely, you still have some red crosses
+  in Eclipse. Please fix those errors before running our checks. If you see a
+  red '!' next to your project name, it means also that Eclipse does not compile
+  your project, you need to go fix the setup of your project and in particular
+  the build path.
+  Sounds silly, well it is and it happens regularly.
+  <xfr>
+    Peut-être que votre code ne compile pas et que vous avez toujours des
+    croix rouges sous Eclipse. Assurez vous que vous n'avez plus de croix
+    rouges avant d'exécuter votre code. Si vous voyez un '!' rouge à coté
+    du nom de votre projet, alors Eclipse ne compile pas le projet et vous devez
+    réparer la configuration du projet et en particulier le "build path".
+    Cela peut paraître bête, mais cela arrive souvent.
+  </xfr>
+</p>
+<p>
+  Your code compiles, but you changed the signatures or you did not respect
+  the signatures we asked for. This is also
+  rather often. Changing signatures means that you change the name
+  of Java packages, the names of classes, or the names of methods,
+  or the arguments (types and/or order), or the returned type.
+  If you change method signatures, our tests can no longer invoke
+  them.
+  <xfr>
+    Votre code compile, mais vous avez changer les signatures
+    des méthodes. La signature d'une méthode est son nom, le
+    type qu'elle retourne, le type et l'ordre des arguments.
+    Si vous changez cela, nos tests ne peuvent plus invoquer les
+    méthodes de votre code. 
+  </xfr>
+</p>
+
+<p>
+  <b>Bugs and hangs:</b>
+  your code compiles, it may even execute without failing, but
+  it does not do what it is supposed to do and therefore fails
+  to pass our checks. Well, in this case, either you misinterpreted
+  what we said the code should do or your code does not what you
+  think it should be doing. Either way, this situation will require
+  you to debug, via our checks, helping you understand how your code
+  needs to be fixed.
+  <xfr>
+    Votre code compile et il s'exécute, mais il ne fait pas ce
+    qu'il faut, et du coup il ne passe pas nos tests. Si c'est
+    le cas, c'est généralement que vous avez mal compris ce que
+    le code devait faire ou que votre code ne fait pas ce que
+    vous pensez qu'il fait. Dans les deux cas,
+    il vous faudra résoudre les bugs pour que votre code
+    passe nos tests. Cela vous permettra de comprendre ce que
+    vous aviez mal fait ou mal compris.
+  </xfr>
+</p>
+<p>
+  But sometimes, your code just hangs, that is, it keeps running
+  and never stops. In this case, you will see the check button
+  counting elapsed seconds, until we decide to timeout and
+  declare that your code has failed. This is also a situation
+  where you will need to debug your code in order to understand
+  why it does not finish whe invoked from our tests.
+  <xfr>
+    Parfois, votre code ne finit pas son exécution. Dans ce cas,
+    vous verrez le bouton "Check" incrémenter le temps qui passent
+    en secondes. Après un certain délai, le "Check" sortira en erreur
+    (timeout). De nouveau, c'est une situation où vous devrez trouver
+    le problème via le debugger.
+  </xfr>
+</p>
+
+<h4>Conclusion</h4>
+<p>
+  As you can see, you have everything available to be
+  successfull. You can work on your own, with others, and you
+  even have tests, with the sources available, to check what how well
+  you are doing. Of course, at first, the tests may be a bit challenging
+  to read, but this is also part of your learning process.
+  At the beginning, for the early tests, we made all efforts
+  possible so that you do not have to read the tests, until
+  you master Java enough to understand them. So everything
+  should work out smooth and easy. If not, ask for help,
+  as usual.
+  <xfr>
+	  Vous voyez, vous avez tout ce qu'il faut pour réussir.
+    Vous pouvez travail seul où en groupe et vous avez des
+    tests sont disponibles avec leur source pour pouvoir 
+	  tester et debugger votre code. Bien sûr, au début, les tests
+	  peuvent être complexes à lire, mais cela fait aussi partie 
+	  de votre processus d'apprentissage. Au début, pour les premiers
+	  tests, nous avons fait beaucoup d'efforts pour que vous n'ayez pas
+	  à lire les tests, jusqu'à ce que vous maitrisiez suffisamment
+	  Java pour les comprendre. Donc tout devrait être ok. Si ce n'est pas
+	  le cas, demandez de l'aide.
+  </xfr>
+</p>
+<p>
+  That's all folks for this task.
+</p>
+
+

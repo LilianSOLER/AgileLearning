@@ -1,0 +1,1036 @@
+<vars>
+  sprint=prog.basics
+  task=t2
+  step=t2-s3
+</vars>
+
+<p>
+  Java is a programming language and like all programming languages,
+  it has a syntax to express basic concepts and statements.
+  With this syntax, you can write code sources, compile those sources,
+  and then execute your code. We already done that, it is time we layout
+  and explain the core concepts and statements.
+  <xfr>
+	  Java est un langage de programmation et comme tous les
+	  langages de programmation, il y a une syntaxe à respecter
+	  pour écrire des programmes corrects, les compiler et puis
+	  les exécuter. Nous avons déjà fait cela, il est temps
+	  maintenant de comprendre plus en détail les concepts
+	  et les instructions du langage Java.
+  </xfr>
+</p>
+<p>
+  This task is written so that beginners can read and understand it.
+  Non-beginners may refresh their memory but they are also expected
+  to help beginners. Remember, this is Agile Learning, a team effort
+  towards success. Revisiting the basics is a good team building
+  moment, so make sure you start working with others.
+  <xfr>
+	  Cette tâche est écrite de manière à ce que les débutants puissent
+    la lire et la comprendre. Pour les non-débutants, cela sera peut-être
+    l'occasion de rafraîchir leur mémoire mais cela sera aussi l'occasion
+    d'aider les débutants. Revoir les bases de la programmation sera
+    l'occasion de travailler ensemble, de constituer des groupes
+    d'entre-aide. 
+  </xfr>
+</p>
+
+<h3>Execution Flow</h3>
+
+<p>
+  As you realized by now, a program is a recipe, like a recipe for pasta.
+  It is a sequence of statements, to do certain things in a certain order.
+  The basic execution flow is the sequence:
+  <xfr>
+	 Comme vous l'avez réalisé, un programme est une recette. C'est
+	 une séquence d'instructions, à exécuter dans un certain ordre.
+	 Le flot d'exécution de base est la séquence: 
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  int i,j;
+  i = 0;
+  j = 1;
+  i = 2 * j;
+</pre>
+<p>
+  Each statement
+  does something, usually reading values from variables and/or writing values
+  to variables.
+  A variable is a named storage box that contains a value.
+  Pretty much like naming a shoe box on a shelf.
+  The variable is typed, telling what kind of values the box
+  can store. Below is the definition of the variable
+  <span class="java-lvar">i</span>,
+  its type is <span class="java-keyword">int</span>,
+  which means the box can store integer values.
+  You can also see a variable
+  <span class="java-lvar">f</span>,
+  its type is <span class="java-keyword">float</span>,
+  which means the box can store real values.
+  You can also see a variable
+  <span class="java-lvar">c</span>,
+  its type is <span class="java-keyword">char</span>,
+  which means the box can store characters.
+  <xfr>
+	  Chaque instruction statement fait une action particulière
+  	  telle que lire des valeurs de variables ou écrire des
+  	  valeurs dans des variables.
+  	  Une variable peut être considérée comme une boite nommée,
+  	  qui contient une valeur. Un peu comme une boite à chaussures
+  	  avec un nom dessus.
+  	  La variable est typée, ce qui détermine le type de valeurs
+  	  que l'on peut mettre dans la boite. 
+  	  Ci-après, est définie la variable
+	  <span class="java-lvar">i</span>,
+  	 dont le type est <span class="java-keyword">int</span>,
+  	 ce qui signifie que la boite peut contenir des valeurs entières.
+  	 Vous pouvez aussi voir la variable
+  	 <span class="java-lvar">f</span>,
+  	 son type est <span class="java-keyword">float</span>,
+  	 ce qui signifie que la boite peut contenir des valeurs réelles.
+  	 Vous pouvez aussi voir la variable
+  	 <span class="java-lvar">c</span>,
+  	 sont type est <span class="java-keyword">char</span>,
+  	 ce qui signifie que la boite peut contenir des caractères.
+  </xfr>
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+  int i;
+  float f;
+  char c;
+</pre>
+<p>
+  The types <span class="java-keyword">int</span> and
+  <span class="java-keyword">float</span> are primitive types.
+  Each programming language defines its own set of primitive types,
+  for Java, the primitive types are the following:
+  <span class="java-keyword">boolean</span>,
+  <span class="java-keyword">char</span>,
+  <span class="java-keyword">byte</span>,
+  <span class="java-keyword">short</span>,
+  <span class="java-keyword">int</span>,
+  <span class="java-keyword">long</span>,
+  <span class="java-keyword">float</span>, and
+  <span class="java-keyword">double</span>.
+  <xfr>
+    Les types <span class="java-keyword">int</span> et
+    <span class="java-keyword">float</span> sont des types primitifs.
+    Chaque langage de programmation définie ses propres types primitifs,
+    pour Java, les types primitifs sont les suivant:
+  </xfr>
+</p>
+<p>
+  The assignment statement is certainly one of the most used statements
+  in programming. The variable on the left-hand side of the "=" sign
+  receives the value produced by the execution of the
+  expression on the right-hand side.
+  <xfr>
+  	L'instruction d'affectation est certainement l'une des plus utilisée
+  	en programmation. La variable à gauche du '=' reçoit la valeur
+  	produite par l'exécution de l'expression à droite du '='.
+  </xfr>
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+  i = 0;
+  j = 1;
+  i = 2 * j;
+</pre>
+<p>
+  Often, as sequence of statements can be compose a <em>lexical block</em>,
+  denoted by a pair of braces. Just like this:
+</p>
+<pre class="prettyprint lang-java">
+  {
+    int i,j;
+    i = 0;
+    j = 1;
+    i = 2 * j;
+  } 
+</pre>
+<p>
+  Notice that any block may define variables. A block of statements is sometimes just
+  called a block, or a block of code, or a lexical block. All these names mean the same
+  thing: the sequence of statements in between braces. These statements will be executed
+  in sequence.
+  <xfr>
+  	Notez que tout bloc d'instruction peut définir des variables. Un bloc
+  	d'instructions est parfois juste appelé un bloc, ou un bloc de code, ou
+  	encore un bloc lexical. Tous ces noms signifient la même chose: la
+  	séquence des instructions entre accolades. Ces instructions seront exécutées
+  	en séquence.
+  </xfr>
+</p>
+
+<h3>Controlling the execution flow</h3>
+
+<p>
+  The execution flow is not always linear, it can be controlled.
+  The statements for that are the following:
+</p>
+<ul>
+  <li>conditional statements</li>
+  <li>loop statements</li>
+</ul>
+
+<h4>Conditional statements</h4>
+
+<p>
+A conditional statement is a statement that controls if a block of statements
+is executed or not. It looks like this:
+</p>
+<pre class="prettyprint lang-java">
+  {
+    int i,j;
+    ...
+    if (i == 0) {
+      i = 2 * j;
+    } else {
+      i = i + j;
+    }
+  }
+</pre>
+<p>
+  When executed, if the variable
+  <span class="java-lvar">i</span> contains a value
+  that is equal to 0, the first block is executed.
+  Otherwise, the second block is executed.
+  The expression <em>(i==0)</em>
+  compares the expression on the left-hand side
+  with the expression on the right-hand side.
+  If they are equals, then the expression is
+  <span class="java-keyword">true</span>,
+  otherwise
+  <span class="java-keyword">false</span>.
+  So the type of expression is <span class="java-keyword">boolean</span>,
+  the primitive type that defines only two values:
+  <span class="java-keyword">true</span> and
+  <span class="java-keyword">false</span>.
+  This means that we can also write this:
+  <xfr>
+  	A l'exécution, si la variable
+  	<span class="java-lvar">i</span> contient une valeur
+  	égale à 0, le premier bloc est exécuté.
+  	Sinon le second bloc est exécuté.
+  	L'expression <em>(i==0)</em>
+  	compare l'expression sur la gauche 
+  	avec l'expression sur la droite.
+  	Si elles sont égales, alors l'expression est 
+  	<span class="java-keyword">vraie (true)</span>,
+  	sinon
+  	<span class="java-keyword">fausse (false)</span>.
+    Donc le type de l'expression est <span class="java-keyword">boolean</span>,
+    le type primitif qui défini seulement deux valeurs:
+    <span class="java-keyword">true</span> et
+  <span class="java-keyword">false</span>.
+    Cela veut dire que l'on peut écire aussi cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  int i,j;
+  i = 0;
+  j = 1;
+  boolean b = (i==j);
+</pre>
+<p>
+  The variable <span class="java-lvar">b</span> will be
+  <span class="java-keyword">true</span>, if the two
+  variables <span class="java-lvar">i</span>
+  and <span class="java-lvar">j</span> contain
+  the same value, 
+  <span class="java-keyword">false</span> otherwise.
+  So in this case,
+  the variable <span class="java-lvar">b</span> will
+  have the value
+  <span class="java-keyword">false</span>.
+  <xfr>
+    La variable <span class="java-lvar">b</span> sera égale à
+  	<span class="java-keyword">true</span>, si les deux
+  	variables <span class="java-lvar">i</span>
+  	et <span class="java-lvar">j</span> contiennent
+  	la même valeur, 
+  	<span class="java-keyword">false</span> sinon.
+  	Donc dans ce cas,
+  	la variable <span class="java-lvar">b</span> aura la valeur
+  	<span class="java-keyword">false</span>.
+  </xfr>
+  
+</p>
+<p>
+  The comparison operators that can be used in a boolean
+  expression are the following:
+</p>
+<ul>
+  <li> The operator <span class="java-keyword">==</span> for equality </li>
+  <li> The operator <span class="java-keyword">!=</span> for inequality </li>
+  <li> The operator <span class="java-keyword">&lt;</span> for less than </li>
+  <li> The operator <span class="java-keyword">&le;</span> for less than or equal to </li>
+  <li> The operator <span class="java-keyword">&gt;</span> for greater than </li>
+  <li> The operator <span class="java-keyword">&ge;</span> for greater than or equal to </li>
+</ul>
+<p>
+  And of course, you have the classical logical operators as well:
+</p>
+<ul>
+  <li> The operator <span class="java-keyword">&&</span> for AND </li>
+  <li> The operator <span class="java-keyword">||</span> for OR </li>
+  <li> The operator <span class="java-keyword">!</span> for NOT </li>
+</ul>
+<p>
+  So you can write something like this:
+</p>
+<pre class="prettyprint lang-java">
+  int i,j;
+  i = 0;
+  j = 1;
+  boolean b = (i==j) && ((i==0) || !(j==1)) ;
+</pre>
+
+<h4>Loop statements</h4>
+
+<p>
+A loop statement is a statement that controls if a block of statements
+is executed over and over while a condition is true.
+</p>
+<pre class="prettyprint lang-java">
+  int i;
+  i = 1;
+  while (i &lt; 8) {
+    i =  2 * i;
+  } 
+</pre>
+<p>
+  In this case, the loop statement will execute the block three times.
+  The first time, the
+  variable <span class="java-lvar">i</span> contains the value 1,
+  which definitively less than 8.
+  Then, the value of the variable <span class="java-lvar">i</span>
+  doubles every loop around, until it contains the value 8.
+  Then the condition is no longer true, the looping stops, and the execution
+  flow continues in sequence.
+   <xfr>
+   	Dans ce cas, la boucle exécutera le bloc trois fois.
+   	La première fois, la variable <span class="java-lvar">i</span> 
+   	contient la valeur 1,
+   	qui est plus petite que 8.
+   	Puis, la valeur de la variable <span class="java-lvar">i</span>
+   	double à chaque boucle, jusqu'à ce qu'elle contienne la valeur 8.
+   	Alors la condition de la boucle n'est plus vraie, la boucle
+   	stoppe, et l'exécution continue après la boucle.
+   </xfr>
+</p>
+<p>
+  Not convinced? Or still unclear. Well, write a small program and debug
+  it. So go ahead, create a class of your own, you know how to do it.
+  It is a good idea to do this in separate package, so to keep these
+  snippet classes separated, so let's create a Java package called
+  <span class="java-package">oop.snippets</span>.
+  <xfr>
+   	Pas convaincu? ou toujours pas clair? Ecrivez un petit programme
+   	et debuggez le. Créer une classe, vou savez comment le faire.
+   	Nous vous conseillons de le faire dans un package à part,
+   	cela vous permettra de conserver ces petits bouts de code à part,
+   	donc créez un package <span class="java-package">ricm3.oop.snippets</span>.
+   </xfr>
+</p>
+<check
+   blocking="false"
+   silent="onSuccess"
+   lang="java"
+   cwd="workspace/prog.basics"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task2.Check1b">
+  <banner>
+    Let us check that you created the right package.
+  </banner>
+  <hint>
+    Hum, seems you didn't get it quite right.
+    Please check your <em>prog.basics</em> project
+    in the <em>workspace</em> directory, and
+    make sure you have a Java package
+    <span class="java-package">oop.snippets</span>.
+    This means having a directory "src/oop/snippets".
+    Ask for help if you need to.
+  </hint>
+  <success>
+    Good.
+  </success>
+  <unfold></unfold>
+</check>  
+<p>
+  Now, in the package
+  <span class="java-package">oop.snippets</span>,
+  on your class, you obviously need to add a method
+  <span class="java-method">main</span>, with the code
+  below:
+</p>
+<pre class="prettyprint lang-java">
+  public static void main(String args[]) {
+    int i,j;
+    i = 0;
+    j = 1;
+    while (i &lt; 8) {
+      if (i==0) {
+        i = j;
+      } else {
+        i = 2 * i;        
+      }
+    }
+  }
+</pre>
+<p>
+  Launch the execution under debugger and observe the execution flow,
+  looking at the values of the variables after executing each statement.
+  Everything will become crystal clear, thanks to controlling the execution
+  under debugger.
+  <xfr>
+     Lancez l'exécution sous debug et observez le flot d'exécution,
+     regardant les valeurs des variables après chaque instruction.
+     Tout doit devenir clair pour vous, grâce à l'aide du debugger.
+   </xfr>
+</p>
+<p>
+  <b>Nota Bene:</b> you should keep those snippet classes, for future reference.
+  That way, in a week or a month, you can come back and look at those snippets
+  to remember how a given feature of Java works. Do not always rely on Google
+  and the Web in general, build your own database of snippets of Java code,
+  commented by yourself in a way that make sense to you.
+  <xfr>
+      <b>Nota Bene:</b>  Vous devriez conserver ces classes "snippet",
+      pour de futurs usages. Par exemple, dans une semaine ou dans un mois, 
+      vous pourrez revenir dessus pour vous rappeler comment fonctionne
+      certains aspects de Java. Ne vous appuyez pas toujours sur Google 
+      et sur le Web en général, construisez votre propre base d'exemples de
+      code, commenté par vos soins avec vos mots et votre compréhension. 
+   </xfr>
+</p>
+
+<h3>More on variables and types</h3>
+
+<p>
+  We already saw that a variable is a named storage box that contains a value
+  of a certain type. The type restricts the kind of values the box
+  can store. 
+  Java understand several primitive types.
+  <xfr>
+      Nous avons vu qu'une variable est une boite nommé qui contient
+      une valeur d'un certain type. Java définit plusieurs types
+      primitifs.
+   </xfr>
+</p>
+<p>
+  Several types are used for integer values:
+  <span class="java-keyword">long</span>,
+  <span class="java-keyword">int</span>,
+  <span class="java-keyword">short</span>, and
+  <span class="java-keyword">byte</span>.
+  The difference is the possible range of values.
+  A <span class="java-keyword">byte</span> ranges
+  over -128 and +127.
+  A <span class="java-keyword">short</span> ranges
+  over -32768 and +32767.
+  The <span class="java-keyword">int</span> and
+  <span class="java-keyword">long</span> have even
+  larger ranges.
+  Two are for real values:
+  <span class="java-keyword">float</span> and
+  <span class="java-keyword">double</span>.
+  Again, the distinction is again a question of
+  the possible range of values.
+</p>
+<p>
+  Two other important primitive types are the
+  <span class="java-keyword">boolean</span> and
+  <span class="java-keyword">char</span> types.
+  We just saw the 
+  <span class="java-keyword">boolean</span> type
+  that can take the value 
+  <span class="java-keyword">true</span> or
+  <span class="java-keyword">false</span>.
+  The type <span class="java-keyword">char</span>
+  allows a variable to contain a character,
+  in the sense of a character you could type on
+  a keyboard:
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+  char c = 'a';
+  char d = 'z';
+</pre>
+<p>
+  Then we have types that are not primitive types, these
+  types are called classes:
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+  String aString;
+</pre>
+<p>
+  When a variable is typed as a class, it is
+  called a <em>reference variable</em>. Why? Because the
+  variable no longer contains a value of its type, but it contains a
+  reference to an object, an object that is an instance of the
+  class the variable is typed with.
+    <xfr>
+      Quand une variable est typée comme une classe, on parle de
+      <em>reference variable</em>. Pourquoi? parce que la
+      variable ne contient pas une valeur primitive, elle contient
+      la référence d'un objet, cet objet étant obligatoirement une
+      instance de la classe qui type la variable.
+   </xfr>
+</p>
+<p>
+  Think of it this way, like in real life.
+  Take a shoebox and write down the name of a good friend
+  on the box, and put his or her phone number inside the box.
+  The name is the variable name. The value of the variable is
+  the phone number. Notice that you didn't put your friend in the
+  box, you put something small that identifies your friend.
+  The phone number identifies your friend, uniquely.
+  Your friend is the only one to have that phone number.
+  That identity allows you to
+  contact that friend. It allows you to ask a service from that
+  friend.
+  <xfr>
+      Pensez comme suit, comme dans la vie réelle.
+      Prenez une boite à chaussure et écrivez dessus le nom d'un 
+      ami, et placer son numéro de téléphone dans la boite.
+      Le nom de l'ami est le nom de la variable.
+      La valeur est le numéro de téléphone.
+      Notez que vous n'avez pas mis votre ami dans la boite,
+      vous avez mis quelquechose de petit qui identifie votre ami:
+      son numéro de téléphone.
+      Ce numéro identifie votre ami de manière unique, car 
+      votre ami est le seul à avoir ce numéro de téléphone.
+      Cette identité vous permet de contacter votre ami, et 
+      de lui demander un service.
+   </xfr>
+</p>
+<p>
+  The shoebox is the real-world equivalent to a variable.
+  The phone number is the real world equivalent to an object
+  reference, containing the identity of an object. Note,
+  the variable does not contain the object, like the shoebox
+  does not contain your friend. The variable contains
+  the identity of the object.
+  So let's illustrate this with a string in Java.
+  <xfr>
+      La boite à chaussure est l'équivalent dans le monde réel
+      d'une variable.
+      Le numéro de téléphone est l'équivalent dans le monde réel
+      d'une référence d'objet, contenant l'identité de l'objet.
+      Notez que la variable référence ne contient pas l'objet,
+      elle le désigne seulement.
+      Illustrons cela avec une chaine en Java.
+   </xfr>
+</p>
+<p>
+  There is a class <span class="java-class">String</span>.
+  So a string in the Java language is an object, an instance of
+  the class <span class="java-class">String</span>.
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+  String s1 = "toto";
+  String s2 = "titi";
+  s2 = s1;
+</pre>
+<p>
+  So again, write a small class of your own, with a
+  method <span class="java-method">main(String[])</span>.
+  Add the two lines above in that method, compile and debug.
+  Don't forget to put a breakpoint in the method
+  <span class="java-method">main(String[])</span>.
+  Look at the variables, under debugger. It will look
+  like this:
+  <xfr>
+  	Donc à nouveau, écrivez une petite classe à vous, avec une méthode
+   <span class="java-method">main(String[])</span>.
+  	Ajoutez les deux lignes ci-dessus dans cette méthode, 
+  	compilez et débuggez.
+  	N'oubliez pas de mettre un breakpoint dans la méthode
+  	<span class="java-method">main(String[])</span>.
+  	Regardez les variables, sous debugger. Cela va ressembler à cela:
+  </xfr>
+</p>
+<img src="images/refvars.png" width="100%" />
+<p>
+  Look at the panel <em>"Variables"</em>, you will see that
+  Java is nice enough to show you the identity of the string
+  objects (ID=xx). So the object referenced by the
+  variable <span class="java-lvar">s1</span> has the
+  ID=16, while the object referenced by the variable
+  <span class="java-lvar">s2</span> has the ID=21.
+  This way, you can tell that before the assignment, line 8,
+  the two variables refer to two different objects, the string
+  "toto" and the string "titi".
+  <xfr>
+  	Vous verrez que Java vous montre l'identité des objets
+  	de type chaine (ID=xx). Donc l'objet réferencé par la
+  	variable <span class="java-lvar">s1</span> a 
+  	pour ID 16, alors que l' objet réferencé par la variable
+  	<span class="java-lvar">s2</span> a pour ID 21.
+  </xfr>
+</p>
+<p>
+  Notice what happens, when executing the assignment at line 8,
+  the two variables refer to the
+  same object, the same string "toto". Exactly as two shoeboxes
+  could contain the same phone number, thereby referencing the
+  same friend of yours, but under different names (the shoebox
+  names). This is called <em>aliasing</em>,
+  exactly like in real life, when a person goes by more than
+  one name, they are called aliases.
+  <xfr>
+  	Remarquez ce qui arrive, lors de l'exécution de l'affectation
+  	ligne 8, les deux variables référencent le même objet,
+  	la même chaine "toto". 
+  	Exactement comme deux boites pourraient contenir le même
+  	numéro de téléphone, référençant le même ami par là-même.
+  	Pourtant ces deux boites ont chacune leur propre nom.
+  	Ceci est appelé <em>aliasing</em>, exactement comme 
+  	dans la vie courante, quand une personne a plusieurs noms, ces
+  	noms sont appelés des alias.
+  </xfr>
+</p>
+<p>
+  <span style="color: red;">
+  Make sure you understand this concept of aliasing.
+  </span>
+  Why is this important? Well, why is it important to know
+  about aliases in real life? Given two different names, it is 
+  important to know if we are talking about the same person or not.
+  But sometimes, we do not care if the two names are aliases of
+  the same person or not. For objects, when asking them
+  to perform services for us, it will be the same.
+  <xfr>
+    Pourquoi est-ce si important? Dans la vie réelle ,
+    étant donné deux noms différents, il peut être
+    important de savoir si l'on parle de la même personne
+    ou non. Parfois, on se fiche de savoir
+    si l'on parle de la même personne ou non.
+    Avec les objets, il en est de même.
+  </xfr>
+</p>
+
+<h3>Java Arrays</h3>
+
+<p>
+  In Java, arrays are objects, so they are referenced by
+  reference variables, like any other object. This is how you
+  can define variables typed as arrays:
+  <xfr>
+    En Java, les tableaux sont des objets, 
+    ils sont donc référencés par des variables de type référence,
+    comme tout objet. Voici comment définir des variables typées
+    comme des tableaux:
+  </xfr>
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+  int[] iValues;
+  char[] cValues;
+  float[] fValues;
+</pre>
+<p>
+  As you can see, we can have arrays with elements of different
+  types. Above, we have one variable that can refer to an array
+  of integer values. Another variable can refer to an array
+  of characters.
+  The last one can refer to an array of floating-point
+  values (real values in mathematics).
+  But for now, they are undefined, they do not actually
+  refer to any array. So how do we create arrays, well,
+  just like this:
+   <xfr>
+     Comme vous pouvez le voir, nous pouvons avoir des tableaux
+     avec des éléments de différents types. Ci dessus, nous avons une 
+     variable qui peut référencer un tableau de valeurs entières.
+     Une autre variable peut référencer un tableau de caractères.
+     La dernière peut référencer un tableau de réels.
+     Mais pour l'instant, ces variables sont non définies, elles
+     ne référencent aucun tableau. 
+     Pour créer des tableaux, il faut faire ainsi:
+  </xfr>
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+  iValues = new int[3];
+  cValues = new char[6];
+  fValues = new float[2];
+</pre>
+<p>
+  Now, the
+  variable <span class="java-lvar">iValues</span>
+  refers to an array of integer values, an array with three elements.
+  The variable <span class="java-lvar">cValues</span>
+  refers to an array of characters, an array with six elements.
+  The variable <span class="java-lvar">fValues</span>
+  refers to an array of float values, an array with two elements.
+  <xfr>
+  	Maintenant, la
+  	variable <span class="java-lvar">iValues</span>
+  	référence un tableau de valeurs entières, avec trois éléments.
+  	La variable <span class="java-lvar">cValues</span>
+  	référence un tableau de caractères, avec six éléments.
+  	La variable <span class="java-lvar">fValues</span>
+  	référence un tableau de réels, avec deux éléments.
+  </xfr>
+</p>
+<p>
+  Since we are talking about reference variables, aliasing is
+  possible. For instance, you can write the following:
+  <xfr>
+    Puisque nous parlons de variables contenant des références,
+    l'aliasing est possible, il est donc possible d'écrire cela:
+  </xfr>
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+  int[] a = new int[3];
+  int[] b = a;
+</pre>
+<p>
+  Note that the array object is <b>not</b> copied, its identity
+  is copied from the variable <span class="java-lvar">a</span>
+  to the variable <span class="java-lvar">b</span>.
+  <span style="color: red;">
+  Make sure you understand this aliasing.
+  </span> Experiment under the debugger if you need to.
+  <xfr>
+    Notez bien que le tableau n'est pas copié, son identité
+    est copiée de la variable <span class="java-lvar">a</span>
+    dans la variable <span class="java-lvar">b</span>.
+  </xfr>
+<p>
+  So let's write a small program with arrays. Again, create
+  a class on your own, add a
+  method <span class="java-method">main(String[])</span>,
+  with the following code:
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+  int[] iValues = new int[3];
+  int i = 0;
+  while (i &lt; iValues.length) {
+    iValues[i] = 2*i;
+    i = i + 1;
+  }
+</pre>
+<p>
+  Knowing that <em>iValues.length</em> gives the length of the
+  array, that is, the number of elements in the array, compile
+  and single-step through the above code and figure out the values
+  of the elements of the array. Done? Verified with the debugger?
+  The final values should be the following:
+  <xfr>
+  	Sachant que <em>iValues.length</em> donne la longueur du
+  	tableau, c'est à dire le nombre d'éléments contenus,
+  	compilez et exécutez en pas à pas, en déterminant la
+  	valeur des éléments du tableau à chaque pas. 
+  	Vérifiez avec le debugger. Les valeurs finales doivent
+  	être les suivantes:
+  </xfr>
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+   iValues[0] == 0
+   iValues[1] == 2
+   iValues[2] == 4
+</pre>
+<p>
+  So let's write another small program with arrays and strings.
+  Again, create
+  a class on your own, add a
+  method <span class="java-method">main(String[])</span>,
+  with the following code:
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+  String s = "Tom & Jerry";
+  char[] chars = s.toCharArray();
+  int i = 0;
+  while (i &lt; chars.length) {
+    System.out.print("["+chars[i]+"]");
+    i = i + 1;
+  }
+  System.out.println();
+</pre>
+<p>
+  So go ahead, figure out what it does. Notice how we ask the
+  string object to do something for us: create an array of characters
+  that corresponds to the sequence of characters in the string.
+  How cool is that? See the power of objects... they are around
+  to help you do stuff. In fact, the variable <em>System.out</em>
+  refers also to an object and it is that object that knows how
+  to print characters into the Eclipse console or the shell terminal.
+  <xfr>
+  	Allez-y, déterminez ce qui se passe. Notez comment nous
+  	demandons à l'objet chaine de faire quelquechose pour nous:
+  	créer un tableau de caractères qui correspond à la séquence de
+  	caractères contenue dans la chaine. C'est cool n'est-ce pas?
+  	Nous voyons ici la puissance des objets, ils nous aident à faire
+  	ce genre de chose. En fait, la variable <em>System.out</em>
+  	référence aussi un objet, et c'est cet objet qui sait
+  	comment écrire des caractères dans la console Eclipse ou
+  	dans le shell depuis lequel vous avez lancé votre application Java.
+  </xfr>
+</p>
+<p>
+  Want to check that out by yourself? Can you do it? Of course,
+  think about it, just add a variable that aliases the same
+  object so that you can look at it while debugging.
+  This is how to do it:
+  <xfr>
+  	Voulez-vous vérifier cela par vous-même?  Vous pouvez le faire,
+  	ajoutez simplement une variable qui "aliase" le même objet de manière à
+  	ce que vous puissiez regarder ce qui se passe avec le debugger. Voici 
+  	comment faire:
+  </xfr>
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+  java.io.PrintStream ps = System.out;
+  String s = "Tom & Jerry";
+  char[] chars = s.toCharArray();
+  int i = 0;
+  while (i &lt; chars.length) {
+    ps.print("["+chars[i]+"]");
+    i = i + 1;
+  }
+  ps.println();
+</pre>
+<p>
+  Here you go, you have your own variable
+  <span class="java-lvar">ps</span> that refers to the object
+  capable of printing characters to the Eclipse console.
+  Notice how we used the fully-qualified name for the class 
+  <span class="java-class">PrintStream</span>,
+  including the name of its package
+  ( <span class="java-package">java.io</span>).
+  See how you can ask that object to do stuff for you,
+  which is called invoking a method on that object.
+  <xfr>
+  	Vous y êtes. Vous avez votre propre variable 
+  	 <span class="java-lvar">ps</span> qui référence l'objet
+  	capable d'afficher des caractères dans la console Eclipse.
+  	Notez comment nous avons utilisé le nom complet pour la classe 
+ 	<span class="java-class">PrintStream</span>,
+  	incluant le nom du package
+  	(<span class="java-package">java.io</span>).
+  	Voyez comment vous pouvez utiliser cet objet pour faire des affichages,
+  	en invoquant une méthode.
+  </xfr>
+</p>
+
+<h3>Invoking methods</h3>
+
+<p>
+  We just used the term <em>method</em> many times already
+  and the fact that we can invoke them.
+  The term was used for the method
+  <span class="java-method">main(String[])</span>,
+  in all our classes. That method is a particular
+  method because it is the entry point of your program,
+  where the execution flow starts. In other words, it is
+  the very first method invoked.
+  <xfr>
+  	Nous avons utilisé le terme <em>method</em> maintes fois
+  	déjà. Ce terme a été utilisé pour la méthode
+  	<span class="java-method">main(String[])</span>,
+  	dans toutes nos classes.
+  	cette méthode est un peu particulière parce qu'elle
+  	définit le point d'entrée d'un programme,
+  	c'est à dire là ou le flot d'exécution commence.
+  	Autrement dit, la méthode <span class="java-method">main(String[])</span>
+  	est la première méthode invoquée.
+  </xfr>
+</p>
+<p>
+  But you can define methods of your own and invoke them.
+  So let's do this. You will see, this is quite easy.
+  So let's create the following class in our snippet package:
+</p>
+<pre style="font-size: 12px;" class="prettyprint lang-java">
+package oop.snippets;
+public class TomJerry {  
+  public static void main(String[] args) {
+    java.io.PrintStream ps = System.out;
+    String s = "Tom & Jerry";
+    char[] chars = s.toCharArray();
+    echo(ps,chars);
+    return;
+  }
+  public static void echo(java.io.PrintStream ps, char[] chars) {
+    int i = 0;
+    while (i &lt; chars.length) {
+      ps.print("["+chars[i]+"]");
+      i = i + 1;
+    }
+    ps.println();
+    return;
+  }
+}
+</pre>
+<p>
+  How cool is that? Quick, let's single step this code to see
+  how it works. You will need to follow the execution in the
+  invocation of the method 
+  <span class="java-method">echo</span>. Remember
+  to switch to the <em>Debug</em> perspective in Eclipse.
+  In the <em>Debug</em> perspective, you can control the
+  execution flow once stopped at a breakpoint,
+  with either <b>F5</b> or <b>F6</b>.
+  <b>F6</b> is for step over and <b>F5</b> is for step in.
+  What is the difference? Well try it... 
+  <xfr>
+   	C'est cool n'est-ce pas?  Rapidement, exécutez ce code en pas à pas
+    et voyez ce qui se passe. Vous devez suivre l'exécution
+    durant l'invocation de la méthode
+  	<span class="java-method">echo</span>. Rappelez-vous de 
+  	basculer sur la perspective <em>Debug</em> dans Eclipse.
+  	Dans cette perspective, vous pouvez contrôler 
+  	le flot d'exécution une fois stoppé à un breakpoint,
+ 	avec <b>F5</b> ou <b>F6</b>.
+ 	<b>F6</b>est pour "step over" et <b>F5</b> est pour "step in".
+ 	Quelle est la différence? Essayez et comprenez... 
+  </xfr>
+</p>
+<p>
+  See,
+  step over (<b>F6</b>) will execute the invoked method,
+  but it will not show you the details of the execution.
+  With step in (<b>F5</b>), the debugger takes you down
+  in the invocation of the method and allows you to single
+  step that code as well. Fantastic, right?
+  <xfr>
+	Voyez, <b>F6</b> va exécuter la méthode invoquée,
+  	mais sans vous montrer les détails de l'exécution.
+  	Avec <b>F5</b>, le debugger vous emmène dans l'invocation
+  	de la méthode et vous permet d'aller en pas à pas
+  	dans cette méthode. Fantastique non?
+  </xfr>
+</p>
+<!--
+<p>
+  Let us check if your class does what it is supposed to do.
+  We will test it like this:
+<textarea class="terminal" rows="5">
+  ~$ cd ~/AgileLearning/workshops/oop/workspace/prog.basics
+  prog.basics$ java -cp ./bin oop.snippets.TomJerry
+  [T][o][m][ ][&][ ][J][e][r][r][y]
+  prog.basics$
+</textarea>
+<check
+   blocking="false"
+   silent="onSuccess"
+   lang="java"
+   cwd="workspace/prog.basics"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task2.Check1c">
+  <banner>
+    If you pass the test, there is a good chance you did it
+    correctly. If you do not, you missed something. Fix your
+    code and retry. If you do not succeed, after trying to fix
+    your code, please ask for help from those who succeeded.
+  </banner>
+  <hint>
+    Hum, seems you didn't get it quite right.
+    Ask for help if you need to.
+  </hint>
+  <success>
+    Good. Well done.
+  </success>
+  <unfold></unfold>
+</check>  
+-->
+
+<h3>Take charge of your learning</h3>
+
+<p>
+  <b>This is important</b>: remember to take charge of your learning.
+  <em>We can show you the door, you are the one that can walk through it</em>.
+</p>
+<p>
+  Follow this workshop as a regular course and you are likely
+  to just waste your
+  time. If you procrastinate, hoping that you will manage to get
+  a grade over 10, you are not really learning how to program.
+  That is, you are not learning your future job. Programming
+  is a craft and you need to practice with purpose.
+  Trying to blaze through the material, trying to get it over with
+  as quickly as you can, you will not learn much. Hence,
+  you are somewhat wasting your time and ours. If it is the case,
+  ask yourself, why did you choose this cursus at Polytech
+  if you are not interested in learning programming?
+  <xfr>
+	  Si vous considérez ce workshop comme un cours classique,
+	  vous êtes juste en train de perdre votre temps.
+	  Si vous procrastiner, en espérerant obtenir une note au-dessus de 10,
+    vous n'allez pas apprendre à programmer, vous n'allez pas
+	  apprendre votre métier. La programmation est un métier d'artisanat,
+    il faut de la pratique attentionnée. 
+	  Essayez de lire en diagonale, d'aller vite, vous n'allez pas
+	  apprendre. Du coup, si c'est le cas, posez vous la question
+    de pourquoi vous avez choisi Polytech si la programmation
+    ne vous intéresse pas?
+  </xfr>
+</p>
+<p>
+  Learning programming is learning a craft,
+  it is not just any course, like history or geography classes
+  in highschool. 
+  This is the foundation of your future craft, the one you will
+  practice everyday at work. It will be also the foundation of all
+  the practical work you will do in the next three years in this school.
+  We cannot force you, we can explain and hope you will understand.
+  Consider yourself informed and properly warned.
+  <xfr>
+	Apprendre à programmer est un artisanat, ce n'est pas comme 
+	un cours classique, comme l'histoire ou la géographie au lycée.
+	Ici vous faites face aux fondations de votre futur métier, celui
+	que vous allez pratiquer au quotidien. La programmation
+	va être votre activité de base, non seulement dans les trois années
+	à venir, mais également dans votre vie professionnelle future, au
+	moins dans les premières années. On ne peut pas vous forcer, on
+  peut seulement vous expliquez et espérer que vous allez comprendre.
+  </xfr>
+</p>
+<p>
+  Also, do not rely only on our tests. Write your code and try to get
+  it right on your own, writing your own tests and debugging your code
+  using your own tests. Use our tests once you feel that you are done and that
+  you believe your code works. If your code fails our tests,
+  there is definitely a problem with your code. If it passes our tests,
+  you did something right, but it does not tell you much more than that.
+  Your code might be ugly or correct by chance. More importantly,
+  the purpose of all this is <b>NOT TO PASS THE TESTS</b>. The purpose is
+  to <b>BECOME A GOOD SOFTWARE ENGINEER</b>.
+  <xfr>
+	  Autre point important, ne vous appuyez pas uniquement sur nos tests.
+    Essayez d'écrire un code qui marche, écrivez des tests et utiliser
+    le debugger si nécessaire. Utilisez nos tests lorsque vous pensez
+    avoir bien fait. Si votre code ne passe pas les tests,
+    il y a bien un problème avec votre code. S'il passe les tests,
+    vous avez produit un code correct,
+	  mais cela ne dit pas que vous maitrisez totalement le code que vous
+	  avez produit. Le but ultime <b>N'EST PAS DE PASSER LES TESTS</b>.
+    Il est de <b>DEVERNIR UN BON INGENIEUR LOGICIEL</b>.
+  </xfr>
+</p>
+<p>
+  So go ahead, use the debugger and explore what it means to use
+  those concepts and statements. Write more code and more classes.
+  Ask for help and details if you
+  need. Find another student that knows more and discuss these
+  concepts and discuss programming. Exchange information.
+  Exchange understanding. Practice. Practice again. And soon,
+  you will wake up and realize that you belong among good developers. 
+  <xfr>
+	  Donc allez-y , utilisez le debugger et explorez, essayez de
+	  comprendre ce que signifie des concepts et instructions.
+	  Ecrivez des classes et des classes.. 
+	  Demandez de l'aide si vous avez besoin.
+	  Trouvez des étudiants qui savent et demandez leur. Echangez
+	  entre vous. Echangez vos compréhensions respectives.
+	  Pratiquez encore et encore. Et puis un jour, sans vraiment
+    vous en rendre compte, vous appartiendrez à la communauté
+    des bons développeurs.
+  </xfr>
+</p>
+<p>
+  Isn't that why you came and took this cursus for?
+  <xfr>
+    N'était-ce pas la raison pour laquel vous vous êtes inscrit à Polytech?
+  </xfr>
+</p>

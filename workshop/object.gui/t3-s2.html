@@ -1,0 +1,638 @@
+<vars>
+  sprint=object.gui
+  task=t3
+	step=t3-s2
+</vars>
+<p>
+	A graphical toolkit is not only about painting components,
+	it is also about allowing the end user to interact with
+	the components painted on screen. This interaction happens
+	through a mouse and a keyboard, as you perfectly know
+	by experience, since you have been interacting with computers,
+	tablets, and phones for many years.
+	<xfr>
+		Un toolkit graphique ne s'occupe pas seulement d'orchestrer
+		l'affichage des composants visuels, il permet aussi l'interaction
+		avec l'utilisateur. Cette interaction se fait par le clavier
+		et la souris, comme vous le savez.
+	</xfr>
+</p>
+<p>
+	As we have already seen, the underlying window provides
+	both mouse and keyboard events, through two listeners:
+	<span class="java-class">object.gui.window.MouseListener</span> 
+	<span class="java-class">object.gui.window.KeyListener</span>.
+	But the mouse and keyboard events are at the level of the entire window, with
+	no knowledge of the actual tree of components that are
+	painted within that window.
+	<xfr>
+		Comme nous l'avons déjà vu, la fenêtre sous-jacente
+		fournit les événements souris et clavier, au travers
+		d'écouteurs:
+		<span class="java-class">object.gui.window.MouseListener</span> 
+		<span class="java-class">object.gui.window.KeyListener</span>.
+		Mais ces événements souris et clavier sont au niveau
+		de la fenêtre, sans aucune connaissance de l'arbre
+		des composants qui y sont affichés.
+	</xfr>
+</p>
+<p>
+	This task is about routing these events to individual components.
+	But which ones and when? This requires us to discuss an important
+	concept in graphical user interface: the <b>focus</b>. It is indeed
+	important to explain to the end user how the focus works:
+	<xfr>
+		Cette tâche est sur le routage de ces événements vers les
+		composants concernés. Mais lesquels? Et quand? Ces questions
+		nous demandent de discuter un concept important: celui du
+		focus de l'interface graphique. Il est en effet essentiel
+		d'expliquer à l'utilisateur comment marche le focus:
+	</xfr>
+</p>
+<ul>
+<li>
+	For the mouse events, the focus is rather intuitive to explain.
+	When an end user moves the mouse over a component displayed on the
+	screen and presses one of the mouse buttons, he or she expects
+	the component under the current mouse location to receive
+	the button events. Indeed, isn't that why the end user click
+	at that location on the screen in the first place?
+	<xfr>
+		Pour la souris, le concept de focus est plutôt intuitif,
+		lorsque l'utilisateur déplace la souris sur un composant
+		et presse un bouton, il s'attend à ce que l'effet soit sur
+		le composant sous la souris.
+	</xfr>
+</li>
+<li>
+	But the focus is also relevant for when the end user types
+	on the keyboard. Which component should receive the keyboard
+	events? In our case, we will keep it simple, it will be the
+	component displayed on the screen under the current location
+	of the mouse. In some other toolkits, the keyboard focus
+	might follow a more complex policy, but we will keep it simple
+	here.
+	<xfr>
+		Mais le concept de focus pour les événements clavier est
+		plus délicat. La question est la suivante: quel composant doit
+		recevoir les événements clavier? C'est à dire les événements
+		correspondant aux touches
+		pressées et relâchées par l'utilisateur. Dans notre cas,
+		nous allons rester simple, le composant sera celui qui
+		est sous la position courante de la souris.
+	</xfr>
+</li>
+</ul>
+<p>
+	So managing the focus will require you to select the component
+	that is under the current position of the mouse. Let's get
+	started with that.
+</p>
+
+<h3>Selecting a component at a given location</h3>
+
+<p>
+	So we will start with implementing the selection of the component
+	under the current mouse location. But first, how do we know the
+	current mouse location?
+	<xfr>
+		Nous allons donc commencer par implémenter la sélection du
+		composant qui est sous la position courante de la souris.
+		Mais avant, comment connaissons-nous la position de la souris?
+	</xfr>
+</p>
+<p>
+	Well, look at the
+	class <span class="java-class">Toolkit</span>
+	in the
+	package <span class="java-class">object.gui.task3</span>.
+	See that the toolkit registers itself as both mouse and
+	keyboard listeners to the base window:
+	<xfr>
+		Et bien regardons la classe
+		<span class="java-class">Toolkit</span>
+		dans le paquet 
+		<span class="java-class">object.gui.task3</span>.
+		Vous voyez, le toolkit s'enregistre auprès de la
+		fenêtre pour recevoir les événements souris et clavier:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Toolkit implements Runnable,
+  object.gui.basics.WindowListener,
+  object.gui.basics.KeyListener,
+  object.gui.basics.MouseListener {
+
+  @Override
+  public void run() {
+    m_frame = new Frame();
+    m_win.setWindowListener(this);
+    m_win.setMouseListener(this);
+    m_win.setKeyListener(this);
+  }
+}
+</pre>
+<p>
+	Now, turn you attention to the methods corresponding
+	to the implemented interfaces
+	<span class="java-class">object.gui.basics.MouseListener</span>:
+</p>
+<ul>
+	<li><span class="java-method">mouseMoved</span></li>
+	<li><span class="java-method">mousePressed</span></li>
+	<li><span class="java-method">mouseReleased</span></li>
+	<li><span class="java-method">mouseEntered</span></li>
+	<li><span class="java-method">mouseExited</span></li>
+</ul>
+<p>
+	Now that we know where the current location of the mouse is,
+	we need to select the component that is right under the mouse.
+	It is the purpose of the
+	method <span class="java-method">select(int, int)</span>
+	on the class <span class="java-class">Component</span>,
+	and overridden on the
+	class <span class="java-class">Container</span>.
+	<xfr>
+		Maintenant que nous connaissons la position de la souris,
+		il nous faut sélectionner le composant qui s'affiche
+		sous la position de la souris. C'est le but de la
+		méthode
+		<span class="java-method">select(int, int)</span>
+		sur la classe <span class="java-class">Component</span>,
+		et redéfinie sur la classe 
+		<span class="java-class">Container</span>.
+	</xfr>
+</p>
+<p>
+	So go ahead, code these two methods
+	<span class="java-method">select(int x, int y)</span>
+	on the class <span class="java-class">Component</span>
+	and the class <span class="java-class">Container</span>.
+	And print the selected component in the methods
+	<span class="java-method">mouseMoved</span>,
+	<span class="java-method">mouseEntered</span>, and
+	<span class="java-method">mouseExited</span>.
+	<xfr>
+		C'est à vous, codez ces deux méthodes
+		<span class="java-method">select(int x, int y)</span>
+		sur les classes
+		<span class="java-class">Component</span> et
+		<span class="java-class">Container</span>.
+		Affichez le composant sélectionné dans les méthodes
+		<span class="java-method">mouseMoved</span>,
+		<span class="java-method">mouseEntered</span>, et
+		<span class="java-method">mouseExited</span>.
+	</xfr>
+</p>
+<p>
+	Need to test your code during development?
+	There is an easy way, using our
+	class <span class="java-class">WindowTest</span>
+	in the Java
+	package <span class="java-package">object.gui.task3.tests</span>.
+	If you execute that class, you will see the following window:
+	<xfr>
+		Vous souhaitez tester votre code? Utilisez notre
+		classe <span class="java-class">WindowTest</span>
+		dans le paquet
+		<span class="java-package">object.gui.task3.tests</span>,
+		vous devriez voir une fenêtre comme celle-ci:
+	</xfr>
+</p>
+<img src="warmup-window.png" width="50%"> 
+<p>
+	Look in details, the layout is such there are light-gray-colored gaps
+	in between components. This means that all components
+	have some pixels visible on the screen, including the frame.
+	Therefore, this
+	means that moving your mouse around should select
+	all the different components.
+	<xfr>
+		Regardez bien, vous voyez qu'il y a des interstices de couleur gris
+		clair. Cela veut dire que tous les composants ont des pixels à
+		l'écran et vous pouvez donc tous les sélectionner avec la souris.
+	</xfr>
+</p>
+
+<h3>Focus Management</h3>
+
+<p>
+	Now it is time to manage the focus and route mouse and
+	keyboard events accordingly.
+	Look again at the class <span class="java-class">Toolkit</span>
+	and the methods for both the mouse and key listeners:
+	<span class="java-class">object.gui.basics.MouseListener</span>
+	and <span class="java-class">object.gui.basics.KeyListener</span>:
+	<xfr>
+		Il est maintenant temps de gérer le focus et router les
+		événements souris et clavier en conséquence.
+		Regardez de nouveau la classe
+		<span class="java-class">Toolkit</span> et les méthodes
+		correspondantes aux interfaces pour la souris et le clavier:
+		<span class="java-class">object.gui.basics.MouseListener</span>
+		et <span class="java-class">object.gui.basics.KeyListener</span>:
+	</xfr>
+</p>
+<ul>
+	<li><span class="java-method">mouseMoved</span></li>
+	<li><span class="java-method">mousePressed</span></li>
+	<li><span class="java-method">mouseReleased</span></li>
+	<li><span class="java-method">mouseEntered</span></li>
+	<li><span class="java-method">mouseExited</span></li>
+	<li><span class="java-method">keyPressed</span></li>
+	<li><span class="java-method">keyReleased</span></li>
+</ul>
+<p>
+	It is time to implement them all. First, you need to manage
+	the component that has the focus: the focus goes to the
+	component that is under the current position
+	of the mouse on the screen. This is where you use the
+	the	method <span class="java-method">select</span>
+	on the class <span class="java-class">Component</span>
+	and overriden on the class <span class="java-class">Container</span>.
+	<xfr>
+		Il est temps de toutes les implémenter. En premier, il
+		faudra gérer le composant qui a le focus, c'est là que
+		vous utiliserez la méthode 
+		<span class="java-method">select</span>
+	  sur la classe <span class="java-class">Component</span>
+		et redéfinie sur la classe
+		<span class="java-class">Container</span>.
+	</xfr>
+</p>
+<p>
+	Once you managed the focus correctly, you need to route both mouse
+	and key events to the component
+	that has the focus. This is easy, but you need to make sure
+	that you translate the global coordinates of the mouse position
+	into local coordinates for the component that has the focus.
+	Indeed, listeners attached to a given component are expecting all
+	given coordinates to be local coordinates within that component.
+	Meaning that if the mouse is at the top-left corner of a component,
+	the mouse location is at (0,0), no matter where this component
+	is on the screen.
+	<xfr>
+		Une fois que vous gérez correctement le composant avec le focus,
+		vous devez router les événements souris et clavier vers celui-ci.
+		C'est facile, mais il faut faire attention à bien traduire les
+		coordonnées de la souris en coordonnées locales au composant
+		qui a le focus. Rappelez-vous, les coordonnées passées à des
+		écouteurs sur un composant sont toujours en coordonnées	locales
+		au composant. 
+	</xfr>
+</p>
+<p>
+	To translate coordinates, look at the methods 
+	<span class="java-method">toLocal</span> and
+	<span class="java-method">toGlobal</span>. The code
+	is completely straightforward to understand if you understood
+	that components are organized as a tree and you understood
+	how they are layed out on the screen. If this is not totally
+	obvious, make sure to ask questions until you get a clear
+	picture.
+	<xfr>
+		Pour faire ces conversions entre systèmes de coordonnées,
+		locales et globales, vous pouvez utiliser les méthodes
+		<span class="java-method">toLocal</span> et
+		<span class="java-method">toGlobal</span>. Le code
+		est triviale, vous n'aurez aucun mal à le comprendre.
+	</xfr>		
+</p>
+<p>
+	Need to test your code during development?
+	You can use again the class <span class="java-class">WindowTest</span>
+	in the Java
+	package <span class="java-package">object.gui.task3.tests</span>.
+	Look at the console output, you will be able to see if you are
+	routing your events correctly. <u>Pay particular attention to generate
+	the proper callbacks <span class="java-method">mouseEntered</span>
+	and <span class="java-method">mouseExited</span> per component</u>.
+	<xfr>
+		Pour tester, utilisez la classe
+		<span class="java-class">WindowTest</span>
+		dans le paquet
+		<span class="java-package">object.gui.task3.tests</span>.
+		Regardez la console, vous verrez si vous faites le routage
+		de événements correctement:
+	</xfr>
+</p>
+<pre class="terminal">
+mouseExited: North Component
+mouseEntered: at (1,86) on Root Frame
+mouseEntered: at (1,86) on Root Frame
+mouseMoved: (1,86) on Root Frame
+mouseMoved: (2,86) on Root Frame
+...
+mouseMoved: (6,88) on Root Frame
+mouseMoved: (7,88) on Root Frame
+mouseExited: Root Frame
+mouseEntered: at (0,79) on North Component
+mouseMoved: (0,79) on North Component
+mouseMoved: (2,80) on North Component
+...
+mouseMoved: (29,94) on North Component
+mouseMoved: (30,94) on North Component
+mouseExited: North Component
+mouseEntered: at (44,107) on Root Frame
+mouseMoved: (44,107) on Root Frame
+mouseMoved: (45,107) on Root Frame
+mouseMoved: (49,109) on Root Frame
+mouseExited: Root Frame
+mouseEntered: at (39,0) on West Component
+mouseMoved: (39,0) on West Component
+mouseMoved: (44,3) on West Component
+...
+mouseMoved: (123,20) on West Component
+mouseMoved: (127,21) on West Component
+mouseExited: West Component
+mouseEntered: at (4,23) on Center Component
+mouseMoved: (4,23) on Center Component
+mouseMoved: (10,24) on Center Component
+...
+mouseMoved: (7,48) on Center Component
+mouseMoved: (0,48) on Center Component
+mouseExited: Center Component
+mouseEntered: at (141,158) on Root Frame
+mouseMoved: (141,158) on Root Frame
+mouseMoved: (140,158) on Root Frame
+mouseMoved: (139,158) on Root Frame
+mouseExited: Root Frame
+mouseEntered: at (126,48) on West Component
+mouseMoved: (126,48) on West Component
+mouseMoved: (122,48) on West Component
+...
+mouseMoved: (6,55) on West Component
+mouseMoved: (0,54) on West Component
+mouseExited: West Component
+mouseEntered: at (9,164) on Root Frame
+mouseMoved: (9,164) on Root Frame
+mouseMoved: (5,164) on Root Frame
+mouseMoved: (4,164) on Root Frame
+mouseMoved: (4,163) on Root Frame
+mouseExited: Root Frame
+</pre>
+<p>
+	Of course, you will not have the same output as above.
+	Just make sure that you can route mouse events to all components
+	as you move the mouse around over our border-layout example.
+	Make sure also that the coordinates are component-local and correct.
+	Then finally, make sure that you can route keyboard events as well.
+	<xfr>
+		Bien sûr, vous n'aurez pas la sortie ci-dessus. Assurez vous
+		cependant que vous faites le routage correctement vers tous les
+		composants en fonction de la position de la souris. Testez bien
+		sûr cela pour les événements souris et clavier.
+	</xfr>
+</p>
+
+<h3>Enforcing the event grammar</h3>
+
+<p>
+	The toolkit must route events, but it must also enforce
+	the correct grammar for these events. But before you can
+	control the grammar on component listeners, you need
+	to fully understand the grammars for the window listeners:
+ 	<span class="java-class">object.gui.basics.MouseListener</span> 
+	<span class="java-class">object.gui.basics.KeyListener</span>.
+  This is important since the toolkit is implementing
+	these window listeners and the methods of these listeners
+	are the starting point for mouse and keyboard events.
+	You can find below the grammars for the two listeners,
+	both grammars start in the state <em>"OUTSIDE"</em>:	
+	<xfr>
+		Le toolkit ne doit pas que router les événements, il doit
+		aussi s'assurer du respect d'une grammaire pour l'ordre
+		de ces événements. Mais avant de pouvoit contrôler la
+		grammaire des événements dont vous faites le routage,
+		il vous faut comprendre la grammaire des événements
+		créés par la fenêtre. Les deux grammaires correspondantes
+		vous sont données ci-dessous, avec comme état intiale
+		l'état <em>"OUTSIDE"</em>:	
+	</xfr>
+</p>
+<table style="width:100%">
+  <tr>
+    <th style="text-align:left;width:45%;" >
+<pre>
+  OUTSIDE:
+    mouseEntered → INSIDE
+  INSIDE: 
+    mouseExited -> OUTSIDE
+    mouseMove  → INSIDE
+    mousePressed  → BUTTON_PRESSED
+    mouseReleased → BUTTON_RELEASED
+  BUTTON_RELEASED:
+    mouseMove  → BUTTON_RELEASED
+    mousePressed  → BUTTON_PRESSED
+    mouseExited -> OUTSIDE
+  BUTTON_PRESSED:
+    mouseMove  → BUTTON_PRESSED
+    mouseReleased → BUTTON_RELEASED
+    mouseExited -> OUTSIDE
+</pre>
+		</th>
+		<th style="width:55%;">
+			<!--
+					Generated with:
+					$ dot -Tsvg mouse-event-grammar.dot > mouse-event-grammar.svg
+				-->
+			<img src="mouse-event-grammar.svg" width="110%" />
+		</th>
+	</tr>
+  <tr>
+    <th style="text-align:left;width:45%;" >
+			<pre>
+  OUTSIDE:
+    mouseEntered → INSIDE
+  INSIDE: 
+    mouseExited -> OUTSIDE
+    keyPressed → KEY_PRESSED
+    keyReleased → KEY_RELEASED
+  KEY_RELEASED:
+    keyPressed → KEY_PRESSED
+    mouseExited -> OUTSIDE
+  KEY_PRESSED:
+    keyPressed → KEY_PRESSED    
+    keyReleased → KEY_RELEASED
+    mouseExited -> OUTSIDE
+			</pre>
+		</th>
+		<th style="width:55%;">
+			<!--
+					Generated with:
+					$ dot -Tsvg keyboard-event-grammar.dot > keyboard-event-grammar.svg
+				-->
+			<img src="keyboard-event-grammar.svg" width="95%" />
+		</th>
+  </tr>
+</table>
+<p>
+	Now that you understand how the listener methods on the
+	class <span class="java-class">Toolkit</span> will be
+	invoked, your job, when routing events, is to ensure
+	the same grammmars for the callbacks on component listeners
+	<span class="java-class">MouseListener</span> and
+	<span class="java-class">KeyListener</span>,
+	defined in the Java
+	package <span class="java-package">object.gui.task3</span>.
+	<xfr>
+		Maintenant ces grammaires, votre responsabilité est
+		d'invoquer, au niveau des composants, les méthodes des écouteurs
+		<span class="java-class">MouseListener</span> et
+		<span class="java-class">KeyListener</span>
+		en respectant les mêmes grammaires.
+	</xfr>
+</p>
+<p>
+	<b>Nota Bene:</b> do not confuse the listeners on the window
+	and on components:
+	<xfr>
+		<b>Nota Bene:</b> ne confondez pas les écouteurs sur la
+		fenêtre et ceux sur les composants:
+	</xfr>
+</p>
+<ul>
+	<li>
+		The window listeners are defined 
+		in the Java package
+		<span class="java-package">object.gui.basics</span>.
+		The window listeners are implemented by the toolkit
+		and <u>only</u> the toolkit.
+		<xfr>
+			Les écouteurs de la fenêtre sont définis dans le paquet
+			Java <span class="java-package">object.gui.basics</span>.
+			Ils ne sont implémentés que par le toolkit.
+		</xfr>
+	</li>
+	<li>
+		The component listeners are defined in the Java package
+		<span class="java-package">object.gui.task3</span>.
+		Component listeners can be implemented by any class.
+		<xfr>
+			Les écouteurs pour les composants sont définis dans le
+			paquet Java 
+			<span class="java-package">object.gui.task3</span>.
+			Ces écouteurs seront implémentés par de nombreuses
+			classes.
+		</xfr>
+	</li>
+</ul>
+<p>
+	In our test example, component listeners are implemented
+	by the inner
+	class <span class="java-class">Listener</span>
+	defined in the
+	class <span class="java-class">WindowTest</span>
+	in the Java
+	package <span class="java-package">object.gui.task3.tests</span>.
+	<xfr>
+		Dans notre exemple, les écouteurs de composant sont
+		implémentés par la classe
+		<span class="java-class">Listener</span>
+		définie dans la classe
+		<span class="java-class">WindowTest</span>
+		dans le paquet 
+		<span class="java-package">object.gui.task3.tests</span>.		
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class WindowTest
+    private class Listener 
+            implements object.gui.task3.MouseListener, 
+                       object.gui.task3.KeyListener {
+    @Override
+    public void keyPressed(Component c, char k, int code) { ... }
+    @Override
+    public void keyReleased(Component c, char k, int code) { ... }
+    @Override
+    public void mouseMoved(Component c, int x, int y) { ... }
+    @Override
+    public void mousePressed(Component c, int x, int y, int button) { ... }
+    @Override
+    public void mouseReleased(Component c, int x, int y, int button) { ... }
+    @Override
+    public void mouseEntered(Component c, int x, int y) { ... }
+    @Override
+    public void mouseExited(Component c) { ... }
+  }
+}
+</pre>
+<p>
+  Let's get back to the class <span class="java-class">Toolkit</span>
+	and the correct routing of mouse and keyboard events. It is your code
+	that is responsible to enforce the correct grammars, <u>per component</u>.
+	Let's consider there is a single component in the window, taking
+	up the entire real estate of the window. In this case, you could just
+	forward all the events received by the toolkit to that unique component.
+	This would be correct since the grammars per component are the same
+	as the ones for the window. This is cool, it makes things simpler.
+	<xfr>
+		Revenons donc à notre classe <span class="java-class">Toolkit</span>
+		qui doit assurer le routage correct des événements souris et clavier.
+		Cette classe doit s'assurer que les deux grammaires sont respectées
+		par composant. Supposons en premier lieu qu'il n'y a qu'un seul
+		composant, occupant toute la fenêtre. Alors la situation est simple,
+		il suffit au toolkit de faire passer les événements qu'il reçoit
+		directement au composant. 
+	</xfr>
+</p>
+<p>
+	But, if you have multiple components layed out in the window, there is
+	bit more work to do. Indeed, the mouse and keyboard grammars must be respected
+	per component.
+	This means that you need to generate extra events for telling each component
+	when the mouse is entering or leaving, even though the mouse is not
+	entering or leaving the window. These extra events (mouseExited and
+	mouseEntered) must be generated whenever the focus changes from one
+	component to another.
+	<xfr>
+		Mais si vous avez plusieurs composants dans la fenêtre, il y a un
+		peu plus de travail pour le toolkit afin de respecter les grammaires
+		pour chacun des composants. Cela veut dire que vous devez générer
+		des événements pour indiquer à chaque composant lorsque la souris
+		sort ou entre. Ces événements doivent être générer lorsque le focus
+		change de composant.
+	</xfr>
+</p>
+<p>
+	To test your code, you can still use our example class
+	<span class="java-class">WindowTest</span>. You may want
+	to use our class <span class="java-class">GrammarChecker</span>
+	that verifies the grammars on both the mouse and keyboard listeners.
+	To use that verifier class, 
+	you just need to change the method
+	<span class="java-method">setListeners</span> on the
+	class <span class="java-class">WindowTest</span> to use
+	this other listener. Our checker-listeners will likely
+	detect most of the
+	grammar errors that your toolkit code might induce.
+  We gave you also that grammar checker so that you can see
+	what is checked and therefore have another perspective
+	on what the grammars are about.
+	<xfr>
+		Pour tester votre code, vous pouvez utiliser
+		notre classe 
+		<span class="java-class">WindowTest</span>.
+		On vous a aussi fourni une classe qui vérifie la
+		grammaire des événements sur un composant, c'est la
+		classe <span class="java-class">GrammarChecker</span>.
+		Pour l'utiliser, vous changer simplement le code de la
+		méthode <span class="java-method">setListeners</span>
+		sur la classe
+		<span class="java-class">WindowTest</span>.
+		Ce vérifieur de grammaire détectera probablement la
+		plupart des erreurs de grammaires
+		que votre code pourrait générer. 
+	</xfr>
+</p>
+
+
+<h3>That's it folks</h3>
+<p>	
+	Please do commit your work.
+</p>
+<textarea class="terminal" rows="4" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.gui, Task3, Step2 completed"
+  $ git push --all
+</textarea>

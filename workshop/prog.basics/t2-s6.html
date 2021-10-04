@@ -1,0 +1,682 @@
+<vars>
+  sprint=prog.basics
+  task=t2
+  step=t2-s6
+</vars>
+
+<p>
+  As we discussed at the end of the previous step,
+  if you write code, you need to write correct code.
+  This means writting code that does what it is supposed to do,
+  even when unexpected conditions occur.
+  Being a good developer is not about writting code that just
+  compiles and that runs sometimes but fails some other times.
+  It is about writing correct code, which is a skill, an important skill.
+  It is a skill that will take you some time to acquire,
+  if you apply yourself to acquiring it.
+  <xfr>
+ 	Comme nous en avons discuté à la fin de l'étape précédente,
+ 	le code que vous écrivez doit être correct.
+ 	Ceci signifie que ce code fait ce qu'il est censé faire,
+ 	même dans des conditions inattendues.
+ 	Etre un bon développeur n'est pas juste produire du code
+ 	qui compile et qui s'exécute "la plupart du temps".
+ 	Etre bon développeur signifie produire du code qui supporte
+ 	toutes les conditions, c'est une compétence qui s'acquiert
+ 	avec le temps et la volonté.
+  </xfr>
+</p>
+<p>
+  But you will only acquire it if you practice it.
+  Like with any other skill, practice makes you better at
+  what you practice.
+  So we will start right now, in this step. We will ask
+  you to improve a bit more on the class
+  <span class="java-class">HalGreetings2</span>.
+  Again you say? Yes we know, but it keeps coding simple,
+  helping you learn.
+  <xfr>
+   Mais dans tous les cas, vous ne deviendrez bon développeur
+   qu'en pratiquant. Donc vous allez démarrer tout de suite,
+   dans cette étape. Nous allons vous demander d'améliorer
+   encore la classe  <span class="java-class">HalGreetings2</span>.
+   Encore cette classe? oui, car cela facilitera votre apprentissage.
+  </xfr>
+</p>
+<p>
+  Don't be impatient, soon,
+  you will be writing your own code, from scratch, and
+  believe us, you will come to regret the time when you
+  worked on the simple class
+  <span class="java-class">HalGreetings</span>.
+  <img stype="display: line;" src="/emoticons/smile.png" height="20px"/>
+</p>
+
+<h4>
+  Questioning the method
+  <span class="java-method">echoGreetings(String[])</span>
+</h4>
+
+<p>
+  It is time to look a the method
+  <span class="java-method">echoGreetings(String[])</span>
+  in the class
+  <span class="java-class">HalGreetings2</span>.
+  Only consider the code of the method
+  <span class="java-method">echoGreetings</span>,
+  do not look at the rest of the code.
+  Then, try to figure out what are the bugs lurking
+  in the dark... 
+  <xfr>
+	Il est temps de regarder la méthode  
+	<span class="java-method">echoGreetings(String[])</span>
+  	dans la classe
+  	<span class="java-class">HalGreetings2</span>.
+ 	Considérez seulement le code de la méthode
+  	<span class="java-method">echoGreetings</span>,
+  	ne regardez pas le reste du code.
+  	Et essayez de trouver les bugs qui se cachent... 
+  </xfr>
+</p>
+<p>
+  To help you, we shape the following questions that cover
+  the three fundamental safety points you should be concerned with,
+  for the method <span class="java-method">echoGreetings</span>.
+  If you do not remember what
+  <span class="java-keyword">null</span> is about, here is
+  quick reminder.
+  The value <span class="java-keyword">null</span> represents
+  the identity that identifies no object. So when a reference variable
+  contains <span class="java-keyword">null</span>,
+  that variable refers to no object at all.   
+  <xfr>
+  	Pour vous aider, nous avons mijoté quelques questions qui couvrent
+  	trois aspects fondamentaux que vous devez considérer,
+  	pour la méthode <span class="java-method">echoGreetings</span>.
+  	Si vous avez oublié ce que signifie
+  	<span class="java-keyword">null</span>, voici un court rappel.
+  	La valeur <span class="java-keyword">null</span> représente
+  	l'identité qui identifie aucun objet. Donc quand une variable de type  
+  	référence contient <span class="java-keyword">null</span>,
+  	cette variable ne référence aucun objet.   
+  </xfr>
+</p>
+<quizz name="Quizz1" ntries="3" enumerate="yes" itemize="false" >
+  <question >
+    <p>
+      May the variable
+      <span class="java-lvar">names</span> be null?
+    </p>
+    <checkboxes>
+      <checkbox>Yes</checkbox>
+      <checkbox>No</checkbox>
+    </checkboxes>
+    <hints>
+      <hint checks="?C">
+	Really? Why not?
+      </hint>
+    </hints>
+    <answers>
+      <answer checks="C?">
+	Yes, the variable may be null. 
+      </answer>
+    </answers>
+    <finally>
+      Of course the variable may be null. 
+      Ask for help if the answer is not clear.
+    </finally>
+  </question>
+  <question>
+    <p>
+      May any of the references in the array referenced by
+      the variable 
+      <span class="java-lvar">names</span> be null?
+    </p>
+    <checkboxes>
+      <checkbox>Yes</checkbox>
+      <checkbox>No</checkbox>
+    </checkboxes>
+    <hints>
+      <hint checks="?C">
+	Really? Why not?
+      </hint>
+    </hints>
+    <answers>
+      <answer checks="C?">
+	Yes, any of them may be null. 
+      </answer>
+    </answers>
+    <finally>
+      Of course, any element of that array may be null.
+    </finally>
+  </question>
+  <question>
+    <p>
+      May the length of the array referenced by the variable
+      <span class="java-lvar">names</span> be zero?
+    </p>
+    <checkboxes>
+      <checkbox>Yes</checkbox>
+      <checkbox>No</checkbox>
+    </checkboxes>
+    <hints>
+      <hint checks="?C">
+	Really? Why not?
+      </hint>
+    </hints>
+    <answers>
+      <answer checks="C?">
+	Yes, an array may have zero elements.
+      </answer>
+    </answers>
+    <finally>
+      Of course, any array may have zero elements.
+    </finally>
+  </question>
+  <unfold>
+    Well done.
+    Of course, the variable
+    <span class="java-lvar">names</span> may be null.
+    Similarly, 
+    any of the references in the array referenced by
+    the variable 
+    <span class="java-lvar">names</span> may be null.
+    Finally, the length of the array referenced by the variable
+    <span class="java-lvar">names</span> may be zero.
+  </unfold>
+</quizz>
+
+<h4>Writing tests</h4>
+
+<p>
+  Let's use tests to discover the problems we just discussed.
+  Writing tests means that you will create
+  at least one test class with a method
+  <span class="java-method">main(String[])</span>.
+  Then, you will write test methods: simple snippets
+  of code that will test your class
+  class <span class="java-class">HalGreetings2</span>.
+  Let us give you an example.
+  <xfr>
+   	Utilisons des tests pour découvrir les problèmes discutés.
+  	Passer des tests signifie que vous devez écrire au moins une
+  	classe de tests avec une méthode
+  	<span class="java-method">main(String[])</span>.
+  	Ensuite vous écrivez vos méthodes de tests qui vont tester votre 
+  	classe <span class="java-class">HalGreetings2</span>.
+  	Un exemple:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+package greetings;
+public class Tests {
+  public static void main(String[] args) {
+    System.out.println("Test1:");
+    test1();
+    System.out.println("Test2:");
+    test2();
+    System.out.println("Test3:");
+    test3();
+    System.out.println("Test4:");
+    test4();
+    System.out.println("Test5:");
+    test5();
+    System.out.println("PASSED.");
+  }
+  public static void test1() {
+    String[] names = null;
+    HalGreetings2.echoGreetings(names);
+  }
+  public static void test2() {
+    String[] names = new String[0];
+    HalGreetings2.echoGreetings(names);
+  }
+  public static void test3() {
+    String[] names = new String[1];
+    HalGreetings2.echoGreetings(names);
+  }
+  public static void test4() {
+    String[] names = new String[1];
+    names[0]="Albert";
+    HalGreetings2.echoGreetings(names);
+  }
+  public static void test5() {
+    String[] names = new String[3];
+    names[0]="Albert";
+    names[1]="Einstein";
+    names[2]="PhD";
+    HalGreetings2.echoGreetings(names);
+  }
+}
+</pre>
+<p>
+  Now all you need to do is execute these tests
+  and make sure that your code works as expected.
+  It is likely that these tests will fail, since
+  we did not change the code of the
+  class <span class="java-class">HalGreetings2</span>.
+  Look below for details on how to test and debug.
+  <xfr>
+    Maintenant tout ce dont nous avons besoin est d'exécuter 
+    ces tests. Il ets probable que ces tests échouent puisque
+    nous n'avons pas changé le code de la
+  	classe <span class="java-class">HalGreetings2</span>.
+  	Regardez ci-après pour savoir comment tester et debugger.
+  </xfr>
+</p>
+
+<h4> Testing and Debugging </h4>
+
+<p>
+  If you tried the above tests, you will experience
+  some runtime exceptions that you probably do not understand.
+  Since you are not really familiar yet with runtime exceptions,
+  we will help you with the first test, the method
+  <span class="java-method">test1</span> given above.
+  It is an important test, testing the behavior of the
+  code when passed
+  <span class="java-keyword">null</span> as an argument.    
+  So if you use that variable to
+  invoke a method, what should the Java runtime do?
+  <xfr>
+	Si vous avez essayé les tests précédents, vous allez
+	avoir des exceptions runtime que vous ne comprendrez pas,
+	puisque vous ne connaissez pas encore ce type d'exceptions.
+	Nous allons donc vous aider avec le premier test, 
+	la méthode
+  	<span class="java-method">test1</span> donnée précédemment.
+  	C'est un test important, testant le comportement du code
+  	quand il reçoit
+  	<span class="java-keyword">null</span> comme argument.    
+  	Dans ce cas, que doit faire le runtime Java?
+  </xfr>
+</p>
+<p>
+  Let's discuss again our real-world analogy with persons
+  and phone numbers. Let's assume that a friend of yours
+  gives you a phone number and asks that you
+  call that person to ask for a service. What should you do
+  if the phone number is invalid, not currently attributed
+  to anyone?
+  <xfr>
+	Discutons encore de notre analogie avec des personnes
+	et des numéros de téléphone. Supposons qu'un ami à vous
+	vous donne un numéro de téléphone et vous demande d'appeler
+	la personne pour demander un service. Que devez vous faire 
+	si le numéro est invalide?
+  </xfr>
+</p>
+<p>
+  You would like to be able say to your friend:
+  <em>no can't do, the phone number is not valid</em>.
+  This is exactly what the Java runtime will do with
+  a special exception: NullPointerException.
+  Whenever your program will try to use a
+  <span class="java-keyword">null</span> identity,
+  the Java runtime will throw a NullPointerException.
+  <xfr>
+  	Vous voudriez pouvoir dire à votre ami: 
+  	<em>impossible, numéro de téléphone invalide</em>.
+  	C'est exactement ce que le runtime Java fera
+  	en levant l'exception NullPointerException.
+  	A chaque fois qu'un programme essaie d'invoquer
+  	une méthode avec une identité 
+  	<span class="java-keyword">null</span>,
+  	le runtime Java émet une exception de type NullPointerException. 
+  </xfr>
+</p>
+<p>
+  So let's look at the code of the
+  method <span class="java-method">echoGreetings</span>,
+  considering that the argument
+  <span class="java-lvar">names</span> contains
+  the <span class="java-keyword">null</span> identity.
+</p>
+<pre class="prettyprint lang-java">
+28  public static void echoGreetings(String[] names) {
+29    int i = 0;
+30    System.out.print("Greetings");
+31    while (i &lt; names.length) {
+32      String s = names[i];
+33      System.out.print(" " + s);
+34      i = i + 1;
+35    }
+36    System.out.println("!");
+37  }
+</pre>
+<p>
+  What will happen?
+  Well, execute the program in your head and try to guess what it will do.
+  Then, execute it under the control
+  of the debugger and verify what it actually does.
+  Looking at the condition of the while loop,
+  you see that it is the following:
+</p>
+<pre class="prettyprint lang-java">
+  (i &lt; names.length)
+</pre>
+<p>
+  It is the first location where the variable 
+  <span class="java-lvar">names</span> is used.
+  Since it contains
+  <span class="java-keyword">null</span>,
+  the Java runtime will raise an exception,
+  the famous <em>NullPointerException</em>.
+  In the <em>Console</em>,
+  it will look like this:
+</p>
+<pre style="color: red;" >
+  Test1:
+  GreetingsException in thread "main" java.lang.NullPointerException
+  at greetings.HalGreetings.echoGreetings(HalGreetings.java:31)
+  at greetings.Tests.test1(Tests.java:20)
+  at greetings.Tests.main(Tests.java:6)
+</pre>
+<p>
+  As we explained before, this is the call stack, captured when the exception
+  was thrown by the Java runtime. It tells you where the exception
+  was thrown. In this case, it is thrown 
+  line 31 in the file <em>HalGreetings.java</em>, which is the
+  file that contains the source for our
+  class <span class="java-class">HalGreetings</span>.
+  The mistake being simple, you can figure out
+  easily what the problem is.
+  <xfr>
+ 	Comme expliqué précédemment, ceci est la pile d'appel, capturée au moment
+ 	où l'exception a été levée. cela vous dit où l'exception a été levée.
+ 	Dans le cas présent, elle est levée ligne 31 dans le fichier 
+ 	<em>HalGreetings.java</em>, qui contient le source de la
+  	classe <span class="java-class">HalGreetings</span>.
+  	L'erreur étant simple, vous pouvez la corriger facilement.
+  </xfr>
+</p>
+<p>
+  No? Well, look at line 31, what do you see? You see the first
+  usage of the variable
+  <span class="java-lvar">names</span>. Indeed, the condition
+  ask the array referenced by the variable
+  <span class="java-lvar">names</span> its length.
+</p>
+<pre class="prettyprint lang-java">
+31    while (i &lt; names.length) {
+</pre>
+<p>
+  Since the variable contains
+  <span class="java-keyword">null</span>, there is no array.
+  So the Java runtime needs to say "No can't do", and it does
+  so by throwing a NullPointerException. It would be great
+  if we could ask the debugger to stop right at that moment,
+  rather than having the execution stop. Well, guest what,
+  we can.
+  <xfr>
+ 	Comme la variable contient <span class="java-keyword">null</span>,
+ 	il n'y a pas de tableau. Donc le runtime Java dit "impossible"
+ 	en levant l'exception NullPointerException.
+ 	Cela serait bien qu'il puisse demander au debugger de
+ 	suspendre l'exécution juste à ce moment. Et bien figurez-vous
+ 	que cela est possible !
+  </xfr>
+</p>
+
+<h4> Breakpoints on thrown exceptions </h4>
+
+<p>
+  The Eclipse debugger has a fantastic feature:
+  setting up breakpoints on thrown exceptions. What does
+  that mean? It means that the breakpoint is not setup on
+  any specific line of code, the breakpoint is setup to
+  catch any actual throwing of an exception, anywhere in the code.
+  This means that the
+  debugger will regain control whenever and wherever an
+  exception of a specific type is thrown.
+  <xfr>
+ 	Eclipse a une fonctionnalité géniale: positionner des
+ 	points d'arrêt (breakpoints) sur des exceptions d'un certain 
+ 	type. A chaque fois qu'une exception de ce type est levée,
+ 	le debugger va suspendre l'exécution.
+  </xfr>
+</p>
+<p>
+  Sounds great? You are right, it is absolutely a game changer.
+  So let's learn how to use it. There are two ways to setup a
+  breakpoint on an exception.
+</p>
+<ol>
+  <li>From an exception stack trace</li>
+  <li>From the <em>Breakpoint view</em></li>
+</ol>
+<p>
+  To see the <em>Breakpoint view</em>, you must 
+  switch to the <em>"Debug"</em> perspective. Look at the
+  <em>Breakpoints</em> view, right next to the
+  <em>Variables</em> view. If it is not there, you can always
+  open it via the menus (Windows &rarr; ShowView).
+ <xfr>
+ 	 Pour voir la vue <em>Breakpoint view</em>, vous devez allez
+ 	 dans la perspective <em>"Debug"</em>. Regardez la vue 
+ 	 <em>Breakpoints</em> view, à droite de la vue 
+ 	 <em>Variables</em>. Si vous ne la voyez pas, vous 
+ 	 pouvez l'ouvrir via les menus (Windows &rarr; ShowView).
+  </xfr>
+</p>
+<img src="images/eclipse-exception-breakpoint.png" width="80%"/>
+<p>
+  Notice in the icon toolbar of the <em>Breakpoints</em> view,
+  the icon 
+  <img src="images/eclipse-exception-breakpoint-icon.png" height="18"/>
+  that enables you to add breakpoints on any exception, before
+  they are raised by an execution. We suggest that you always
+  have a breakpoint on the exception
+  <span class="java-class">NullPointerException</span>.
+  Just like this:
+   <xfr>
+ 	 Notez l'icone 
+ 	 <img src="images/eclipse-exception-breakpoint-icon.png" height="18"/>
+ 	 dans la toolbar de la vue <em>Breakpoints</em>. Cette icone
+ 	 vous permet d'ajouter des breakpoints sur tout type d'exception.
+ 	 Nous vous suggérons d'avoir un breakpoint systématique
+ 	 sur l'exception <span class="java-class">NullPointerException</span>,
+ 	 comme cela:
+  </xfr>
+</p>
+<p>
+  In this case, it is easier to set the breakpoint from
+  the exception stack trace. Look the Eclipse <em>Console</em>,
+  simply click on the exception name, which is a URL-like link that
+  will open up a dialog:
+  <xfr>
+	Dans le cas présent, il est plus simple de positionner 
+	un breakpoint depuis la pile d'appels de l'exception.
+	Regardez la <em>Console</em>, et cliquez sur le nom de
+	l'exception, qui est de type URL. Cela ouvre un
+	dialogue:
+  </xfr>
+</p>
+<img src="images/eclipse-debug-npe-dialog.png" width="100%" />
+<p>
+  Click on <em>"Apply and Close"</em>.
+</p>
+<p>
+  Now, re-launch the execution
+  of the test again under the control of the debugger
+  and something magical will happen, the execution will suspend
+  exactly where the problem is, just like this:
+  <xfr>
+	Maintenant relancez l'exécution du test à nouveau sous debug.
+	L'exécution va se suspendre au bon endroit, comme cela:
+  </xfr>
+</p>
+<img src="images/eclipse-debug-npe-suspended.png" width="100%" />
+<p>
+  Look at the <em>Debug</em> view, it tells you why the debugger
+  has stopped the execution:
+</p>
+<pre>
+     Thread[main] (Suspended (exception NullPointerException))
+</pre>
+<p>
+  This is just fantastic. The execution is suspended right
+  where the problem is and you have full access to the variables,
+  you can navigate up and down the call stack, you have everything
+  you need to understand what is going on.
+</p>
+
+<h4>
+  Fixing the method
+  <span class="java-method">echoGreetings(String[])</span>
+</h4>
+
+<p>
+  Now that we have seen the problem, it is time to fix it.
+  Fortunately, the fix is easy, just add
+  an <em>"if"</em> statement as follows, line 31.
+</p>
+<pre class="prettyprint lang-java">
+28  public static void echoGreetings(String[] names) {
+29    int i = 0;
+30    System.out.print("Greetings");
+31    if (names != null) {
+32      while (i &lt: names.length) {
+33        String s = names[i];
+34        System.out.print(" " + s);
+35        i = i + 1;
+36      }
+37    }
+38    System.out.println("!");
+39  }
+</pre>
+<p>
+  Now, it is your turn to fix the next problems, if any.
+  Once the code is correct, you will see the following
+  output in the Eclipse console when running all tests.
+</p>
+<pre>
+  Test1:
+  Greetings!
+  Test2:
+  Greetings!
+  Test3:
+  Greetings!
+  Test4:
+  Greetings Albert!
+  Test5:
+  Greetings Albert Einstein PhD!
+  PASSED.
+</pre>
+
+<h4> Separating tests </h4>
+
+<p>
+  Let's discuss a bit more about writing tests.
+  Mixing your code and the tests in the same "source folder" and
+  even in the same Java package may make sense when your code is really
+  small and you do not intend to give it to anyone else. This is
+  the case here with the learning steps in this task.
+  <xfr>
+ 	  Discutons un peu plus sur l'écriture des tests.
+ 	  Mixer votre code et le code des tests dans le même dossier
+    pour sources, voir le même package,
+ 	  peut avoir du sens quand votre code est petit en taille
+    et que vous travaillez pour vous, ce qui est le cas ici
+    dans cette tâche.
+  </xfr>
+</p>
+<p>
+  But rapidly, you will want to separate your code and
+  the corresponding tests. By separate, we mean that you want
+  to use a different source folder in your Eclipse project.
+  So let's create a new source folder named <em>"tests"</em>.
+  Right-click on your project in the <em>Package Explorer</em>
+  and select <em>"New" &rarr; "Source Folfer"</em>.
+  <xfr>
+ 	  Mais rapidement, vous allez vouloir séparer votre code
+ 	  des tests, c'est à dire utiliser un source folder différent
+ 	  dans votre projet Eclipse.
+  	Donc créons un nouveau source folder nommé <em>"tests"</em>.
+  	Avec un clic droit sur votre project dans le <em>Package Explorer</em>
+  	sélectionnez <em>"New" &rarr; "Source Folfer"</em>.
+  </xfr>
+</p>
+<p>
+  What about the same package? You can use the same
+  package, even though it is in a different source folder. Great, right?
+  So let's create the package <span class="java-package">greetings</span>.
+  To do so, select that source folder in the <em>Package Explorer</em>,
+  right-click on it and select select <em>"New" &rarr; "Package"</em>.
+  <xfr>
+    Et maintenant, que faire pour le paquet Java? C'est possible d'utiliser
+    le paquet bien que nous soyons dans un dossier pour sources différent.
+  	Nous allons donc créer le	package <span class="java-package">greetings</span>.
+  	Pour cela, sélectionnez le source folder "tests"
+    dans le <em>Package Explorer</em>, puis
+  	faites un clic droit dessus et sélectionnez <em>"New" &rarr; "Package"</em>.
+  </xfr>
+</p>
+<p>
+  Now you can drag and drop your test classes,
+  in the <em>Package Explorer</em> panel, across the source folders
+  <em>"src"</em> and <em>"tests"</em>
+</p>
+<p>
+  Surprised that we have the same package in two source folders?
+  Really? Remember that a source folder is just a folder
+  where the Java compiler will look
+  for sources. Then a package is essentially a hierarchy of folders,
+  in a source folder. So there is really no problem with having
+  two source folders contributing Java classes to the same Java
+  package. 
+  <xfr>
+ 	  Vous êtes surpris d'avoir le même package dans deux source folders?
+ 	  Rappelez-vous qu'un source folder est juste un folder
+ 	  où le compilateur Java va chercher les sources. Un package est
+ 	  essentiellement une hiérarchie de folders, dans un source folder.
+ 	  Donc il n'y a pas de problèmes avec le fait d'avoir deux source folders
+ 	  définissant des classes appartenant au même package.
+  </xfr>
+</p>
+<p>
+  To convince yourself, look at the Eclipse project in the file system,
+  using your favorite file system browser. Look at the
+  folder hierarchies, so that you make sure you understand. You will
+  see that all your classes for that package
+  <span class="java-package">greetings</span> are compiled in a
+  single folder: "bin/greetings/".
+</p>
+
+<h4> Time to test that you succeeded </h4>
+
+<p>
+  To keep with our tradition, we will end this step, with some
+  checks on what you did.
+</p>
+<check
+   silent="onSuccess"
+   blocking="false"
+   lang="java"
+   cwd="workspace/prog.basics"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task2.Check4">
+  <banner>
+    We will run the tests, given above. We will check that they execute normally.
+    This is not a full check, but if this check fails, you definitely still have
+    some bugs. 
+  </banner>
+  <hint>
+    Something is not quite right, what is going on?
+    Ask for help, if you need to.
+    You are getting a black box with a lot of information.
+    Please continue onto the next step,
+    where we discuss our testing framework and give you the
+		information you need to undestand the above information
+		in the black box.
+    You can always come back later to finish fixing the code
+    and pass this test.
+  </hint>
+  <success>
+    Cool, nicely done.
+  </success>
+  <unfold></unfold>
+</check>
+
+
+

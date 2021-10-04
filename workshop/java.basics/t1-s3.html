@@ -1,0 +1,832 @@
+<vars>
+  sprint=java.basics
+  task=t1
+  step=t1-s3
+</vars>
+<p>
+  In the previous step, you wrote some code that you observed under
+  the debugger and it was an opportunity for us to discuss important
+  facets of object-oriented programming. 
+  But how do you know that you did it <em>"right"</em>, meaning how
+  do you know you wrote the code we asked you to write?
+  See, this is important because, most of the time, developers write code
+  for someone else to use it. It is therefore important to be able to
+  design classes following a specification.
+  A specification is what has been agreed between the developer that
+  will use a class and the developer that will write and test that class.
+  <xfr>
+    A l'étape précédente, vous avez écrit du code que vous avez observé sous
+    debugger et cela a été une opportunité de discuté de points importants
+    de la programmation orientée-objet.
+    Mais comment savez vous que que ce code est correct, c'est à
+    dire que ce que vous avez écrit correspond à ce qui vous était demandé?
+    Ceci est un point important parce que, la plupart du temps, les développeurs
+    écrivent du code qui sera utilisé par d'autres développeurs.
+    Il est donc important 
+    d'être capable de concevoir des classes qui suivent une spécification.
+    Une spécification décrit ce qu'une classe est sensé faire, c'est donc
+    un contrat entre le développeur qui va utiliser la classe et le développeur
+    qui va l'écrire et la tester.
+  </xfr>
+</p>
+<p>
+  In our case, we agreed on the class <span class="java-class">Point</span>
+  and the class <span class="java-class">Vector</span>. We wanted
+  the following methods:
+</p>
+<pre class="prettyprint lang-java">
+  class Point {
+    int x,y;
+    void translate(int dx, int dy) { ... }
+    void translate(Vector v) { ... }
+  }
+  class Vector {
+    float rho,theta;
+    int toX() { ... }
+    int toY() { ... }
+    Point toPoint(Point origin) { ... }
+    void translate(Point p) { ... }
+  }
+</pre>
+<p>
+  We also agreed on when to create objects and when to modify objects,
+  an essential part of specifying what methods on classes should do.
+  <xfr>
+  Nous avons également vu quand créer des objets et quand les modifier,
+  un aspect essentiel dans la spécification de ce que les méthodes
+  et les classes doivent faire.
+  </xfr>
+</p>
+<p>
+  To help you know if you did it <em>"right"</em>, we will include
+  various checks all throughout this workshop. But it is important
+  that we discuss what these checks and what they are not.
+  Our checks validate
+  that you followed what was asked of you. But the checks are by
+  no mean complete. 
+  <b>
+    Passing our checks is a good sign, but it is not the goal.
+  </b>.
+  The goal is for you to to master the concepts introduced
+  in our lessons in a way that you can use them efficiently when coding
+  6 weeks or 6 months in the future.
+  <xfr>
+   Pour vous aider à vérifier la correction de ce que vous avez fait, nous
+   allons inclure différents tests tout au long de ce workshop. Nos
+   tests valident que vous avez bien suivi ce qui était demandé, mais
+   ils ne sont pas exhaustifs.
+    <b>
+    Le fait de passer les tests avec succès est bon signe, mais
+    ce n'est pas l'objectif premier.
+    </b>
+    L'objectif est pour vous de maîtriser les concepts introduits
+    dans les leçons de manière à pouvoir les utiliser efficacement en
+    codant dans 6 semaines ou 6 mois. 
+  </xfr>
+</p>
+<p>
+  Remember, the goal of this workshop is to learn skills and know-how,
+  not to pass checks. Unfortunately, year after year, we have too many
+  students that just try to pass the tests and they are missing a lot.
+  We advise you to perceive our checks as just a feedback mechanism,
+  an online help being provided to you, available 24h, 7 days a week.
+  The goal of this step is to help understand how to use these checks
+  as an effective learning tool.
+  <xfr>
+    Rappelez-vous, l'objectif de ce workshop est d'apprendre des concepts et
+    de méthodologies, pas de passer les tests. Voyez les tests comme un moyen
+    d'avoir un feed-back, une aide en ligne disponible 24/24, 7/7.
+    L'objectif de cette étape est de vous aider à comprendre comment
+    utiliser ces tests comme un outil.
+  </xfr>
+</p>
+
+<h3>Running checks</h3>
+
+<p>
+	We have two classes to run checks on, the class
+	<span class="java-class">Point</span> and
+	the class
+	<span class="java-class">Vector</span>.
+	To do so, you will click on the corresponding buttons below.
+	One of two things will happen. Your code will either pass
+	or fail our tests.
+	<xfr>
+		Nous avons deux classes à tester, lala classe
+		<span class="java-class">Point</span> et la classe
+		<span class="java-class">Vector</span>.
+		Pour cela, vous allez cliquer sur les boutons correspondant
+		ci-dessous. Les tests font alors réussir ou échouer.
+	</xfr>
+</p>
+<p>
+	Either way, the page
+	will change, so pay attention.
+	If the test succeeds, you will see some text
+	telling you so and a black box usually appears showing you
+	the output of the execution of our tests.
+	If the test failed, a black box with a <b>red border</b>
+	will show you the output of the execution of the failed test.
+	By reading that output,
+	you will often be able to figure out what the problem is
+	and correct your code. But do not just correct the code,
+  understand why you got it wrong the first time and why
+  did we tested in a such a way that failed your code.
+	<xfr>
+		Quelque soit le résultat de l'exécution des tests,
+		la page va être modifiée. 
+		Si les tests réussissent, vous allez voir du
+		texte qui vous indique que le test a réussi et une boite
+		noire avec la sortie de l'exécution des tests. Si le test échoue,
+		la page va aussi se modifier pour vous montrez la sortie de
+		l'exécution du test dans une boite noire <b>bordée de rouge</b>.
+		En lisant cette sortie, vous serez
+		alors à même de comprendre où se trouve l'erreur et de la
+		corriger. Mais ne corrigez pas seulement vos bugs,
+    comprenez pourquoi vous vous êtes trompé et pourqoi nous
+    avons écrit ce test qui a pris en faute votre code.
+	</xfr>
+</p>
+<p>
+	So let's try it, try to pass the two tests below.
+  Then, keep reading on how to fix any
+	problem. If your code passes our checks, we advise you to introduce
+	bugs in order to see what happens when your code fails our tests.
+	<xfr>
+		Essayez maintenant de passer nos tests, puis continuez à lire
+		cette page pour comprendre comment résoudre les problèmes dans votre
+		code. Si d'aventure votre code passe nos tests, nous vous conseillons
+		fortement d'introduire des bugs pour voir comment cela se passe.
+	</xfr>
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/java.basics"
+   classpath="bin;tests.jar"
+   classname="basics.step1.TestPoint">
+  <banner>
+    It is time to try out our checks on the class
+		<span class="java-class">Point</span>.
+  </banner>
+  <hint>
+    <p>
+			So your class 
+			<span class="java-class">Point</span> does not pass our
+			tests. Locate the class that runs the test, in the
+			output given below in the black box with a red border.
+			You can see it is the class <span class="java-class">TestPoint</span>.
+			You can also see the method in which the error occured.
+			May be the method
+			<span class="java-method">checkPoint</span>.
+			It is time to go back to Eclipse and launch this class under
+			the control of the debugger and to fix the problem.
+			Read the rest of this page to know how.
+      <xfr>
+				Votre class <span class="java-class">Point</span> ne passe
+				pas nos tests. Regardez la sortie du test ci-dessous, dans
+				la boite noire avec une bordure rouge. Localisez la
+				nom de la classe qui exécute les tests.
+				Dans ce cas, c'est la classe
+				<span class="java-class">TestPoint</span>.
+				Retournez maintenant dans Eclipse
+				puis lancez l'exécution de cette classe sous le contrôle du
+				debugger pour pouvoir comprendre le problème et le corriger.
+				Lisez le reste de cette page pour comprendre en détails
+				comment faire.
+      </xfr>
+    </p>
+  </hint>
+  <success>
+    Your class <span class="java-class">Point</span> passed our tests. 
+    Well done. Notice the black box below, without a red border,
+		that provides you with the output of the test. In particular,
+		you see which class was used to test your code, in this case,
+		it is the class
+    <span class="java-class">basics.step1.TestPoint</span>.
+		You may want to introduce a bug in your
+		class <span class="java-class">basics.step1.Point</span> in order
+		to see what it looks like when a test fails. To retry the checks,
+		just click the <b>reset</b> button and then on the button
+		<b>Check</b> that re-appeared.
+		<xfr>
+			Votre classe <span class="java-class">Point</span> a passé nos
+			tests, c'est super. Cependant, nous
+			vous conseillons d'introduire un bug dans la classe
+			<span class="java-class">basics.step1.Point</span> pour voir
+			ce qui se passe lorsque votre code ne passe pas nos tests.
+			Pour repasser nos tests, cliquez sur le bouton <b>reset</b>
+			puis sur le button <b>check</b> qui est ré-appary.
+		</xfr>
+  </success>
+  <unfold name="point_unfold">
+  </unfold>
+</check>
+
+<div name="point_unfold" style="display:none;" >
+</div>
+
+<p>
+	Now, let's check your class
+	<span class="java-class">Vector</span> where there might be
+	real bugs.
+	<xfr>
+		Maintenant il est temps de tester votre classe
+		<span class="java-class">Vector</span> où il y a peut-être
+		des erreurs.
+	</xfr>
+</p>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/java.basics"
+   classpath="bin;tests.jar"
+   classname="basics.step1.TestVector">
+  <banner>
+    Checks on the class <span class="java-class">Vector</span>.
+  </banner>
+  <hint>
+    Your class <span class="java-class">Vector</span> does not pass our tests.
+		Use the output below, in the black box with a red border, to help you locate
+		where the erreur is. Do not hesitate to execute the failing test from Eclipse
+		under the	control of the debugger. To help you this time, we provided
+		you with the correct code for the class
+		<span class="java-class">Vector</span> below:
+    <xfr>
+      Votre class <span class="java-class">Vector</span>  ne passe pas nos tests.
+			Utilisez la sortie du test, dans la boite noire avec une bordure rouge,
+			pour vous savoir où se trouve l'erreur. N'hésitez pas à lancer le test
+			depuis Eclipse sous le contrôle du debugger. Pour vous aidez, nous
+			vous avons donné la solution pour la classe
+			<span class="java-class">Vector</span> ci-dessous.
+      </xfr>
+</p>
+    <pre style="font-family: Arial,Serif;font-size:12ptx;" class="prettyprint lang-java">
+public class Vector {
+  float rho;
+  float theta;
+
+  int toX() {
+    return (int) (rho * Math.cos(theta));
+  }
+  int toY() {
+    return (int) (rho * Math.sin(theta));
+  }
+  Point toPoint(Point origin) {
+    Point p = new Point();
+    p.x = origin.x + (int)(rho * Math.cos(theta));
+    p.y = origin.y + (int)(rho * Math.sin(theta));
+    return p;
+  }
+  void translate(Point p) {
+    p.x = p.x + (int)(rho * Math.cos(theta));
+    p.y = p.y + (int)(rho * Math.sin(theta));
+    return;
+  }
+}
+    </pre>	  
+  </hint>
+  <success>
+    Your class <span class="java-class">Vector</span> passed our tests.
+    Well done. 
+  </success>
+  <unfold name="vector_unfold">
+  </unfold>
+</check>
+
+<h3>Debugging Setup</h3>
+
+<p>
+  Sometimes, your code will fail our checks and you will be able to tell right
+  away why and therefore you will be able to fix your core immediately.
+  Sometimes, however, the problems will not be obvious and will require you
+  to debug. We will explain you now how to do this efficiently.
+  <xfr>
+     Parfois, nos tests vont échouer et vous allez être capable de
+     comprendre pourquoi et de corriger le problème. Dans d'autres cas,
+     le problème sera complexe à comprendre et vous devrez passer en mode
+     debug pour le traiter. Nous allons vous expliquer comment faire 
+     cela efficacement.
+  </xfr>
+</p>
+<p>
+  For each sprint of this workshop, you have an associated
+  Eclipse project. In that project, you will find a jar
+  file named <em>"tests.jar"</em>. Unsurprisingly, that
+  Java archive contains the automated tests for that
+  sprint. The archive must be added to the build path of the
+	project and must be visible under the folder
+	<em>"Referenced	Libraries"</em>. If it is not, add the
+	archive to the build path with a right-click on it.
+	If you feel lost with Eclipse, remember that you have
+	been provided with a 
+  <a href="/eclipse/eclipse.htm">Eclipse guided tour</a>.
+  <xfr>
+    Pour chaque sprint, vous avez un projet Eclipse associé.
+    Ce projet contient une archive Java avec nos tests,
+    qui s'appelle <em>"tests.jar"</em>. Cette archive doit
+		être incluse dans le build path de votre projet. Elle
+		doit être visible dans le dossier <em>"Referenced Libraries"</em>.
+		Si ce n'est pas le cas, vous devez ajouter l'archive
+		dans la build path, vous pouvez le faire par une click
+		droit sur l'archive. Si vous vous sentez perdu par
+		rapport à Eclipse, nous vous rappelons que vous avez
+		à disposition un
+		<a href="/eclipse/eclipse.htm">tour guidé d'Eclipse</a>. 
+  </xfr>
+</p>
+<p>
+  The Java archive contains both Java
+  classes and the corresponding sources. This means that
+  you will be able to read the source code of the tests.
+  As we said, Agile Learning is all about transparency.
+  The tests are not there to trap you in anyway, they
+  are there to help you assess the quality of your work
+  and therefore assess your progress in learning your trade.
+  <xfr>
+    Notre archive de tests contient nos classes de tests,
+    et leur source. Pas de secret, vous pourrez lire nos
+    tests pour mieux comprendre pourquoi votre code ne passe
+    pas tel ou tel test. Ces tests ne sont pas là pour vous
+    pieger, ils sont là pour vous aider à évaluer la qualité
+    de votre code et ainsi vous faire progresser dans l'apprentissage
+    de votre métier.
+  </xfr>
+</p>
+
+<h3>Understanding Failures</h3>
+
+<p>
+  A check is run whenever you press a "check" button in
+  your browser. For your information, we use a local
+  web server, running on your machine.
+  That web server is the one running the tests,
+  spawning a Java Platform to run each test.
+  If the test fails, the web page of the task
+  will show you the output in the black box with a
+  red edge.
+  <xfr>
+    Un test est lancé chaque fois que vous appuyez sur
+    un bouton "check" dans votre browser. Pour votre information,
+    nous utilisons un serveur Web qui tourne localement sur votre
+    machine. 
+    Ce serveur est celui qui lance les tests et collectent
+    les résultat. Si un test échoue, la sortie du test
+    est reportée dans la boite noire avec une bordure rouge
+    de la page web pour vous permettre
+    de la lire et de comprendre pourquoi le test a échoué.
+  </xfr>
+</p>
+<p>
+  We have done our best to have meaningfull messages
+  so that the reason for the failure is easy to understand
+  and that it guides you towards the fix in your code.
+  Unfortunately, we cannot always have anticipated
+  all possible errors and sometimes it will be
+  just about a failed assertion. It is important
+  that you learn how to understand the failed
+  assertion so that you get along with fixing your code.
+  <xfr>
+    Nous avons fait de notre mieux pour vous donner des
+    messages d'échec qui soient clairs et qui indiquent
+    le problème à corriger dans votre code.
+    Malheureusement, il est impossible pour nous d'anticiper
+    tous les cas de figure possible et parfois la
+    sortie d'un test en échec peut ne pas être si claire
+    que cela à la première lecture.
+  </xfr>
+</p>
+<p>
+  When a test fails, it does so via a Java exception being
+  thrown. Of course, we show you the stack trace for the
+  exception. Remember, we saw what a stack trace is before.
+  It tells you exactly where the exception what thrown.
+  Not only in terms of where in the source (the line
+  number in a class source) but more importantly
+  in terms of the call stack that led the execution
+  there.
+  <xfr>
+    Quand un de nos tests échoue, il lève une exception Java
+    et nous vous montrons la pile des appels correspondante.
+    Vous vous rapppelez, nous avons déjà vu le concept de
+    pile d'appels. Une pile d'appels vous dit où l'exception
+    a été levée, mais aussi la chaîne des appels qui ont amené
+    le flot d'exécution a cette endroit précis.
+  </xfr>
+</p>
+<textarea class="terminal" rows="11">
+Test: basics.step1.TestPoint
+Checking the class Point
+Failed assert.
+cursus.tests.TestUtils$FailedException: Failed assert.
+	at cursus.tests.TestUtils.ensure(TestUtils.java:149)
+	at basics.step1.TestPoint.checkPoint(TestPoint.java:121)
+	at basics.step1.TestPoint.run(TestPoint.java:32)
+	at cursus.tests.TestHarness.run(TestHarness.java:213)
+	at basics.step1.TestPoint.main(TestPoint.java:17)
+</textarea>
+<p>
+  So look at that stack trace. As you can see,
+  the top calls are within our test framework.
+  These methods may be hard for you to understand,
+  at first, especially if you are a beginner in Java.
+  Don't worry, just move up the stack trace, until
+  you see a code that you understand.
+  <xfr>
+    Regarder la pile d'appels. Bien sûr, les derniers
+    appels sont généralement au sein de notre code de tests.
+    Certaines de ces méthodes seront difficiles à comprendre
+    pour vous, surtout si vous êtes débutant en Java.
+    Ne vous inquiétez pas, remonter la pile d'appels,
+    jusqu'à du code que vous comprendrez. 
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+121     TestUtils.ensure(dx==p.x);
+</pre>
+<p>
+  The code is pretty much self-explanatory.
+  It is about ensuring a condition, in this case
+  that the value in the variable
+  <span class="java-lvar">dx</span> is equal
+  to the value in the object field
+  <span class="java-lvar">p.x</span>.
+  The test failed because the condition is
+  not true. Time to debug when that happens.
+  <xfr>
+    Le code est plutôt simple à comprendre.
+    On voit qu'il est question de s'assurer
+    que la condition exprimée est vrai.
+    La condition est que la valeur de la variable
+    <span class="java-lvar">dx</span> est la
+    même que la valeur du champs 
+    <span class="java-lvar">p.x</span>.
+    Il est temps de lancer le debugger quand
+    cela arrive.
+</p>
+
+<h3>Debugging a failing test</h3>
+
+<p>
+  Most of the times, you will need to debug your code, being driven by our
+  tests. If there is a bug, it is very unlikely that the bug is in our tests.
+  Always possible, but very unlikely since these tests have been used years
+  and years by hundreds of students.   Usually, the bug is in your code
+  and you need to debug our tests driving your code.
+  Do not worry, nothing is easier, all our tests are
+  standalong Java program that you can launch yourself.
+  <xfr>
+    La plupart du temps, vous allez devoir debugger votre code,
+    lorsqu'il est utilisé par nos tests. Si il y a un bug,
+    il est très peu probable que le bug soit dans nos tests.
+    Il est plus probablement dans votre code, vous voulez
+    donc debugger.
+    Pas de panique, nos tests sont des programmes
+    Java que vous pouvez lancer depuis Eclipse, sous debugger.
+  </xfr>
+</p>
+<p>
+  Let's look at an example, the class 
+  <span class="java-class">TestPoint</span>.
+  You can easily look at it, just use the Ctrl-Shift-T
+  shortcut, enter the name of the test class (TestPoint)
+  and you will be able to read the source code of that
+  test.
+  <xfr>
+    Regardons un exemple, la classe
+    <span class="java-class">TestPoint</span> que
+    vous pouvez facilement voir en utilisant Ctrl-Shift-T.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class TestPoint implements ITest {
+
+  public static void main(String args[]) {
+    ITest test = new TestPoint();
+    TestHarness.run(test);
+  }
+  
+  public void run(PrintStream ps) throws Exception {
+    ...
+  }
+}
+</pre>
+<p>
+  As you can see, the class has a method
+  <span class="java-method">main</span>
+  so it can be run as a standalone program. Therefore, you
+  create a debug configuration in Eclipse to debug the
+  execution of that test. Usually, try to focus on your
+  code, setting breakpoints in methods that you wrote.
+  Only try to understand the code of our tests if you
+  can't find your bug by focusing on your code and your code
+  alone. To read and understand the test that fails, just put
+  a breakpoint in the method
+  <span class="java-method">run</span> and single step
+  from there.
+  <xfr>
+    Comme vous pouvez le voir, cette classe a une méthode main,
+    donc vous pouvez la lancer depuis Eclipse comme une application
+    Java. Donc vous pouvez créer une configuration de debug sous
+    Eclipse qui va vous permettre de debugger. Essayez de focaliser
+    votre attention sur votre code lors des sessions de debug.
+    Si cela ne suffit pas, alors vous allez devoir lire et comprendre
+    le code du test qui ne passe pas. Pour cela, vous pouvez commencer
+    par mettre un point d'arrêt sur la méthode 
+    <span class="java-method">run</span> et avancer pas-à-pas sous
+    debugger. 
+  </xfr>
+</p>
+<p>
+  Remember that you can right-click on the method
+  <span class="java-method">main</span> of any class
+  and ask to debug it as a Java application. This will
+  automatically create a debug configuration and launch
+  a debug session.
+  <xfr>
+    Rappelez vous que pour lancer une exécution, vous
+    pouvez tout simplement faire un clique droit sur
+    la méthode <span class="java-method">main</span>
+    et demander le debug comme une application Java.
+    Cela va lancer l'exécution sous le contrôle du debugger.
+  </xfr>
+</p>
+
+<h3>Helping you read our tests</h3>
+
+<p>
+  Our tests usually explore two things:
+  <xfr>
+    Nos tests explorent deux facettes de votre code: la structure du code
+    et la correction de votre code.
+  </xfr>
+</p>
+<ol>
+  <li>The structure of your code</li>
+  <li>The correctness of your code</li>
+</ol>
+
+<h4>The structure of your code</h4>
+
+<p>
+  Our checks usually start by checking the structure of your code.
+  Usually, we asked you to create classes, with certain fields
+  and methods. So our checks verify that your code has the required
+  structure in terms of classes, methods, and fields.
+  Look at the code below, which will be a bit hard for you to read,
+  so just get a sense of what it does:
+  <xfr>
+     Nos tests commencent habituellement par vérifier la structure
+     de votre code. Normalement, nous vous avons demandé de créer des
+     classes avec certains champs et méthodes. Donc nos tests vérifient 
+     que votre code a la bonne structure en termes de classes, méthodes
+     et champs. regardez le code ci-après, qui va être un peu dur à lire
+     et à comprendre:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+52  static void checkPointClass(PrintStream ps) throws Exception {
+53    Class cls = null;
+54    Field f;
+55    Method m;
+56    Class[] parameterTypes;
+57
+58    ps.println("Checking the class Point");
+59
+60    int mods = Modifier.PUBLIC;
+61    int nmods = Modifier.PRIVATE | Modifier.STATIC;
+62
+63    cls = TestUtils.checkClass("basics.step1.Point");
+64    f = TestUtils.checkField(cls, "x", Integer.TYPE, mods, nmods);
+65    f = TestUtils.checkField(cls, "y", Integer.TYPE, mods, nmods);
+66
+67    parameterTypes = new Class[2];
+68    parameterTypes[0] = Integer.TYPE;
+69    parameterTypes[1] = Integer.TYPE;
+70    m = TestUtils.checkMethod(cls, "translate", parameterTypes, Void.TYPE, mods, nmods);
+71
+72    parameterTypes = new Class[1];
+73    parameterTypes[0] = Vector.class;
+74    m = TestUtils.checkMethod(cls, "translate", parameterTypes, Void.TYPE, mods, nmods);
+75  }
+</pre>
+<p>
+  So let's look at what that code is doing. It is checking the class
+  <span class="java-class">basics,step1.Point</span>. First, it checks that it
+  exists, line 63:
+  <xfr>
+    Regardons ce que code fait, il vérifie la classe
+    <span class="java-class">basics,step1.Point</span>. En premier,
+    il vérifie que la classe existe, ligne 63:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+63    cls = TestUtils.checkClass("basics.step1.Point");
+</pre>
+<p>
+  Then, it checks that the class has the two required fields, named
+  "x" and "y", and types as integers. It also checks that these fields
+  are qualifies as <span class="java-keyword">public</span>
+  and not as <span class="java-keyword">private</span> or
+  <span class="java-keyword">static</span>.
+  <xfr>
+    Ensuite, il vérifie que la classe a les deux champs "x" et "y"
+    et qu'ils sont typés comme des entiers. Il vérifie aussi que
+    ces champs sont qualifiés de <span class="java-keyword">public</span>
+    et non <span class="java-keyword">private</span> ou
+    <span class="java-keyword">static</span>.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+60    int mods = Modifier.PUBLIC;
+61    int nmods = Modifier.PRIVATE | Modifier.STATIC;
+62
+64    f = TestUtils.checkField(cls, "x", Integer.TYPE, mods, nmods);
+65    f = TestUtils.checkField(cls, "y", Integer.TYPE, mods, nmods);
+</pre>
+<p>
+  Finally, the code checks that the class
+  <span class="java-class">Point</span> has the two methods required.
+  The two methods are named "translate".
+  One takes two arguments, both typed as integers. The other takes only one
+  argument, typed as a Vector. Both methods are also checked to be qualified
+  as <span class="java-keyword">public</span>
+  and not as <span class="java-keyword">private</span> or
+  <span class="java-keyword">static</span>.
+  <xfr>
+    Finalement, ce code vérifie que la classe
+    <span class="java-class">Point</span> a les deux méthodes demandées.
+    Les deux méthodes sont nommées "tranlsate". L'une a deux arguments,
+    typé comme <span class="java-keyword">int</span>. L'autre ne prends
+    qu'un seul argument, typé par la class
+    <span class="java-class">Vector</span>.
+    Le code vérifie aussi que les deux méthodes 
+    sont qualifiés de <span class="java-keyword">public</span>
+    et non <span class="java-keyword">private</span> ou
+    <span class="java-keyword">static</span>.
+  </xfr>
+</p>
+</pre>
+<pre class="prettyprint lang-java">
+60    int mods = Modifier.PUBLIC;
+61    int nmods = Modifier.PRIVATE | Modifier.STATIC;
+      ...
+67    parameterTypes = new Class[2];
+68    parameterTypes[0] = Integer.TYPE;
+69    parameterTypes[1] = Integer.TYPE;
+70    m = TestUtils.checkMethod(cls, "translate", parameterTypes, Void.TYPE, mods, nmods);
+71
+72    parameterTypes = new Class[1];
+73    parameterTypes[0] = Vector.class;
+74    m = TestUtils.checkMethod(cls, "translate", parameterTypes, Void.TYPE, mods, nmods);
+</pre>
+
+<h4>The correctness of your code</h4>
+
+<p>
+  Once our tests have determined that your code looks good
+  (it has the correct structure), we will move on to testing
+  if it behaves correctly. Let's look at an example:
+</p>
+<pre class="prettyprint lang-java">
+ 78  static void checkPoint(PrintStream ps) throws Exception {
+ 79    Random rand = new Random();
+ 80    int dx, dy;
+ 81    Point p;
+ 82    p = new Point();
+ 83    dx = 12;
+ 84    dy = 14;
+ 85    p.translate(dx, dy);
+ 86    TestUtils.ensure(dx == p.x);
+ 87    TestUtils.ensure(dy == p.y);
+ 88
+ 89    Vector v;
+ 90    float rho = 10F;
+ 91    float theta = (float) (Math.PI / 8.0);
+ 92    v = new Vector();
+ 93    v.rho = rho;
+ 94    v.theta = theta;
+ 95
+ 96    p = new Point();
+ 97    p.x = 12;
+ 98    p.y = 14;
+ 99
+100    dx = p.x + (int) (v.rho * Math.cos(v.theta));
+101    dy = p.y + (int) (v.rho * Math.sin(v.theta));
+102
+103    p.translate(v);
+104
+105    TestUtils.ensure(rho == v.rho);
+106    TestUtils.ensure(theta == v.theta);
+107
+108    TestUtils.ensure(dx == p.x);
+109    TestUtils.ensure(dy == p.y);
+110  }
+</pre>
+<p>
+  The test code is much easier to read and understand. It is about
+  using your code, checking that it does what it is supposed to do.
+  For instance, the first few lines are checking that the method
+  that is supposed to translate a point using two integer values
+  actually translates the point:
+  <xfr>
+   Le code du test est plus facile à lire et à comprendre. 
+   Il vérifie que votre code fait ce qu'il doit faire. Par exemple,
+   les premières lignes vérifient que la méthode
+   supposée translater un point en utilisant deux valeurs entières 
+   translate réellement le point:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+ 80    int dx, dy;
+ 81    Point p;
+ 82    p = new Point();
+ 83    dx = 12;
+ 84    dy = 14;
+ 85    p.translate(dx, dy);
+ 86    TestUtils.ensure(dx == p.x);
+ 87    TestUtils.ensure(dy == p.y);
+</pre>
+<p>
+  The rest of the code checks the other method to translate a
+  point, using a vector.
+</p>
+
+<h3>Thrown Exceptions</h3>
+
+<p>
+  There are many usual suspects, when it comes to finding bugs.
+  We cannot cover them all here and now, but we can cover an
+  important one: when your code throws an unexpected exception.
+  Let's look at an example.
+  <xfr>
+   Il y a toujours beaucoup d'erreurs possibles dans un code.
+   Nous ne pouvons pas toutes les couvrir, mais nous pouvons
+   en couvrir une majeure: lorsque votre code lève une exception
+   inattendue. Regardons un exemple.
+  </xfr>
+</p>
+<textarea class="terminal" rows="11">
+Test: basics.step1.UsualSuspectNPE
+Our tests got an unexpected exception:
+This probably means that we didn't anticipate the error,
+which means that the output might not contain an easy-to-understand message.
+We apologize for this, but at least, here is the stack trace:
+java.lang.NullPointerException
+	at basics.step1.Point.translate(Point.java:15)
+	at basics.step1.UsualSuspectNPE.checkPoint(UsualSuspectNPE.java:38)
+	at basics.step1.UsualSuspectNPE.run(UsualSuspectNPE.java:30)
+	at cursus.tests.TestHarness.run(TestHarness.java:213)
+	at basics.step1.UsualSuspectNPE.main(UsualSuspectNPE.java:25)
+Please, ask for help if you need to.
+</textarea>
+<p>
+  This example shows a possible output when your code throws a
+  null-pointer exception, the exception that is thrown
+  when using a
+  <span class="java-keyword">null</span> reference.
+  We already discussed what a
+  <span class="java-keyword">null</span> reference is,
+  it is a reference that refers to no object at all.
+  So if a reference variable contains
+  <span class="java-keyword">null</span>, that
+  variable references no object. This means
+  that it cannot be used to access a field
+  or invoke a method.
+  <xfr>
+    Cet exemple montre la sortie d'un test où le code
+    a levé une exception pour cause de pointeur null.
+    Nous avons déjà discuté de ce qu'est une référence
+    <span class="java-keyword">null</span> ,
+    c'est une référence qui ne désigne aucun objet.
+    Donc si une variable de type référence contient
+    <span class="java-keyword">null</span>, cette variable
+    ne désigne aucun objet. Elle ne peut donc pas être utilisée pour
+    accéder à un champ ou pour invoquer une méthode.
+  </xfr>
+</p>
+<p>
+<p>
+  The important part of it is the stack trace that shows you
+  where the error occured. This is a start and sometimes it is enough.
+  But really, the call stack does not tell you why the exception occured,
+  it only tells you where it happened. But fortunately, you can debug
+  our tests and set up a breakpoint at the line where the exception
+  occured or you can setup a breakpoint for the exception
+  <span class="java-keyword">NullPointerException</span>. If you
+  do not remember how to setup such a breakpoint, make sure that
+  you ask and that you remember moving forward.
+  <xfr>
+    La partie importante est la pile des appels qui vous montre où
+    l'exception a été levé. C'est des fois suffisant pour corriger
+    le bug, mais il faut aussi parfois prendre le test sous debugger.
+    Vous pouvez mettre un point d'arrêt à la ligne où l'exception
+    est levée ou bien mettre un point d'arrêt sur l'exception
+    <span class="java-keyword">NullPointerException</span>.
+    Si vous ne vous rappelez comment faire, assurez vous de demander
+    et de vous en souvenir à l'avenir.
+  </xfr>
+</p>

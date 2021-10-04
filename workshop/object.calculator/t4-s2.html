@@ -1,0 +1,375 @@
+<vars>
+  sprint=object.calculator
+  task=t4
+	step=t4-s2
+</vars>
+
+<p>
+	Let's discuss why types for expressions are useful.
+	Try out these two following expressions,
+	we are guessing that you will get at least one wrong:
+	<xfr>
+		Discutons pourquoi avoir des types est utile. Essayez les deux expressions
+		suivantes, il est probable qu'au moins une des deux ne s'évaluera pas
+		correctement.
+	</xfr>
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  > * 2 3.4;
+  = 6;
+  > * 3.4 2;
+  = 6.8;
+</textarea>
+<p>
+	If one evaluation is wrong, like the first one above,
+	it is because the multiplication is applied to
+	integer values, as opposed to a multiplication applied to float values.
+	So before we are fixing the problem, we ask again that you make sure
+	that you understand
+	precisely why the expression "* 2 3.4" or "* 3.4 2" is not evaluated
+	properly.
+	<xfr>
+		Si une des deux expressions n'est pas évaluée correctement,
+		comme la première ci-dessus, c'est parce que la multiplication
+		est appliquée à des valeurs entières et non réelles.
+		Avant de corriger le problème, il est important que vous
+		compreniez vraiment pourquoi l'évaluation n'est pas correcte.
+	</xfr>
+</p>
+<p>
+	OK, so how do we fix this? The solution starts with typing expressions
+	correctly. By typing, we do not mean typing on the keyboard, we mean
+	computing the types of expressions, as in determining if the evaluation
+	of an expression at runtime will produce a boolean, a float, or integer
+	value.
+	We already discussed types when we discussed the different
+  values supported by our calculator: integer, float, and boolean
+  values. So we know that values have a type 
+  (<span class="java-keyword">int</span>,
+  <span class="java-keyword">float</span>,
+  <span class="java-keyword">bool</span>).
+  Therefore, we can also say that expressions have a type as well
+  since they are combining typed values.
+	<xfr>
+		Bon, alors comment corrige-t-on le problème? La solution commence par
+		calculer le type des expressions.
+		Nous avons déjà discuté les différentes valeurs comprises par notre calculateur:
+    des valeurs entières, réelles, et booléennes. Donc nous savons que
+    des valeurs ont un type (int, float, bool). En conséquence,
+		on peut dire que les expressions ont aussi un type
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class Expression {
+    Type type;
+    Expression(Type type) {
+      this.type = type;
+    }
+  }
+</pre>
+<p>
+	But how do we know the type of an expression? With unary operations,
+	the type of the value produced by the evaluation of the operation
+	is always the same as the type of the value the operation operated on.
+	Why? Because we only have two unary operations: '-' and '!'. The
+	operation '-' inverses the sign of a arithmetic value. The operation
+	'!' negates a boolean value.
+	<xfr>
+		Mais comment savons-nous le type d'une expression?
+		Pour les opérations unaires, le type est le même que celui de
+		l'opérande. Pourquoi? Parce que nous avons seulement les
+		opérateurs unaires '-' et '!'. 
+	</xfr>
+</p>
+<p>	
+	For binary expressions, it depends on the types of both operands.
+	We have the following rules, given as a matrix:
+  <xfr>
+		Pour les opérations binaires, le type de l'expression
+		dépends des types des deux opérandes. Les règles de
+    composition des types sont résumées dans la matrice ci-dessous:
+  </xfr>
+</p>
+<b>
+<pre>
+          | int    float   bool
+    ---------------------------
+    int   |  int    float   xxx
+    float | float  float    xxx
+    bool  |  xxx    xxx    bool
+</pre>
+</b>
+<p>
+  You can see that any operator with at least one float value
+  must be computed with float values. This means that "+ 2 3.4"
+  must be computed as "(2.0 + 3.4)", using float values.
+  But "* 2 3" must be computed using integer values as "(2 * 3)".
+  You can see that a boolean value is only
+  compatible with a boolean value. So you cannot write
+  the expression: " * 2 true ".
+  <xfr>
+    Vous pouvez voir que les opérateurs avec au moins une valeur
+    réelle doivent être calculées dans le domaine des réels.
+    Cela veut dire que "+ 2 3.4" doit être calculé comme
+    "(2.0 + 3.4)". Mais l'expression "* 2 3" doit être calculée
+    dans le domaine des entiers. En ce qui concerne les valeurs
+    booléennes, elles ne sont compatible avec aucun autre type
+    de valeurs. Vous ne devez pas écrire "* 2 true".
+  </xfr>
+</p>
+<p>
+  We call this process <em>"lifting"</em>, that is,
+	the process that determines
+  the type of an binary operator from "lifting" the types
+  of the left and right expressions. This process happens
+  as the abstract syntax tree is built. In other words,
+  expressions are typed as they are constructed.
+  <xfr>
+    Nous appelons "lifting" le processus qui détermine le type
+    d'un opérateur binaire en "élevant" les types des expressions
+    gauche et droite. Ce processus survient lors de la construction
+    de l'arbre syntaxique abstrait. En d'autres mots, les expressions
+    sont typées lorsqu'elles sont construites.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class TypeSystem {
+  public static Type lift(Type t1, Type t2) throws CastException;
+}
+public class Expression {
+  Expression(Type type);
+  Type type();
+}
+public abstract class BinaryOp extends Expression {
+  public BinaryOp(String op, Expression l, Expression r) throws CastException {
+    super(TypeSystem.lift(l.type(),r.type());
+    ...
+  }
+}
+</pre>
+<p>
+  This method
+  <span class="java-method">lift</span> implements the lifting process,
+  based on the matrix given above.
+  The matrix gives you the lift type for all binary operations,
+  given the types of the left and right expressions. Notice that
+	some combinations are not supported and should result in
+	a cast exception being thrown when constructing the abstract
+	syntax tree.
+  <xfr>
+    La première méthode
+    <span class="java-method">lift</span> implémente la matrice
+    donnée ci-dessus. Elle calcule le type d'une expression binaire
+    étant donnée les types des expressions gauche et droite.
+		Notez que certaines combinaisons ne sont pas possibles et
+		doivent être refusées lors de la construction de l'arbre
+		syntaxique abstrait en levant une exception de "projection" (cast).
+  </xfr>
+</p>
+<p>
+  Through lifting, you must make sure that all expressions are typed and
+	evaluated correctly. So for instance,
+  the expression "* 2 3.4" must be correctly typed as a float and
+	evaluated as a float multiplication ("(2.0 * 3.4)").
+		Once you have the
+  lift type, it is easy to pass it to the constructor of the class
+  <span class="java-class">Expression</span>.
+  <xfr>
+    Au travers du processus de lifting, vous devrez vous assurer que
+		les expressions sont correctement typées et évaluées.
+    Ainsi, l'expression "* 2 3.4" devra être correctement typée
+		et évaluée comme une expression calculant une valeur réelle (2.0*3.4).
+    Une fois que le type est obtenu, il est facile de le passer
+    au constructeur de la classe
+    <span class="java-class">Expression</span>.
+  </xfr>
+</p>
+<p>
+	Correctly typing expressions is necessary but not enough for a correct
+	evaluation. You also have to make sure that
+	the evaluation of an expression is done according to its type. With our example,
+	"* 2 3.4", the evaluation needs to cast the integer value "2" to the
+	float value "2.0". We propose to do this by modifying the
+	abstract syntax tree (AST), as we are building it, 
+	introducing a casting node. This is where the following method
+  comes in:
+  <xfr>
+		Typer les expressions correctement n'est pas suffisant, il faut
+		s'assurer que leur évaluation est faite en fonction de leur type.
+		Avec notre exemple, cela veut dire que la valeur entière "2" doit
+		être transformée en une valeur réelle "2.0". Nous proposons de le
+		faire par transformation de l'arbre syntaxique abstrait, en introduisant
+		une projection vers un type donné. Regardez dans le code la
+		méthode suivante que <em>vous devez lire et comprendre</em>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class TypeSystem {
+  public static Expression cast(Type type, Expression exp) throws CastException;
+}
+</pre>
+<p>
+	Remember, this method will be called when building the AST. It purposes
+	is to introduce a new node in the tree, if necessary, that will cast,
+	at evaluation time, the value produced by the evalution of the given
+	expression to a value of the given type.
+	<b>
+		This transformation of the abstract syntax tree
+		is important to understand</b>.
+	To illustrate this transformation,
+	let's continue
+  to discuss our binary operation example.
+  <xfr>
+    La méthode
+    <span class="java-method">cast</span>
+    retourne une expression qui projètera, au moment de l'évaluation,
+    l'expression passée en paramêtre vers le type passé en paramêtre.
+  </xfr>
+</p>
+<p>
+  When constructing a binary operation, we need to follow two steps:
+</p>
+<ol>
+  <li>
+		We first compute the resulting type of the binary operation,
+		by lifting the types of both the left and right expression.
+	</li>
+	<li>
+		We then cast the left and right expressions to that type,
+		only if necessary.
+	</li>
+</ol>
+<p>
+  This process is illustrated
+  in the figure below, the tree on the left-hand side corresponds
+  to the expression as it produced by the parser,
+  while the tree on the right-hand side corresponds
+  to the self-modified expression with the added cast
+  operators.
+  <xfr>
+    Lorsque nous
+    construisons une opération binaire, nous allons
+    calculer le type du résultat de l'opération binaire
+    en "levant" les types des expressions gauche et droite.
+    Puis, nous allons projeter les expressions gauche
+    et droite sur ce type, seulement si nécessaire.
+    Ce processus est illustré sur la figure ci-dessous,
+    l'arbre sur la gauche corresponds à l'expression telle
+    qu'elle a été parsée, alors que l'arbre sur la
+    droite corresponds à l'expression auto-modifiée par
+    le processus de levage des types.
+  </xfr>
+</p>
+<img src="images/typed-expression-tree.svg" width="60%">
+<p>
+  This means the evaluation will evaluate the tree on the
+  right-hand side, not the tree on the left-hand side.
+  That way, the evaluation of the binary operation (multiplication)
+  will be using two float values.
+  As a result, in our example, the addition will also
+  be computed on float values.
+	<b>Make sure you understand this</b>.
+  <xfr>
+    Cela veut dire que l'évaluation se fera sur l'arbre de gauche
+    et non sur celui de droite. De cette façon, le calcul arithmétique
+    se fera sur deux valeurs 
+    Cela est une "magique" important. Lorsque nous
+    construisons une opération binaire, nous allons
+    calculer le type du résultat de l'opération binaire
+    en "levant" les types des expressions gauche et droite.
+    Puis, nous allons projeter les expressions gauche
+    et droite sur ce type. Ainsi, l'operation binaire
+    s'évaluera sur deux valeurs du bon type, les valeurs
+    résultant de l'évaluation des expressions gauche et
+    droite. Ce processus est illustré sur la figure ci-dessous,
+    l'arbre sur la gauche corresponds à l'expression telle
+    qu'elle a été tapée et parsée, alors que l'arbre sur la
+    droite corresponds à l'expression auto-modifiée par
+    le processus de levage des types.
+  </xfr>
+</p>
+<p>
+	Crystal clear? Great, because none of that is in place,
+	so go ahead, <b>it is your job
+		to add the proper support</b>. Do not forget to do the necessary
+	changes for unary operators as well.
+	<xfr>
+		C'est clair? Super parce que <b>c'est à vous maintenant</b>
+		puisque le code qui vous a été donné ne s'occupe ni du typage ni
+		d'insérer des noeuds de conversion... N'oubliez pas de gérer
+		aussi les types pour les opérateurs unaires correctement.
+	</xfr>
+</p>
+<p>
+  Once this is done, you should be able to mix integer and
+  float values in any arithmetic operation. Do not forget
+  to type unary operations as well. In the end, 
+  the following expressions should evaluate correctly
+  or raise the correct cast exception
+  (<span class="java-class">CastException</span>).
+</p>
+<textarea class="terminal" rows="9" width="60%" >
+  > + 2 3.4;
+  = 5.4;
+  > + 3.4 2;
+  = 5.4;
+  > + 2 -(3.4);
+  > * 2 true; -> CastException (int)(bool)
+  > * 3.2 true; -> CastException (float)(bool)
+  > ! 3.2 ; -> CastException (bool)(float)
+</textarea>
+<p>
+  Indeed, you should be able
+  to mix integer and float values freely. You should also get cast
+  exceptions when mixing boolean values with any other type of values.
+  Finally, unary operators ('!' and '-') must also be typed correctly.
+</p>
+<p>
+  <b>We expect you to test your code</b>
+  before attempting to run our tests. You can obviously start
+  with using the calculator, typing various expressions.
+  After all, it is fun to use its own software.
+  But remember, the <b>goal is to understand</b> the object-oriented
+  programming techniques used, <em>not to just get it working</em>.
+  By the same time, you should also better understand what types are
+  about in programming languages such as Java and C.
+  <xfr>
+    <b>Nous vous demandons de tester votre code</b>,
+    avant même d'essayer de passer nos tests. Vous pouvez bien sûr
+    utiliser le calculator, après tout,
+    c'est toujours amusant d'utiliser son propre calculator.
+    Mais n'oubliez pas que <b>le but est de comprendre</b> les techniques
+    de programmation orientée-objet utilisées, <em>le but n'est pas
+      de juste avoir un truc qui marche</em>. En conséquence, vous
+    devriez maintenant mieux comprendre à quoi servent les types
+    dans les langages de programmation tels que Java et C.
+  </xfr>
+</p>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.calculator"
+   classpath="bin;tests.jar;parser.jar;../object.collections/edu-polytech-ricm-oop-collections.jar"
+   classname="calculator.TestCalcV4_02"> 
+  <banner>
+    Let's check your work.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check4_02_unfold">
+  </unfold>
+</check>
+
+<h3>That's all folks</h3>
+
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint calculator, Task4, Step2 completed"
+  $ git push --all
+</textarea>

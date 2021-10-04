@@ -1,0 +1,11 @@
+digraph click_detector {
+	OUTSIDE -> INSIDE [label="mouseEntered"];
+	INSIDE -> OUTSIDE [label="mouseExited"];
+	INSIDE -> KEY_PRESSED [label="keyPressed"];
+	INSIDE -> KEY_RELEASED [label="keyReleased"];
+	KEY_RELEASED -> KEY_PRESSED [label="keyPressed"];
+	KEY_RELEASED -> OUTSIDE [label="mouseExited"];
+	KEY_PRESSED -> KEY_PRESSED [label="keyPressed"];
+	KEY_PRESSED -> KEY_RELEASED [label="keyReleased"];
+	KEY_PRESSED -> OUTSIDE [label="mouseExited"];
+}

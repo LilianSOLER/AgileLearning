@@ -1,0 +1,123 @@
+<vars>
+  sprint=object.calculator
+  task=t4
+</vars>
+
+<p>
+  This task is about using integrating important features
+	in our calculator in several steps.
+	But before we do these steps, we will discuss using
+	a different parser.
+  <xfr>
+    Cette tâche va ajouter des fonctionalités importantes
+		à notre calculator en plusieurs étapes. Mais avant
+		de faire ces étapes, nous allons discuter l'usage
+		d'un nouveau parser.
+  </xfr>
+</p>
+
+<h3>Using a Different Parser</h3>
+
+<p>
+	For your information, we will be using a different parser
+	from now on. The syntax is becoming too complex to parse
+	to continue writing
+  our parser manually. We have used a parser generator,
+  called <em>JavaCC</em> to write a decent grammar for which
+  the parser will be automatically generated.
+  The parser still understands the same
+  inverted polish notation, but it relies on finishing your
+  statements with a semi-column (';'). Also, boolean values
+  are now "true" and "false" rather than 'T' and 'F'.
+  <xfr>
+		Pour votre information, nous allons utiliser un autre
+		parser dorénavant, car la syntaxe devient trop complex
+    pour continuer à écrire
+    le parser à la main. Nous avons utilisé un generateur
+    de parser, appelé <em>JavaCC</em> pour écrire une
+    grammaire dont le parser sera généré automatiquement.
+    Le parser comprends toujours la même notation polonaise
+    inversée, mais il requière de terminer chaque ligne par
+    un point-virgule (';'):
+  </xfr>
+</p>
+<pre class="terminal">
+  > + 2 3;
+  = 5
+  > -(+ 2 3);
+  = -5
+  > * 2.0 x;
+  = 6.0
+  > / 6.0 x;
+  = 2.0
+  > - 2 * 3 4;
+  = -10
+  > & false true;
+  = false
+</pre>
+<p>
+	Also, look now under the package
+	<span class="java-package">ricm3.calculator.ast</span> for
+	the classes representing the Abstract Syntax Tree (AST).
+	When parsing, the abstract syntax tree is built by the
+	builder, the class
+	<span class="java-class">Builder</span>
+	in the package
+	<span class="java-package">ricm3.calculator.v4</span>.
+</p>
+<p>
+	<b>Caveat:</b><br>
+  Writing a parser is hard and getting it to work flawlessly is
+  even harder. So it is possible that there are still a few bugs
+  in our parser, even though it is getting better every year.
+  If you experience such bugs, please send us an email with
+  the source that does not parse correctly. This will help
+  us improve the parser over time.
+  <xfr>
+    Ecrire un parser est une tâche difficile et obtenir qu'il
+    marche parfaitement est encore plus dure. En conséquence,
+    il est possible que notre parser ait encore quelques bugs,
+    bien que sa qualité s'améliore d'année en année. Si vous
+    rencontrez des bugs, envoyez nous le source qui n'est pas
+    parsé, pour que nous puissions continuer d'améliorer le
+    parser. 
+    </xfr>
+</p>
+<p>
+  But what is even harder is to write a parser that produces
+  understandable error messages when the parsing fails.
+  So we apologize in advance for any inconvenience that you
+  will certainly experience when writing your own "calculator"
+  code and trying to get it to parse correctly.
+  Good luck and keep a positive attitude, life is not perfect.
+	The positive side? 
+  Our crappy error messages will make you appreciate
+	Eclipse and its clear error messages
+  even more.
+  <xfr>
+    Mais il est encore plus difficile d'écrire un parser qui
+    produise des erreurs de parsing qui soient claires.
+    Nous nous excusons par avance des difficultés que vous
+    pourriez rencontrer. Cela vous fera sans doute apprécier
+    encore plus Eclipse et ses messages d'erreur claires.
+  </xfr>
+</p>
+
+<h3>Steps:</h3>
+
+<steps>
+  <step name="t4-s1" label="Using Late Binding">
+  </step>
+  <step name="t4-s2" label="Introducing expression types">
+  </step>
+  <step name="t4-s3" label="Introducing comparisons">
+  </step>
+</steps>
+
+<h3>That's all folks</h3>
+
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint calculator, Task4 completed"
+  $ git push --all
+</textarea>

@@ -1,0 +1,804 @@
+<vars>
+  sprint=object.gui
+  task=t6
+</vars>
+<!--
+text editor as MVC.
+
+give them the model, the controller.
+
+give them the view?
+
+(1) View port with up/down array -> require translating coordinates.
+- give them a translatable graphics?
+- ask them to do it in the paint?
+just about changing the starting "y"
+
+(2) Ask them to do the caret visual cue?
+- static
+
+(3)
+- blinking cursor
+
+-> ask them to implement a timer queue in Toolkit,
+using a window timer. 
+	-->
+<p>
+	This task is about a simple text editor widget,
+	designed following a Model-View-Controller (MVC) pattern.
+	We will also touch on managing an event pump.
+	Of course, these concepts are new to you and the names
+	do not mean much to you, but trust us, they are
+	important concepts.
+	<xfr>
+		Cette tâche parle d'un éditeur de texte super simple,
+		conçu en suivant le patron Modèle-Vue-Contrôleur (MVC).
+		Nous allons en profiter pour parler de pompe à événements.
+		Bien sûr, tout cela ne vous dit pas encore grand chose,
+		mais ce sont des concepts importants.
+	</xfr>
+</p>
+<p>
+	Unfortunately, there are important concepts but there are
+	also complex concepts when it comes to writing code.
+	Alas, we have only a limited
+	time available to us. Therefore, we made the choice
+	to give you a working editor and we will ask you
+	to enhance its features. This will require you to read
+	and understand our code, giving you the opportunity
+	to understand how to manage drawing text in a user interface.
+	<xfr>
+		Malheureusement, ces concepts sont importants et complexes
+		d'un point de vue de l'écriture du code, et malheureusement
+		nous avons peu de temps à y consacrer. Aussi, nous avons
+		fait le choix de vous fournir un petit éditeur de texte
+		qui marche et nous allons vous demander d'y rajouter des
+		fonctionalités. Vous allez donc devoir lire et comprendre
+		notre code, vous donnant l'opportunité de comprendre les
+		principes de la gestion de texte dans une interface
+		graphique.
+	</xfr>
+</p>
+<p>
+	The code is in the source folder <em>"task6n7"</em>,
+	it is named like that 
+	because it will be used for this task6 and the next task7.
+	In the package <span class="java-package">object.gui.widgets</span>,
+	you will find the classes for the text editor.
+	In the package
+	<span class="java-package">object.gui.examples</span>,
+	you will find examples on how to use this text-area widget.
+	For now, ignore the package
+	<span class="java-package">object.events</span> and
+	the new classes in the package
+	<span class="java-package">object.gui</span>.
+	<xfr>
+		Le code est dans le dossier source <em>"task6n7"</em>,
+		dont le nom vous indique qu'il sera utilisé pour cette
+		tâche 6 et la suivante, la tâche 7. 
+		Dans le paquet <span class="java-package">object.gui.widgets</span>,
+		vous trouverez les classes pour l'éditeur de texte.
+		Dans le paquet 
+		<span class="java-package">object.gui.examples</span>,
+		vous allez trouver des exemples de l'utilisation de cet éditeur.
+		Pour l'instant, ignorer les paquets
+		<span class="java-package">object.events</span> et
+		les nouvelles classes dans le paquet
+		<span class="java-package">object.gui</span>.
+	</xfr>
+</p>
+<p>
+	You can try this widget, <em>out of the box</em>, with our example,
+	launch the
+	class <span class="java-class">TextExample</span>
+	in the package
+	<span class="java-package">object.gui.examples</span>.
+	It looks like this:
+	<xfr>
+		Vous pouvez essayer ce widget, <em>out of the box</em>, avec
+		notre exemple par la classe <span class="java-class">TextExample</span>
+		dans le paquet 
+		<span class="java-package">object.gui.examples</span>.
+		Cela va ressembler à cela:		
+	</xfr>
+</p>
+<img src="text-widget-example.png" width="50%" />
+<p>
+	You can type in new text, delete existing text, click the mouse
+	to set the cursor. You can use the left and right
+	arrows also to move the cursor left or right. 
+	You can resize the window and watch the text automatically
+	relayout itself.
+	<xfr>
+		Vous pouvez taper du texte, effacer du texte, cliquer
+		avec la souris pour positionner le curseur d'édition.
+		Vous pouvez utiliser les flèches gauche et droite pour
+		déplacer le curseur. Vous pouvez aussi redimensionner
+		la fenêtre et voir que le texte se reorganise
+		en conséquence.
+	</xfr>
+</p>
+
+<h3>Code Overview</h3>
+
+<p>
+	The first thing is to discuss the overall architecture of the
+	code so that you have the right mental image. The architecture
+	follows the design pattern called the <em><u>Model-View-Controller</u></em>
+	pattern, a design pattern to organize the code of more
+	complex widgets.
+	<xfr>
+		La première chose à faire est de discuter de l'organisation globale
+		du code pour que vous puissiez avoir la bonne image mentale.
+		L'architecture du code suit le patron de conception
+		appelé <em><u>Modèle-Vue-Contrôleur</u></em>, un patron qui
+		est efficace pour organiser le code des widgets plus complexes.
+	</xfr>
+</p>
+<ul>
+	<li>
+		Model: the classes that manages the data managed and displayed
+		by the widget.
+		<xfr>
+			Modèle: les classes qui servent à représenter les données
+			gérées et affichées par le widget.
+		</xfr>
+	</li>
+	<li>
+		View: the classes that actual display the data, all of it or only part of it.
+		<xfr>
+			La vue: les classes qui s'occupent d'afficher les données, en totalité
+			ou bien partiellement.
+		</xfr>
+	</li>
+	<li>
+		Controller: the classes that manages the end user interfaction
+		<xfr>
+			Contrôleur: les classes qui s'occupent de l'interaction avec
+			l'utilisateur.
+		</Xfr>
+	</li>
+</ul>
+<p>
+	So what is the model of a text editor? It is an object graph
+	that represents some text. In our case, we decided for a simple
+	model: a sequence of paragraphs, each paragraph being a sequence
+	of words.
+	<xfr>
+		Qu'est-ce qu'un modèle pour un éditeur de texte? Et bien, c'est
+		un graphe d'objets qui représente un texte. Dans notre cas, nous
+		avons choisi de rester simple avec un modèle qui est une séquence
+		de paragraphes, chaque paragraphe étant une séquence de mots.
+	</xfr>
+</p>
+<p>
+	You can look at the abstract
+	class <span class="java-class">TextModel</span> to give
+	yourself an idea of what one can do with a text model.
+	Then look at the
+	subclass <span class="java-class">SimpleTextModel</span>,
+	a simple implementation of a text model.
+	We decided to encode our text using a simple array of
+	characters. Words are separated by a <u>single</u> white space
+	(the character ' '). Paragraphs are separated by the character '\n'.
+	Let's look at an example:
+	<xfr>
+		Vous pouvez regarder la classe abstraite
+		classe <span class="java-class">TextModel</span> pour avoir
+		une idée du comportement proposé. Puis ensuite, regardez la
+		classe <span class="java-class">SimpleTextModel</span>,
+		qui éthand la classe <span class="java-class">TextModel</span>.
+		L'implémentation est super simple avec un tableau de caractères.
+		Le mots sont séparés par un unique espace ' ' et les paragraphes
+		sont séparés par un unique caractère '\n'.
+		Regardez un exemple:
+	</xfr>
+</p>
+<em>
+<pre>
+  This is a sample.\nThis is a second paragraph.\n\n\nNote the previous empty paragraphs.\n
+</pre>
+</em>
+<p>
+	The above sequence of characters, that can be stored in an
+	array of characters, would be displayed as follows:
+	<xfr>
+		La séquence de caractères, qui peut être mémorisée dans
+		un tableau de caractères, sera affichée comme ceci:
+	</xfr>
+</p>
+<div style="margin-left: .5in; width:300px;overflow:auto">
+<pre style="border-style: solid; border-width: 1px;">
+This is a sample.
+This is a second paragraph.
+
+
+Note the previous empty paragraphs.
+</pre>
+</div>
+<p>
+	Now let's discuss the controller: the
+	class <span class="java-class">TextController</span>
+	controls
+	the interaction with the end user, meaning that it essentially handles
+	the mouse and keyboard events. The code is small and
+	trivial to understand, give it a quick look.
+	The one point to note is the fact that the controller
+	interacts with both the model and the view.
+	<xfr>
+		Discutons maintenant du contrôleur, la classe
+		<span class="java-class">TextController</span> qui
+		s'occupe de l'interaction avec l'utilisateur, c'est
+		à dire, essentiellement les événements souris et clavier.
+		Le code est petit et trivial, vous n'aurez aucun problème
+		à le comprendre.
+	</xfr>
+</p>
+<p>
+	This leads us to discussing the view: the
+	class <span class="java-class">TextView</span>.
+	It is certainly the hardest code to undertand,
+	although it is essentially only about drawing the text
+	of the model on the screen. Graphical code is often
+	like this, simple and yet full of annoying details.
+	This view widget has the following features:
+	<xfr>
+		Cela nous emène à discuter de la vue: la classe
+		<span class="java-class">TextView</span>. C'est
+		certainement le code le plus compliqué à comprendre
+		bien qu'il ne fasse pas grand chose: il affiche
+		du texte. Mais le code graphique est souvent
+		comme cela, embrouillé de pleins de petits détails.
+		La vue a les fonctionalités suivantes:
+	</xfr>
+</p>
+<ul>
+	<li>
+		Text displayed as a sequence of paragraphs,
+		each paragraph being wrapped around on multiple 
+		lines, if necessary.
+		<xfr>
+			Le texte est affiché comme un séquence de paragraphes,
+			chaque paragraphe étant affiché sur une ou plusieurs
+			lignes.
+		</xfr>
+ </li>
+ <li>
+	 Border can be defined around the text area.
+	 <xfr>
+		 Il est possible de définir des marges autour du texte
+		 affiché.
+	 </xfr>
+ </li>
+ <li>
+	 Text can be drawn with a "raised" effect 
+   displaying a shadow as if the text area was raised
+   above the surrounding border.
+	 <xfr>
+		 Le texte peut s'afficher avec un effet d'ombre
+		 donnant l'impression qu'il est affiché sur une
+		 méplat légèrement rehaussé.
+	 </xfr>
+ </li>
+</ul>
+<p>
+	Look at the method <span class="java-method">paint</span>
+	so that you can understand how this works. This is similar
+	to what you did for the label, with the extra work required
+	to show a cursor on the screen where the caret is in the
+	model. The code is fully commented so it should be
+	fairly easy to understand.
+	<xfr>
+		Regardez la méthode
+		<span class="java-method">paint</span> pour comprendre
+		comment l'affichage du texte fonctionne. Cela ressemble
+		au code que nous avions pour un label, mais avec une complexité
+		certaine du à la présence du curseur et de l'affichage
+		multi-ligne des paragraphes. Le code est totalement
+		commenté, vous devriez le comprendre assez aisément.
+	</xfr>
+</p>
+
+<h3>Adding Scrolling Support</h3>
+
+<p>
+	We know, it is not easy to read code and force oneself to
+	truly understand the code unless one has an incentive to do so.
+	So here is an incentive: adding the ability to scroll the text
+	with up and down arrows. Currently,
+	the widget reacts to the end user hitting the left and right
+	arrows on the keyboard, but not the up and down arrows.
+	You will add this functionality.
+	<xfr>
+		Nous le savons bien, il n'est pas facile de lire du core
+		et de se forcer à le comprendre dans les détails. Nous
+		allons donc vous donner une bonne raison: l'ajout de
+		fonctionalité. Nous allons ajouter la capacité de scroller
+		le texte avec les flèches vers le haut et vers le bas.
+	</xfr>
+</p>
+<p>
+	Now, we need to think before you start coding:
+	what does it mean for the end
+	user to hit the up or down arrow? What behavior do we want?
+	<xfr>
+		Nous devons réfléchir un peu avant de se lancer
+		dans le codage. Quel est le comportement que l'utilisateur
+		souhaite pour le défilement vertical du texte?
+	</xfr>
+</p>
+<ol>
+	<li>
+		If it can, the cursor should change line, either up or down.
+		But the cursor may not move outside the existing text.
+		<xfr>
+			Si il le peut, le curseur doit changer de ligne, mais il
+			ne doit pas sortir du text éxistant.
+		</xfr>
+	</li>
+	<li>
+		The cursor must remain visible at all times,
+		even if the text is too large to fit in that visible area.
+		<xfr>
+			Le curseur doit rester visible à tout moment même
+			si la fenêtre n'affiche pas tout le texte.
+		</xfr>
+	</li>
+	<li>
+		If the cursor may not move up because it is at the top of
+		the visible area, the text should be scrolled
+		down, if possible. 
+		<xfr>
+			Si le curseur ne peux se déplacer vers le haut parce
+			qu'il est déjà au sommet de la fenêtre, c'est alors le texte
+			qui doit défiler vers le bas, si c'est possible.
+		</xfr>
+	</li>
+	<li>
+		If the cursor may not move down because it is at the bottom
+		of the visible area, the text should be scrolled
+		up, if possible.
+		<xfr>
+			Si le curseur ne peux se déplacer vers le bas parce
+			qu'il est déjà en bas de la fenêtre, c'est alors le texte
+			qui doit défiler vers le haut, si c'est possible.
+		</xfr>
+	</li>
+</ol>
+<p>
+	In the following sections, we will guide you through
+	an incremental path to implementing this new scrolling feature.
+	See how we split the coding in small manageable steps towards
+	the implementation of the full feature. 
+	<xfr>
+		Dans les sections suivantes, nous allons vous guider
+		sur le chemin de l'implémentation, en avancant par
+		des pas raisonnables.
+	</xfr>
+</p>
+
+<h5><u>Checking the Controller:</u></h5>
+
+<p>
+	First, check the controller: the necesary wiring is already
+	in place for the up and down arrows, invoking the
+	two methods <span class="java-method">lineUp</span>
+	and <span class="java-method">lineDown</span> on
+	the view (class <span class="java-class">TextView</span>).
+	We ask that you write the code for these two methods.
+	<b>Nota Bene:</b> these methods need to be only a few lines,
+	don't start coding
+	large complex methods. There is almost everything you need
+	in the class <span class="java-class">TextView</span>.
+	<xfr>
+		En premier, regardez le contrôleur, les flèches vers le
+		haut et la bas sont déjà prices en compte, elle
+		provoque l'invocation des méthodes
+		<span class="java-method">lineUp</span> et
+		<span class="java-method">lineDown</span> sur la vue
+		(class <span class="java-class">TextView</span>).
+		On vous demande d'implémenter ces deux méthodes.
+		<b>Nota Bene:</b> l'implémentation fait quelques lignes
+		seulement. La classe 
+		<span class="java-class">TextView</span> contient
+		déjà presque tout ce dont vous avez besoin.
+	</xfr>
+</p>
+
+<h5><u>Checking the View:</u></h5>
+
+<p>
+	The class <span class="java-class">TextView</span> has already
+	a lot of support that could be used. In particular, it maintains
+	the location of the cursor at every paint and it also provides
+	the possibility to change that position. So let's look at the methods
+	<span class="java-method">paint</span> and
+	<span class="java-method">setCursorAt(int x, int y)</span>.
+	<xfr>
+		La classe <span class="java-class">TextView</span>
+		a déjà beaucoup de fonctionnalités que vous pouvez utiliser.
+		En particulier, elle recalcule la position du curseur à
+		chaque affichage. De plus, elle permets de changer par programmation
+		la position du curseur. Regardez les méthodes
+		<span class="java-method">paint</span> and
+		<span class="java-method">setCursorAt(int x, int y)</span>.		
+	</xfr>
+</p>
+<ul>
+	<li>
+		The view already tracks where the cursor should be on the
+		screen, based on the caret. The caret is the offset
+		within the text model where inserting and deleting characters
+		will happen. The cursor is the visual cue that tells the end
+		user where the caret is in the text. The cursor has therefore
+		a location (m_cursorX, m_cursorY) as well as a line number
+		(m_cursorLine).
+		The location is the location of the top-left corner of the cursor
+		in the local coordinate system of the view.
+		<xfr>
+			La vue traque déjà la position du curseur en fonction d'où se
+			trouve la caret d'insertion. Le caret est l'endroit
+			dans le modèle du texte où les insertions et suppressions
+			se feront. Le curseur est le retour visuel sur la position
+			du caret. Le curseur a donc une position dans la fenêtre
+			(m_cursorX,m_cursorY) et un numéro de ligne (m_cursorLine).
+		</xfr>
+	</li>
+	<li>
+		The location of the cursor is updated at each paint, so look at the
+		method <span class="java-method">paint</span>. This is necessary
+		in case the text has been updated since the last paint operation.
+		Also, the view might have been resized with new bounds, leading to a different
+		layout of the text within those bounds.
+		If characters have been inserted or deleted, the location of the
+		cursor on the screen may also have changed. It is therefore
+		necessary to recompute the cursor location, at each paint,
+		from the current caret and the current layout of the text
+		in the current bounds.
+		<xfr>
+			La position du curseur est mise à jour à chaque affichage
+			(méthode <span class="java-method">paint</span>).
+			Cela est nécessaire au cas ou le texte a été changé depuis le
+			dernier affichage. Mais il est aussi possible que la vue
+			ai été redimensionnée ce qui peut occasionner un affichage
+			différent du texte.
+		</xfr>
+	</li>
+	<li>
+		The class <span class="java-class">TextView</span>
+		has support to request a new position	for the cursor on the screen,
+		moving accordingly the caret in the text model. The first use is to
+		allow a user to click in the text to position the cursor and thus
+		the caret. Look at the method
+		<span class="java-method">setCursorAt(int x, int y)</span>.
+		<xfr>
+			La classe <span class="java-class">TextView</span>
+			permet de repositionner le curseur en donnant une position dans
+			la fenêtre, ce qui va déplacer en correspondance le caret
+			dans le modèle du	texte. Le premier usage de cette fonctionnalité
+			est de permettre à l'utilisateur de cliquer dans le texte pour
+			positionner le curseur et donc le caret.
+		</xfr>
+	</li>
+	<li>
+		The method <span class="java-method">setCursorAt</span>
+		only succeeds if the given coordinates corresponds to a
+		caret position that is within the text.
+		<xfr>i 
+			La méthode 			<span class="java-method">setCursorAt</span>
+			ne réussie que si les coordonnées fournies correspondent
+			à une position du caret qui soit dans le texte.
+		</xfr>
+	</li>
+	<li>
+		The given coordinates to the method
+		<span class="java-method">setCursorAt</span> are local
+		to the coordinate system of the text area. 
+		Note that the given coordinates may be negative. Also
+		note that the x coordinate (resp. y coordinate)
+		may be greater than the width (resp. height) of the text area.
+		<xfr>
+			Les coordonnées de la méthode
+			<span class="java-method">setCursorAt</span> sont des
+			coordonnées locales pour la zone de texte. Notez 
+			que les coordonnées données peuvent être négative.
+			Cela veut aussi dire que la coordonnée x (respectivement
+			la coordonnée y) peut être plus grande que la largeur
+			(respectivement la hauteur) de la zone visible du texte.
+		</xfr>
+	</li>
+	<li>
+		Nota Bene: if the given coordinates are outside the
+		visible area, the cursor may not be visible.
+		<xfr>
+			Nota Bene: si les coordonnées données sont hors de la
+			zone visible, le curseur ne sera pas visible.
+		</xfr>
+	</li>
+</ul>
+<p>
+	If successful, the method <span class="java-method">setCursorAt</span>
+	computes the local coordinates (m_cursorX, m_cursorY) of the
+	top-left corner of the cursor. The cursor position may be
+	outside the visible area, but the corresponding caret must
+	be within the text.
+	<xfr>
+		Si elle réussie, la méthode va calculer les
+		coordonnées du coin haut-gauche du cursor (m_cursorX,m_cursorY).
+		Cette position du cursor peux être en dehors de la partie
+		visible du texte mais le caret qui lui corresponds lui
+		se trouve dans le texte.
+	</xfr>
+</p>
+<p>
+	It is important that you understand that the visible area
+	may be too small to accomodate the entire text. The visible
+	area is defined by the bounds of the component
+	(class <span class="java-class">TextView</span>), set by
+	its parent during layout. The bounds may be too small
+	to draw the entire text within, nevertheless, you
+	will notice that
+	the method <span class="java-method">paint</span> of the
+	class <span class="java-class">TextView</span>
+	draws the entire text and the cursor. If the visible
+	area is too small,
+	some text will be drawn outside the visible area. The
+	cursor might also be drawn outside of the visible area.
+	But remember that the graphics, given to the method
+	<span class="java-method">paint</span>, is clipped to
+	the bounds of the repainted component. So anything
+	drawn outside of the current bounds of the component
+	will be clipped out (not drawn on the screen).
+	<xfr>
+		Il est important que vous compreniez que la partie
+		visible du texte peut être trop petite pour afficher
+		tout le texte. La partie visible est déterminée
+		pas les dimensions de la vue
+		(class <span class="java-class">TextView</span>),
+		calculée par le container parent de la vue.
+		Ces dimensions peuvent être trop petite pour que
+		tout le texte soit visible mais remarquez que le
+		code de la méthode
+		<span class="java-method">paint</span>
+		de la classe
+		<span class="java-class">TextView</span>
+		affiche toujours la totalité du curseur, mais
+		rappelez vous que les opérations d'affichage
+		n'ont d'effets qu'au sein des limites du composant
+		dans lequel elles opèrent.
+	</xfr>
+</p>
+<p>
+	To understand better these points, 
+	we <u>suggest</u> that you try a large enough
+	text that does not fit in the visible bounds of the view.
+	Look at our example
+	again (class <span class="java-class">object.gui.examples.TextExample</span>)
+	and change the text displayed by default. Look at the code
+	of the method <span class="java-method">run</span> and change
+	the following lines, using the longer <b>text2</b> rather than
+	the shorter	text1. Right there in the code:
+	<xfr>
+		Pour me comprendre ces points, nous vous suggérons
+		que vous essayez notre exemple
+		(class <span class="java-class">object.gui.examples.TextExample</span>)
+		avec un texte qui est trop grand pour s'afficher en totalité
+		dans la zone visible de la vue. Pour cela, il vous suffit
+		de modifier la méthode <span class="java-method">run</span>
+		et d'utiliser le <b>text2</b> plutôt que le text1. Juste
+		à cet endroit dans le code:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String text = text1; // change this to text2 for a longer text
+  TextModel model = new SimpleTextModel();
+  model.setText(text);
+</pre>
+<p>
+	Remember that you can resize the window so that it is small enough,
+	you will have a text that no longer fits within the view.
+	You will notice that the drawing of the text remains clipped
+	within the bounds of the text view. The text is still drawn in its
+	entirety though, but since the graphic operations are clipped to the
+	bounds of the painted component, only the visible portion of
+	the text is displayed within the text view.
+	<xfr>
+		Rappelez vous que vous pouvez redimensionner la fenêtre pour
+		qu'elle soit trop petite pour afficher le texte en entier.
+		Vous noterez que l'afficache du texte ne déborde pas,
+	  seulement la portion visible apparaît malgré que la totalité
+		du texte soit affiché.
+	</xfr>
+</p>
+
+<h5><u>First Step: Basic Scrolling</u></h5>
+
+<p>
+	Since only the visible text is drawn on the screen, scrolling
+	is simply about changing which lines of text is displayed at
+	the top of the view area. The simplest way to achieve this is
+	to keep drawing the entire text, but change the location
+	at which we start drawing the first line. Let's discuss
+	an example.
+</p>
+<p>
+	Assume you want to scroll the text up by 2 lines. If we
+	assume that the height of a line of text is 30 pixels,
+	if you start drawing your first line at (0,-60), the
+	first two lines will be drawn with negative Y coordinates,
+	they will be clipped out and will not be shown. The first line
+	that will appear at the top of the view will be the third line.
+</p>
+<p>
+	Look at the
+	method <span class="java-method">paint</span>, see that it
+	uses the
+	field <span class="java-field">m_verticalShift</span> to
+	compute the local variable
+	<span class="java-lvar">y</span>, which is the Y-coordinate
+	for drawing text lines. So go ahead, modify the value
+	of the
+	field <span class="java-field">m_verticalShift</span>
+	in the
+	two methods <span class="java-method">lineUp</span>
+	and <span class="java-method">lineDown</span> in
+	the class <span class="java-class">TextView</span>.
+	Try it out and you can now marvel at the text
+	scrolling up and down. A good first step, right?
+</p>
+
+<h5><u>Second Step: Advanced Scolling</u></h5>
+
+<p>
+	So we have basic scrolling, but we know scrolling does not work
+	this way. Open a text editor, type some text, and use the
+	up/down arrows to move the cursor up and down. So?
+	See, the text is scrolled only if the cursor would move
+	outside of the visible area. Otherwise, it is the cursor that
+	moves down one line or up one line.
+</p>
+<p>
+	To code this, you need to remember that you can request
+	the view to change the cursor position
+	through the method <span class="java-method">setCursorAt</span>,
+	giving it the (x,y) coordinates where you want the cursor to be.
+	Also remember that the method <span class="java-method">paint</span>
+	maintains the current cursor position on the screen for you in the
+	fields <span class="java-method">m_cursorX</span>
+	and <span class="java-field">m_cursorY</span>.
+</p>
+<p>
+	From there, it should not be too hard to be able to implement
+	a full scrolling... Once you are done, we will move to another
+	important topic: adding a blinking cursor.
+</p>
+
+<h3>Adding Blinking Cursor</h3>
+
+<p>
+	Adding a blinking cursor is cool visually, but it is a pretext
+	to introduce the use of timers in event-oriented programming,
+	one of the pillars of event-oriented programming.
+	Indeed, to add a blinking cursor, you need a timer and a timer listener.
+	The idea is to use the timer to wakeup periodically and repaint
+	the text, alternatively with a cursor and without a cursor,
+	thus making the cursor appear to blink.
+</p>
+<p>
+	Look at the code below to understand how to use a timer.
+	You set the timer to a certain value, like 500ms, and when the
+	timer expires, the timer listener is invoked, letting you react
+	to the fact that the timer expired. The timer listener would
+	implement the following interface:
+</p>
+<pre class="prettyprint lang-java">
+package object.gui.window;
+public interface TimerListener {
+  public void expired();
+}
+package object.gui;
+public class Toolkit {
+  /**
+   * This method sets a timer to the given delay in milliseconds.
+   * It cancels any pending timer, if there was any.
+   * @param delay
+   * @param listener
+   */
+  public void setTimer(int delay, final TimerListener listener) {
+    m_win.cancelTimer();
+    m_win.setTimer(delay, listener);
+  }
+}
+</pre>
+<p>
+	As you can see, the timer feature is provided by the toolkit,
+	but it relies on the timer provided by the window. For now, the
+	implementation of the toolkit timer is straigthforward, it will
+	become more complex later on. Look at
+	the code below to see how you could use it to blink the
+	cursor in our text area:
+</p>
+<pre class="prettyprint lang-java">
+public class TextView implements TimerListener {
+  private boolean m_cursorOn;
+  public TextView(Container parent, TextModel model) {
+    ...
+    Toolkit tk = Toolkit.getToolkit();
+    tk.setTimer(500, new TimerListener() {
+      @Override
+      public void expired() {
+        m_cursorOn = !m_cursorOn;
+        repaint();
+        tk.setTimer(500, this);
+      }
+    });
+  }
+}
+</pre>
+<p>
+	Having a hard time reading the above code? We use what
+	is called a <b>lexical closure</b>, you can look it up
+	on the Web. If this feels too advanced for you, we could have
+	written it this way:
+</p>
+<pre class="prettyprint lang-java">
+  public TextView(Container parent, TextModel model) {
+    ...
+    Toolkit tk = Toolkit.getToolkit();
+    TimerListener l = new _TimerListener();
+    tk.setTimer(500, l);
+  }
+  private static class _TimerListener implements TimerListener {
+    TextView m_view;
+    _TimerListener(TextView view) {
+       m_view = view;
+    }
+    @Override
+    public void expired() {
+      m_view.m_cursorOn = !m_view.m_cursorOn;
+      m_view.repaint();
+      Toolkit tk = Toolkit.getToolkit();
+      tk.setTimer(500, this);
+    }
+  }
+</pre>
+<p>
+	Now look at the method
+	<span class="java-method">paint(Graphics)</span>, you will
+	see that the cursor is drawn only if the boolean field
+	<span class="java-field">m_cursorOn</span> is true.
+	You are wondering if you are reading this code right?
+	You are reading right, we are indeed repainting the entire text
+	to make	our cursor blink, and we do it every 500 milli-seconds!
+	The resulting CPU load will be at about 15%, on a
+	typical laptop. This is not great, we should optimize this.
+	But to optimize this would require quite some work and this is
+	clearly outside of the scope of this sprint on the basics of
+	a toolkit for designing graphical user interfaces. 
+</p>
+<p>
+	So this is certainly not the right way to blink a cursor,
+	but it is a simple illustration of the use of a timer and
+	how a timer can be used to redraw a component and therefore
+	producing an animation on the screen. The animation here
+	is simply a blinking cursor. We will do much more in the
+	following tasks.
+</p>
+<p>
+	So go ahead, <b>make your cursor blink!</b> But do not just
+	copy the code above, make sure that you understand
+	what happens in terms of the execution. As usual, if you
+	are not sure that you understand, discuss these technical
+	points and ask questions.
+</p>
+
+<h3>That's it folks</h3>
+
+<p>
+	Please do commit your work.
+</p>
+<textarea class="terminal" rows="4" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.gui, Task6 completed"
+  $ git push --all
+</textarea>

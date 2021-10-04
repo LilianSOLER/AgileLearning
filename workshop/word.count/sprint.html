@@ -1,0 +1,76 @@
+<vars>
+  sprint=word.count
+</vars>
+
+<p>
+  This sprint is about the famous word count program,
+  available in almost all Linux distribution, as the
+  <em>wc</em> program. It is a simple
+  command line tool that prints the count of lines, words, and
+  characters for the text files given as arguments. Have a quick look
+  at the man page:
+  <xfr>
+	 	Ce sprint concerne le fameux programme <em>word-count</em>,
+	 	disponible sur la plupart des distributions Linux
+	 	(programme "wc"). C'est un simple outil disponible en
+	 	ligne de commande, qui affiche le nombre de lignes, mots
+	 	et caractères pour des fichiers textes passés en arguments.
+	 	Regardez rapidement la page man du programme wc:
+   </xfr>
+</p>
+<pre class="terminal">
+  $ man wc
+</pre>
+<p>
+  We will extend the <em>word-count</em> program with the ability
+  to count the number of occurrences of words. In other words, we
+  will know which words appeared in a text file and how many times
+  they appeared.
+  <xfr>
+	 	Vous allez étendre le programme <em>word-count</em>
+	 	avec la capacité de compter le nombre d'occurences de chaque
+	 	mot. Autrement dit, nous saurons quels mots apparaissent
+	 	dans un fichier et combien de fois. 
+   </xfr>
+</p>
+<p>
+  <b>Reminders:</b>
+</p>
+<ul>
+  <li>
+    Do not forget to import the <em>word.count</em> project
+    in your Eclipse workspace.
+  </li>
+  <li>
+    Do not forget to make sure the tests.jar is part of your build path
+    and that it appears in the <em>Referenced Libraries</em>
+  </li>
+</ul>
+
+<h4>Tasks:</h4>
+<tasks>
+  <task name="t1" label="About Streams" >
+    Streams are an important concept when programming, this task
+    is about the core idea and the basics of reading or writing streams.
+  </task>
+  <task name="t2" label="Word Count" >
+    In this task, you will learn how to write a very simpler parser
+    of character streams, counting characters, words, and lines.
+    The equivalent of the Linux tool "wc".
+  </task>  
+  <task name="t3" label="Occurrence Count" >
+    This task is improving on the previous one. Our word-count program
+    will now count the number of occurrences of each word, which
+    will drastically change the structure
+    of the program. It will be an interesting endeavor, guaranteed!
+  </task>  
+  <task name="t4" label="Performance Evaluation" >
+    This task is about introducing performance counters in our word count
+    program to evaluate performance and identify potential
+    improvements.
+  </task>  
+</tasks>
+
+<p>
+  That's all folks for this sprint.
+</p>

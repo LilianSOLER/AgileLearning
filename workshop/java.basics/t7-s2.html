@@ -1,0 +1,216 @@
+<vars>
+  sprint=java.basics
+  task=t7
+  step=t7-s2
+</vars>
+
+<p>
+  Now, let's discuss performance counters. Which counters do we want?
+	Well, look at the class <span class="java-class">Counters</span>
+	in the package <span class="java-package">basics.step7</span>.
+  The question is really the following: which counters would help us
+  understand what the program does while executing?
+  You may consider the following:
+  <xfr>
+	 	Maintenant discutons des compteurs de performances. Quels
+	 	compteurs voulons nous? Regardez la classe
+		<span class="java-class">Counters</span> dans le package
+		<span class="java-package">basics.step7</span>.
+		La question est réellement: quels
+	 	compteurs vont nous aider à comprendre ce que fait le programme
+	 	quand il s'exécute? Vous pouvez considérer:
+  </xfr>
+</p>
+<ul>
+  <li> Number of objects created. </li>
+  <li> Number of times costly methods are invoked. </li>
+</ul>
+
+<h4>Counting Created Objects</h4>
+
+<p>
+  Counting the number of objects is important because creating objects
+  is not free, even though Java is extremely efficient at that.
+  We could easily count the objects that are instances of
+  the following classes:
+  <xfr>
+	 	Compter le nombre d'objets est important parce que 
+	 	créer des objets n'est pas gratuit, même si Java est extrèmement
+	 	optimisé pour cela. Nous pouvons facilement compter les
+	 	objets qui sont instances des classes suivantes:
+  </xfr>
+</p>
+<ul>
+  <li> Class <span class="java-class">Point</span> </li>
+  <li> Class  <span class="java-class">Line</span> </li>
+  <li> Class  <span class="java-class">Polygon</span> </li>
+  <li> Class  <span class="java-class">Circle</span> </li>
+</ul>
+<p>
+	So go ahead, insert the code to update the following
+	object counters in the class
+  <span class="java-class">Counters</span>.
+  Notice how we use static fields in that class as global
+  variables.
+  <xfr>
+    Allez-y, insérer le code pour mettre à jour ces
+    compteurs d'objets. Notez comment nous utilisons
+    des champs statiques dans cette classe comme
+    variables globales.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Counters {
+  
+  static int nPoints;
+  static int nLines; 
+  static int nPolygons;
+  static int nCircles; 
+  static int nPointArrays;
+}
+</pre>
+<p>
+  How should you do it? 
+  Do you envision to put the code in the constructors or at the
+  allocation sites? Well, of course, you need to put the code
+  in the constructors. 
+	Now you see another advantage of forcing the use of constructors,
+	you know that if you update the counters in the constructors,
+	then you are counting correctly.
+  <xfr>
+    Comment feriez-vous ?
+    Est-ce que vous envisagez de mettre le code nécessaire dans les
+    constructeurs ou alors sur les lieux des allocations? Bien sûr,
+    la bonne approche est de mettre le code nécessaire dans les
+    constructeurs. Vous voyez ainsi un autre intéret d'avoir des
+    constructeurs.
+  </xfr>
+</p>
+<p>
+  Note: please note that we count object creations, not destructions.
+  Indeed, there is no way to explicitly destruct an object in Java,
+  like in all decent object-oriented programming languages. This
+  can be contrasted with the C programming language where there is
+  a <span class="java-class">malloc</span> and a
+  <span class="java-class">free</span>. Java is relying on an
+  automated garbage collector (GC) that detects and reclaims objects
+  that are not longer useful. Since the garbage collector does its
+  job transparently, we cannot know about object destructions and
+  thus we cannot count them.
+  <xfr>
+  Note: vous noterez que l'on compte les créations d'objets mais
+  pas les destructions. En fait, vous ne pouvez pas détruire
+  un objet en Java, contrairement au langage C où il y a le
+  <span class="java-class">malloc</span>
+  mais aussi le <span class="java-class">free</span>.
+  Java est un langage doté d'un ramasse-miettes
+  automatique réclamant les objets qui ne sont plus utilse,
+  et cela totalement d'une manière totalement transparente.
+  Nous ne pourrions donc pas compter les destructions.
+  </xfr>
+</p>
+  
+<h4>Counting Method Invocations</h4>
+
+<p>
+  Which methods are costly? This is an interesting question
+  and it requires a certain understanding of the code.
+  Ignoring the class <span class="java-class">GUI</span>,
+  look at the code on the classes we mentioned above.
+  We would suggest the following methods to look at:
+  <xfr>
+	 	Quelles méthodes sont coûteuses? Ceci est une question
+	 	intéressante qui demande une certaine compréhension du code.
+	 	En ignorant la classe <span class="java-class">GUI</span>,
+	 	regardez le code dans les classes mentionnées précédemment.
+	 	Nous suggérons de regarder les méthodes suivantes:
+  </xfr>
+</p>
+<ul>
+  <li> <span class="java-method">Circle.smooth</span> </li>
+  <li> <span class="java-method">Circle.draw</span> </li>
+</ul>
+<p>
+  Why those? First, because they are called many times over and over.
+  Second, because they contains loops that are potentially costly,
+  that is, long to execute, creating many objects.
+	We ask that you add the code to update the following
+	counters of method invocations:
+  <xfr>
+	 	Pourquoi ces méthodes? parce qu'elles sont appelées maintes fois.
+	 	Par ailleurs, elles contiennent des boucles qui sont potentiellement
+	 	coûteuses, c'est à dire longues à exécuter, créant plusieurs objets.
+	 	Nous vous demandons de mettre à jour les compteurs suivants:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Counters {
+  static int nCircleDraws;
+  static int nPolygonDraws;
+  static int nLineDraws;   
+  static int nCircleSmooths;
+}
+</pre>
+<p>
+	Then, we ask that you also keep track of the following elapsed time:
+  <xfr>
+	 	Nous vous demandons aussi d'évaluer les temps écoulés suivant:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Counters {
+  static long elapsedCircleDraws;
+  static long elapsedCircleSmooths;
+  static long elapsedPolygonDraws;
+}
+</pre>
+<p>
+	Look at the code below to understand how to track elapsed times:
+	<xfr>
+		Voici comment faire:
+	</xfr>
+<pre class="prettyprint lang-java">
+  class Circle {
+    ...
+    void draw(Graphics g, Point origin) {
+      long start = System.nanoTime();
+      poly.draw(g, origin);
+      long end= System.nanoTime();
+      Counters.nCircleDraws++;
+      Counters.elapsedCircleDraws+=(end-start);
+    }
+  }
+</pre>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/java.basics"
+   classpath="bin;tests.jar"
+   classname="basics.step7.TestPerf2">
+  <banner>
+    Fixed?
+  </banner>
+  <hint>
+    Hum... it seems that you are not updating counters.
+  </hint>
+  <success>
+    Great! It seems you are updating counters.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+<div name="check3_unfold" style="display:none;" >
+  <p>
+    Now that we have the counters in place, we will be able
+    to have detailled information on the execution in terms
+    of the number of objects created and the number of times
+    specific methods are invoked. This will be our next step.
+    <xfr>
+	 	Maintenant que nous avons les compteurs en place, nous allons
+	 	être capables d'avoir des informations détaillées sur l'exécution
+	 	en termes du nombre d'objets crées et du nombre d'invocations
+	 	des méthodes considérées. Cela va être notre prochaine étape.
+  </xfr>
+  </p>
+</div>

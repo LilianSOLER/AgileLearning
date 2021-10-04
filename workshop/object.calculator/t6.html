@@ -1,0 +1,785 @@
+<vars>
+  sprint=object.calculator
+  task=t6
+</vars>
+
+<p>
+  This task is about adding functions to our calculator language.
+  To illustrate functions, we will consider
+  coding the factorial function,
+  using both the recursive and the iterative approach.
+  The recursive approach looks like this:
+  <xfr>
+    Cette tâche est l'ajout des fonctions dans le langage de notre
+    calculateur. Pour illustrer les fonctions, nous allons discuter
+    la fonction factorielle, en considérant les deux implémentations
+    (récursive et itérative).
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+int rfact(int n) {
+  int f;
+  if (n==1) 
+    return 1;
+  f = * n rfact(- n 1);
+  return f;
+};
+</pre>
+<p>
+  The iterative approach looks like this:
+</p>
+<pre class="prettyprint lang-java">
+int ifact(int n) {
+  int f=1;
+  while (n!=1) {
+    f = * f n;
+    n = - n 1;
+  }
+  return f;
+};
+</pre>
+<p>
+  This introduces most of the usual constructs of programming languages.
+  Functions with arguments and a return value. The function body is
+  expressed within
+  a lexical block delimited by braces. We can define local variables
+  in lexical blocks. The iterative construct <em>"while"</em> and
+  the conditional construct <em>"if-then-else"</em>. The construct
+  to <em>"return"</em> from function.
+  We provided you with the corresponding classes:
+  <xfr>
+    Cela introduit les constructions syntaxiques habituelles.
+    Nous avons les fonctions avec des arguments et une valeur
+    de retour. Le corps de la fonction est exprimé au sein d
+    un bloc lexicale délimité par des acolades. Nous pouvons
+    définir des variables locales dans les blocs lexicaux.
+    Nous avons la construction if-then-else et celle de la
+    boucle while. Toutes ces concepts correspondent aux classes
+    suivante:
+  </xfr>
+</p>
+<ol>
+  <li> Class <span class="java-class">Function</span> </li>
+  <li> Class <span class="java-class">Argument</span> </li>
+  <li> Class <span class="java-class">Block</span> </li>
+  <li> Class <span class="java-class">IfThenElse</span> </li>
+  <li> Class <span class="java-class">While</span> </li>
+  <li> Class <span class="java-class">Return</span> </li>
+  <li> Class <span class="java-class">CallSite</span> </li>
+</ol>
+<!--
+<p>
+  Caveat: we hope that the parser will behave and that you will
+  not experience too much unwarranted parser errors.
+  But before you blame the parser, make sure that your syntax
+  is correct. Most of the time, you will have made a mistake
+  since you no longer have Eclipse to help you with writing
+  syntactically correct code.
+</p>
+<p>
+  Remember that it is hard to write a parser that produces
+  understandable error messages when the parsing fails.
+  So we apologize in advance for any inconvenience that you
+  will certainly experience when writing your own "java" code
+  and trying to get it to parse correctly.
+  Good luck and keep a positive attitude, life is not perfect.
+  Don't forget to email us with your sources that do not parse
+  and that you think should.
+</p>
+-->
+<h3>Discussing the new classes</h3>
+
+<p>
+  The class <span class="java-class">Function</span> represents
+  a function. A function has a name, a return type, and a list of arguments.
+  Arguments are modeled by the class <span class="java-class">Argument</span>.
+  An argument has a name and a type.
+  <xfr>
+    La classe <span class="java-class">Function</span> représente
+    une fonction. Une fonction a un nom, le type de la valeur
+    de retour, et une liste d'arguments.
+    Les arguments sont modélisés par la classe
+    <span class="java-class">Argument</span>. Un argument a un nom
+    et un type.
+  </xfr>
+</p>
+<p>
+  A function also has a body that is a block.
+  The class <span class="java-class">Block</span> models a lexical
+  block, that is, a list of statements. What is a statement?
+  Well, look at the hierarchy of classes rooted at the class
+  <span class="java-class">Statement</span>. A statement can be
+  an expression. It can be a variable declaration. It can be
+  a variable assignment. It can be a control flow statement,
+  such as a "while" loop or an "if-then-else" construct.
+  <xfr>
+    Une fonction a aussi un corps qui est un block lexical.
+    La classe
+    <span class="java-class">Block</span> représente
+    un bloc lexical, c'est à dire une liste de déclarations.
+    Qu'est-ce qu'une déclaration? Et bien regardez la hiérarchie
+    de classe dont la racine est la classe
+    <span class="java-class">Statement</span>. Une déclaration
+    peut être une expression. Une déclaration peut être une
+    assignation. Elle peut être une structure du control du
+    flot d'exécution, c'est-à-dire un test if-then-else ou 
+    une boucle while.
+  </xfr>
+</p>
+<p>
+  The evaluation of a block is the evaluation of
+  the statements in that block, respecting the control flow.
+  Without control flow statements, the evaluation executes
+  all statements in sequence, in the lexical order their appears
+  in within the block. With control flow statements, the evaluation
+  follows the semantics of these statements. For a "while"
+  statement, modeled by the class
+  <span class="java-class">While</span>,
+  the evaluation loops as long as the condition is true.
+  For the "if-then-else" statement, modeled by the class
+  <span class="java-class">IfThenElse</span>,
+  the evaluation picks either the
+  "then" block or the "else" block, depending on the value
+  from evaluation the condition.
+  <xfr>
+    L'évaluation d'un bloc est l'évaluation 
+    des déclarations de ce bloc, en respectant le flot
+    d'exécution. Sans structure de control de ce flot,
+    l'évaluation est séquentielle, dans l'ordre lexical
+    où les déclarations ont été faites. Lorsqu'il y a
+    des structures de control du flot d'exécution,
+    l'évaluation suit la sémantique de ces structures
+    de contrôle.
+  </xfr>
+</p>
+<p>
+  Do not forget to handle return statements appropriately.
+  This concept is model by the class
+  <span class="java-class">Return</span>.  
+  A return statement <em>returns</em> from the current
+  function call. Remember that return statements can appear
+  anywhere in the function body, in any nested lexical
+  block, not only at the end of the function body. For example:
+  <xfr>
+    N'oubliez pas de gérer le retour d'appel
+    de fonction correctement. Ce concept est modélisé pas la
+    classe   <span class="java-class">Return</span>.  
+    Un retour d'appel de fonction fait exactement cela, il
+    interrompt l'appel en cours. Mais il faut se souvenir
+    qu'un retour d'appel de fonction peut se trouver n'importe
+    où dans le corps de la fonction, dans n'importe quel
+    bloc lexical et non pas seulement à la fin du corps
+    de la fonction. Par exemple:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+int fact(int n) {
+  int f;  
+  if (n==1) { 
+    return 1;
+  } 
+  f = * n fact(- n 1);
+  return f;
+};
+</pre>
+<p>
+  In the above code, you can also see a call site, modeled by the class
+  <span class="java-class">CallSite</span>.
+  Indeed, any expression may contain primitive values, such
+  as float or integer values, symbols that name variables,
+  and call sites. As the name suggests, the call site is
+  a site of a function call. We see a call site in the
+  right-hand side expression in the following assignment:
+  <xfr>
+    Dans le code ci-dessous, vous pouvez aussi voir un
+    appel de fonction, modélisé par la classe
+    <span class="java-class">CallSite</span>.
+    En effet, toute expression peut contenir une valeur
+    d'un type primitif, comme un entier ou un réel,
+    un symbole correspondant à une variable, ou un
+    appel de fonction. Nous voyons un appel de fonction
+    dans la partie droite de cette assignation:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  f = * n fact(- n 1);
+</pre>
+<p>
+  A call site refers to a known function and has a list
+  of parameters. The parameters are expressions and their
+  evaluation will provide the values to assign to the
+  function arguments when making the function call.
+  In the above example, the call site has one parameter,
+  the expression <em>"(- n 1)"</em> whose evaluation
+  will provide the value to assign to the argument 
+  "<span class="java-class">n</span>".
+  This leads to the necessity to handle a call stack,
+  which we discuss in the following section.
+  <xfr>
+    Un appel de fonction contient le nom de la fonction
+    a appeler et les paramêtres, c'est à dire les expressions
+    qui vont fournir les valeurs aux arguments de la fonction
+    lors de l'appel de cette dernière. Dans l'exemple
+    ci-dessus, l'appel à un seul paramêtre, l'expression
+    <em>(- n 1)</em> dont l'évaluation fournira la valeur
+    a donner à l'argument   "<span class="java-class">n</span>".
+    Cela nécessite une pile d'appel.
+  </xfr>
+</p>
+
+<h3>Discussing the Call Stack</h3>
+
+<p>
+  Since we have the ability to call functions, we need a call stack.
+  This is the same concept that you studied already in Java and in C.
+  In our context, this means that we need to be able to stack
+  scopes. In fact, we need to stack scopes not only for function
+  calls but also for the nesting of blocks. Let's consider
+  stacking scopes for function calls first:
+  <xfr>
+    Puisque nous pouvons faire des appels de fonctions, nous avons
+    besoin d'une pile d'appel. C'est le même concept que vous avez
+    déjà vu en Java, en C, ou encore en assembleur. Dans notre
+    calculateur, cela veut dire que nous devons pouvoir empiler
+    des scopes. En fait, nous allons devoir empiler des scopes,
+    non seulement pour les appels de fonction mais aussi pour
+    l'emboitement des blocs lexicaux.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+int fact(int n) {
+  int f;  
+  if (n==1) 
+    f = 1;
+  else 
+    f = * n fact(- n 1);
+  return f;
+};
+fact(3);
+</pre>
+<p>
+  In the last line, we have a call site, to the function "fact",
+  with the value "3" as the parameter value. That call site
+  will be evaluated in the global scope, created when starting
+  the calculator. The function "fact" is known in that scope
+  because it has been declared just before.
+  Look at the class <span class="java-class">FunDecl</span>
+  and its method
+  <span class="java-method">eval</span>
+  to understand how this happens.
+  <xfr>
+    A la dernière ligne, nous avons un appel à la fonction "fact",
+    avec la valeur 3 comme paramêtre. Cet appel va être évalué
+    dans le scope global, créé lors du démarrage du calculateur.
+    La fonction "fact" est connu de ce scope puisqu'elle a été
+    définie juste avant l'appel. Regarder la classe
+    <span class="java-class">FunDecl</span> et sa méthode
+    <span class="java-method">eval</span>
+    pour comprendre comment une fonction est déclarée.
+  </xfr>
+</p>
+<p>
+  Conceptually, to execute that call to "fact(3)", you
+  need to have a call stack since "fact(3)" will call
+  "fact(2)" that will call "fact(1)". At that point,
+  we will have the following call stack:
+  <xfr>
+    Conceptuellement, pour exécuter un appel à "fact(3)",
+    vous allez avoir besion d'une pile d'appel puisque
+    fact(3) va appeler fact(2) qui va appeler fact(1).
+    A ce moment, nous aurons la pile d'appel suivante:
+  </xfr>
+</p>
+<pre>
+  "main"
+  |---fact(3)
+  |   | return * 3 fact(2)
+  |   |------------|  return * 2 * fact(1)
+  |   |            |---------------|  return 1
+</pre>
+<p>
+  For each invocation, we need a scope, for holding the
+  argument "n" and the local variable "f".
+  Right? So we will have a stack of scopes, just like this:
+  <xfr>
+    Pour chaque appel, nous avons besoin d'un scope pour
+    contenir les arguments et les variables locales.
+    N'est-ce pas? Notre pile d'appel est donc une pile
+    de scope.
+  </xfr>
+</p>
+<pre>
+  global-scope()
+  |--- | Scope for fact(3):
+  |    |   argument "n"
+  |    |   variable "f"
+  |    |-------| Scope for fact(2)
+  |    |       |   argument "n"
+  |    |       |   variable "f"
+  |    |       |-------| Scope for fact(1)
+  |    |       |       |   argument "n"
+  |    |       |       |   variable "f"
+</pre>
+<p>
+  But this is not all. We have to consider lexical code blocks
+  since they may define local variables.
+  Look at the following code, which is not the cleanest and
+  certainly not the way to write the function factorial,
+  but it is a simple evolution of the factorial code above
+  that illustrates the nesting of lexical blocks:
+  <xfr>
+    Mais nous n'avons pas fini. Nous avons à considérer aussi
+    les blocs lexicaus qui peuvent définir des variables locales.
+    Regardez le code ci-dessous, qui n'est pas le plus propre qui
+    soit et surement pas la bonne façon d'écrire la fonction
+    factorielle, mais il illustre de façon simple l'emboitement
+    de blocs lexicaux et la définition de variables locales
+    à ces blocs:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+int fact(int n) {
+  int f;  
+  if (n==1) 
+    f = 1;
+  else {
+    int t;
+    t = * n fact(- n 1);
+    f = t;
+  }
+  return f;
+};
+</pre>
+<p>
+  The function has a body, composed of a block. That block
+  is a sequence of statements: "if-then-else" and "return".
+  The "if-then-else" statement has two blocks, one for the
+  "if" and one for the "else". We could represent the abstract
+  syntax tree like this:
+  <xfr>
+    La fonction a un corps, qui est un bloc lexical. Ce bloc
+    est une séquence de déclarations: "if-then-else" et "return".
+    La structure de control "if-then-else" définie deux blocs,
+    un pour le "if" et l'autre pour le "else". Nous pouvons
+    représenter l'arbre syntaxique abstrait comme cela:
+  </xfr>
+</p>
+<pre>
+  function[name="fact" type="int" args="(int n)"]
+    block {
+      vardecl["int f"]
+      if-then-else [n==1] 
+        if-block {
+          assignment["f = 1"]
+        }
+        else-block {
+          vardecl["int t"]
+          callsite["fact","- n 1"]
+        }
+    }
+</pre>
+<p>
+  Notice that two blocks have variable declaration statements:
+  "int f;" and "int t;". There are local variables to their
+  relative blocks. This means that each block must have its own
+  scope to hold its local variables.
+  So now we have a more complex stack,
+  stacking scopes for function calls (called <em>frames</em>)
+  and regular scopes for lexical blocks:
+  <xfr>
+    Notez que les deux blocs définissent une variable locale:
+    "int f;" et "int t;". Ces variables sont "locales" au
+    bloc lexical les définissant. Cela impose que chaque bloc
+    soit accompagné de son scope pour contenir les variables
+    locales définies. Nous avons donc une pile plus complexe,
+    empilant des scopes pour les appels de fonction et pour
+    l'emboitement des blocs lexicaux.
+  </xfr>
+</p>
+<pre>
+  global-scope()
+  |--- | Frame for fact(3):
+  |    |   argument "n"
+  |    |   variable "f"
+  |    |   | Block {else}
+  |    |   | variable "t"
+  |    |   |----| Frame for fact(2)
+  |    |       |   argument "n"
+  |    |       |   variable "f"
+  |    |       |   | Block {else}
+  |    |       |   | variable "t"
+  |    |       |   |----| Frame for fact(1)
+  |    |                |   argument "n"
+  |    |                |   local variable "f"
+</pre>
+<p>
+  Which corresponds to the three classes
+  <span class="java-class">Scope</span>,
+  <span class="java-class">Frame</span> and
+  <span class="java-class">GlobalScope</span>.
+  Notice the field "m_parent" that "stacks"
+  scopes.
+</p>
+<pre class="prettyprint lang-java">
+public class Scope {
+
+  protected Scope m_parent;
+  protected IList m_vars;
+  
+  public Scope() {
+    m_vars = new LinkedList();
+  }
+  public Scope(Scope parent) {
+    m_parent = parent;
+    m_vars = new LinkedList();
+  }
+  public Scope getParent() {
+    return m_parent;
+  }
+  public GlobalScope getRoot() {
+    return m_parent.getRoot();
+  }
+}
+
+public class GlobalScope extends Scope {
+
+  protected IList m_funcs;
+  private ICalculator m_calc;
+
+  public GlobalScope(ICalculator calc) {
+    m_funcs = new LinkedList();
+    m_calc = calc;
+  }
+  @Override
+  public GlobalScope getRoot() {
+    return this;
+  }
+}
+</pre>
+<p>
+  Indeed, consider the object graph, corresponding
+  to these classes. A stack is essentially a list of objects
+  where objects are pushed and popped at the
+  top of the stack (the beginning or end of the list).
+  So our call stack starts with creating a
+  global scope, at the base of the stack.
+  Then scopes are pushed by the constructor
+  <span class="java-method">Scope(Scope parent)</span>.
+  Popping occurs via the method
+  <span class="java-method">getParent()</span>.
+  A simple example follows:
+  <xfr>
+    En effet, considérer le graphe d'objets correspondant
+    à ces classes. Une pile est essentiellement une liste
+    d'objets où les objets sont empilés et dépilés sur
+    le sommet de pile (la fin ou le début de la liste).
+    Donc notre pile d'appel commence avec le scope globale,
+    c'est le bas de la pile. Les scopes sont alors
+    empilés par l'appel au constructeur
+    <span class="java-method">Scope(Scope parent)</span>.
+    Les scopes sont dépilés par la méthode
+    <span class="java-method">getParent()</span>.
+    Un simple exemple suit:
+</p>
+<pre class="prettyprint lang-java">
+  Function func;
+  IList params;
+  GlobalScope root = new GlobalScope();
+  Scope current = root;
+  // pushing a new frame for a call site:
+  current = new Frame(current, func, params);
+  // pushing another scope for a lexical block:
+  current = new Scope(current);
+  // popping the block scope:
+  current = current.getParent();
+  // popping the call frame:
+  current = current.getParent();
+</pre>
+
+<h3>Variables versus Functions</h3>
+
+<p>
+  Note that variables may be declared as global variables,
+  in the global scope, or as local variables in any lexical block.
+  However, note that functions may only be defined in the global
+  scope, not in any lexical block.
+  This is confirmed by the following abstracted behavior
+  on the two classes
+  <span class="java-class">Scope</span> and
+  <span class="java-class">GlobalScope</span>.
+  <xfr>
+    Notez que les variales peuvent être déclarées comme
+    des variables globales (dans le scope global) ou bien
+    comme des variables locales à un bloc lexical. Cependant,
+    notez aussi que les fonctions ne peuvent quant à elle
+    être définie que dans le scope global. Cela est
+    visible dans le comportement définie par les classes
+    <span class="java-class">Scope</span> et
+    <span class="java-class">GlobalScope</span>.  
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Scope {
+  protected Scope m_parent;
+  protected IList m_vars;
+
+  public IList.Iterator variables();
+  public Variable lookup(String name);
+  public void declare(Variable v);
+}
+
+public class GlobalScope extends Scope {
+  protected IList m_funcs;
+
+  public IList.Iterator functions();
+  public void declare(Function f) throws CalculatorException;
+  public Function find(String name);
+}
+</pre>
+<p>
+  This means that you cannot define a function within a function.
+  In our language, the following code is not valid, but it could
+  be valid in other programming languages.
+</p>
+<pre class="prettyprint lang-java">
+  int foo() {
+    int i = 2;
+    int bar(int x) { return * 2 x; };
+    return bar(2);
+  };
+</pre>
+
+<h3>Unit Testing Scopes</h3>
+
+<p>
+  Before you can declare any function and call it, in the console
+  of our calculator, you have to implement
+  several pieces. So it is usually a good idea to divide the work
+  so to conquer the complexity. Any piece that can be developped
+  and tested independently must be done first. This is the case
+  with scopes. We have three classes:
+  <span class="java-class">Scope</span>,
+  <span class="java-class">Frame</span> and
+  <span class="java-class">GlobalScope</span>.
+  The class <span class="java-class">GlobalScope</span> is for the
+  global scope. The class <span class="java-class">Frame</span> is
+  for function calls. The class <span class="java-class">Scope</span>
+  is for the nesting of lexical blocks.
+  <xfr>
+    Avant de pouvoir déclarer une fonction et l'appeler dans la console
+    de notre calculateur, il va falloir implémenter plusieurs choses.
+    Dans ce cas, il est souvent judicieux de diviser le travail
+    pour réduire la complexité de ce qu'il y a à faire. Tout morceau
+    de code qui peut être coder et tester en isolation est un bon candidat
+    pour commencer. C'est le cas avec les scopes. Nous avons trois classes:
+    <span class="java-class">Scope</span>,
+    <span class="java-class">Frame</span> and
+    <span class="java-class">GlobalScope</span>.
+    La classe <span class="java-class">GlobalScope</span> est pour le
+    scope globale. La classe <span class="java-class">Frame</span> est
+    pour l'appel de fonction. La classe <span class="java-class">Scope</span>
+    est pour l'emboitement des blocs lexicaux.
+  </xfr>
+</p>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.calculator"
+   classpath="bin;tests.jar;parser.jar;../object.collections/edu-polytech-ricm-oop-collections.jar"
+   classname="calculator.TestCalcV6_01"> 
+  <banner>
+    Finish the implementation of the classes
+    <span class="java-class">Scope</span> and
+    <span class="java-class">GlobalScope</span>.
+    Then run our tests.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Well done.
+  </success>
+  <unfold name="check6_01_unfold">
+  </unfold>
+</check>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.calculator"
+   classpath="bin;tests.jar;parser.jar;../object.collections/edu-polytech-ricm-oop-collections.jar"
+   classname="calculator.TestCalcV6_02"> 
+  <banner>
+    Finish the implementation of the class
+    <span class="java-class">Frame</span> 
+    and then run our tests.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Congrats.
+  </success>
+  <unfold name="check6_02_unfold">
+  </unfold>
+</check>
+
+<h3>Implementing Functions</h3>
+
+<p>
+  We suggests that you approach your coding and testing
+  incrementally, from the simplest functions up to more complex ones.
+  Let us suggest a possible incremental path to get you
+  started:
+  <xfr>
+    Nous vous suggérons d'approcher le codage des fonctions
+    de façon progressive, que cela soit pour le codage
+    et pour le test. Commencez par les fonctions les plus
+    simples et progresser vers les fonctions plus compliquées.
+    Nous vous suggérons la progression suivante:
+</p>
+<p>
+  <b>The smallest possible function:</b>
+</p>
+<pre class="terminal">
+  > void foo1() {};
+  > foo1();
+</pre>
+
+<p>
+  <b>Just add the return statement:</b>
+</p>
+<pre class="terminal">
+  > int foo2() { return 1; };
+  > foo2();
+  -> 1
+</pre>
+
+<p>
+  <b>Just add one arguments:</b>
+</p>
+<pre class="terminal">
+  > int foo3(int x) { return x; };
+  > foo3(2);
+  -> 2
+</pre>
+
+<p>
+  <b>Just add another arguments:</b>
+</p>
+<pre class="terminal">
+  > float foo4(int x, float y) { return + x y; };
+  > foo4(2,3.0);
+  -> 5.0
+</pre>
+
+<h3>Implementing control flow</h3>
+
+<p>
+  Again, we strongly suggests in incremental approach
+  when coding and testing control flow constructs.
+</p>
+<pre class="terminal">
+  > int abs(int x) { if (x &lt; 0) return -x; return x; };
+  > abs(3);
+  -> 3
+  > abs(-3);
+  -> 3
+</pre>
+
+<pre class="terminal">
+  > int abs2(int x) { if (x &lt; 0) return -x; else return x; };
+  > abs2(3);
+  -> 3
+  > abs2(-3);
+  -> 3
+</pre>
+
+<pre class="terminal">
+  > int abs3(int x) {
+  if (x &lt; 0) {
+    int a = -x;
+    return a;
+  }
+  return x;
+  };
+  > abs3(3);
+  -> 3
+  > abs3(-3);
+  -> 3
+</pre>
+
+<pre class="terminal">
+  > int foo4(int x, int y) {
+  if (y != 0) {
+    int t = y;
+    int y = * x t;
+    x = y;
+  }
+  return x+y;
+  };
+  > foo4(2,3);
+  -> 9
+</pre>
+
+<p>
+  And so on... until you feel satisfied with your testing
+  of the "if-then-else" construct. Remember, you can
+  put your tests in a file and ask the class
+  <span class="java-class">CalcMainV6</span> to read
+  it automatically for you. 
+</p>
+<p>
+  It is now time to tests your "while" construct.
+  You can start with the iterative factorial given earlier:
+</p>
+<pre class="prettyprint lang-java">
+int ifact(int n) {
+  int f=1;
+  while (n!=1) {
+    f = * f n;
+    n = - n 1;
+  }
+  return f;
+};
+</pre>
+<p>
+  Working you way to more complex code. To help you, we gave
+  you a bunch of functions in the file "samples/tests-funcs.java".
+</p>
+
+<h3>Final Tests</h3>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.calculator"
+   classpath="bin;tests.jar;parser.jar;../object.collections/edu-polytech-ricm-oop-collections.jar"
+   classname="calculator.TestCalcV6_03"> 
+  <banner>
+    Once you think your tested your entire code and
+    it works, then you can try to run our tests.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check6_03_unfold">
+  </unfold>
+</check>
+
+<h3>That's all folks</h3>
+
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint calculator, Task6 completed"
+  $ git push --all
+</textarea>
+
+

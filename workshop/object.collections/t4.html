@@ -1,0 +1,302 @@
+<vars>
+  sprint=object.collections
+  task=t4
+</vars>
+<h3>Java Interfaces</h3>
+
+<p>
+  Let's take a second here to reflect on our coding.
+  We implemented three classes,
+  the class <span class="java-class">Vector</span>,
+  the class <span class="java-class">List</span>,
+  and the class <span class="java-class">List2</span>,
+  all with the same behavior. 
+  Wouldn't it nice if we
+  could write code that could use any of these classes,
+  without any changes?
+  <xfr>
+    Prenons un moment pour réfléchir à notre code.
+    Nous avons implémenté trois classes,
+    la classe <span class="java-class">Vector</span>,
+    la classe <span class="java-class">List</span>,
+    et la classe <span class="java-class">List2</span>,
+    toutes avec le même comportement. Ne serait-il pas
+    intéressant si nous pouvions écrire du code qui
+    pourrait utiliser ces trois classes, au choix?
+  </xfr>
+</p>
+<p>
+  This is your first encounter with polymorphic programming.
+  The idea is to write code that can work identically with different
+  objects, hence the term polymorphic, since the code works identically
+  with objects of different forms. There are many exemple of
+  polymorphic behaviors in real life. When a professor ask
+  questions, it does so without considering any differences across
+  students: male or female, local or alien, etc. When you feed
+  birds, with seeds, you do it and different species of birds
+  come and eat. When you drive a car, you drive it the same ways
+  irrespective of the make or model of that car.
+  <xfr>
+    C'est votre première rencontre avec le concept de programmation
+    polymorphique. L'idée est d'écrire du code qui fonctionne
+    sur différents types d'objets, d'ou le nom de programmation
+    polymorphique. Il y a de nombreux exemples de comportement
+    polymorphique dans la nature. Un professeur pose ses questions
+    à ses étudiants sans prendre en compte les différences entre
+    étudiants, telles que le sex, l'age, ou le pays d'origine.
+    Si vous nourrissez des oiseaux via des graines dans un mangeoir,
+    vous le faites sans vous souciez du fait que plusieurs espèces
+    d'oiseaux viendront manger. Lorsque vous conduisez une voiture,
+    vous conduisez de la même manière quelle que soit la marque
+    et le modèle de la voiture.
+  </xfr>
+</p>  
+<p>
+  Java has exactly what we need: the concept of <b>interfaces</b>.
+  A Java interface defines a pure behavior, that is,
+  it defines method signatures, but only signatures,
+  no code. It can define inner interfaces as well.
+  <xfr>
+    Java a exactement ce dont nous avons besoin, le concept
+    d'<b>interfaces</b>. Une interface définie seulement un
+    comportement, c'est à dire que des signatures de méthodes,
+    sans implémentation. Une interface peut aussi définir des
+    interfaces internes. 
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">	
+  public interface IList {
+    public interface Iterator {
+      public boolean hasNext();
+      public Object next();
+    }
+    Iterator iterator();
+    int length();
+    Object elementAt(int index);
+    Object updateAt(int index, Object niu);
+    void insertAt(int index, Object elem);
+    Object removeAt(int index);
+    boolean remove(Object elem);
+    boolean contains(Object elem);
+  }	  
+</pre>
+<p>
+  In the code above, we just collected all the methods that we defined
+  for our three classes, in that one interface.
+  We also used an inner interface for the iterator.
+  How is an interface used then? Nothing simpler.
+  <xfr>
+    Dans le code ci-dessus, nous avons juste collecté toutes les méthodes
+    que nous avions défini dans nos trois classes. Nous avons aussi défini
+    une inner interface pour l'itérateur. Mais comment utiliser cette
+    interface en Java? Rien de plus simple.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  void scan(IList array) {
+    for (int i=0; i &lt; array.length(); i++) {
+      Object o = array.elementAt(i);
+      ...
+    }
+  }
+  Vector vector;
+  List   list;
+  ...
+  scan(vector);
+  scan(list);
+</pre>
+<p>
+  See? The code scans a vector or a linked list the same way.
+  But it raises the question how the Java compiler accepts
+  that a vector or a list can be seen as the interface
+  <span class="java-class">IList</span>. Here is how:
+  <xfr>
+    Vous voyez? Le code parcours un vecteur ou une liste
+    chaînée de la même manière. Mais cela pose la question
+    suivante: comment le compilateur Java accepte-t-il qu'un
+    vecteur ou une liste soit vu comme l'interface
+    <span class="java-class">IList</span>. Et bien voici
+    comment:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">	
+  public class List implements IList {
+
+    private class _Iterator implements IList.Iterator {
+      ...
+    }
+    ...
+  }
+
+  public class Vector implements IList {
+
+    private class _Iterator implements IList.Iterator {
+      ...
+    }
+    ...
+  }
+  
+</pre>
+<p>
+  If you declare that one of your classes implements
+  an interface, the Java compiler
+  will then verify that your class implements all the methods
+  defined in the interface. If it is not the case, you
+  will get a compilation error stating that you are missing
+  one or more methods. Be mindfull that such methods must
+  be public methods. In other words, if a method is defined
+  in an interface, its implementation in a class implementing
+  that interface must be qualified as public.
+  <xfr>
+    Si vous déclarez que votre classe implémente une interface.
+    Dans ce cas, le compilateur Java va vérifier pour vous
+    que votre classe implémente toutes les méthodes définies
+    sur l'interface. Si ce n'est pas le cas, vous obtiendrez une
+    erreur à la compilation disant qu'il manque à votre classe
+    des méthodes de l'interface. Il faut savoir que toutes ces
+    méthodes de l'interface doivent être qualifiée de public.
+  </xfr>
+</p>
+<p>
+  Let's look at how polymorphic programming works with iterators
+  now. Look at the code below,
+  see how we can write one method to print
+  the elements of any list, whatever the implementation:
+</p>
+<pre class="prettyprint lang-java">
+  void print(IList list) {
+    IList.Iterator iter = list.iterator();
+    while (iter.hasNext()) 
+      System.out.println(iter.next().toString());
+  }
+  
+  IList list = new List();
+  ...
+  print(list);
+  list = new Vector();
+  ...
+  print(list);
+</pre>
+<p>
+  So let's do this, go to the package
+  <span class="java-package">object.collections.step3</span>
+  and copy 
+  the class <span class="java-class">Vector</span>,
+  the class <span class="java-class">List</span>,
+  and the class <span class="java-class">List2</span>
+  from the Java package
+  <span class="java-package">object.collections.step2</span>.
+  Notice that we gave you the interface
+  <span class="java-class">IList</span>, so go ahead,
+  modify your classes so that they implement the interface
+  <span class="java-class">IList</span> and
+  <span class="java-class">IList.Iterator</span>.
+  <xfr>
+    Il est temps de le faire.
+    Vous allez copier dans le paquet Java 
+    <span class="java-package">object.collections.step3</span>
+    les class <span class="java-class">Vector</span>,
+    class <span class="java-class">List</span>,
+    class <span class="java-class">List2</span>
+    du paquet Java
+    <span class="java-package">object.collections.step2</span>.
+    Notez que nous vous avons donné l'interface
+    <span class="java-class">IList</span>, alors c'est parti,
+    modifiez vos classes dans le paquet
+    <span class="java-package">object.collections.step3</span>
+    pour qu'elles implémentent l'interface
+    <span class="java-class">IList</span> et
+    <span class="java-class">IList.Iterator</span>.
+  </xfr>
+</p>
+<p>
+  To test your changes, you can use
+  class <span class="java-class">MultiListTest</span> in the
+  package <span class="java-package">object.collections.step3</span>.
+  Look at that test class, see how it is written in a completely
+  generic way, using the interface
+  <span class="java-class">IList</span>.
+  <xfr>
+    Pour tester vos changements, vous pouvez utiliser la classe
+    <span class="java-class">MultiListTest</span> dans le paquet
+    <span class="java-package">object.collections.step3</span>.
+    Regardez son code, voyez comment il est écrit avec l'interface
+    <span class="java-class">IList</span>,
+    sans référence aucune à vos trois classes.
+  </xfr>
+</p>
+<p>
+  You will need to fix the list factory, look at the method
+  <span class="java-class">newList</span> and fix the code
+  so that it looks like this:
+  <xfr>
+    Vous allez devoir corriger la fabrique de listes, 
+    la méthode 
+    <span class="java-class">newList</span> devrait être
+    comme cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">	
+static final int VECTOR = 1;
+static final int LIST1 = 2;
+static final int LIST2 = 3;
+static int kind;
+
+static IList newList() {
+  switch (kind) {
+  default:
+    throw new RuntimeException("Unknown kind!");
+  case VECTOR:
+    return new Vector();
+  case LIST1:
+    return new List();
+  case LIST2:
+    return new List2();
+  }
+}
+</pre>
+<p>
+  Interfaces are one of the great tools in Java. Once you defined
+  interfaces, you can write polymorphic code that works with that interface,
+  hidding the fact that the objects are in fact instances of different classes
+  and have different forms. 
+  We can say that the interface <em>abstracts</em> away the implementation.
+  <xfr>
+    Les interfaces sont un des outils fantastiques de Java. Une fois
+    que vous avez défini des interfaces, vous pouvez écrire du code
+    polymorphique qui utilise une implémentation ou une autre, avec presque aucun
+    changement. Nous pouvons dire qu'une interface abstrait l'implémentation,
+    ne donnant que le comportement publique.
+  </xfr>
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.collections"
+   classpath="bin;tests.jar"
+   classname="object.collections.step3.TestList"> 
+  <banner>
+    When done with your changes, let's us check
+    what you did.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check2_unfold">
+  </unfold>
+</check>
+<p>
+  That's all folks for this task. But before we move on,
+  please make sure
+  that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.collections, Task4 completed"
+  $ git push --all
+</textarea>

@@ -1,0 +1,13 @@
+digraph click_detector {
+	OUTSIDE -> INSIDE [label="mouseEntered"];
+	INSIDE  -> OUTSIDE [label="mouseExited"];
+	INSIDE  -> BUTTON_PRESSED [label="mousePressed"];
+	INSIDE  -> INSIDE [label="mouseMoved"];
+	INSIDE  -> BUTTON_RELEASED [label="mouseReleased"];
+	BUTTON_RELEASED -> BUTTON_PRESSED [label="mousePressed"];
+	BUTTON_RELEASED -> BUTTON_RELEASED [label="mouseMoved"];
+	BUTTON_RELEASED -> OUTSIDE [label="mouseExited"];
+	BUTTON_PRESSED -> BUTTON_RELEASED [label="mouseReleased"];
+	BUTTON_PRESSED -> OUTSIDE [label="mouseExited"];
+	BUTTON_PRESSED -> BUTTON_PRESSED [label="mouseMoved"];
+}

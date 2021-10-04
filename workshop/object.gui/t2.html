@@ -1,0 +1,564 @@
+<vars>
+  sprint=object.gui
+  task=t2
+</vars>
+<p>
+	It is time to discuss the basics of graphical interfaces.
+	We provided you with a small foundation upon which we will
+	incrementally build our own toolkit for building graphical
+	user interfaces.
+  <xfr>
+		Il est temps maintenant de discuter des bases des
+		interfaces graphiques. Nous vous avons fourni
+		une fondation simple sur laquelle nous allons construire
+		notre boite à outils pour construire des interfaces graphiques.
+  </xfr>
+</p>
+
+<h3>Our Foundation</h3>
+
+<p>
+  Look in the source folder <em>graphics.public</em> and
+  then in the Java packages 
+  <span class="java-package">object.gui.window</span>.
+	You will see several classes. Let's discuss first
+	these two classes:
+</p>
+<ul>
+	<li> class <span class="java-class">Window</span></li>
+	<li> class <span class="java-class">WindowListener</span></li>
+</ul>
+<p>
+	A window is a surface of pixels on your screen of a given
+	size. You do not manage a window, you create one and it is
+	then managed by the window manager of your platform. But
+	while you do not manage it, you are responsible to paint
+	its contents, that is, the pixels of the window. This
+	is what the window listener is about, it keeps you informed
+	of the size of the window and it asks you to repaint it.
+	The method invocations on the listener respects the following
+	grammar:
+	<xfr>
+		Une fenêtre est une surface de pixels sur l'écran de votre
+		ordinateur. Vous ne gérez par cette fenêtre, vous demandez
+		sa création, d'une certaine taille, puis elle est totalement
+		gérée par le gestionnaire de fenêtre de votre système
+		d'exploitation. Cependant, vous êtes responsable d'en
+		peindre le contenu, c'est à dire donner des couleurs
+		aux pixels de la fenêtre. Vous ferez cela par l'écouteur
+		de fenêtre (WindowListener) qui vous tient au courant
+		de la taille de la fenêtre et vous demande de la repeindre.
+		La grammaire des rappels est la suivante:
+	</xfr>
+</p>
+<pre>
+	(resized paint*)+
+</pre>
+<p>
+ So you always have a resized event first, telling you the
+ size of the window before you are asked to repaint. But you
+ may have to repaint it multiple times before it is resized,
+ if ever resized.
+ But how do you paint a window? For this, you will need
+ to look at the following classes:
+ <xfr>
+	 Vous avez donc toujours un rappel en premier pour vous donnez la
+	 taille de la fenêtre pour ensuite une suite de rappel pour
+	 vous demander de la repeindre. Maintenant la question est
+	 de celle de savoir repeindre une fenêtre. Pour cela, regardez
+	 les classes suivantes:
+ </xfr>
+</p>
+<ul>
+	<li> class <span class="java-class">Graphics</span></li>
+	<li> class <span class="java-class">Color</span></li>
+	<li> class <span class="java-class">Font</span></li>
+	<li> class <span class="java-class">Image</span></li>
+</ul>
+<p>
+	The class <span class="java-class">Graphics</span>
+	provides all the drawing operations necessary to paint
+	a window, such as drawing a line or a filling a rectangle.
+	The drawing happens with the current color setup on the
+	Graphics object. Colors are encoded by instances of the class
+	<span class="java-class">Color</span> as a Red-Green-Blue
+	combination. Via a
+	Graphics object, you can also draw some text, using the
+	font currently setup on the Graphics object, look at
+	the class <span class="java-class">Font</span> which
+  represents a font.
+	To know how to load a font, look at the following
+	method on the class <span class="java-class">Window</span>:
+	<xfr>
+		La classe <span class="java-class">Graphics</span>
+	  vous fournit toutes les opérations nécessaires
+		pour peindre la fenêtre, par exemple les opérations pour
+		tracer une ligne ou bien remplir un rectangle avec une
+	  couleur. Toutes les opérations de traçage ou de remplissage
+		se font avec la couleur courante, associé à l'objet
+		graphics et que l'on peut changer à tout moment.
+		Les couleurs sont encodées par les instances de la classe
+		<span class="java-class">Color</span> par la combinaison
+		des couleurs Rouge-Vert-Bleue (Red-Green-Blue).
+		Par l'objet graphics, vous pouvez aussi tracer du
+		texte, en utilisant la fonte courante qui peut être
+		aussi changée à tout moment. Regardez la classe 
+		<span class="java-class">Font</span> dont les instances
+		représentent les différentes fontes.
+		Pour savoir comment charger une fonte,
+		regardez la méthode suivante de la classe
+		<span class="java-class">Window</span>:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static final String SANS_SERIF = "SansSerif";
+  public static final String SERIF = "Serif";
+  public static final String MONOSPACED = "Monospaced";
+	
+  public abstract Font font(String name, float size);
+</pre>
+<p>
+	Also look at the class
+	<span class="java-class">Image</span> which represents
+	an image, that is, a rectangular surface of pixels.
+	To know how to load an image, look at the following
+	methods on the class <span class="java-class">Window</span>:
+	<xfr>
+		Regardez aussi la classe
+		<span class="java-class">Image</span> dont les instances
+		seront des images, c'est à dire des surfaces rectangulaires
+		de pixels. Pour savoir comment charger une image, à partir
+		d'un flux d'octets,
+		regardez la méthode suivante de la classe
+		<span class="java-class">Window</span>:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public abstract Image load(InputStream is);
+</pre>
+<p>
+	So now we know how to paint our window, but how do we interact
+	with our end user: the human typing on the keyboard and
+	using the mouse? Well, look at the following interfaces:
+	<xfr>
+		Nous savons maintenant comment peindre notre fenêtre, mais comment
+		interagissons nous avec notre utilisateur final? Regardez ces
+		interfaces:
+	</xfr>
+</p>
+<ul>
+	<li> class <span class="java-class">KeyListener</span></li>
+	<li> class <span class="java-class">MouseListener</span></li>
+</ul>
+<p>
+	These two interfaces define
+	two listeners: one for the
+	keyboard strokes and one for both the mouse movements and
+	actions on the mouse buttons.
+</p>
+
+<h3>Experimenting with the foundation</h3>
+
+<p>
+	To better understand these core concepts, there is no better
+	way than to browse the code and then look at a running sample,
+	demonstrating the very basics.
+	Look in the source folder <em>task2</em> and
+  then in the Java packages 
+  <span class="java-package">object.gui.task2</span>
+	and finally at the class
+  <span class="java-class">WindowBasics</span>.
+	Overall, the code is quite simple, but there are a few
+	important points that we need to discuss. Look at
+	the entry point, the usual method 
+  <span class="java-class">WindowBasics.main(String[])</span>:
+	<xfr>
+		Pour mieux comprendre les concepts de notre fondation,
+		il n'y a pas mieux que de regardez du code d'un exemple
+		qui fonctionne. Regardez dans le dossier source
+		<em>task2</em> et dans le paquet Java
+		<span class="java-package">object.gui.task2</span>
+		et finalement la classe 
+		<span class="java-class">WindowBasics</span>.
+		Le code de cet exemple est très simple, mais il y
+		a quelques points important à discuter. Regardez
+		le point d'entrée du code, la méthode 
+		<span class="java-class">WindowBasics.main(String[])</span>:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static void main(String args[]) throws Exception {    
+    bl = new WindowBasics(args);
+  }
+</pre>
+<p>
+	We expect you to be baffled by this entry point, it creates
+	an object and that is it. If you look at the constructor,
+	there is no loop, the constructor just creates a window
+	and returns.
+	<xfr>
+		Vous devriez être surpris par ce code, il crée un objet
+		et puis c'est tout. Si vous regardez le constructeur,
+		il n'y a pas de boucle, 
+		le constructeur crée juste une fenêtre puis se termine.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+WindowBasics(String args[]) {
+  m_win = Window.InitWindow(this);
+}
+</pre>
+<p>
+	So the method
+	<span class="java-method">WindowBasics.main(String[])</span>
+	will return and you would expect the execution to stop.
+	Right?
+</p>
+<p>
+	Well, pay closer attention to the constructor and the
+	fact that it passes <em>"this"</em> to get the window.
+	Looking at the signature, this is about a <em>runnable
+	object</em>:
+	<xfr>
+		Vous devriez donc vous attendre à ce que l'exécution
+		se termine, mais en regardant de plus près, vous voyez
+		que le constructeur passe "this" pour la création de
+		la fenêtre. En regardant la signature, on voit qu'il
+		s'agit d'un <em>runnable object</em>:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static Window InitWindow(Runnable callable);
+</pre>
+<p>
+	An object that is a runnable is an object that implements
+	the interface <span class="java-class">Runnable</span>:
+</p>
+<pre class="prettyprint lang-java">
+public interface Runnable {
+  public void run();
+}
+</pre>
+<p>
+	See, this is where you relinquish control of the execution.
+	At some later time,	the method
+	<span class="java-method">run</span> will be invoked
+	on the object, instance of the class
+	<span class="java-class">WindowBasics</span>.
+	So set a breakpoint on the method
+	<span class="java-method">WindowBasics.run</span>
+	and then launch the execution under the debugger,
+	for the class 
+	<span class="java-class">WindowBasics</span>.
+  You will see, the debugger will suspend the execution
+	at your breakpoint.
+	<xfr>
+		Vous voyez, c'est par là que l'exécution va se poursuivre
+		de façon asynchrone. Pour le voir, mettez un point d'arrêt
+		sur la méthode <span class="java-method">run</span> dans
+		la classe <span class="java-class">WindowBasics</span>.
+    Sous debugger, vous comprendrez le coté asynchrone de
+		cet appel, que vous n'appelez pas, mais qui sera appelé
+		par notre fondation.
+	</xfr>
+</p>
+<p>
+	So let's have a look at that method 
+	<span class="java-method">run</span>.
+	It sets up the listeners on the window
+	and that is it. Of course, remember, you are
+	not in control of the execution, your code will only react
+	through your listeners.
+	<xfr>
+		Regardons le code de la méthode
+ 	  <span class="java-method">run</span> dans
+		la classe <span class="java-class">WindowBasics</span>.
+    On y voit l'enregistrement des écouteurs sur la
+		fenêtre et c'est tout. En effet, rappelez vous
+		que vous n'avez pas le contrôle de l'exécution,
+		votre code va désormais ne faire que réagir
+		aux rappels sur les écouteurs.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+@Override
+public void run() {
+  m_win.setKeyListener(this);
+  m_win.setMouseListener(this);
+  m_win.setWindowListener(this);
+}
+</pre>	
+<p>
+	And sure thing, the class
+	<span class="java-class">WindowBasics</span>
+	implements all the corresponding listener interfaces:
+</p>
+<pre class="prettyprint lang-java">
+  public class WindowBasics
+         implements Runnable, MouseListener, KeyListener, WindowListener  {
+    ...
+  }
+</pre>
+<p>
+	Let's consider the methods of the interface
+	<span class="java-class">WindowListener</span>,
+	there are only two methods:
+</p>
+<pre class="prettyprint lang-java">
+public interface WindowListener {
+  void paint(Graphics g);
+  void resized(int width, int height);
+}
+</pre>
+<p>
+	Launch the execution of the class
+	<span class="java-class">WindowBasics</span>,
+	you will see a red rectangle over a yellow background.
+	Look at the code for the method
+	<span class="java-method">paint</span>, it is pretty
+	easy to read.
+	<xfr>
+		Lancez l'exécution de la classe
+		<span class="java-class">WindowBasics</span>,
+		vous allez voir à l'écran, dans la fenêtre,
+		un rectangle rouge tracé sur un fond jaune.
+		Regardez maintenant le code de la méthode
+		<span class="java-method">paint</span>, il est
+		plutôt facile à comprendre.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public void paint(Graphics g) {
+    g.setColor(Color.yellow);
+    g.fillRect(0, 0, m_win.getWidth(), m_win.getHeight());
+    g.setColor(Color.red);
+    g.fillRect(50, 50, 100, 100);
+  }
+</pre>
+<p>
+	Try resizing the window that popped up on the screen, the method
+	<span class="java-method">resized</span> will be called and
+	then the method
+	<span class="java-method">paint</span> will be called next.
+  Look at the output in the console to confirm this or set
+	breakpoints in those methods.
+	<xfr>
+		Essayez maintenant de redimensionner la fenêtre, avec votre
+		souris, vous allez voir que les méthodes
+		<span class="java-method">resized</span> et 
+		<span class="java-method">paint</span> vont être invoquées.
+		Pour le confirmer, vous pouvez mettre des points d'arrêt
+		ou bien regarder la sortie dans la console.
+	</xfr>
+</p>
+<p>
+	What about the other methods for the different listeners.
+	Well, browse through their code, on the class
+	<span class="java-class">WindowBasics</span>, most of them are just 
+	simple snippets	of code. Nevertheless, make sure to exercise them:
+	move the mouse, press and release mouse buttons, and
+	do not forget to type on the keyboard. Look also at the
+	output in the console to verify your understanding of the
+	execution.
+	<xfr>
+		Qu'en est-il des autres méthodes de nos écouteurs?
+		Et bien, regardez le code de ces méthodes sur la classe
+		<span class="java-class">WindowBasics</span>, la plupart
+		sont très courtes et faciles à comprendre. Mais soyez
+		sûr qu'elles soient exécutées en interagissant avec 
+		la fenêtre: bougez votre souris, appuyez et relachez les
+		boutons de votre souris, et bien sûr n'oubliez de
+		taper sur le clavier, après avoir cliqué au moins une fois
+		dans la fenêtre. Regardez le sortie dans la console pour
+		vérifier votre compréhension de l'exécution.
+	</xfr>
+</p>
+<p>
+	About the keyboard, there are a few points that may need clarification.
+	First, it will only work if your window has the focus, so you need to click
+	in the window at least once. Second,
+	make sure you try out lower case and upper case characters.
+	See what happens? Not everything you type corresponds to a
+	character, the key <em>SHIFT</em> does not, and yet, you
+	are told when it is pressed or released. It will be the
+	same for a lot of other special keys such as <em>ESCAPE</em>
+	<em>CONTROL</em> or even <em>RETURN</em>.
+	<xfr>
+		A propos du clavier, il faut discuter de quelques points
+		particulier. Tout d'abord, soyez bien sûr de donner le focus
+		à la fenêtre, vous devez donc cliquer au moins une fois dans
+		la fenêtre pour que le gestionnaire de fenêtre de votre
+		système d'exploitation route les touches claviers vers la
+		fenêtre. Autre point, essayez les minuscules et les majuscules.
+		Que se passe-t-il? Vous voyez des rappels pour la touche
+		"SHIFT". Essayez avec "CONTROL", "ESCAPE" et "RETURN".
+		Vous voyez c'est pareil. 
+	</xfr>
+</p>
+
+<h3>Small Coding Tasks </h3>
+
+<p>
+	Now that you understand the code provided to you, it is
+	time that you write some code of your own, modifying
+	the class <span class="java-class">WindowBasics</span>.
+	<xfr>
+    Maintenant que vous comprenez le code que nous vous
+		avons fourni, il est temps d'écrire votre propre
+		code. Voici des petites tâches à faire en modifiant
+		le code de la classe <span class="java-class">WindowBasics</span>.
+	</xfr>	
+</p>
+<p>
+	<b>Using colors</b>
+	<br>
+  Change the color of the square drawn on the yellow
+	background when you click the
+	mouse inside the square. To do this, you will have
+	to listen to mouse events.
+	<xfr>
+		Changez la couleur de carré affiché sur le fond
+		jaune lorsque vous cliquez sur le carré. Pour cela,
+		il vous faudra écouter les rappels pour la souris.
+	</xfr>
+</p>
+<p>
+	<b>Click and Drag</b>
+	<br>
+	Click and drag the square with the mouse. Pay attention
+	to the coordinate system, you will rapidly realize that
+	the Y-axis is inverted. Many graphical toolkits are like
+	that, for	historical reasons.
+	<xfr>
+		Cliquez et déplacez le carré avec votre souris.
+		Faites attention au système de coordonnée, vous allez
+		très vite comprendre que l'axe des Y est inversé.
+	</xfr>
+</p>
+<p>
+	<b>Keyboard</b>
+	<br>
+	Move the square with the arrows on the keyboard.
+	Then grow/shrink the square with the keys '+' and '-'.
+	To do this, you will have to listen to the keyboard
+	events. Arrows are not characters, just key codes.
+	<xfr>
+		Déplacer le carré avec les flèches sur le clavier.
+		Puis réduisez ou augmentez la taille du carré avec
+		les touches '+' et '-'.
+	</xfr>
+</p>
+<p>
+	<b>Displaying text</b>
+	<br>
+	Display above the top-left corner of the square the
+	actual coordinates of that corner in the window. Assuming
+	the corner is at x=24 and y=56, you will draw the text
+	"(24,56)". As you drag around the square, the displayed
+	coordinates will change. To draw text, look at the methods on the class
+	<span class="java-method">Graphics</span>.
+	<xfr>
+		Affichez au dessus du coin en haut à gauche du carré,
+		la position en pixel de ce coin du carré. Si le coin
+    en haut et à gauche du carré est aux coodonnées x=24
+		et y=56, vous afficherez le texte "(24.56)". Si vous
+		déplacez le carré, les coordonnées affichées changeront.
+		Pour afficher du texte, regardez les méthodes de la classe
+		<span class="java-method">Graphics</span>.
+	</xfr>
+</p>
+<p>
+	<b>Displaying Image</b>
+	<br>
+	Draw an image instead of a square. You are given a few
+	images in the directory <em>"images"</em> such as the
+	image <em>"linux.png"</em> or <em>"raspberry.png"</em>.
+	To load an image, look at the class
+	<span class="java-class">Window</span>, there is
+	a method <span class="java-method">load(InputStream)</span>
+	that returns an image. To load the image <em>"raspberry-pi.png"</em>,
+	please use a local path such as
+	<span class="java-method">load("images/raspberry-pi.png")</span>
+	<xfr>
+		Affichez une image au lieu d'un carré. Vous avez quelques
+		images disponibles dans le dossier <em>"images"</em>.
+		Pour charger une image, regardez la classe
+		<span class="java-class">Window</span>, there is
+		a method <span class="java-method">load(InputStream)</span>
+		that returns an image. 
+		Par exemple, pour charger l'image <em>"raspberry.png"</em>,
+	  faites le comme cela:
+		<span class="java-method">load("images/raspberry.png")</span>
+	</xfr>
+</p>
+<p>
+	Each loaded image has a size (width and height). But
+	an image can be displayed at any size, which stretches
+	or shrinks the image accordingly.
+</p>
+<p>
+	<b>Drawing Polyline</b>
+	<br>
+	The purpose here is to have you write automata across
+	the use of the mouse and keyboard so that you understand
+	the event-oriented nature of graphic programming.
+	<xfr>
+		Ici le but est de vous aidez avec la programmation
+		d'automates à cheval sur les rappels du clavier
+		et de la souris. 
+	</xfr>
+</p>
+<p>
+	Hit the letter 'p' starts a new polyline.
+  Each click with the mouse adds a new segment to the polyline.
+	Hitting	"Enter" ends the current polyline.
+	You keep adding polylines, meaning you will paint
+	one or more polylines.
+	<xfr>
+		Pour démarrer un nouveau poly-ligne, appuyez sur la touche 'p'.
+		Puis chaque click de la souris va ajouter un segment à la
+		poly-ligne. Enfin, la touche "Enter" va indiquer la fin
+		de la construction de la poly-ligne. Vous pourrez ainsi
+		créer plusieurs poly-lignes qui s'afficheront toutes
+		dans la fenêtre.
+	</xfr>
+</p>
+<p>
+	Allow to select and delete polylines. To select,
+	click <em>near</em> one of the points of a polyline.
+	When you paint, show which polyline is selected,
+	maybe using a different color. With a polyline
+	selected, hitting 'd' will delete the selected polyline.
+	Hitting 'c' will clear the screen of all polylines.
+	<xfr>
+		Vous allez ensuite permettre de selectionner et
+		détruire des poly-lignes. Pour selectioner, il
+		suffira de cliquer près d'un des points d'une
+		poly-ligne. Il vous faudra montrer à l'utilisateur
+		quelle poly-ligne est sélectionnée lors du
+		tracage des lignes (peut-être en utilisant une
+		couleur différente). Avec une ligne sélectionnée,
+		la touche 'd' va la supprimer. La touche 'c'
+		va permettre d'effacer toutes les lignes.
+	</xfr>
+</p>
+<!--
+  worm game: worm grows, always moves,
+             cut through itself -> tail part dies
+             score: integral of length over time.
+             potential add "food" or "dangers".
+             like an enemy that appears and goes towards the head,
+             cuts through any part that it touches
+             kills you if it reaches the head.
+             hunter survives only for so long.
+	-->
+<h3>That's all folks</h3>
+<p>
+	Please do commit your work.
+</p>
+<textarea class="terminal" rows="4" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.gui, Task2 completed"
+  $ git push --all
+</textarea>
+

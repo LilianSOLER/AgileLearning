@@ -1,0 +1,328 @@
+<vars>
+  sprint=prog.basics
+  task=t1
+  step=t1-s1
+</vars>
+
+<p>
+  During this task, you will use Java through line-oriented commands typed
+  at the prompt of a shell in a terminal window. Open up a new terminal
+  window, you may use your mouse or the Ubuntu shortcut keys: Ctrl-Alt-T.
+  Once you have the prompt, change the current working directory to the
+  one where you cloned this workshop: ~/AgileLearning/workshops/oop. Then,
+  source the file <em>setenv.sh</em>. Just like this:
+  <xfr>
+    Durant cette tâche, vous allez utiliser travailler en ligne de commandes,
+    via le shell dans une fenêtre dite <em>terminal</em>. Vous allez donc ouvrir
+    un terminal, soit via votre souris soit en utilisant le racourci clavier
+    d'Ubuntu Ctrl-Alt-T. Un fois que vous avez l'invite du shell, changer votre
+    répertoire courant pour ~/AgileLearning/workshops/oop. Puis sourcer le fichier
+    <em>setenv.sh</em>. Comme ceci:
+  </xfr>
+</p>
+<textarea class="terminal" rows="2">
+  ~$ cd ~/AgileLearning/workshops/oop
+  oop$ source setenv.sh
+</textarea>
+<p>
+  This configures your shell for this workshop, in particular,
+  this sets up the environment variable PATH in your shell. Remember,
+  this is the sequence of paths on your file system that the shell uses
+  to find executable. In other words, the PATH variable tells the shell
+  where to find the executable files. In particular, we have set up a
+  path to the right Java Development Kit, from Oracle; the one that
+  we have downloaded during the registering to this workshop.
+  <xfr>
+    Cela configure l'environnement de votre shell pour cet atelier.
+    En particulier, cela positionne la variable d'environnement PATH.
+    Nous vous rappelons que cette variable est celle qui donne les chemins
+    où se trouvent les fichier exécutables. Nous avons modifié cette variable
+    pour qu'elle donne le bon chemin pour trouver les outils Java,
+    dans le kit de développement Java d'Oracle, celui que nous avons
+    installé sur votre machine lors de l'enregistrement à cet atelier.
+  </xfr>
+</p>
+<p>
+  You can verify yourself that everything worked fine as follows. Of course,
+  the first check should have been that the above command
+  worked without errors, terminating silently. Then, if it was the
+  case, try out the following commands. The first one verifies
+  if java can be launched, just asking its version number.
+  The second one ask the shell which executable file it launches
+  when you type <em>java</em>:
+  <xfr>
+    Vous pouvez vérifier que tout a bien fonctionné comme suit.
+    Tout d'abord, il faut que la commande précédente est fonctionnée
+    sans erreur, c'est le cas si elle se termine silentieusement.
+    Ensuite, vous pouvez taper les commandes suivantes. La première
+    lance Java et lui demande sa version. La seconde demande au shell
+    quel exécutable il lance lorsque vous tapez <em>java</em>:
+  </xfr>
+</p>
+<textarea class="terminal" rows="6">
+  oop$ java -version
+  java version ...
+  
+  oop$ which java
+  ~/AgileLearning/share/jdk/bin/java
+</textarea>
+<p>
+  The path given, telling which java is used, should be prefix
+  by ~/AgileLearning, telling you that you will be using the
+  Java that we installed on your machine.
+  <xfr>
+    Le chemin donné vers l'exécutable doit être préfixé par
+    ~/AgileLearning, ce qui vous indique que vous utiliserez le
+    Java que nous avons installé sur votre machine.
+  </xfr>
+</p>
+<p>
+  <span style="color: red;">
+    <b>Note:</b> it is important that you remember to source the
+    <em>setenv.sh</em> file in each new terminal window you open,
+    if you intend to use that window as part of this workshop.
+  </span>
+  <xfr>
+    <b>Note:</b> il est important que vous vous rappeliez de faire
+    cette commande <em>source</em> dans chaque nouvelle fenêtre terminal
+    que vous allez utiliser pour cette atelier.
+  </xfr>
+</p>
+<p>
+  Now let's do the unavoidable HelloWorld program.
+  The Java sources are in files with a <em>".java"</em> extension.
+  So let's create a file, called <em>HelloWord.java</em> that will
+  contain the source for a class <span class="java-class">HelloWorld</span>.
+  Using your favorite editor, just copy and paste the code below in a file
+  named <em>"HelloWorld.java"</em> in the directory
+  <em>"oop/workspace/hello.world"</em>.
+  Note that this directory already exists.
+  <xfr>
+    Nous allons maintenant faire l'inévitable programme HelloWorld.
+    Les sources Java sont des fichiers avec l'extension ".java". Un
+    fichier "HelloWorld.java" contiendra la classe HelloWorld.
+    En utilisant votre éditeur de texte favori, copier et coller le texte
+    ci-dessous dans un fichier "HelloWorld.java" dans le répertoire
+    <em>"oop/workspace/hello.world"</em>. Ce répertoire existe déjà.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class HelloWorld {
+    public static void main(String[] args) {
+      System.out.println("Hello World!");
+      return;
+    }
+  }
+</pre>
+<p>
+  Now, let's compile the source we just created. Indeed, Java is
+  a compiled programming language, which means that the Java
+  runtime cannot understand the source of a Java class such as
+  the one we just typed. You need to compile your source into
+  a Java class file. Let's do it:
+  <xfr>
+    Maintenant, nous allons compiler le source que nous venons de créer.
+    En effet, Java est un language de programmation qui nécessite la compilation
+    des sources avant de pouvoir les exécuter. 
+  </xfr>
+</p>
+<textarea class="terminal" rows="10">
+  ~$ cd AgileLearning/workshops/oop
+  oop$ cd workspace/hello.world
+  hello.world$ javac HelloWorld.java
+  hello.world $ ls
+  HelloWorld.class
+  HelloWorld.java
+  hello.world $ ls -al HelloWorld.*
+  -rw-rw-r-- 1 ogruber ogruber 426 mars  11 13:43 HelloWorld.class
+  -rw-rw-r-- 1 ogruber ogruber 139 mars  11 13:43 HelloWorld.java
+</textarea>
+<p>
+  See, the Java compiler produced one Java class file, with
+  the <em>".class"</em> extension. Note that the source and
+  the class file have the same name, only the extension changes.
+  The <em>".java"</em> extension for sources,
+  the <em>".class"</em> extension for compiled class files.
+  Notice that a class file is not an executable, from a Linux
+  perspective (it does not have the <em>r-x</em> rights).
+  <xfr>
+    Vous voyez, le compilateur Java a produit un fichier class file,
+    avec l'extension ".class". Notez que le fichier source et class
+    ont le même nom, seule l'extension change. L'extension pour les
+    sources est ".java" et ".class" pour les fichiers classes.
+    Notez aussi que les fichiers classes ne sont pas des exécutables,
+    au sens Linux du terme.
+  </xfr>
+</p>
+<p>
+  To execute your class, you need to ask the Java runtime to load
+  and execute your class, something that is quite easy to do:
+</p>
+<textarea class="terminal" rows="4">
+  hello.world$ java HelloWorld
+  Hello World!
+  $
+</textarea>
+<p>
+  See, that was easy. You need to memorize these steps:
+</p>
+<ul>
+  <li>
+    So the source is in the file <em>HelloWorld.java</em>.
+  </li>
+  <li>
+    It is compiled by <em>javac</em> (java compiler) into a class
+    file <em>HelloWorld.class</em>.
+  </li><li>
+    That class file is loaded by the <em>java</em> (Java runtime)
+    and then executed.
+  </li>
+</ul>
+<p>
+  For your information, the Java runtime is sometimes called 
+  the <b>Java Runtime Environment</b> (JRE) or the
+  <b>Java Virtual Machine</b> (JVM).
+  There are subtil distinctions as to what those names exactly
+  mean, but as far as you are concerned, you should consider them as
+  synonymous. If you want to know/understand more, just come discuss
+  these subtle differences with the teaching staff.
+  <xfr>
+    Pour votre information, le runtime Java est parfois appelé
+    le <em>"Java Runtime Environment"</em> ou bien encore la
+    machine virtuelle Java (<em>"Java Virtual Machine"</em>).
+    Mais pour ce qui vous concerne, ces noms sont essentiellement
+    des synonymes. Si vous voulez en savoir plus, demandez aux
+    enseignants.
+  </xfr>
+</p>
+
+<h3>Checking this step</h3>
+
+<p>
+  Throughout this workshop, we will run various checks.
+  These checks are just there to help you learn,
+  catching some of the most common
+  mistakes that have been made by students in previous years.
+  <xfr>
+    Tout au long ce cet atelier, nous allons lancer des tests.
+    Le but de ces tests est de vous aider à apprendre, en
+    vérifiant que vous n'avez pas fait les erreurs les plus courantes
+    qui ont été faites par les étudiants des années précédentes.
+  </xfr>
+</p>
+<p>
+  Passing the check does not mean you did it right.
+  More importantly, it does not mean that you understood
+  or that you acquired the skills and know-how taught.
+  Only you can make sure of that. Only you can make sure
+  you understood the concepts taught here and are able to reuse
+  those concepts as a developer in the future.
+  <xfr>
+    Passer ces tests ne veux pas dire que vous avez tout bien fait.
+    Plus important encore, passer ces tests ne veux pas dire que vous
+    avez compris ou que vous avez appris les connaissances et le savoir-faire
+    enseignés. Vous êtes le seul à savoir cela. Vous êtes le seul
+    qui peut s'assurer que vous compris et appris les concepts
+    enseignés et que vous saurez les utiliser en tant que développeur
+    dans le future.
+  </xfr>
+</p>
+<p>
+  Even more important, only you can ensure that you do what is necessary
+  for you to remember these skills and know-how for the long run.
+  Why is it necessary to you memorize for the long run?
+  Because you are learning your trade and you will need all these skills
+  and know-how during the next months and years.
+  It is really important that you understand that and that you adapt
+  the way your work. Don't just do what you are asked to do. Learn in
+  a way that you will be able to reuse what you are learning in 3 months
+  or even 2 years.
+  <xfr>
+    Encore plus important, vous êtes le seul à pouvoir assurer que vous allez
+    mémoriser ces compétences et ces connaissances durablement. C'est important
+    pour vous parce que vous allez avoir besoin de ces connaissances durant les
+    mois et les années à venir. C'est important que vous compreniez cela.
+    Et du coup, il est important que vous adaptiez votre façon de travailler
+    en conséquence.
+  </xfr>
+</p>
+<p>
+  At the very least, take notes, which is one of the best
+  long-term learning trick. The best way is to write down the notes on a
+  piece of paper as you learn. It is the fastest, it is easy to write text and
+  draw schemas, much simpler and faster than using editors, unless if you
+  have a pencil-capable tablet and know how to use it well.
+  Then, later, go through your notes and
+  clean them up into an electronic form than can be easily searched.
+  You could use a markdown language so that you can mix text, images,
+  and links to Web pages or even to the very pages of this course.
+  For your hand-drawn schemas, you can take a picture or scan them
+  rather than spending hours redoing them.
+  <xfr>
+    Au minimum, prenez des notes, c'est un des meilleurs moyens
+    d'apprendre pour le long terme. Le meilleur moyen est d'écrire vos notes
+    manuellement puis de revenir dessus pour en faire un document electronique.
+    Ecrire manuellement est simple, rapide, et permet de faire des schémas
+    rapidement. On peut facilement faire cela au fur et à mesure que l'on
+    apprends quelque chose de nouveau. Utiliser des éditeurs est bien plus lent
+    et introduit beaucoup plus de distraction lors du processus d'apprentissage.
+  </xfr>
+</p>
+<p>
+  You have to understand the two steps are important to engage your long-term
+  memory. Just reading and doing does not induce long-term memorization.
+  The memorization will really happen when you are
+  going through your notes again and working at restructuring them,
+  understanding them, and asking yourself questions and finding answers.
+  Additionnally, reusing these skills over and over is also important
+  for long-term memorization.
+  <xfr>
+    Vous devez comprendre que ces deux étapes sont importantes pour engager
+    une mémorisation sur le long-terme. La mémorisation va s'opérer lorsque
+    vous allez revenir sur vos notes et les reprendre sous forme electronique.
+    Ce sera le moment de vérifier que vous avez bien compris, de poser des
+    questions et de trouver les réponses. Un dernier point, il vous faudra
+    réutiliser ces connaissances et ces compétences régulièrement pour assure
+    leur mémorisation sur le long terme.
+  </xfr>
+</p>
+<check
+   silent="onSuccess"
+   blocking="false"
+   lang="java"
+   cwd="workspace/hello.world"
+   classpath=".;bin;tests.jar"
+   classname="tests.prog.basics.task1.Check1">
+  <banner>
+    This check will launch your HelloWorld class.
+    It should succeed if your HelloWorld class exists and
+    executes without error.
+  </banner>
+  <hint>
+    Something is not quite right, check your <em>hello.world</em> project
+    in the <em>workspace</em> directory:
+    <ol>
+      <li>
+	Make sure that you have a file called HelloWorld.java in
+	the <em>hello.world</em> directory.
+      </li>
+      <li>
+	Make sure that you have a file called HelloWorld.class in
+	the <em>hello.world</em> directory.
+      </li>
+      <li>
+	Make sure that you can load and execute your class HelloWorld
+	like this:
+	<textarea class="terminal" rows="3" >
+  hello.world$ java HelloWorld
+  Hello World!
+	</textarea>
+      </li>
+    </ol>
+    Ask for help if you need to.
+  </hint>
+  <success>
+    Cool, nicely done.
+  </success>
+  <unfold></unfold>
+</check>

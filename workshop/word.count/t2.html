@@ -1,0 +1,582 @@
+<vars>
+  sprint=word.count
+  task=t2
+</vars>
+<p>
+  The <em>"word count"</em> program is
+  available in all good linux distribution. It is a simple
+  command line tool that prints the count of lines, words, and
+  characters for the text files given as arguments. Have a quick look
+  at the man page.
+  <xfr>
+  	 Le programme <em>word-count</em> est
+	 disponible sur la plupart des distributions Linux
+	 (programme "wc"). C'est un simple outil disponible en
+	 ligne de commande, qui affiche le nombre de lignes, mots
+	 et caractères pour des fichiers textes passés en arguments.
+	 Regardez rapidement la page man du programme wc.
+  </xfr>
+</p>
+<textarea class="terminal" rows="2">
+  $ man wc
+</textarea>
+<p>
+  Let's try it on a small text that we provided you: "test.utf8".
+	Please try this:
+  <xfr>
+    Essayons ce programme sur un petit fichier de texte que nous vous
+		avons fourni: "test.utf8". Voici comment faire:
+  </xfr>
+</p>
+<textarea class="terminal" rows="4">
+  oop$ cd workspace/word.count
+  word.count$ wc test.utf8 
+  19  169 1124 test.utf8
+</textarea>
+<p>
+  This is easy, the file has 19 lines, 169 words, and 1124 characters.
+  So that is great. Even better, our word count will be able to do the same
+  thing:
+	<xfr>
+		C'est simple, le fichier a 19 lignes, 169 mots, et 1124 caractères.
+		Notre programme word.count pourra faire la même chose:
+	</xfr>
+</p>
+<textarea class="terminal" rows="5">
+  oop$ cd workspace/word.count
+  word.count$ java -cp bin word.count.step1.WordCountStep1 test.utf8
+	Vocab	Lines	Words	Chars 
+	0	    19	  169	  1124	test.utf8
+</textarea>
+<p>
+  Notice that we will count the same number of lines, words, and characters,
+  but also notice that will have one more column, the column named <em>Vocab</em>.
+  That will be an extra functionality of our word count program, so for now,
+	let's just ignore it.
+	<xfr>
+		Vous noterez que nous calculons le même nombre de lignes, de mots, et
+		de caractères. Mais nous avons un chiffre de plus, 0 pour la colonne "Vocab",
+		un chiffre que nous allons ignorer pour l'instant.
+	</xfr>
+</p>
+<p>
+  Let's discuss word counting on multiple files.
+  The <em>wc</em> can actually process multiple files at once.
+	This is cool and extremely useful for developers, since it allows
+  to compute the number of lines of code for their project.
+  It is always a nice quantitative measure of a developer's work. Something
+  that you can be used on the day of your project defense or when interviewing
+  for a job and the recruiter asks you about your programming experience.
+	<xfr>
+		Nous allons discuter la possibilité de faire du comptage sur
+		plusieurs fichiers. 
+ 		C'est vraiment utile pour un développer, puisque cela permet de connaitre
+ 		le nombre de lignes de code d'un projet.
+ 		C'est toujours une mesure intéressante de la taille du projet, ce qui
+ 		peut vous servir le jour d'une soutenance ou lors d'un entretien
+ 		de recrutement comme un élément quantitatif de votre travail.
+	</xfr>
+</p>
+<textarea class="terminal" rows="6">
+  oop$ cd workspace/word.count
+  oop$  wc word.count/word/count/step1/*.java
+   70  167 1457 word.count/word/count/step1/WordCount.java
+   49  150 1709 word.count/word/count/step1/WordCountStep1.java
+  119  317 3166 total
+</textarea>
+<p>
+	Cool, but how could we easily count for all the Java source files
+	of an Eclipse projet. Manually typing all paths to all Java
+	packages in all source folders seems error-prone and not efficient.
+  So how do we  know all the Java files? We certainly do not want to
+  type all the file names, we would like to find all the java
+  sources. We can use the find command for that:
+	<xfr>
+		Cool, mais comment pourrions nous compter tous les fichiers sources
+		d'un projet Eclipse? De devoir taper manuellement tous les chemins
+		de tous les paquets Java de tous les dossiers sources semble être
+		une approche inefficace et peu fiable. Pour connaître tous les
+		fichiers sources, nous pouvons utiliser la commande suivante:
+	</xfr>
+</p>
+<textarea class="terminal" rows="4">
+  oop$ cd workspace/word.count
+  word.count$ find word.count -name "*.java" -print
+  ...
+</textarea>
+<p>
+  So via this command, you get all the files, whose names are matching the
+  regular expression "*.java". Now the question is how to
+	combine the two commands, the command "wc" to count and
+	the command "find" to find all the files. This is how
+	to do this:
+	<xfr>
+		Ainsi vous obtenez la liste de tous chemins de tous les
+		fichiers sources Java. Mais comment composer les deux commandes,
+		la commande "wc" pour compter et la commande "find" pour
+		trouver les fichiers? Voici comment faire:
+	</xfr>
+</p>
+<textarea class="terminal" rows="5">
+  $ wc `find word.count -name "*.java" -print`
+  ...
+  1900  6938 51056 total
+  $
+</textarea>
+<p>
+  There you have it. All the files, all the counts (lines, words,
+  and characters), and a nice total that you can use.
+  So what is the trick we used to combine these two commands?
+	<xfr>
+		Et voilà! Nous avons le compte pour tous les fichires source
+		Java, nous avons le détails du compte des caractères, des lignes,
+		et des mots par fichier mais nous avons aussi le total.
+		Mais comment avons nous fait pour combiner ces deux commandes?
+	</xfr>
+</p>
+<p>
+  See how we used the character <em><b>`</b></em> to surround
+  the find command. Do not confuse the character <em><b>`</b></em>
+	and the character <em><b>'</b></em>, the first is the backward single quote
+	while the second is the regular vertical single quote. Also, do not confuse
+	these two characters with the regular <em><b>"</b></em> double quote either.
+	This trick will execute whatever is in between the characters
+  <em><b>`</b></em> first, then using the output of that execution as
+	arguments to the command "wc". Try:
+	<xfr>
+		Vous voyez comment nous avons utilisé le caractère <em><b>`</b></em>
+		pour entourer la commande "find".
+		Ne pas confondre le caractère <em><b>`</b></em> et le caractère
+		<em><b>'</b></em>, le premier est l'apostrophe inversée alors que le
+		second est l'apostrophe normale. Ne confondez pas non plus
+		avec le caractère <em><b>"</b></em> qui est le guillemet.
+		Cela indique au shell que
+		tout ce qui se trouve entre les caractères <em><b>`</b></em> doit
+		être exécuté en premier et le résulat de l'exécution sera utilisé
+		comme arguments pour la commande "wc". Essayez ceci:
+	</xfr>
+</p>
+<textarea class="terminal" rows="7">
+  word.count$ echo ls
+  ls
+  word.count$ echo "ls"
+  ls
+  word.count$ echo `ls`
+  bin streams test-html.utf8 tests.jar test-small.utf8 word.count
+</textarea>
+<p>
+	The first command echoes the string "ls",
+	as confirmed by the second command.
+	But the third command is different, the command `ls` is executed first and
+  it produces its output: the list of files in the current directory.
+  Then, that output is used as the arguments passed to
+  the <em>echo</em> command.
+  <xfr>
+    La première ligne de commande est un simple écho, comme nous le confirme
+    la seconde commande. Pour la troisième, la commande "ls" est d'abord exécutée
+    et produit un texte qui est la liste des fichiers dans le répertoire courant,
+    c'est ce texte qui est passé à la commande echo et qui s'affiche donc.
+  </xfr>
+</p>
+<p>
+  With modern shells, you can also use the following syntax that
+  makes more complex nesting of commands easier/clearer.
+</p>
+<textarea class="terminal" rows="6">
+  $ echo $(ls)
+  bin streams test-html.utf8 tests.jar test-small.utf8 word.count
+  $ wc $(find word.count -name "*.java" -print)
+  ...
+  1900  6938 51056 total
+  $
+</textarea>
+<p>
+  Would the nesting trick works with our Java program? Of course, it is
+  a shell trick and it will work with any program. But now you can
+	confirm how it works because you can see what are the arguments
+  passed to your code, look at the code of the class
+	<span class="java-class">WordCountStep1</span>, in particular
+	the code for the method
+	<span class="java-method">main</span> and see that it processes
+	the arguments given on the command line.
+  <xfr>
+    Est-ce que cette astuce fonctionnerait avec notre programme Java?
+    Bien sûr puisque c'est une astuce du shell et elle marchera donc
+    avec n'importe quel programme. L'intéret ici est que vous pouvez
+    maintenant vous en convaincre puisque vous pouvez regarder la liste
+    des arguments que reçoit votre programme. Regardez la classe
+    <span class="java-class">WordCountStep1</span>, en particulier
+    le code de la méthode 
+	  <span class="java-method">main</span>, vous y trouverez le traitement
+    des arguments donnés en ligne de commande.
+  </xfr>
+</p>
+<textarea class="terminal" rows="8" cols="69" wrap='off'>
+  oop$ cd workspace/word.count
+  word.count$ java -cp bin word.count.step1.WordCountStep1 `find word.count -name "*.java" -print`
+  ...
+  Totals:
+      Vocab   Lines   Words   Chars   
+      0       0       0       0
+  $
+</textarea>
+<p>
+  Or:
+</p>
+<textarea class="terminal" rows="8" cols="69" wrap='off'>
+  oop$ cd workspace/word.count
+  word.count$ java -cp bin word.count.step1.WordCountStep1 $(find word.count -name "*.java" -print)
+  ...
+  Totals:
+      Vocab   Lines   Words   Chars   
+      0       0       0       0
+  $
+</textarea>
+<p>
+  Well, the shell trick works, does it not? Sure it does,
+  but the counting is not implemented yet.
+  This is your job. Yet, as you can see,
+  the shell in Linux can be a powerful
+  tool for you. Sometimes a corky one, but always a useful one.
+  <xfr>
+ 		Bien, le programme shell fonctionne, come vous pouvez le voir
+ 		avec tous les fichiers traités, mais le comptage n'est
+ 		pas encofre implémenté. Ceci va être votre job. 
+ 		Maintenant comme vous l'avez vu, les shell Linux peut
+ 		être un outil puissant pour vous. Parfois compliqué, mais
+ 		puissant.
+  </xfr>
+</p>
+
+<h3>Get started</h3>
+
+<p>
+  To get you started, we gave you a working word count
+  program in Java. In the Eclipse <em>word.count</em>
+  project, look at the source folder <em>word.count</em>.
+  Then look at the 
+  class <span class="java-class">WordCountStep1</span>,
+  with the method <span class="java-method">main</span>,
+  in the Java package 
+  <span class="java-package">word.count.step1</span>.
+  <xfr>
+   Pour démarrer, nous vous avons donné un programme word count
+  	qui fonctionne. Dans le projet Eclipse <em>word.count</em>,
+  	regardez le source folder <em>word.count</em>.
+  	Puis regardez la
+  	classe <span class="java-class">WordCountStep1</span>,
+  	avec la méthode <span class="java-method">main</span>,
+  	dans le package 
+  	<span class="java-package">word.count.step1</span>.
+  </xfr>
+</p>
+<p>
+  We ask that you read and understand all the code.
+  This is practice of an important skill: reading someone
+  else's code. We know that most developers do not fancy reading
+  code, they prefer to write their own code. But this is 
+  a good way to gain experience by learning new ways to write code. 
+	<xfr>
+		Nous vous demandons de lire et de comprendre le code.
+		C'est une pratique importante: lire du code écrit par
+		quelqu'un d'autre. Nous savons que la plupart des développeurs
+    n'aiment pas lire le code des autres, mais c'est un bon moyen
+    de gagner de l'expérience et d'apprendre de nouvelles façons
+    d'écrire du code. 
+	</xfr>
+</p>
+<p>
+  Still not convinced? Well, do you really think you will
+  be coding from scratch in your next internship or job?
+  Well, guess again! You will integrate a team with existing
+  code. You will have to read and understand that code base
+  before you can actually evolve it. Practicing reading code
+  will make you a better developer and a better team player.
+  <xfr>
+ 		Toujours pas convaincu? Pensez-vous réellement que vous allez
+ 		coder depuis zéro dans votre prochain stage ou votre premier boulot?
+ 		Pas du tout, vous allez intégrer une équipe avec du code existant.
+    Vous allez devoir lire et comprendre le code existant avant de pouvoir 
+ 		le faire évoluer. Donc vous devez apprendre à lire et à comprendre du code,
+ 		cela fera de vous un meilleur développeur qui s'intègrera plus facilement
+    au sein de projets existants.
+  </xfr>
+</p>
+<p>
+  Now, look at the method
+  <span class="java-method">main</span>
+  on the class
+  <span class="java-class">WordCountStep1</span>.
+  It shows you how to handle the program arguments.
+  It shows you how to open files, which is something
+  really important and useful to know.
+  <xfr>
+   Regardez la méthode
+  	<span class="java-method">main</span>
+  	de la classe
+  	<span class="java-class">WordCountStep1</span>.
+  	Elle vous montre comment traiter les arguments du programme.
+  	Elle vous montre comment ouvrir des fichiers, ce qui est quelquechose
+  	d'important et utile à savoir.
+  </xfr>
+</p>
+<p>
+  Look also at the method
+  <span class="java-method">parse()</span>
+  on the class
+  <span class="java-class">WordCount</span>.
+  It shows you how to read from an input stream,
+  wrapping it using a reader
+  (<span class="java-class">InputStreamReader</span>),
+  like we discussed in the previous task.
+  <xfr>
+  	Regardez aussi la méthode
+  	<span class="java-method">parse()</span>
+  	de la classe
+ 	 <span class="java-class">WordCount</span>.
+  	Elle vous montre comment lire depuis un flot d'entrée,
+  	en utilisant un objet dédiée (reader)
+  	(<span class="java-class">InputStreamReader</span>),
+  	comme nous en avons discuté dans les tâches précédentes.
+  </xfr>
+</p>
+<p>
+  You remember that the method
+  <span class="java-method">read()</span>
+  returns the character read, as an integer in the range 0 to 16383
+  (<tt>0x00-0xffff</tt>), or -1 if the end of the stream has
+  been reached. So this means we need to handle that specific
+  case:
+   <xfr>
+  	Vous vous rappelez que la méthode 
+  	<span class="java-method">read()</span>
+  	retourne le caractère lu, comme un entier dans l'intervalle 0 à 16383
+  	(<tt>0x00-0xffff</tt>), ou -1 si la fin du flot a été atteinte.
+   	Donc cela signifie que nous devons traiter ce cas particulier:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public void parse() throws IOException {
+    char c;
+    int r;
+    r = reader.read();
+    while (r!=-1) {
+      c = (char)r;
+      ...
+      r = reader.read();
+    }
+  }
+</pre>
+<p>
+	Then, there is the switch statement that interprets each read character,
+	one after the other. The code splits the stream of characters when it finds
+	a separator character or a new line ('\n'). 
+	<xfr>
+		Maintenant, regardons le bloc "switch" qui interprète les caractères
+		au fur et à mesure qu'ils sont lus. Le code découpe le flux de caractères
+		lorsqu'il trouve un caractère séparateur ou '\n'.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public void parse() throws IOException {
+    char c;
+    int r;
+    r = reader.read();
+  
+    // this variable that tells if the last character, read from the stream,
+    // was a separator character or any other character
+    boolean lastCharNotSeparator = false;
+  
+    while (r!=-1) {
+      c = (char)r;
+      switch(c) {
+      // these characters are word separators:
+      case '(':
+      case ')':
+      case '.':
+      case ',':
+      case ':':
+      case ';':
+      case ' ':
+        lastCharNotSep = false;
+        break;
+      // this character marks the end of a line
+      case '\n':
+        lastCharNotSep = false;
+        break;
+      // all other characters are not separators, 
+      // they are making up words
+      default:
+        lastCharNotSep = true;
+      }
+      r = reader.read();
+    }
+  }
+</pre>
+<p>
+	The code above parses a stream of characters in accordance with the
+  following specification:
+	<xfr>
+		Le code ci-dessus parse un flôt de caractères en accord avec la
+    spécification suivante:
+	</xfr>
+</p>
+<ul>
+	<li>
+    <b>Separators</b> are the following characters:
+		<ul>
+			<li> space: ' '</li>
+			<li> parenthesis: '(' and ')'</li>
+			<li> comma: ','</li>
+			<li> period: '.'</li>
+			<li> semi-column: ';'</li>
+			<li> column: ':'</li>
+		</ul>
+    <xfr>
+      Ces caractères sont les séparateurs de mots.
+      </xfr>
+	</li>
+  <li>
+    <b>Word</b>:
+    <em>
+      a word is any non-zero-length sequence of characters 
+      delimited by separators or the end of line.
+    </em>.
+		<xfr>
+			Un mot est une séquence non-vide de caractères délimitée par
+			des séparateurs ou la fin de ligne.
+		</xfr>
+  </li>
+  <li>
+    <b>Line</b>:
+    <em>
+      a line is a sequence of characters terminated by the newline character '\n'.
+    </em>
+		<xfr>
+			Une ligne est une séquence de caractères terminée par une caractère
+			indiquant la fin de ligne ('\n').
+		</xfr>
+  </li>
+</ul>
+<p>
+  You are asked to add the few lines of code necessary, in the method
+  <span class="java-method">parse()</span>,  
+  to count lines, words, and characters, according to the specification above.
+  This means incrementing the fields
+  <span class="java-field">lineCount</span> and
+  <span class="java-field">wordCount</span> and
+  <span class="java-field">charCount</span> while parsing.
+  As usual, ask questions if you need to.
+  <br>
+  <b>Note:</b> ignore the method
+  <span class="java-method">vocabCount</span>
+  on the class
+  <span class="java-class">WordCount</span>.
+  We will implement that method in the next task.
+	<xfr>
+    On vous demande de rajouter les quelques lignes de code nécessaire,
+    dans la méthode
+    <span class="java-method">parse()</span>,  
+    pour compter les lignes, mots, et caractères.
+    Cela demande d'incrémenter les champs 
+    <span class="java-field">lineCount</span> et
+    <span class="java-field">wordCount</span> et
+    <span class="java-field">charCount</span> lors
+    du parsing.
+		Posez des questions si vous avez besoin.
+    <br>
+		<b>Note:</b> vous pouvez ignorer le méthode
+		<span class="java-method">vocabCount</span>
+		sur la classe
+		<span class="java-class">WordCount</span>,
+		nous en discuterons plus tard.
+	</xfr>
+</p>
+<p>
+  Do you have added the necessary lines of code and <b>have you done
+    your own testing
+  to make sure it works</b>? Great, it is time to check if you did it right.
+  The check below will test your line, word, and character counting
+  against a small text:
+  <xfr>
+    Avez-vous rajouté les lignes de code nécessaires et avez-vous tester
+    que le code marche? Super, il est temps alors de lancer notre test,
+    un test qui va tester vos modifications pour compter les
+    lines, mots, et characters sur ce petit text:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, \n" + 
+    "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \n" + 
+    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris \n" + 
+    "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in \n" + 
+    "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla \n" + 
+    "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa \n" + 
+    "qui officia deserunt mollit anim id est laborum.";
+</pre>
+<p>
+  The text above has 6 lines, 69 words, and 451 characters.
+  Note that it has 6 lines and not 7 lines  because the
+  last <em>line</em> is not a line by the above specification
+  because it does not end with the character '\n'.
+  This is one example where we can see the importance of the specification.
+  A program must implement a specification, the specification gives the meaning to the code. In this case,
+  although a human would naturally consider that the text has 7 lines, the specification is very clear,
+  this text has 6 lines, not 7 lines. A specification tells you what the code must do and the code you
+  write must respect the specification. 
+  <xfr>
+    Ce text a 6 lignes, 69 mots, et 451 caractères. Notez qu'il a 6 lignes et non pas 7 lignes.
+    En effet, si vous lisez attentivement la spécification, la dernière line n'est pas une ligne
+    car elle n'est pas terminée par le caractère '\n'. Vous voyez ici l'importance d'une spécification,
+    c'est ce qui donne le sens au code que l'on écrit. Ici, la spécification est très claire, le text
+    a 6 lignes et non pas 7. La spécification indique ce que le code doit faire et votre code doit
+    respecter la spécification.
+  </xfr>
+</p>
+<p>
+  This means that the clearer is the specification, that is, the more you understand what the code is
+  supposed to do, the easier it is for you to write the code and then write the tests that can check
+  that it works, that is, that the code respects its specification. As you will discover, it is hard
+  and painful to write code when you have no clear understanding of what it is supposed to do. The
+  writing process becomes long and unclear. Then worse, the testing is somewhat a waste of time since
+  no one has a clear understanding of what needs to be tested. Understanding a specification and
+  writing code that respects that specification is one of the fundamental pillars of software development.
+  <xfr>
+    Cela veut dire que plus la spécification est claire, plus vous comprenez ce que le code est censé faire,
+    plus il est facile pour vous d'écrire le code et d'écrire les tests qui vont vérifier que le code respecte
+    sa spécification. Comme vous allez le découvrir, il est pénible d'écrire du code lorsque l'on ne comprends
+    pas vraiment ce qu'il doit faire et la période de tests devient vite l'enfer. Comprendre une spécification
+    et savoir écrire du code qui respecte cette spécification est l'un des pilliers fondamentaux du
+    développement logiciel.
+  </xfr>
+</p>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="word.count.step1.TestWordCount"> 
+  <banner>
+  </banner>
+  <hint>
+    Not quite. Try again.    
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+<div name="check1_unfold" style="display:none;" >
+</div>  
+<p>
+  That's all folks for this task. 
+  Please make sure that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="4" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint word.count, Task2 completed"
+  $ git push --all
+</textarea>

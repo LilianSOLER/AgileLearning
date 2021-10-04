@@ -1,0 +1,303 @@
+<vars>
+  sprint=ricm3.ovm
+  task=t1
+</vars>
+
+<p>
+  The goal of this task is to get you started with the concept of a
+  parser that builds an Abstract Syntax Tree (AST) that is then evaluated
+  by an interpreter. You are already familiar with the concepts:
+  parser, builder, and interpreter. They were present in the previous
+  calculator code we wrote. Here, we will more precisely understand
+  what these concepts are:
+</p>
+<ol>
+  <li>Parser</li>
+  <li>Abstract Syntax Tree</li>
+  <li>Interpreter</li>
+</ol>
+<p>
+  The parser parses some text, a sequence of characters that represents
+  a program. From parsing that text, the parser builds
+  an Abstrat Syntax Tree (AST); the AST is the tree of objects representing
+  the program. Understand that the source of a program is a textual form,
+  it is a sequence of characters. That sequence of characters can be parsed
+  and a tree of objects can be created whose purpose is to represent the
+  same program, but using objects rather than characters.
+</p>
+<p>
+  The purpose of the AST is to be evaluated. Why? To interpret the program.
+  See, the interpreter is a program that will interpret the program represented
+  by an AST in order to execute it. Our language here will be simple, it will
+  be about evaluating arithmetic expressions and managing a few variables.
+  So the interpretation of ASTs will be about evaluated arithmetic expressions
+  and assigning variables with values. Nothing too difficult to understand.
+</p>
+<p>
+  When we coded our calculator, we saw pretty much the same concepts.
+  We saw such a tree when coding our calculator, remember?
+  We created a tree of objects that represented an expression.
+  Then, we evaluated that tree to compute the value of an expression.
+  Here, the idea is the same, but applied to a different language,
+  introducing variables. Also, the code structure is a bit different,
+  introducing a parser, a builder, and an intepreter.
+</p>
+
+<h3>The language</h3>
+
+<p>
+  We need to start with the syntax and semantics of the language
+  we intend to parse and represent as objects. Indeed, we need
+  to know what we are talking about.
+</p>
+<p>
+  The syntax of a language is what you have the right to write down.
+  Like for french or english, the language is composed of words,
+  and each word has a specific spelling. Then, words can be composed
+  in statements that means something. So for instance, you can write:
+</p>
+<pre>
+  2 + 3
+  2 + (3 * 4)
+</pre>
+<p>
+  You cannot write the following:
+</p>
+<pre>
+  2 #$ ^%^#@@
+  @x : 2 * 3
+</pre>
+<p>
+  So what can you write? You can write arithmetic expressions,
+  using integer values, the classical arithmetic operators ('+', '-',
+  '*', '/'). You may also use parenthesis.
+  The following statements are examples of
+  arithmetic expressions:
+</p>
+<pre>
+  (2 + 3) - 3
+  2 + (3 * 4) / 2
+</pre>
+<p>
+  You can also write statements that are assignments:
+</p>
+<pre>
+  x = 2
+  y = 3 * x
+</pre>
+<p>
+  Notice that a statement names a variable on
+  the left-hand side of the '=' sign and gives an expression
+  on the right-hand side. The semantics is the following.
+  First, the named variable must be looked up in the context
+  and created if it does not already exist. What is the context?
+  The context is the list of all known variables. What is
+  a variable? It is a name and a current value.
+  Second, the named variable must be assigned with the value
+  resulting from the evaluation of the expression.
+</p>
+<p>
+  An interpreter is a never-ending loop. It gets a line of text
+  as input, it parses it, and then interprets it. The interpretation
+  is about executing what the text means, exactly like your brain
+  does when reading some text. You first parse the text to recognize
+  the words and then you interpret the words to get the meaning
+  of the text. So for instance,
+  you can understand the following text:
+<p>
+<pre>
+  x = 2 + 3
+  y = 4 * x
+</pre>
+<p>
+  Because you know the semantics of a number (it is that number
+  itself) and you know the semantics of the '+' and '*' operators,
+  they represent the addition and the multiplication.
+  You also know the semantics of the assignment operator '='.
+  Having this knowledge, your brain can interpret that text and know that
+  in the end the value of the variable 'x' is '5' and the value
+  of the variable 'y' is '20'.
+</p>
+<p>
+  Here, we are trying to write a program that can do the same.
+  The program will parse and interpret
+  the same text, like your brain does. The parser will parse the
+  text and produce a tree of objects that describe the meaning
+  of the text. Then, it will be able to evaluate that tree of
+  objects, which will in fact interpret the meaning of the original
+  text. The result of this evaluation will be that the
+  the value of the variable 'x' will be '5' and the value
+  of the variable 'y' will be '20'.
+</p>
+
+<h3>The Parser/Builder/Interpreter Combo</h3>
+
+<p>
+  Now, we will introduce the parser and the builder for the AST.
+  The parser is the code that reads a stream of characters, the
+  source of the program, and drives the builder in order to
+  build the AST. Look at the interface
+  <span class="java-class">IBuider</span>:
+</p>
+<pre class="prettyprint lang-java">
+public interface IBuilder {
+  Expression newValue(String s);
+  Expression newNegOp(Expression e);
+  Expression newAddOp(Expression e1,Expression e2);
+  Expression newSubOp(Expression e1,Expression e2);
+  Expression newDivOp(Expression e1,Expression e2);
+  Expression newMultOp(Expression e1,Expression e2);
+  Symbol newSymbol(String name);
+  Assignment newAssignment(String name, Expression exp);
+}
+</pre>
+<p>
+  You can guess what this interface is about, don't you?
+  It is a factory to create nodes in the AST.
+  Whenever the parser encounters a concept in the
+  character stream of the source, it invokes the builder
+  to create a corresponding node.
+  So for example, let's assume that you type this source:
+</p>
+<pre>
+  2 + 3 * 4
+</pre>
+<p>
+  A parser given that input stream could invoke the following
+  sequence on the builder:
+</p>
+<pre class="prettyprint lang-java">
+  Expression v1 = builder.newValue("2");
+  Expression v2 = builder.newValue("3");
+  Expression v3 = builder.newValue("4");
+  Expression e1 = builder.newMultOp(v2,v3);
+  Expression e2 = builder.newAddOp(v1,e2);
+</pre>
+<p>
+  This would correspond to the interpretation
+  of the expression as:
+</p>
+<pre>
+  2 + (3 * 4)
+</pre>
+<p>
+  Another parser might understand the stream of characters
+  differently such as:
+</p>
+<pre>
+  (2 + 3) * 4
+</pre>
+<p>
+  In that case, the sequence of invocations on the builder will
+  be different:
+</p>
+<pre class="prettyprint lang-java">
+  Expression v1 = builder.newValue("2");
+  Expression v2 = builder.newValue("3");
+  Expression e1 = builder.newAddOp(v1,v2);
+  Expression v3 = builder.newValue("4");
+  Expression e2 = builder.newMultOp(e1,v3);
+</pre>
+<p>
+  Now let's assume that we also have an assignement.
+</p>
+<pre>
+  x = (2 + 3) * 4
+</pre>
+<p>
+  The parser would invoke the builder like this:
+</p>
+<pre class="prettyprint lang-java">
+  Expression v1 = builder.newValue("2");
+  Expression v2 = builder.newValue("3");
+  Expression e1 = builder.newAddOp(v1,v2);
+  Expression v3 = builder.newValue("4");
+  Expression e2 = builder.newMultOp(e1,v3);
+  Assignment a = builder.newAssignment("x",e2);
+</pre>
+<p>
+  Which will create the following AST:
+</p>
+<img src="images/expression-tree.svg" />
+
+<p>
+  So for instance, the evaluation of this AST
+  above would create
+  the variable 'x' and would assign that
+  variable with the value '20' resulting from
+  the evaluation of the expression "(2+3)*4".
+  So the variable 'x' would now be part
+  of the context of the interpreter.
+  You could write something like this:
+</p>
+<pre>
+  y = (3 * x) / 2
+</pre>
+<p>
+  Which will create the following AST:
+</p>
+<img src="images/expression2-tree.svg" />
+<p>
+  Notice the symbol "x" appearing in the expression.
+  A symbol is the name of a variable. Its presence
+  in an expression means that the name will be used
+  to look up a variable in the context of the interpreter.
+  If a variable with that name is found, its value
+  will be used. In the case above, the variable "x"
+  exists and its value is '20'. So the variable "y"
+  will be created and assigned with the value '30'.
+</p>
+
+<h4>Finishing the implementation</h4>
+
+<p>
+  We gave you a fully functional parser, 
+  in the <em>"parser.jar"</em>. We gave you the
+  sources, but we suggest that you do not look at them.
+  This is generated code and it is mostly unreadable.
+  However, having it may help you in some debugging situation,
+  so we gave it to you.
+</p>
+<p>
+  The parser is functional and will create an instance
+  of the class <span class="java-class">Builder</span>,
+  a class that implements the interface
+  <span class="java-class">IBuilder</span>.
+  That class is incomplete, we ask that you finish the
+  implementation.
+</p>
+<p>
+  We also gave you working interpreter, look at the class
+  <span class="java-class">Interpreter</span>,
+  you will see the never-ending loop of an
+  interpreter: parsing and evaluating.
+  However, we did not implement the context, we
+  just created the skeleton in the class
+  <span class="java-class">Context</span>.
+  So go ahead finish the implementation of the
+  class <span class="java-class">Context</span>.
+</p>
+<p>
+  To launch the execution, you can launch 
+  the class 
+  <span class="java-class">OvmTask1</span>
+  in the package
+  <span class="java-package">rim3.ovm</span>.
+</p>
+<p>
+  This is really easy coding. Remember, the goal is that
+  you understand the relationship between a parser, a builder,
+  and an interpreter. The parser is given to you, you did not write
+  that code. The builder is written by you and obeys the
+  invocations of the parser. The builder builds an AST that
+  the interpreter will evaluate in
+  order to interpret the meaning of the text.
+  Finally, the interpreter uses your context to manage
+  the known variables.
+</p>
+
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint ricm3.ovm, Task1 completed"
+  $ git push --all
+</textarea>

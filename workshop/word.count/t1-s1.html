@@ -1,0 +1,1247 @@
+<vars>
+  sprint=word.count
+  task=t1
+	step=t1-s1
+</vars>
+
+<p>
+  You will see that the concept of streams is pretty simple to grasp
+  and using them is not so hard either, especially that you already used
+	streams without really thinking about it. So that is the purpose of this
+	step: remind you about streams, what they are and how to use them.
+  So let's re-discover the magic of streams.
+  <xfr>
+		Comme vous pourrez le voir, le concept de flot est plutôt simple
+		à appréhender et son utilisation n'est pas difficile, surtout que vous
+		les avez déjà utilisé sans trop réfléchir à ce qu'ils étaient. C'est
+		tout le propoos de cette étape: vous rappeler ce que sont les flux
+		et comment les utiliser. Et bien c'est parti, re-découvrons la magie
+		des flux...
+   </xfr>
+</p>
+
+
+<h3>About Standard Input/Output Streams</h3>
+
+<p>
+	As you already know, the standard input stream allows to read
+	the characters read from the keyboard and the standard output stream
+	allows to print on the screen. In Java, they are available as two objects
+  whose references are available in two static fields
+	in the class <span class="java-class">System</span>:
+  <xfr>
+		Comme vous le savez déjà, le flux de l'entrée standard permet
+		de lire le clavier et le flux de la sortie standard permet
+		d'écrire sur l'écran. Ces deux flux sont disponibles via deux objets dont
+    la référence est disponible dans les deux champs statiques
+		de la classe <span class="java-class">System</span>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class System {
+    public static InputStream in;
+    public static PrintStream out;
+  }
+</pre>
+<p>
+	We can see that the standard output (<span class="java-field">System.out</span>)
+	is a <span class="java-class">PrintStream</span>, a wrapping of an underlying
+	byte stream. Indeed, just look at the constructor taking an output stream object
+	as argument:
+	<xfr>
+		Nous pouvons voir que la sortie standard (<span class="java-field">System.out</span>)
+		est un objet instance de la classe <span class="java-class">PrintStream</span>,
+		un emballage du flux d'octets sous-jacent. En effet,
+		regardez le constructor de la classe
+		<span class="java-class">PrintStream</span> qui prends en argument un objet:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class PrintStream {
+    public PrintStream(OutputStream os);
+
+    public void println()
+    public void println(boolean v);
+    public void println(char c);
+    public void println(char[] chars);
+    public void println(double d);
+    public void println(float f);
+    public void println(int i);
+    public void println(long l)
+    public void println(java.lang.String s);
+  }
+</pre>
+<p>
+	This means that whatever you print via the print-stream object
+	is transformed into a sequence of bytes written to the wrapped
+	byte-stream object. For instance, if you print a boolean value,
+	either "true" or "false" will be printed on the screen:
+	<xfr>
+		Cela veut dire que quelque soit ce que vous imprimiez via l'objet
+		print-stream, cela sera transformé en une séquence d'octet écrit
+		dans le flux d'octets sous-jacent. Par exemple, si vous imprimez
+		une valeur booléenne, alors la chaîne de caractères "true" ou
+		"false" sera imprimée sur l'écran:
+		</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  PrintStream ps = System.out;
+  boolean b = true;
+  ps.println(b); // will print the characters "true" on the screen
+  b = false;
+  ps.println(b); // will print the characters "false" on the screen
+</pre>
+<p>
+	This means the print-stream object is translating the given boolean	value into
+	a sequence of characters that are then encoded to a sequence of bytes,
+	so that these bytes can be written in the wrapped byte-stream object.
+	Then, by the magic of the operating system, these bytes are translated
+	into pixels on your screen, pixels representing the characters.
+	A similar translation will occur when printing other primitive values,
+	such as integers:
+	<xfr>
+		Cela veut dire que l'objet print-stream va transformer la valeur
+		booléenne en une séquence de caractères qui seront alors encodé en
+		une séquence d'octets qui seront écrit dans le flux de sortie sous-jacent.
+		C'est alors que la magique du système d'exploitation apparaît car
+		il peut alors faire correspondre à ce flux d'octet des pixels qui
+		représentent les caractères. Un processur de traduction similaire
+		aura lieu lorsque vous allez imprimer d'autres valeurs, telles
+		que des valeurs entières:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  PrintStream ps = System.out;
+  int i = 123;;
+  ps.println(i); // will print the characters "123" on the screen
+  i = -321;
+  ps.println(b); // will print the characters "-321" on the screen
+</pre>
+<p>
+	We know that the concept of wrapping an object with another is still
+	foreign to you. We also know that the translation process probably
+	does not mean much to you. We will explain these in this task because
+	they are important concepts to know, understand, and to use.
+	<xfr>
+		Nous savons que le concept d'emballer un objet par un autre est
+		encore un concept qui ne vous est pas encore familié. Nous savons
+		aussi que le processus de traduction décrit ci-dessous ne vous dit
+		probablement pas beaucoup pour l'instant. Nous allons justement
+		couvrir ces points dans cette tâche car ils sont des concepts
+		importants à connaître, comprendre, et savoir utiliser.
+	</xfr>
+</p>
+<p>
+	But let's continue about streams and what we already know about them.
+	You also used the standard input stream, when coding your games,
+	reading the input from the player:
+	<xfr>
+		Mais continuons sur les flux et ce que nous savons déjà d'eux.
+		Vous avez déjà utilsé le flux d'entrée standar, lorsque vous
+		avez codé vos jeux, pour lire les entrées clavier du joueur.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  InputStream is;
+  InputStreamReader isr;
+  is = System.in;
+  isr = new InputStreamReader(is);
+  char c = (char)isr.read();
+</pre>
+<p>
+	Again, the input-stream reader wraps an byte-input stream so that
+	you can read characters, not bytes. The operating system magic
+	occurs in reading the key strokes on the keyboard and translating them into
+	a sequence of bytes that are the encoding of the typed characters.
+	To read a character, you would use the following method on the
+	class <span class="java-class">InputStreamReader</span>:
+	<xfr>
+		Encore une fois, the flux d'entrée emballe un flux d'octet pour que
+		vous puissiez lire des caractères au lieu d'octets. C'est le système
+		d'exploitation qui transforme les frappes sur le clavier en une suite
+		d'octet qui encode la suite des caractères entrés par le joueur.
+		Pour lire un caractère, vous utilisez la méthode suivante de la classe
+		<span class="java-class">InputStreamReader</span>:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public int read() throws IOException;
+</pre>
+<p>
+  The method reads a single character.
+  <b>
+    Note that this method will block until a character is
+    available, an I/O error occurs, or the end of the stream is reached.
+  </b>
+  So this means that if you invoke that method on a stream and there is
+  no character to read, the method will block.
+  Do you remember that you experienced exactly that when you debugged your games?
+  Do you remember the debugger freezing upon waiting for you to type
+  something at the keyboard? Yep, that is it, that is blocking.
+  <xfr>
+  	La méthode lit un simple caractère
+  	<b>
+			Notez que cette méthode va bloquer jusqu'à ce qu'un
+			caractère soit disponible, ou bien qu'une IO erreur apparaisse, ou enfin que
+			la fin du flot soit atteinte.
+  	</b>
+ 		Donc cela signifie que si vous invoquez cette méthode sur un flot
+ 		et qu'il n'y a aucun caractère à lire, la méthode va bloquer.
+ 		Rappelez-vous, vous avez vu cela quand vous avez debuggé vos jeux,
+ 		le debugger se bloquant en attendant que vous tapiez quelque chose au clavier.
+  </xfr>
+</p>
+<p>
+  <b>
+    Note also that the character is returned as an integer,
+    in the range 0 to 65535 (<tt>0x0000-0xffff</tt>).
+  </b>
+  This means that you will need to cast it, as shown above.
+  But why not returning a character then?
+  Well, this is an old habit from C programmers,
+  returning an integer that is either a valid value
+  or an error code.
+  So the method returns -1 if the end of the stream has
+  been reached. What is even weirder is that this method
+  may also throw an IOException if an I/O error occurs.
+  <xfr>
+   	<b>
+    Notez aussi que le caractère est retourné comme un entier,
+    entre 0 et 65535 (<tt>0x0000-0xffff</tt>).
+  	</b>
+  	Cela signifie que vous allez devoir le caster, comme montré
+  	précédemment.
+  	Mais pourquoi ne pas retourner un caractère alors?
+  	Bien, c'est une vieille habitude des programmeurs C,
+  	returner une valeur entière qui est soit une valeur valide,
+  	ou un code d'erreur.
+  	Donc la méthode retourne -1 si la fin du flot a été atteinte.
+  	Ce qui reste bizarre est que cette méthode
+  	peut aussi émettre une IO exception si une I/O erreur arrive.
+  </xfr>
+</p>
+<p>
+  It would have been cleaner to return a character and throw
+  two exceptions, one for exceptions indicating a read error
+	and one for the end-of-stream	exception. Just like this:
+  <xfr>
+   	Il aurait été plus propre de retourner un caractère et lever
+   	deux exceptions, l'une pour les exceptions indiquand une erreur de
+		lecture et celle indiquant la fin du flux. Comme ceci:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public char read() throws IOException, EndOfStreamException;
+</pre>
+<p>
+	But you will see this often, poorly designed libraries because of historical
+  bad habits. That's life. So let's move on. Do you remember that we actually
+	further wrapped the standard input when we used it for reading the keyboard
+	in your games? Look at the code below:
+  <xfr>
+   	Mais vous	allez voir cela souvent, des librairies pas toujours bien
+   	conçues en raison de mauvaises habitudes de programmation,
+   	il faut faire avec. Donc continuons. Vous rappelez-vous que nous avons encapsulé
+   stdin pour lire les caractères tapés au clavier dans vos
+   jeux? Regardez le code ci-dessous:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  InputStream is;
+  InputStreamReader isr;
+  is = System.in;
+  isr = new InputStreamReader(is);
+  char c = (char)isr.read();
+
+  BufferedReader br;
+  br = new BufferedReader(isr);
+  String line = br.readLine();
+</pre>
+<p>
+  See, it was another wrapping intended to provide the ability
+  to read entire lines of characters. But what we have here is a double
+  wrapping. We have an object, instance of the
+	class <span class="java-class">BufferedReader</span> that wraps another
+  object that is an instance of the class
+  <span class="java-class">InputStreamReader</span>. But that object
+  is itself wrapping another object, an instance of the class
+  <span class="java-class">InputStream</span>. Each wrapping changes
+  streams, from a stream of bytes into a stream of characters and finally
+  a stream of lines of characters.
+  <xfr>
+		Il est donc possible d'emballer un flux d'entrée de caractères pour pouvoir
+		le lire	ligne par ligne au lieu de caractère à caractère. 
+    Ce que vous avons ici est un emballage double. Nous avons un premier
+    objet, instance de la classe
+    <span class="java-class">BufferedReader</span> qui emballe
+    un autre objet, instance de la classe
+    <span class="java-class">InputStreamReader</span>. Mais cet objet
+    emballe lui-même un autre objet, instance de la classe
+    <span class="java-class">InputStream</span>. Ici, chaque emballage
+    change l'usage: un flux d'octets devient un flux de caractères qui
+    devient un flux de lignes de caractères.
+  </xfr>
+</p>
+<p>
+  So that is it for the standard
+	input and output streams, but streams have other usages, such as allowing
+  to read or write files in the file system.
+  <xfr>
+		Nous avons fait le tour des flux d'entrée et de sortie standard, mais nous
+		n'avons pas fait le tour de l'utilisation des flux. La suite est l'usage
+    des flux pour lire et écrire un fichier.
+  </xfr>
+</p>
+
+<h3>About Files</h3>
+
+<p>
+	Streams are used to read and write files.
+	You all know that the operating system provides you with
+  the concept of files and it so happens that a file is a stream
+  of bytes. So, a file can be read or written using the concept
+  of streams from Java. The code is real easy to read:
+  <xfr>
+		Les flux sont aussi utilisé pour lire et écrire dans
+		les fichiers fournit par le système d'exploitation.
+		Un fichier est un
+    flux d'octets. Voici un exemple de code:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  File file = new File("fileWithBytes");
+  OutputStream os = new FileOutputStream(file);
+  for (int i=0; i &lt; 256; i++)
+    os.write(i);
+  os.close();
+  InputStream is = new FileInputStream(file);
+  for (int i=0; i &lt; 256; i++)
+    assert(i==is.read());
+  is.close();
+</pre>
+<p>
+	As you can see, files are read from or written to through
+	byte streams, wrapping the file object. You can write byte values
+	and later read those values back. We gave you that code in the
+	Java package
+	<span class="java-package">about.streams</span> with
+	the class
+	<span class="java-class">WriteReadFile</span>.
+	Execute it and look at the output.
+	<xfr>
+		Comme vous pouvez le voir, les fichiers sont lus ou écrit
+		au travers de flux d'octets, avec les objets flux qui emballent
+		l'objet fichier. Vous pouvez écrire des octets puis les relire
+		plus tard. Nous vous avons donné le code pour faire cela
+		dans la paquet Java 
+		<span class="java-package">about.streams</span> avec la classe
+		<span class="java-class">WriteReadFile</span>.
+		Lancez l'exécution de cette classe, regardez la sortie de cette
+		exécution dans la console.
+	</xfr>
+</p>
+<p>
+	So? What is the program doing? Read the code and try to undstand it.
+</p>
+<p>
+  So? Did you figure it out? Let's make sure you did.
+  The program writes 256 bytes
+	into the file named "fileWithBytes" and re-reads the contents
+	of that file. Let's confirm that by looking at the file "fileWithBytes",
+  using the Linux shell:
+	<xfr>
+    Avez-vous lu et compris le programme? 
+		Le programme écrit 256 octets dans un fichier nommé "fileWithBytes"
+    puis il relit le contenu de ce même fichier.
+		Nous allons confirmer cela au niveau du shell:
+	</xfr>
+</p>
+<textarea class="terminal" rows="3" width="60%" >
+$ ls -al fileWithBytes 
+-rw-rw-r-- 1 ogruber ogruber 256 juil. 21 15:30 fileWithBytes
+</textarea>
+<p>
+  Great, the file is there and it contains 256 bytes.
+	So we created a file with 256 bytes, but what are the bytes written?
+	Well, it starts with the value 0 up to
+	the value 255, which is indeed 256 values. Well, let's dump the
+	contents of the file. Under Linux, there is a tool for that purpose,
+	the command "od", for further information you can ask for the manual
+	for that command with:
+	<xfr>
+    Super, le fichier est bien là et il contient bien 256 octets.
+		Mais avec quelles valeurs? Les valeurs de 0 à 255,
+    ce qui fait 256 valeurs et donc
+		256 octets. Vérifions cela en affichant le contenu du fichier avec
+		la commande "od" de Linux. Pour avoir les détails de cette commande,
+		vous pouvez demander le manuel:
+	</xfr>
+</p>
+<textarea class="terminal" rows="2" width="60%" >
+$ man od 
+</textarea>
+<p>
+	Following the manual, the way to dump the contents of the file as
+	bytes, as unsigned decimal integers, is given below with the
+	corresponding output:
+	<xfr>
+		En suivant ce que dit le manuel, voici comment afficher le
+		contenu du fichier comme une suite d'entier, affichés en base 10:
+	</xfr>
+</p>
+<textarea class="terminal" rows="19" cols="69" wrap='off' width="60%" >
+$ od -t u1 fileWithBytes
+0000000   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
+0000020  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31
+0000040  32  33  34  35  36  37  38  39  40  41  42  43  44  45  46  47
+0000060  48  49  50  51  52  53  54  55  56  57  58  59  60  61  62  63
+0000100  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79
+0000120  80  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95
+0000140  96  97  98  99 100 101 102 103 104 105 106 107 108 109 110 111
+0000160 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
+0000200 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143
+0000220 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159
+0000240 160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175
+0000260 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
+0000300 192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207
+0000320 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223
+0000340 224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239
+0000360 240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255
+</textarea>
+
+
+<h3>About Encoding</h3>
+
+<p>
+	Encoding is about how we organize data into a stream of bytes.
+	Encoding is usually a difficult topic for most when starting programming.
+	Unfortunately, it is a topic that one must understand early on,
+	since streams are often used for encoding data. As a matter of fact,
+	you experienced encoding already when using the standard input
+	and output streams.
+	<xfr>
+		L'encodage est la manière dont des données sont organisées
+		sur un flud d'octets. Le concept d'encodate n'est généralement
+		pas immédiat pour la plupart des développeurs mais c'est un
+		concept important et utile car très souvent utilisé. En fait,
+		vous en avez déjà fait l'expérience avec les flux d'entrée et
+		de sortie standards.
+	</xfr>
+</p>
+<p>
+	To better understand encoding, let's start to modify slightly the code of the class
+	<span class="java-class">WriteReadFile</span>, making it write
+	300 byte values rather than just 256. 
+	A modification that should be	harmless, right? The modified code
+	is given below:
+	<xfr>
+		Pour mieux comprendre ce qu'est l'encodage, nous allons commencer par
+		modifier le code de la classe
+		<span class="java-class">WriteReadFile</span> pour qu'il écrive
+		300 valeurs et non 256 valeuers. Une modification qui semble
+		sans conséquence, n'est-ce pas?  Voici le code modifié:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static void main(String[] args) {
+    try {
+      <b>int n = 300; // 300 bytes instead of 256</b>
+      writeFile(n);
+      readFile(n);
+      System.out.println("Done.");
+    } catch(IOException ex) {
+      ex.printStackTrace(System.err);
+      System.exit(-1);
+    }
+  }
+</pre>
+<p>
+	Let's execute it, which will write over the same file.
+	Hum, the output does not seem right, does it? Maybe, we have a bug.
+	Let's look at the file "fileWithBytes", the size is indeed 300 bytes,
+	as confirmed by the command "ls":
+	<xfr>
+		Exécutons ce code qui va re-écrire le fichier et afficher les valeurs
+		écrites. Mais que ce passe-t-il? Les valeurs n'ont pas l'air correctes.
+		Regardons la taille du fichier:
+	</xfr>
+</p>
+<textarea class="terminal" rows="3" width="60%" >
+$ ls -al fileWithBytes 
+-rw-rw-r-- 1 ogruber ogruber 300 juil. 21 15:30 fileWithBytes
+</textarea>
+<p>
+	The size is correct. So let's look at the contents.
+	Well, let's reuse the command "od"
+	to dump the contents of the file as unsigned numbers:
+	<xfr>
+		La taille est correcte, regardons alors le contenu, pour cela,
+		nous pouvons réutiliser la commande "od" de Linux:
+	</xfr>
+</p>
+<textarea class="terminal" rows="21" cols="69" wrap='off' width="60%" >
+$ od -t u1 fileWithBytes
+0000000   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
+0000020  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31
+0000040  32  33  34  35  36  37  38  39  40  41  42  43  44  45  46  47
+0000060  48  49  50  51  52  53  54  55  56  57  58  59  60  61  62  63
+0000100  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79
+0000120  80  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95
+0000140  96  97  98  99 100 101 102 103 104 105 106 107 108 109 110 111
+0000160 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
+0000200 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143
+0000220 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159
+0000240 160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175
+0000260 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
+0000300 192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207
+0000320 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223
+0000340 224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239
+0000360 240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255
+0000400   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
+0000420  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31
+0000440  32  33  34  35  36  37  38  39  40  41  42  43
+</textarea>
+<p>
+	So there is definitely something weird going on here. Look at the last values,
+	after 255, they loop back to zero. What is going on? We are reading and
+	writing bytes, from 0 to 300, so what are the values in the file different?
+	<xfr>
+		Il y a donc bien un problème avec notre code. Regardez les dernières valeurs,
+		après 255, elles recommencent à zéro. Mais c'est bizarre parce que le code
+		écrit et relit les valeurs de 0 à 300. Que se passe-t-il?
+	</xfr>
+</p>
+<p>
+	Well, how big is a byte? A byte is made of 8 bits,	each bit being either 0 or 1.
+	So a byte can contain values from zero up to 255, included. So let's explain again
+	how numbers are represented in base 16, 10, 2.
+	What is the number "255" in decimal?
+	<xfr>
+		Et bien, quelle est la taille d'un octet? Un octet est composé de 8 bits,
+		chaque bit prenant la valeur 0 ou 1. Aussi, un octet encode les valeurs
+		entre 0 et 255. Reprenons l'explication de comment un chiffre est representé
+		dans les bases 16, 10, et 2. Pour le chiffre 255 en décimal, nous avons:
+	</xfr>
+</p>
+	&nbsp;&nbsp;&nbsp;&nbsp;259==2*10<sup>2</sup>+5*10<sup>1</sup>+9*10<sup>0</sup>
+<p>	
+	So with 3 digits, each digit between 0 and 9, you can encode values from 0 to 999.
+	Well, this is the same here, except that we are in binary, with each digit being either 0 or 1.
+	In hexadecimal, each digit is in between 0 and 16, noted as 0-9 and then A-F for the values
+	A=10, B=11, C=12, D=13, E=14, and F=15. So 259 decimal is 0x103 in hexadecimal, while
+	254 décimal is 0xFE hexadécimal.
+	<xfr>
+		Ainsi, avec trois chiffres entre 0 et 9, vous pouvez encoder des valeurs allant de 0 à 999 en base 10.
+		En base 16 (hexadecimal), chaque chiffre prends la valeur de 0 à 16, avec 0-9 pour les valeurs entre 0 et 9
+		et les lettres A-F pour les valeurs plus grandes que 9,
+		A=10, B=11, C=12, D=13, E=14, and F=15. Donc 259 décimal est 0x103 en hexadécimal et la valeur 254 décimal
+		est la valeur 0xFE en hexadécimal:
+	</xfr>
+</p>
+<p>
+	&nbsp;&nbsp;&nbsp;&nbsp;259 = 0x103 = 1*16<sup>2</sup>+3*16<sup>0</sup>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;254 = 0xFE  = 15*16<sup>2</sup>+14*16<sup>0</sup>
+</p>
+<p>
+	Find below a few more examples:
+	<xfr>
+		Voici quelques examples de plus:
+	</xfr>
+</p>
+<p>
+	&nbsp;&nbsp;&nbsp;&nbsp;255=0xFF=11111111=2<sup>7</sup>+2<sup>6</sup>+2<sup>5</sup>+2<sup>4</sup>+2<sup>3</sup>+2<sup>2</sup>+2<sup>1</sup>+2<sup>0</sup>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;256=0x100=100000000=2<sup>8</sup>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;257=0x101=100000001=2<sup>8</sup>+2<sup>0</sup>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;258=0x102=100000010=2<sup>8</sup>+2<sup>1</sup>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;259=0x103=100000011=2<sup>8</sup>+2<sup>1</sup>+2<sup>0</sup>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;260=0x104=100000100=2<sup>8</sup>+2<sup>2</sup>
+</p>
+<p>
+	See what is happening here? When writing a value larger than 255, only the 8 least-significant
+	bits are written to the file. Consequently, we will read always an integer value between
+	0 and 255 when reading from a file. We are thus limited to a sequence of values,
+	each value being between 0 and 255. What about larger numbers? what about negative numbers?
+	<xfr>
+		Vous voyez ce qui se passe? Lorsque vous écrivez une valeur entière plus grande que 255,
+		seulement les 8 bits les moins significatifs sont retenu et écrit dans le fichier. Ainsi,
+		vous lirez toujours des valeurs de 8 bits dans un fichier, des valeurs entre 0 et 255.
+		Mais comment faire si on a des valeurs plus grandes à sauvegarder? Ou bien des valeurs
+		négatives? 
+	</xfr>
+</p>
+<p>
+	Let's start with negative numbers.
+	In binary, a bit pattern can be interpreted as an unsigned
+	value or as a signed value. For instance, the pattern 11111111 can be interpreted as 255
+	or -1. It is a choice that you make, so it is important that you understand it.
+	When reading a signed value, the encoding is called <b>two's complement</b>.
+	The full explanation can be found
+	at the Wikipedia page on <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=2ahUKEwjmjKbEnsbjAhUHoRQKHWuzBZQQFjAAegQIABAB&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTwo%2527s_complement&usg=AOvVaw1FdOX00pWIr_4W56rtRwiP">Two's complement</a>. In Java, all numbers are signed:
+	<xfr>
+		Discutons les valeurs négatives. En binaire, une suite de bit peut être
+		interprétée	comme une valeur positive ou négative. Par exemple, la
+		suite 11111111 est la valeur 255 ou -1. Comment la valeur est interprétée
+		est votre choix en tant que développeur. L'explication complète est sur
+		Wikipedia, à la page sur les
+		<a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&uact=8&ved=2ahUKEwjmjKbEnsbjAhUHoRQKHWuzBZQQFjABegQIBhAB&url=https%3A%2F%2Ffr.wikipedia.org%2Fwiki%2FCompl%25C3%25A9ment_%25C3%25A0_deux&usg=AOvVaw1hRgJ8nImIu4HcfRCVtzCT">compléments à deux</a>. En Java, toutes les valeurs entières sont signées:
+	</xfr>
+</p>
+<ol>
+	<li>
+		An integer (<span class="java-keyword">int</span>)
+		is encoded on 32 bits, so it contains values between
+		-2<sup>31</sup> (0x80000000 in hexadecimal or -2147483648 decimal)
+		and 2<sup>31</sup>-1 (0x7fffffff in hexadecimal or 2147483647 decimal).
+		<xfr>
+			Un entier  (<span class="java-keyword">int</span>) est encodé sur 32 bits,
+			donc il peut contenir les valeurs entre
+			-2<sup>31</sup> (0x80000000 en hexadécimal or -2147483648 décimal)
+			et 2<sup>31</sup>-1 (0x7fffffff en hexadécimal or 2147483647 décimal).
+		</xfr>
+	</li>
+	<li>
+		A <span class="java-keyword">short</span> is encoded on 16 bits, 
+		so it contains values between
+		-2<sup>15</sup> (0x8000 in hexadecimal or −65536 decimal)
+		and 2<sup>15</sup>-1 (0x7fff in hexadecimal or 65535 decimal).
+		<xfr>
+			Un <span class="java-keyword">short</span> est encodé sur 16 bits,
+			donc il peut contenir une valeur entre -2<sup>15</sup> (0x8000 in hexadécimal
+			ou −65536 décimal) et 2<sup>15</sup>-1 (0x7fff en hexadécimal ou
+			65535 décimal).
+		</xfr>
+	</li>
+	<li>
+		A <span class="java-keyword">byte</span> is encoded with 8 bits,
+		so it contains values between  -2<sup>7</sup> (0x80 in hexadecimal
+		or −128 decimal) and 2<sup>15</sup>-1 (0x7f in hexadecimal or 127 decimal).
+		<xfr>
+			A <span class="java-keyword">byte</span> est encodé sur 8 bits, donc il peut
+			contenir les valeurs entre -2<sup>7</sup> (0x80 en hexadécimal ou −128 décimal)
+			et 2<sup>15</sup>-1 (0x7f en hexadécimal ou 127 décimal).
+		</xfr>
+	</li>
+</ol>
+<p>
+	To help you understand, we gave you the class
+	<span class="java-class">DumpFile</span>. Look at the code
+	and execute it; it should dump the contents
+	of the file, first as unsigned values and then as signed values.
+	<xfr>
+		Pour vous aidez à mieux comprendre, nous vous avons donné la classe
+		<span class="java-class">DumpFile</span>. Regarder le code et
+		lancez son exécution qui devrait afficher à l'écran le contenu
+		du fichier, en premier comme des valeurs non-signées
+		puis comme des valeurs signées.
+	</xfr>
+</p>
+<textarea class="terminal" rows="20" cols="69" wrap='off' width="60%" >
+$ od -t u1 fileWithBytes
+    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
+   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30   31
+   32   33   34   35   36   37   38   39   40   41   42   43   44   45   46   47
+   48   49   50   51   52   53   54   55   56   57   58   59   60   61   62   63
+   64   65   66   67   68   69   70   71   72   73   74   75   76   77   78   79
+   80   81   82   83   84   85   86   87   88   89   90   91   92   93   94   95
+   96   97   98   99  100  101  102  103  104  105  106  107  108  109  110  111
+  112  113  114  115  116  117  118  119  120  121  122  123  124  125  126  127
+  128  129  130  131  132  133  134  135  136  137  138  139  140  141  142  143
+  144  145  146  147  148  149  150  151  152  153  154  155  156  157  158  159
+  160  161  162  163  164  165  166  167  168  169  170  171  172  173  174  175
+  176  177  178  179  180  181  182  183  184  185  186  187  188  189  190  191
+  192  193  194  195  196  197  198  199  200  201  202  203  204  205  206  207
+  208  209  210  211  212  213  214  215  216  217  218  219  220  221  222  223
+  224  225  226  227  228  229  230  231  232  233  234  235  236  237  238  239
+  240  241  242  243  244  245  246  247  248  249  250  251  252  253  254  255
+    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
+   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30   31
+   32   33   34   35   36   37   38   39   40   41   42   43
+</textarea>
+<p>
+	Let's use the command "od" to dump the contents	of the file as signed bytes:
+	<xfr>
+		Utilisons maintenant la commande "od" pour afficher les valeurs signées:
+	</xfr>
+</p>
+<textarea class="terminal" rows="21" cols="69" wrap='off' width="60%" >
+$ od -t d1 fileWithBytes 
+0000000    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
+0000020   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30   31
+0000040   32   33   34   35   36   37   38   39   40   41   42   43   44   45   46   47
+0000060   48   49   50   51   52   53   54   55   56   57   58   59   60   61   62   63
+0000100   64   65   66   67   68   69   70   71   72   73   74   75   76   77   78   79
+0000120   80   81   82   83   84   85   86   87   88   89   90   91   92   93   94   95
+0000140   96   97   98   99  100  101  102  103  104  105  106  107  108  109  110  111
+0000160  112  113  114  115  116  117  118  119  120  121  122  123  124  125  126  127
+0000200 -128 -127 -126 -125 -124 -123 -122 -121 -120 -119 -118 -117 -116 -115 -114 -113
+0000220 -112 -111 -110 -109 -108 -107 -106 -105 -104 -103 -102 -101 -100  -99  -98  -97
+0000240  -96  -95  -94  -93  -92  -91  -90  -89  -88  -87  -86  -85  -84  -83  -82  -81
+0000260  -80  -79  -78  -77  -76  -75  -74  -73  -72  -71  -70  -69  -68  -67  -66  -65
+0000300  -64  -63  -62  -61  -60  -59  -58  -57  -56  -55  -54  -53  -52  -51  -50  -49
+0000320  -48  -47  -46  -45  -44  -43  -42  -41  -40  -39  -38  -37  -36  -35  -34  -33
+0000340  -32  -31  -30  -29  -28  -27  -26  -25  -24  -23  -22  -21  -20  -19  -18  -17
+0000360  -16  -15  -14  -13  -12  -11  -10   -9   -8   -7   -6   -5   -4   -3   -2   -1
+0000400    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
+0000420   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30   31
+0000440   32   33   34   35   36   37   38   39   40   41   42   43
+</textarea>
+<p>
+	It is important to understand that the file contains the same sequence of bytes,
+  that is, the same sequence of zeroes and ones.
+  It is the interpretation of the bits/bytes
+	that is changing, that is, how you decide to interpret the bits/bytes. It would be
+	the same in memory, something you will see in the C programming course. In C,
+	one may choose how to interpret the bits/bytes in memory, as signed or unsigned
+	integer values. But in fact, this goes further that just integer values, 
+	remember that bits and bytes are used to encode everything in computers.
+	<u>Because computers only understand 0s and 1s, anything else is an interpretation
+    of zeroes and ones, i.e., an encoding.</u>
+	So how would we encode characters for example?
+	<xfr>
+		C'est important de comprendre que le fichier contient la même séquence de bits,
+		donc la même séquence d'octets. C'est l'interpretation de ces octets/bits qui
+		est différente. C'est pareil si l'on considère des bits et des octets en mémoire,
+		la même séquence de bits/octets pour être interprétée de différentes façons.
+		C'est souvent le cas lorsque l'on programme en C qui permet beaucoup de
+		variations et de subtilité dans l'interpretation de séquences de bits ou
+		d'octets. Mais cela va plus loin que l'interprétation de valeurs entières
+		signées ou pas, en effet les ordinateurs ne comprennent que des 0s et des 1s
+		et donc tout est encodé par des séquences de bits. Donc, tout est
+		une question d'encodage et interprétation. Comment cela marche-t-il pour
+		les caractères?
+	</xfr>
+</p>
+
+<h3> Encoding Characters </h3>
+
+<p>
+	You may remember that characters are also encoded using 0s and 1s, meaning integer
+	values. There are different encodings. The first one, historically, and the
+	simplest, is the <a href="https://en.wikipedia.org/wiki/ASCII">ASCII encoding</a>.
+	Each character is encoded on 8 bits. This means that any byte stream can be interpreted
+	as a character stream rather than a stream of integer values between 0 and 255.
+	Let's ask the command "od" to dump the file contents as characters:
+	<xfr>
+		Vous vous rappelez peut-être que les caractères sont encodés avec 0s et
+		des 1s, donc en fait des valeurs entières. Il y plusieurs encodages.
+		Le premier historiquement et le plus simple est
+		l'<a href="https://en.wikipedia.org/wiki/ASCII">encodage ASCII</a>.
+		Chaque caractère est encodé sur 8 bits. Cela veut dire que tout flux
+		d'octets peut être un flux de caractères plutôt qu'un flux de valeurs
+		entières entre 0 et 255. Demandons donc à la commande "od" de nous
+		afficher le contenu de notre fichier en caractères plutôt qu'en
+		valeurs entières:
+	</xfr>
+</p>
+<textarea class="terminal" rows="19" cols="69" wrap='off' width="60%" >
+$ od -t c fileWithBytes 
+0000000  \0 001 002 003 004 005 006  \a  \b  \t  \n  \v  \f  \r 016 017
+0000020 020 021 022 023 024 025 026 027 030 031 032 033 034 035 036 037
+0000040       !   "   #   $   %   &   '   (   )   *   +   ,   -   .   /
+0000060   0   1   2   3   4   5   6   7   8   9   :   ;   <   =   >   ?
+0000100   @   A   B   C   D   E   F   G   H   I   J   K   L   M   N   O
+0000120   P   Q   R   S   T   U   V   W   X   Y   Z   [   \   ]   ^   _
+0000140   `   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o
+0000160   p   q   r   s   t   u   v   w   x   y   z   {   |   }   ~ 177
+0000200 200 201 202 203 204 205 206 207 210 211 212 213 214 215 216 217
+0000220 220 221 222 223 224 225 226 227 230 231 232 233 234 235 236 237
+0000240 240 241 242 243 244 245 246 247 250 251 252 253 254 255 256 257
+0000260 260 261 262 263 264 265 266 267 270 271 272 273 274 275 276 277
+0000300 300 301 302 303 304 305 306 307 310 311 312 313 314 315 316 317
+0000320 320 321 322 323 324 325 326 327 330 331 332 333 334 335 336 337
+0000340 340 341 342 343 344 345 346 347 350 351 352 353 354 355 356 357
+0000360 360 361 362 363 364 365 366 367 370 371 372 373 374 375 376 377
+0000400  \0 001 002 003 004 005 006  \a  \b  \t  \n  \v  \f  \r 016 017
+0000420 020 021 022 023 024 025 026 027 030 031 032 033 034 035 036 037
+0000440       !   "   #   $   %   &   '   (   )   *   +
+</textarea>
+<p>
+	You can see that the command those a good job, it shows caracters when it can
+	and otherwise shows the integer values if they do not correspond to any
+	character that could be printed on the screen.
+	As you can see, this is all about how you choose to look at the bit/byte
+	stream, this is all about the interpretation you make of the 0s and 1s.
+	To help you understand, we gave you the class
+	<span class="java-class">DumpFileAsChars</span>. Look at the code
+	and execute it; it should dump the contents
+	of the file, some characters are recognizable, others are not.
+	This is because Java is not using an ASCII encoding but a Unicode
+	encoding for its characters. The ASCII encoding is limited,
+	it has only 255 characters, not enough to encode all the characters
+	of all the different human languages and dialects. The Unicode
+	encoding uses 16 bits, so it can encode up 65535 characters (2^16-1),
+	enough to cover all known human languages and dialects.
+	<xfr>
+		Comme vous pouvez le voir, la commande fait bien son boulot, elle affiche
+		les caractères ou bien la valeur entière si elle ne corresponds pas à un
+		caractère affichable. Donc vous voyez bien que c'est tout une question
+		d'encodage à l'écriture	et d'interprétation à la lecture (décodage).
+		Pour vous aidez à mieux	comprendre, on vous a donné la classe 
+		<span class="java-class">DumpFileAsChars</span>. Regardez le code
+		et exécutez le; il va imprimer le contenu du fichier comme des
+		caractères. Vous noterez que certains caractères sont reconnaissables,
+		d'autres ne le sont pas. En fait en Java, l'encodage des caractères
+		n'utilise pas l'ASCII mais l'unicode. Pourquoi? Parce que l'ASCII
+		ne permet pas d'encoder tous les caractères de tous les langages
+		de l'humanité, alors que l'Unicode le permet. L'encodage Unicode
+		est sur 16 bts, soit un <span class="java-keyword">short</span>.
+	</xfr>
+</p>
+<p>
+	So if Java characters are encoded on two bytes,
+	how can we write Java characters into a file and read them back?
+	We gave you the code for that in the class
+	<span class="java-class">CharFile</span> that writes the strings
+	given as arguments in a file "file.txt" and reads them back.
+	Read the code to understand the encoding. A string is written
+	as its length first, using 4 bytes, and then the sequence
+	of characters, each character being encoded on two bytes.
+	Let's confirm that with our usual command "od":
+	<xfr>
+		Donc si les caractères en Java sont encodé sur 2 octets,
+		comment pouvons nous les écrire dans un fichier puis les relire?
+		Nous vous avons donné la classe <span class="java-class">CharFile</span>
+		qui fait juste cela, elle écrit dans un fichier "file.txt" les chaînes de
+		caractères passées en argument lors du lancement de l'exécution.
+		Lisez le code et déduisez en l'encodage que nous avons choisi.
+		Une chaîne est écrite comme suit: d'abord la longueur sur 2 octets
+		puis la séquence des caractères, chaque caractère sur 2 octets.
+		Confirmons cela avec la commande "od":
+	</xfr>
+</p>
+<textarea class="terminal" rows="11" cols="69" wrap='off' width="60%" >
+word.count$ java -cp bin about.streams.CharFile un deux trois
+ un
+ deux
+ trois
+Done.
+word.count$ od -t c file.txt 
+0000000  \0  \0  \0 002  \0   u  \0   n  \0  \0  \0 004  \0   d  \0   e
+0000020  \0   u  \0   x  \0  \0  \0 005  \0   t  \0   r  \0   o  \0   i
+0000040  \0   s
+0000042
+</textarea>
+<p>
+	As you can see, the command "od" gives us different output depending on
+	the interpretation we are asking. Since we asked "od" to interpret everything  
+	as a character, the bytes encoding the string lengths are a bit bizarre,
+  but still recognizable.
+	For instance, the string "un" has a length of 2, which we see at the beginning
+	as "\0 \0 \0 002", which are the characters corresponding to the byte values:
+  0x00, 0x00, 0x00, 0x02 (expressed in hexadecimal).
+  The string "trois" has a length of 5, which we can see
+	towards the end as "\0 \0 \0 \005". In this case, we see the 4 characters
+  corresponding to the four byte values: 0, 0, 0, 5.
+  We can also see that we used two bytes to store each character,
+  hence the "\0 u \0 n" for the string "un", which corresponds to the 4 characters
+  corresponding to the four byte values 0, 117, 0, 110. Why? Because the letter
+  'u' is encoded over two bytes as (0,117) and the letter 'n' is encoded
+  over two bytes as (0,110).
+	Below, we can look at the same file as a byte sequence where we recognize
+  the byte values we just talked about:
+	<xfr>
+		Comme vous pouvez le voir, la commande "od" nous donne une sortie différente
+		maintenant. Tout octet lu est interprété comme un caractère, mais ce n'est pas
+		tout à fait correcte. Mais on peut quand même reconnaître un peu le contenu
+		du fichier. Par exemple, la chaîne "un" a une longeur de 2, ce que nous pouvons
+		reconnaître au début du fichier: "\0 \0 \0 002". La chaîne "trois" a une longueur
+		de 5 que vous pouvez reconnaître un peu plus loin as "\0 \0 \0 \005". On peut
+		aussi voir que nous avons effectivement pris deux octets par caractères,
+		d'ou la séquence "\0 u \0 n" pour la chaîne "un".
+		Ci-dessous, nous pouvons regarder le même fichier comme une séquence de valeurs
+		entières:
+	</xfr>
+</p>
+<textarea class="terminal" rows="6" cols="69" wrap='off' width="60%" >
+word.count$ od -t u1 file.txt 
+0000000   0   0   0   2   0 117   0 110   0   0   0   4   0 100   0 101
+0000020   0 117   0 120   0   0   0   5   0 116   0 114   0 111   0 105
+0000040   0 115
+0000042
+</textarea>
+<p>
+	Here, the byte-encoding of the lengths is clear, but the character encoding
+	is less recognizable. Let's try to use our class 
+	<span class="java-class">CharFile</span> to write characters that are not
+	part of the ASCII character set, like french accentutated characters.
+	<xfr>
+		Cette fois-ci, nous voyons clairement l'encodage des longueurs des chaînes
+		de caractères mais l'encodage des caractères est bien moins reconnaissable.
+		Maintenant, essayons d'utiliser notre classe 
+		<span class="java-class">CharFile</span> pour écrire des caractères qui ne
+		sont pas dans l'ensemble des caractères ASCII, comme les caractères accentués
+		de la langue française:
+	</xfr>
+</p>
+<textarea class="terminal" rows="13" cols="69" wrap='off' width="60%" >
+$ java -cp bin about.streams.CharFile un été à la mer
+ un
+ été
+ à
+ la
+ mer
+Done.
+ogruber@pingouin:word.count$ od -t c file.txt 
+0000000  \0  \0  \0 002  \0   u  \0   n  \0  \0  \0 003  \0 351  \0   t
+0000020  \0 351  \0  \0  \0 001  \0 340  \0  \0  \0 002  \0   l  \0   a
+0000040  \0  \0  \0 003  \0   m  \0   e  \0   r
+0000052
+</textarea>
+<p>
+	You can see there that our Java program has no problem dealing with french accents,
+	it can write and read the strings. But the anglo-saxon command "od", using only the
+	ASCII encoding, stumbles on all the characters that are not in the ASCII encoding.
+	For instance, the character 'é' is shown as 351.
+	<xfr>
+		Vous voyez que notre programme Java n'a aucun mal à géré l'alphabet du français
+		mais le programme "od" qui est anglo-saxon lui ne reconnait plus les caractères
+		accentués comme des caractères et affiche leur valeur numériques. Par exemple,
+		le caractère 'é' est affiché comme la valeur 351.
+	</xfr>
+</p>
+
+<h3> UTF-8 Encoding </h3>
+
+<p>
+	Let's try to ask Linux to print our textual file, how does that work?
+	<xfr>
+		Essayons d'afficher par une commande Linux notre fichier qui contient
+		des lignes de texte:
+	</xfr>
+</p>
+<textarea class="terminal" rows="2" width="60%" >
+  $ cat file.txt
+</textarea>
+<p>
+	Not great. Right? Why? Because Linux is not aware of our encoding.
+	If we ask Linux to tell us what it thinks our file is, it tells us
+	it is data, not text:
+	<xfr>
+		Le résulat n'est pas très concluant, n'est-ce pas?
+		Comprenez vous pourquoi? Tout simplement parce que Linux ne
+		comprends pas notre encodage. Demandons à Linux ce qu'il comprends
+		du format de notre fichier:
+		</xfr>
+</p>
+<textarea class="terminal" rows="3" width="60%" >
+$ file file.txt
+file.txt: data
+</textarea>
+<p>
+	Linux says it contains data which pretty much means
+	that Linux does not recognize the format of our file.
+	This is because Linux is using yet another encoding for its text file,
+	it is called the
+	<a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8 encoding</a>.
+	As you can see on the graph below, it is the conquering format,
+	with more than 60% of the files on the web encoded with UTF-8.
+	UTF-8 is a bit more complex encoding so we will not discuss its
+	details. We will just say that the encoding of one character
+	takes between 1 and 3 bytes.
+	<xfr>
+		Linux nous dit que le fichier
+		contient des données, ce qui veut dire que Linux ne comprends
+		rien à notre format. Et c'est normale car Linux utilise
+		un autre format d'encodage pour les fichiers textes,
+		c'est le 
+		<a href="https://en.wikipedia.org/wiki/UTF-8">format UTF-8</a>.
+		Comme vous pouvez le voir sur le graphe ci-dessous, c'est le format
+		dominant à travers le monde aujourd'hui avec plus de 60% des fichiers textes
+		encodés en UTF-8 sur le Web.
+		UTF-8 est aussi un encodage
+		un peu plus compliqué que celui que nous avons choisi.  Nous n'allons
+		pas en discuter les détails ici. Nous dirons simplement que l'encodage
+		d'un caractère va prendre entre un à trois octets.
+	</xfr>
+</p>
+<img src="images/Utf8webgrowth.svg.png" />
+<p>
+	Look at the class
+	<span class="java-class">UTF8File</span> that writes the strings
+	given as arguments in a file "file.txt" and reads them back.
+	Read the code to understand the general principle behind this encoding.
+	Try out these commands:
+	<xfr>
+		Regardez la classe 
+		<span class="java-class">UTF8File</span> qui est capable de produire
+		ce format, écrivant les chaines de caractères passées en argument
+		dans le fichier "file.txt" puis les relisant.
+		Lisez le code et comprenez le principe générale de cet encodage.
+		Essayez ensuite ces commandes:
+	</xfr>
+</p>
+<textarea class="terminal" rows="17" width="60%" >
+$ java -cp bin about.streams.UTF8File un été à la mer
+ un
+ été
+ à
+ la
+ mer
+Done.
+$ file file.txt
+file.txt: UTF-8 Unicode text
+$ cat file.txt
+un
+été
+à
+la
+mer
+$ gedit file.txt
+</textarea>
+<p>
+	Now Linux understands our file format. It recognizes it is an UTF-8 Unicode text file.
+	It is therefore able to print it on the screen. You can even edit it with your favorite
+	editor, such as "gedit". This is great, we know how to write and read text files.
+	But what if we need to write other stuff than characters? Like music or an image?
+	<xfr>
+		Linux comprends maintenant le format de notre fichier et il est capable d'en afficher
+		le contenu, correctement. Vous pouvez même éditer le fichier avec votre éditeur
+		favori, comme "gedit" par exemple. Super, vous savez maintenant lire et écrire des
+		fichiers contenant du texte. Mais qu'en est-il d'autres données comme de la musique
+		ou des images?
+	</xfr>
+</p>
+
+<h3> Encoding Whatever </h3>
+
+<p>
+	Files may contain very different data, so we need to be able to encode
+  whatever data	into bytes. Well, we already did it to a certain extent,
+  didn't we? Indeed, we did write and read integer
+	values and character values, encoding them into small sequences of bytes.
+  Four bytes
+	for an integer, two bytes for character. And this is the idea. Fortunately, Java
+	gives a Swiss army knife for encoding and decoding streams with the classes
+	<span class="java-class">java.io.DataOuputStream</span>
+	and
+	<span class="java-class">java.io.DataInputStream</span>.
+	They look something like this:
+  <xfr>
+		Les fichiers peuvent contenir des données diverses, nous devons donc pouvoir
+		encoder ces différentes données en des séquences d'octets. En fait, nous
+		l'avons déjà fait jusqu'à un certain point, n'est-ce pas? En effet,
+		nous avons écrit et lu des valeurs entières, des caractères, en les encodant
+		sur plusieurs octets; nous avons utilisé 4 octets pour un entier, 2 pour un
+		caractère. Heureusement, Java nous propose un couteau Suisse de l'encodage
+		et du décodage de flux d'octets avec les classes
+		<span class="java-class">java.io.DataOuputStream</span>
+		and
+		<span class="java-class">java.io.DataInputStream</span>.
+		Elles ressemblent plus ou moins à ceci:		
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  package java.io;
+  class DataInputStream {
+    DataInputStream(InputStream s);
+    char readChar();
+    byte readByte();
+    short readShort();
+    int readInt();
+    float readFloat();
+    long readLong();
+    double readDouble();
+	  String readUTF();
+  }
+  class DataOutputStream {
+    DataOutputStream(OutputStream s);
+    void writeChar(char value);
+    void writeByte(byte value);
+    void writeShort(short value);
+    void writeInt(int value);
+    void writeLong(long value);
+    void writeFloat(float value);
+    void writeDouble(double value);
+	  void writeUTF(String s);
+  }
+</pre>
+<p>
+	So let's use this functionality to write or read a file that could
+  preserve the best scores for a game, a feature we didn't have when
+  we wrote game programs
+  earlier. Usually, games keep
+	a short list of the best scores achieved by players. So let's see how
+	we would implement that. Have a look at the class 
+	<span class="java-class">ScoreLedger</span>.
+	It manages a score ledger.
+	<xfr>
+		Nous allons utiliser ces fonctionalités pour écrire et lire un fichier
+		des meilleures scores pour un jeu.
+    En générale, un jeu garde une liste des meilleurs
+		scores réussi par les joeurs. Voyons comment nous pourrions implémenter
+		cela en Java, regardez la classe 	<span class="java-class">ScoreLedger</span>
+		qui gère le recueil des meilleurs scores.
+	</xfr>
+</p>
+<p>
+	The class	<span class="java-class">ScoreLedger</span> is fully functional,
+	except for the missing implementations for saving or loading the scores.
+	We therefore ask that you read and understand the given code so that you
+  can implement the two methods
+	<span class="java-method">load(DataInputStream)</span>.
+	and
+	<span class="java-class">save(DataOutputStream)</span>.
+	But we want you to respect the following file format:
+	<xfr>
+		La classe <span class="java-class">ScoreLedger</span> est totalement
+		fonctionnelle sauf pour la capacité de sauvegarde et chargement des
+		meilleurs scores sur un fichier. Nous vous demandons de lire
+    et comprendre le code afin d'implémenter
+		ces deux méthodes
+		<span class="java-method">load(DataInputStream)</span>.
+		et	<span class="java-class">save(DataOutputStream)</span>.
+		Mais nous voulons que vous respectiez le format suivant
+		pour le fichier: 
+	</xfr>
+</p>
+<ul>
+	<li> 4 bytes: <em><b>size</b></em> </li>
+	<li> 4 bytes: <em><b>nscores</b></em> </li>
+	<li> Per score:
+		<ul>
+			<li> 4 bytes: the score of the player</li>
+	    <li> 2 bytes: the number of bytes that follows to encode the name</li>
+	    <li> N bytes: the UTF-encoded characters of the name</li>
+		</ul>
+	</li>
+</ul>
+<p>
+  The value <em><b>size</b></em> is the size of the ledger,
+  the maximum number of scores that will be remembered.
+  The value <em><b>nscores</b></em> is the number of top scores
+  actually stored.
+</p>
+<ul>
+</ul>
+<p>
+	This means that assuming a score ledger of a size 10. Please look below
+	at the file contents when considering the ledger only has
+	the two following entries out of ten: (Tom,75) and (Jerry,40).
+	<xfr>
+		Cela veut dire que le recueil aura 10 entrées, ne retenant que les
+		dix meilleurs scores seulement. Regardez le contenu du fichier si
+		le recueil ne contenait que deux entrées sur les dix: (Tom,75) et (Jerry,40).
+	</xfr>
+</p>
+<pre>
+	4 bytes: 0 0 0 10              // size
+	4 bytes: 0 0 0 2               // nscores
+	4 bytes: 0 0 0 75              // Tom's score
+	2 bytes: 0 3                   // "Tom" length
+	3 bytes: 'T' 'o' 'm'           // "Tom"
+	4 bytes: 0 0 0 75              // Jerry's score
+	2 bytes: 0 5                   // "Jerry" length
+	5 bytes: 'J' 'e' 'r' 'r' 'y'   // "Jerry"
+</pre>
+<p>
+	Of course, you are not going to write the individual bytes like this,
+	you will use a data ouput stream to achieve that format. To do so,
+	you will use the following methods on the	classes
+	<span class="java-class">java.io.DataOuputStream</span>
+	and
+	<span class="java-class">java.io.DataInputStream</span>.
+	<xfr>
+		Bien sûr, vous n'allez pas écrire les octets un par un en suivant
+		le format ci-dessous, vous allez utiliser les classes 
+		<span class="java-class">java.io.DataOuputStream</span>
+		et
+		<span class="java-class">java.io.DataInputStream</span>.
+	</xfr>
+</p>
+<ul>
+	<li> DataOutputStream.writeInt(int): write a signed integer value using 4 bytes </li>
+	<li> DataOutputStream.writeUTF(String): write the length using 2 bytes and then the UTF-8 encoded characters</li>
+	<li> DataInputStream.readInt(int): read a signed integer value using 4 bytes</li>
+	<li> DataInputStream.readUTF(): read the length using 2 bytes and then UTF-8 encoded characters</li>
+</ul>
+<p>
+	So go ahead, code the methods
+	<span class="java-method">load(DataInputStream)</span>
+	and
+	<span class="java-class">save(DataOuputStream)</span>
+	on the unfinished class
+	<span class="java-class">ScoreLedger</span>.
+	Once you are done coding and debugging, run the
+	check below.
+	<xfr>
+		C'est parti, vous allez coder les méthodes 
+		<span class="java-method">load(DataInputStream)</span>
+		et
+		<span class="java-class">save(DataOuputStream)</span>
+		de la classe 
+		<span class="java-class">ScoreLedger</span> qui est incomplète.
+		Une fois que vous avez complété cette classe et testé votre
+		code, veuillez passer nos tests.
+	</xfr>
+</p>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="about.streams.TestScoreLedger">
+  <banner>
+    This test will check that a score ledger can be saved and loaded,
+		but also that the file format given above is respected. 
+  </banner>
+  <hint>
+    Something is not quite right, read the output and fix the reported problem.
+    As usual, ask for help if you need to.
+  </hint>
+  <success>
+    Everything looks fine.<br>
+    Congratulations!
+  </success>
+  <unfold></unfold>
+</check>
+
+
+<h3> That's all Folks </h3>
+
+<p>
+	That was a long learning stretch, but it was an important one.
+	Files, streams, and encoding are important subjects that a developer must understand.
+	We suggest that you discuss your new learned knowledge with others, compare your
+	understanding, take notes in your own words. Don't expect to remember any of this
+	in three weeks if you only read through this page. Discuss that knowledge.
+	Put it to use. Come back to it later. Then you will remember it for the rest
+	of your professional life and that knowledge will serve you well in the years
+	to come.
+	<xfr>
+		Cette tâche fût longure, mais elle représente une étape importante pour vous.
+		Les fichiers et les flux sont très importants à comprendre et la difficulté
+    centrale est l'encodage. Nous vous suggérons de discuter entre vous de ce
+    que vous appris, de comparer vos compréhensions, et surtout de prendre des
+    notes avec vos propres mots. En effet, ne vous attendez pas à vous rappeler
+    de beaucoup de choses si vous ne faites	que lire le contenu de cette tâche,
+    faisant ce que l'on vous demande, puis de tourner	la page vers de nouvelles
+    activités. Discutez les connaissances acquises. Mettez les en	pratique,
+    utilsez les. C'est comme cela que l'on apprends un savoir-faire et non pas
+		juste des connaissances pour répondre aux questions d'un examen,
+    connaissances que l'on pourra oublier juste après l'examen. 
+	</xfr>  
+</p>
+<p>
+  As an exercise, think about adding a first field in the file that would be
+  a version number. Why would it be useful? Well, at the beginning, you design
+  and code one format for your file. But as time passes, maybe, the format will
+  evolve. And what if you have files that are old and new, meaning that the old
+  files have the old format and the new ones have the new format... How would
+  you know how to parse a given file? By having a version number, encoded over
+  the very first bytes, you would know.
+</p>
+<p>
+  This is what any real software does. For instance, Google applications or
+  Microsoft Office all use headers at the beginning of files to describe the
+  encoding and contents of that file. Of course, these headers are always
+  encoded the same way, that can never change. The Web does the same,
+  every HTML page starts with a header giving enough information
+  on the page content so that the web browser can decode it.
+</p>

@@ -1,0 +1,199 @@
+<vars>
+  sprint=object.classes
+  task=t2
+  step=t2-s1
+</vars>
+
+Look in the source folder <em>step1</em>, you will find the
+skeletons for the classes to implement our file system.
+These classes are the following in the Java package
+<span class="java-package">step1.filesys.oop</span>:
+</p>
+<ol>
+  <li>class <span class="java-class">FileSystem</span>.</li>
+  <li>class <span class="java-class">Directory</span>.</li>
+  <li>class <span class="java-class">File</span>.</li>
+</ol>
+<p>
+  Notice that these classes implement the interfaces defined
+  in the Java package
+  <span class="java-package">oop.filesys</span>.
+</p>
+<!--
+  Using interfaces allows us to define the desired behaviors
+  abstractly, without considering any implementaton considerations.
+  Furthermore, having interfaces allows us also to develop
+  a line-oriented shell, using polymorphic programming. Indeed,
+  our shell will be able to work with any implementation of
+  these interfaces. Our shell closely resemble the Linux Bash shell
+  you have been using in terminal windows on Linux machines.
+  Our shell has been implemented
+  in the class <span class="java-class">Shell</span>.
+-->
+
+<h3>In-Memory File System</h3>
+
+<p>
+  What is an in-memory file system? It may not be obvious to you
+  since you are used to a file system
+  above a mass storage, like with USB keys or disks;
+  so you probably associate the concept of a file system with the
+  ability to use a mass storage. Historically, this is entirely
+  true. But a file system is also just a way to organize data.
+</p>
+<p>
+  In our case, an in-memory file system is a file system implemented using
+  Java object. There is no concept of mass storage. A directory
+  is an object, it references sub-directories and files, that are
+  also objects. In particular, this means that files are Java objects.
+  The content of a file is a sequence of bytes, they are kept in a byte array,
+  just another Java object.
+  See, these bytes are never <em>"written"</em> to
+  a mass storage and consequently they are never <em>"read"</em>
+  either. 
+</p>
+<p>
+  So be open minded, a file system is only a way to organize information,
+  it is not always related to a mass storage. It is a way to organize
+  files in directories with hierarchical names. In fact, Linux implements
+  an in-memory file system, called the
+  <a href="https://wiki.debian.org/ramfs"><em>ramfs</em></a>,
+  which stands for
+  a <b>f</b>ile <b>s</b>ystem in <b>ram</b> memory.
+</p>
+
+<h3>Finishing the Implementation</h3>
+  
+<p>
+  We ask that you finish the implementation of the classes
+  in Java package
+  <span class="java-package">step1.filesys.oop</span>.
+  Please respect the code already present: class names,
+  types and names of fields, and signatures of methods.
+  You may add new methods and new fields,
+  if necessary. You may add new classes, but this should not be
+  necessary, but to carry your own experiments and your own tests
+  There are a few important points to notice:
+</p>
+<ul>
+  <li>
+    You may <b>not</b> modify the interfaces from the
+    Java package
+    <span class="java-package">oop.filesys</span>.
+  </li>
+  <li>
+    Notice the constructors of
+    the class <span class="java-class">Directory</span>.
+    One is to construct the root of the tree of the file system.
+    The other is to construct other directories, belonging to
+    a parent directory. 
+  </li>
+  <li>
+    Remember that all directories belong to the same file system.
+  </li>
+  <li>
+    Notice that each directory maintains the parent-child relationship.
+    Indeed, a directory is created as a child of another directory, right?
+    So it makes sense to maintain the relationship immediately
+    as part of constructing a directory.
+  </li>
+  <li>
+    Notice that each file also maintain the parent-child relationship
+    since a file belongs to a parent directory.
+  </li>
+  <li>
+    Since directories and files are organized as a tree, there
+    is a path along that tree to any file or directory.
+    That path is what returns
+    the method <span class="java-class">path</span>, the path
+    of a file or directory can be built recursively based on the path
+    of the parent directory. 
+  </li>
+</ul>
+<p>
+  <b>Do not confuse</b> the parent relationship between directory
+  objects, which forms a tree structure, with the inheritance
+  relationship between classes, which also forms a tree structure.
+  One is a tree structure related to the object graph, that is,
+  how you decided to organize objects into meaningful and
+  useful object graphs. The other is related to the inheritance
+  hierarchy of classes, that is, how you decided to organize
+  your source code, exploiting class inheritance via the
+  <span class="java-keyword">extends</span>
+  keyword.
+</p>
+<p>
+  So go ahead, implement the above classes and do not forget to
+  test your code, writing your own test code. As part of that
+  testing, you may also use our line-oriented shell as a way to
+  play with your implementation. Read on.
+</p>
+
+<h3>Using our Shell</h3>
+
+<p>
+   Look for the 
+  class <span class="java-class">step1.filesys.oop.ShellMain</span>
+  as a way to launch our shell with your implementation of the
+  file system. You can use the following commands:
+</p>
+<ol>
+  <li><em>pwd</em> to print the working directory.</li>
+  <li><em>cd</em> to change the working directory.</li>
+  <li><em>ls</em> to list files and directories in the working directory.</li>
+  <li><em>mkdir</em> to make a new directory in the working directory.</li>
+  <li><em>rmdir</em> to remove a directory from the working directory.</li>
+  <li><em>touch</em> to create a file in the working directory.</li>
+  <li><em>rm</em> to remove a file from the working directory.</li>
+  <li><em>cat</em> to print a file in the working directory.</li>
+  <li><em>edit</em> to edit a file in the working directory.</li>
+  <li><em>mv</em> to move a file or directory.</li>
+  <li><em>ln</em> to create a symbolic link. <b>Do not use for now</b>.</li>
+</ol>
+<p>
+  So go ahead, play around with the shell that should look and feel
+  like your regular Linux shell, but a bit simpler.
+  You can get help with the command "help".
+</p>
+
+<h3>Passing Our Tests</h3>
+
+<p>
+  Once you have played around with the shell
+  Then, you may run our tests, clicking below.
+  You may also run the same tests from the 
+  class <span class="java-class">step1.filesys.oop.TestStep1</span>.
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.classes"
+   classpath="bin;tests.jar;../object.collections/edu-polytech-oop-collections.jar"
+   classname="object.classes.tests.TestStep1"> 
+  <banner>
+    Let's check what you did.
+    Remember, these are simple checks, you should do your own
+    intensive testing.
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Great! Well done.
+  </success>
+  <unfold name="check_unfold">
+  </unfold>
+</check>
+<div name="check_unfold" style="display:none;">
+  <p>
+    That's all folks for this step.
+    But before we move on, please make sure
+    that you commit and push your work to our server:
+  </p>
+  <textarea class="terminal" rows="5" width="60%" >
+    $ git add --all
+    $ git commit -m "Sprint object.classes, Task2, Step1 completed"
+    $ git push --all
+  </textarea>
+</div>

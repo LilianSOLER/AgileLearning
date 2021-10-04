@@ -1,0 +1,687 @@
+<vars>
+  sprint=java.basics
+  task=t1
+  step=t1-s1
+</vars>
+<p>
+  A class represents a concept, such as a point or a
+  rectangle, a person or an employee, or a list of things. You need to be able
+  to explain what your classes are about, in terms of being a representation
+  of something. The class is the description, the objects are the instances
+  of that class. For intance, you can have a class that describes what a rectangle
+  is and you can have one or more actual rectangles, instances of that class.
+  So a class describes its instances, called objects.
+  <xfr>
+    Une classe représente un concept, tel qu'un point ou un rectangle, une
+    personne ou un employé, ou une liste de choses.
+    Vous devez pouvoir expliquer ce que vos classes représentent.
+    Par exemple, vous pouvez avoir une classe qui décrit le concept
+    de rectangle et vous pouvez avoir un ou plusieurs rectangles,
+    instance de cette classe. Donc une classe décrit ses instances
+    qui sont des objets.
+  </xfr>
+</p>
+<p>
+  For example, let's take the concepts of geometrical shapes. You have
+  the concepts of a point, a line, or a polygon. But you also have
+  actual points, lines, and polygons as part of a drawing. The actual
+  points, lines, and polygons would be the objects, each being an
+  instance of a class. The objects representing points would be
+  instances of a class <span class="java-class">Point</span>.
+  The objects representing lines would be instances of a
+  class <span class="java-class">Line</span>. And so forth.
+  <xfr>
+    Par example, prenons l'exemple des formes géométriques.
+    Nous avons les concepts de points, de lignes, ou encore de polygones.
+    Nous avons donc des classes correspondantes: point, ligne, et polygone.
+    Mais nous avons aussi des points, des lignes, et des polygones
+    qui sont ceux que l'on trouve dans une figure. Ceux-ci
+    seront des objets, des instances spécifiques de la classe
+    correspondante. Donc nous avons une classe
+    <span class="java-class">Point</span> et des instances
+    de cette classe, des objets points, dans des figures.
+  </xfr>
+</p>
+
+<h3>The Class Point</h3>
+
+<p> 
+  So let's consider the class <span class="java-class">Point</span>
+  below:
+</p>
+<pre class="prettyprint lang-java">
+  class Point {
+    int x;
+    int y;
+
+    void translate(int dx, int dy) {
+      this.x = this.x + dx;
+      this.y = this.y + dy;
+    }
+  }
+</pre>
+<p>
+  As you can see,
+  <b>a class describes both a structure and a behavior</b>.
+  The structure is described with <b>fields</b>, in this case,
+  the coordinates (x,y).
+  The behavior is described with <b>methods</b>, in this case,
+  the method that translates a point on a plane.
+  <xfr>
+    Comme vous pouvez le voir, une classe décrit à la fois
+    une <b>structure</b> et un <b>comportement</b>.
+    La structure est un ensemble de champs, dans ce cas ci,
+    les deux coordonnées x et y. Le comportement est décrit
+    par des méthodes, ici l'unique méthode pour translater
+    un point sur un plan. 
+  </xfr>
+</p>
+<p>
+  A class is a factory for objects, called the <b>instances</b>
+  of that class. So in this case,
+  from the class <span class="java-class">Point</span>,
+  you can create actual points. The code below will
+  create two objects, both instances of the
+  class <span class="java-class">Point</span>:
+  <xfr>
+    Une classe est une fabrique d'objet, que nous appelerons
+    les <b>instances</b> de cette classe. Dans notre cas,
+    la classe  <span class="java-class">Point</span>
+    fabrique des objets points. Le code ci-dessous
+    crée deux objets, deux instances de la classe
+    <span class="java-class">Point</span>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Point p1 = new Point();
+  Point p2 = new Point();
+</pre>
+<p>
+  So a class describes the structure of its instances,
+  but what does that mean really?
+  The class <span class="java-class">Point</span> describes
+  a structure with two fields. So this means that each point
+  object, as an instance of the class <span class="java-class">Point</span>,
+  will have two fields
+  corresponding to the fields declared in the class.
+  In the figure below, the class is represented with a diamond
+  shape and its instances with a round shape.
+  <xfr>
+    Nous avons dit qu'une classe décrit la structure de ses
+    instances, mais qu'est-ce que cela veut dire réellement?
+    La classe <span class="java-class">Point</span> décrit
+    une structure avec deux champs. Cela veut dire que chaque
+    object point, parce qu'ils sont des instances de la classe
+    <span class="java-class">Point</span>, auront deux
+    <b>champs</b> qui correspondent aux champs décrit dans la
+    classe. Dans la figure ci-dessous, la classe est représentée
+    par un diamant et ses instances par des ronds.
+  </xfr>
+</p>
+<img src="images/class-objects.svg">
+<p>
+  The arrows from the point objects to the class
+  <span class="java-class">Point</span> describes the fact
+  that objects always know the class they are an instance of.
+  <xfr>
+    Les flèches des objets points vers leur classe
+    représente le fait que ces objects sont des instances
+    de leur classe. Un objet en Java connait sa classe,
+    il sait ce qu'il est.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Point p = new Point();
+  Class cls = p.getClass();
+</pre>
+<div>
+  <p>
+    This means a class plays different rôles at different times:
+  </p>
+  <ol>
+    <li>
+      A class has an existence in your mind, as a concept.
+    </li>
+    <li>
+      A class has an existence as a textual source, when you are writing code.
+    </li>
+    <li>
+      A class also has an existence as a class file, the result of
+      compiling a class source.
+    </li>
+    <li>
+      A class has a runtime existence as an object, during the execution.
+    </li>
+  </ol>
+  <xfr>
+    Une classe aura donc plusieurs existences. Une classe
+    existe dans votre esprit, comme un concept identifié.
+    Elle existe aussi comme du texte, dans le source Java,
+    lorsque vous allez écrire le code. Elle existe aussi
+    comme un fichier <em>classfile</em>, comme le résultat
+    de la compilation. Puis enfin, elle existe à l'exécution,
+    comme un objet, dans la plateforme Java.
+  </xfr>
+</div>
+<p>
+  The last point, about classes being objects is usually the
+  hardest to grasp at first. Do not worry, we will come back on
+  that point many times and it will get clearer. But you already
+  experienced it, without realizing it.
+  When you launched an execution, you gave the Java Platform
+  a class path, where the needed class files could be found.
+  The reason why the Java Platform needs class files is to be able
+  to load class files and create the corresponding class objects
+  at runtime.
+  <xfr>
+    Un dernier point, sur le fait que les classes sont des objets.
+    C'est souvent un point d'accroche pour ceux qui apprennent,
+    mais pas toujours. Ne vous inquiétez pas si ce n'est pas
+    tout à fait claire pour l'instant, nous reviendrons sur cela.
+    Mais en fait, sans le savoir, vous en avez fait l'expérience
+    déjà. En effet, lorsque vous avez lancé la plateforme Java,
+    vous avez donné un chemin où trouver les classfiles.
+    C'était pour que la plateforme puisse charger ces classfiles
+    et créer des objects qui sont des classes.
+  </xfr>
+</p>
+
+<h3>Working with objects, described by classes</h3>
+
+<p>
+  We already said that a class describes its instances,
+  that is, the objects that are instances of that class.
+  The class describes the structure of its instances,
+  by defining fields. 
+  A class also defines the behavior of its instances,
+  by defining methods. If a class defines a method,
+  that method can be invoked on the objects of that class.
+  <xfr>
+    Nous avons déjà dit qu'une classe décrit ses instances.
+    La classe décrit la structure de ses instances, en
+    définissant des champs. Une classe définie aussi
+    le comportement de ses instances, en définissant
+    des méthodes. Si une classe définie une méthode,
+    alors cette méthode pourra être invoquée sur
+    les instances de cette classe.
+  </xfr>
+</p>
+<p>
+  Looking back at our class
+  <span class="java-class">Point</span>.
+  See how the class
+  <span class="java-class">Point</span> defines two fields
+  (coordinates x and y) and one method (translate).
+  In the following code snippet, we create a new point object and then we
+  translate it by changing its coordinates, that is, the values of
+  the fields <span class="java-field">x</span> and
+  <span class="java-field">y</span>:
+  <xfr>
+    La classe <span class="java-class">Point</span> définie
+    deux champs (x et y) et une méthode (translate).
+    Dans le code ci-dessous, nous créons un object point
+    et nous le translatons en assignant de nouvelles valeurs
+    à ces champs, nous changons les coordonnées du point.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Point p = new Point();
+  p.x += 5;
+  p.y += 10;
+</pre>
+<p>
+  Notice the variable <span class="java-field">p</span>, it is called
+  a <b>reference variable</b> because it is used to <em>reference</em>
+  an object. This means that the variable contains the <b>unique identity</b>
+  of the object
+  it refers to. In this case, it is the identity of the new point object
+  we just created. Notice how a reference variable can be used to
+  access the fields of the referenced object.
+  <xfr>
+    Notez la variable <span class="java-field">p</span>, c'est une
+    variable dite <b>référence</b> car elle est utilisée pour
+    référencer un object. Cela veut dire que la variable contient
+    l'identité de l'objet qu'elle référence. Dans notre cas présent,
+    c'est l'identité de l'objet point que nous venons de créer.
+    Vous noterez qu'une référence peut être utilisée pour accéder
+    les champs de l'objet qu'elle référence.
+  </xfr>
+</p>
+<p>
+  Reference variables can also be used to invoke methods on objects.
+  In the following code snippet, we create a new point object and then we
+  invoke the translate method on that very object we just created:
+  <xfr>
+    Les références peuvent aussi être utilisées pour invoquer les méthodes
+    sur des objets. Dans le code ci-dessous, de nouveau, nous créons un
+    objet point et nous invoquons la méthode qui le translate.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Point p = new Point();
+  p.translate(5,10);
+</pre>
+<p>
+  Notice the notation, it involves an object, a method, and arguments.
+  The object is the object referenced by the variable <span class="java-lvar">p</span>.
+  The invoked method is the method <span class="java-method">translate</span>.
+  Because the object referenced by the variable <span class="java-lvar">p</span>
+  is an instance of the class <span class="java-class">Point</span>, the
+  method method <span class="java-method">translate</span> is the one
+  defined on the class <span class="java-class">Point</span>. The 
+  arguments are in between paranthesis, in this case,
+  the arguments are the two integer values 5 and 10.
+  <xfr>
+    Vous remarquerez la notation utilisée qui demande un objet, une méthode,
+    et des arguments. L'objet est celui référencé par la variable
+    <span class="java-lvar">p</span>. La méthode est la méthode nommée
+    (<span class="java-method">translate</span>).
+    Le code correspondant est celui définie dans la classe
+    <span class="java-class">Point</span>. Pourquoi?
+    Nous savons que la variable <span class="java-lvar">p</span>
+    référence un objet et nous savons qu'il est une instance de la
+    classe <span class="java-class">Point</span>.
+    Les arguments sont ceux entre parenthèses (les valeurs entières
+    5 et 10).
+  </xfr>
+</p>
+<p>
+  The object upon which a method is invoked is called the <b>receiver</b>.
+  So, in the snippet above, the <em>receiver</em> of the invoked
+  method <span class="java-method">translate</span>
+  is the object referenced
+  by the variable <span class="java-lvar">p</span>. In Java, a method is
+  always invoked on an object, the <em>receiver of that invocation</em>.
+  The receiver is also called <span class="java-lvar">this</span>.
+  In fact, look at the code of the method
+  <span class="java-method">translate</span> below,
+  see the undeclared variable <span class="java-lvar">this</span>?
+  <xfr>
+    L'objet sur lequel est invoqué une méthode est appelé le <b>receveur</b>.
+    Dans le code que nous veons de voir, le <em>receveur</em> de l'invocation
+    de la méthod <span class="java-method">translate</span> est l'objet
+    référencé pas la variable <span class="java-lvar">p</span>.
+    Le receveur est aussi appelé <em>this</em>. Regardez le code
+    de la méthode <span class="java-method">translate</span> ci-dessous,
+    voyez vous la référence <em>this</em> qui n'est pas déclarée.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Point {
+    int x, y;
+    void translate(int dx, int dy) {
+      this.x += dx;
+      this.y += dy;
+    }
+  }
+  class Main {  
+    public static void main(String[] args) {
+      Point p = new Point();
+      p.translate(5,10);
+    }
+  }
+</pre>
+<p>
+  That variable <span class="java-lvar">this</span> is a builtin variable,
+  it is always available in the code of any method, it always refers to the receiver.
+  In our example of invoking the method <span class="java-method">translate</span>,
+  the variable <span class="java-lvar">this</span> and
+  the variable <span class="java-lvar">p</span>  will refer to the same object,
+  during the invocation of the method <span class="java-method">translate</span>.
+  <xfr>
+    Cette variable <span class="java-lvar">this</span> est toujours
+    disponible dans le code d'une méthode et elle référence toujours
+    le receveur à l'exécution. Dans notre exemple d'invocation de la
+    méthode <span class="java-method">translate</span>, la variable
+    <span class="java-lvar">this</span> prendra la valeur de la variable
+    <span class="java-lvar">p</span> au moment de l'invocation de la
+    méthode <span class="java-method">translate</span> sur le receveur
+    référencé par la variable <span class="java-lvar">p</span>.
+  </xfr>
+</p>
+<img style="margin-left: .5in;box-shadow: 2px 2px 5px #888888;"
+     src="images/method-invocation.svg" width="60%" />
+<p>
+  In the figure above, you can see the invocation mechanic in relation with
+  the call stack, also called the invocation stack. For every method
+  invocation on that stack, there is a stack frame, 
+  hence the fact that we represent the variable <span class="java-lvar">p</span>
+  in a frame. The invocation of the method <span class="java-method">translate</span>
+  pushes a new frame on the call stack, holding the arguments and the local
+  variables, like you learning in other programming languages. So in our example,
+  we have the two arguments (5,10) and the variable
+  <span class="java-lvar">this</span> initialized with the
+  identity of the receiver, that is, the object referenced by the variable
+  <span class="java-lvar">p</span>.
+  <xfr>
+    Dans la figure ci-dessus, vous pouvez voir la mécanique d'invocation en
+    relation avec la pile des appels. Vous vous rappelez que toute exécution
+    s'appuie sur une pile d'appels et que donc toute fonction ou méthode
+    s'appuie sur un "cadre d'appel". Aussi, nous avons un cadre pour l'exécution
+    de notre exemple de code avec la présence de la variable
+    <span class="java-lvar">p</span>. L'invocation de la méthode
+    <span class="java-method">translate</span>
+    pousse un nouveau cadre sur la pile des appels, en passant les deux arguments
+    (5,10) et initialize la variable <span class="java-lvar">this</span> avec
+    l'identité de l'objet référencé par la variable
+    <span class="java-lvar">p</span>.
+  </xfr>
+</p>
+<p>
+  We say that the point object is <b>aliased</b> by the two variables
+  <span class="java-lvar">p</span> and <span class="java-lvar">this</span>.
+  This means that we have two reference variables that hold the same
+  object identity, which means that the two variables refer to the same
+  objet.
+  <xfr>
+    Nous dirons que l'objet point correspondant est <b>aliasé</b>
+    par les deux variables 
+    <span class="java-lvar">p</span> et <span class="java-lvar">this</span>.
+    Cela veut dire que nous avons les deux variables qui contiennent la
+    même identité d'objet, dont elles référencent le même objet.
+  </xfr>
+
+<h3>Learning via the Eclipse debugger</h3>
+
+<p>
+  There is nothing better than the debugger to understand these things.
+  To help you, we organized the <em>java.basics</em> project in
+  your Eclipse Workspace in the following way.
+  <xfr>
+    Il n'y a rien de mieux que le debugger pour comprendre ces facettes
+    de la programmation orientée-objet. Dans votre workspace, nous vous
+    avons donné un projet <em>java.basics</em>, organisé comme suit:
+  </xfr>
+</p>
+<p>
+  We created
+  several source folders that corresponds to different learning steps.
+  In these folders, you may find redundant Java packages or classes.
+  You would not normally organize classes and packages that way, in
+  a regular project. But because we want to show you variations,
+  on the same classes, we have created different source folders and
+  different Java packages, each dedicated to a specific learning step.
+  <xfr>
+    Nous avons créé plusieurs dossiers pour les sources, chaque dossier
+    correspondant à une étape d'apprentissage. Des ces dossiers,
+    vous trouverez plusieurs fois les mêmes classes. Ce n'est pas
+    une organisation normale pour un projet de développement.
+    Mais elle a du sens dans une situation d'apprentissage, pour
+    vous montrer des variations sur les mêmes classes.
+  </xfr>
+</p>
+<p>
+  Look at the source folder <em>step1</em>.
+  Look at the class <span class="java-package">basics.step1</span>,
+  you will see the class <span class="java-class">Point</span> that
+  we discussed above.
+</p>
+<p>
+  Also look at the
+  class <span class="java-class">JavaBasicStep1</span>
+  that carries the method <span class="java-method">main</span>
+  for this first step. It is customary to have a class as the
+  entry point, the one defining the main method.
+  Notice that we used a complex name, which may look a bit too
+  much. Right? In fact, it is to help you. Let's check it out.
+</p>
+<p>
+  Launch the execution of
+  class <span class="java-class">JavaBasicStep1</span>, like
+  you already know how to do (right-click on the class in
+  the <em>Package Explorer</em> view and select <em>Debug As</em>
+  and then <em>Java Application</em>. It should execute,
+  printing <em>"That's all folks."</em> like at the end of
+  old Walt Disney cartoons. 
+  Now, look at your debug configurations. Remember how?
+  Click on the drop-menu triangle in the debugger icon 
+  <img src="images/eclipse-debugger-icon.png" height="16"/>.
+  <xfr>
+    Lancez l'exécution de la classe 
+    <span class="java-class">JavaBasicStep1</span>
+    (clique droit sur la classe dans la vue 
+    <em>Package Explorer</em> et choisissez <em>Debug As</em>
+    puis <em>Java Application</em>. L'exécution devrait
+    réussir et afficher <em>"That's all folks."</em> dans la console,
+    comme à la fin des dessins animés de Walt Disney.
+    Maintenant, regardez vos configuration de debug.
+    Nous avions vu comment faire... cliquez sur le triangle noir
+    à coté de l'icon
+    <img src="images/eclipse-debugger-icon.png" height="16"/>.
+  </xfr>
+</p>
+<p>
+  What do you see? Eclipse automatically created a launch configuration
+  with the name <em>JavaBasicStep1</em>, the name 
+  of the class that defines the
+  method <span class="java-method">main</span>.
+  Because we used a complex name, the different launch configurations
+  will not conflict. If we had used always the same name, let's say
+  <em>Main</em>, you would end up with many launch configurations
+  called <em>Main</em> and then <em>Main(1)</em> and then <em>Main(2)</em>
+  and so on. With our naming scheme, each step can have its own configuration
+  and you can know exactly which one to select when you want to execute a
+  specific step of a specific sprint.
+  <xfr>
+    Que voyez vous? Eclipse a créé une configuration avec le nom
+    <em>JavaBasicStep1</em>, le nom de la classe dont vous avez
+    exécuté la méthode <span class="java-method">main</span>.
+    Parce que nous avons utilisé des noms un peu longs et complexes,
+    les configurations vont avoir toutes un nom unique qu'il vous
+    sera facile de reconnaitre. Il vous sera donc facile de choisir
+    l'exécution d'un step particulier d'un sprint particulier.
+  </xfr>
+</p>
+<p>
+  Now that we have explained how the project for this sprint is organized,
+  overall, we can get down to business and look at some code.
+  Set a breakpoint in the method <span class="java-method">main</span>
+  in the class <span class="java-class">JavaBasicsStep1</span>. 
+  Launch the execution under the control of the Java debugger.
+  Once suspended in the method <span class="java-method">main</span>,
+  single step through the code (using <b>F6</b>) and look at the
+  variables in the <em>Variables</em> view.
+  <xfr>
+    Il est temps de regarder du code. 
+    Positionner un point d'arrêt dans la méthode
+    <span class="java-method">main</span>
+    dans la classe <span class="java-class">JavaBasicsStep1</span>.
+    Lancez l'exécution sous le control du debugger Java.
+    Une fois l'exécution suspendue dans la méthode
+    <span class="java-method">main</span>,
+    avancer en pas à pas (using <b>F6</b>) et regardez les
+    variables dans la vue <em>Variables</em>.
+  </xfr>
+</p>
+<p>
+  Notice that you can browse the object fields.
+  Take the variable <span class="java-lvar">p</span>,
+  you can expand it in the <em>Variables</em> view and see the values
+  of the fields of the object it references. Your Eclipse should look
+  like this:
+  <xfr>
+    Notez que vous pouvez voir les champs des objets.
+    Prenons la variable <span class="java-lvar">p</span>,
+    vous pouvez voir la structure de l'objet référencé dans la
+    vue <em>Variables</em> et voir la valeur des champs de l'objet
+    référencé. Votre Eclipse devrait ressembler à cela:
+  </xfr>
+</p>
+<img src="images/JavaBasicsStep1-at-main.png" width=100%>
+<p>
+  There are several points to discuss.
+</p>
+<ol>
+  <li>
+    The execution stopped at line 34, so it already created a point object,
+    whose identity is stored in the 
+    variable <span class="java-lvar">p</span>.
+    <xfr>
+      L'exécution est arrêtée ligne 34, elle a déjà crée un objet point,
+      dont l'identité est mémorisée dans la variable
+      variable <span class="java-lvar">p</span>.
+    </xfr>
+  </li>
+  <li>
+    We selected that variable <span class="java-lvar">p</span>
+    in the <em>Variables</em> and we expanded it. You can see
+    that the two fields (field <span class="java-field">x</span>
+    and field <span class="java-field">y</span>) have been
+    initialized to zero.
+    <xfr>
+      Nous avons sélectionné la variable <span class="java-lvar">p</span>
+      dans la vue <em>Variables</em> et nous l'avons ouvert.
+      On peut voir les deux champs de la classe qui ont été
+      initialisé à la valeur zéro.
+    </xfr>
+  </li>
+  <li>
+    When you select a reference variable, in the <em>Variables</em> view,
+    the debugger prints information
+    about the referenced object. In this case, the debugger confirms
+    that the object is an instance of the
+    <span class="java-class">basics.step1.Point</span>.
+    That confirms that an object knows at runtime what it is, it
+    knows its class, which is how the debugger knows that the object
+    is an instance of the class <span class="java-class">Point</span>.
+    <xfr>
+      Lorsque vous selectionnez une variable, dans la vue <em>Variables</em>,
+      le debugger affiche ce qu'il sait de l'objet référencé. Dans notre
+      cas, pour la variable <span class="java-lvar">p</span>, il nous dit
+      que l'objet est une instance de la classe
+      <span class="java-class">basics.step1.Point</span>.
+      Cela confirme qu'un objet connait sa classe à l'exécution,
+      c'est en effet comme cela que le debugger sait que la variable
+      <span class="java-lvar">p</span> référence un object point
+      et pas autre chose.
+    </xfr>
+  </li>
+</ol>
+<p>
+  Keep single stepping through the execution and reuse your
+  single stepping skills that you acquired in the previous sprint.
+  Remember: <b>F5</b> to step in, <b>F6</b> to step over. 
+  Especially, single step through the method
+  <span class="java-method">translate</span> and look at
+  the fields of the receiver, changing values as they are assigned
+  new values. See how powerful a tool is the Eclipse debugger.
+  <xfr>
+    Continuez l'exécution en pas-à-pas, vous avez appris à le
+    faire dans le sprint précédent. En particulier, exécutez
+    pas-à-pas la méthode
+    <span class="java-method">translate</span> et regardez
+    les champs du receveur qui changent de valeur lorsqu'ils
+    sont assignés de nouvelles valeurs.
+  </xfr>
+</p>
+<p>
+  <b>This is very important, use the debugger to understand what is
+    a call stack.</b>
+  Single step into the method
+  <span class="java-method">translate</span> or directly set a breakpoint
+  there. Look at the <em>Debug</em> view, it shows you the call stack.
+  It shows that the execution is stopped in the method
+  <span class="java-method">translate</span>.
+  It also shows you that the method 
+  <span class="java-method">translate</span>
+  was invoked from the method
+  <span class="java-method">main</span>.
+  See how the view <em>"Debug"</em> shows you the call stack in Eclipse.
+  <xfr>
+    <b>Ceci est vraiment important, utilisez le debugger pour comprendre
+    ce qu'est une pile d'appels.</b>
+    Allez en pas à pas dans la méthode
+    <span class="java-method">translate</span> ou positionnez un breakpoint.
+    Regardez la vue <em>Debug</em>, elle vous montre la pile d'appels.
+    Elle vous montre que l'exécution est stoppée dans la méthode
+    <span class="java-method">translate</span>.
+    Elle vous montre également que la méthode 
+    <span class="java-method">translate</span>
+    a été invoquée depuis la méthode
+    <span class="java-method">main</span>.    
+  </xfr>
+</p>
+<img style="margin-left: .5in;box-shadow: 2px 2px 5px #888888;"
+     src="images/method-invocation.svg" width="60%" />
+<p>
+  Use Eclipse to navigate up and down the call stack.
+  Click on the different lines in the <em>Debug</em> view and
+  notice how Eclipse navigates to the corresponding lines in
+  the different sources.
+  <b>
+    A call stack shows you how the
+    execution got where it is</b>, this is the most important point to remember.
+    <xfr>
+    Utilisez Eclipse pour naviguer dans la call stack.
+    Cliquez sur les différentes lignes dans la vue <em>Debug</em> et
+    notez comment Eclipse se place sur les lignes correspondantes dans
+    les different sources.
+    <b>
+    Une pile d'appels vous montre comment l'exécution est arrivée où elle est, 
+    </b>, c'est le point le plus important à mémoriser.
+    </xfr>
+</p>
+<p>
+  Indeed, how did the execution got where it is stopped at, under
+  the control of the debugger? You launched the execution and the execution
+  started in
+  the class <span class="java-class">JavaBasicStep1</span>, in
+  the method
+  <span class="java-method">main</span>, starting at line 6.
+  Look at the <em>Variables</em> view, you can see the variables
+  in the stack frame corresponding to the invocation of the
+  method <span class="java-method">main</span>.
+  Then, at line 8, the method
+  <span class="java-method">translate</span> is invoked,
+  so the execution pushed a new stack frame on the call stack,
+  to hold the arguments and local variables of the method
+  <span class="java-method">translate</span>. Then,
+  the execution moves on to line 11 in the
+  class <span class="java-class">Point</span>.
+  <xfr>
+    En effet, comment l'exécution a t-elle été stoppée à cet endroit
+    sous le contrôle du debugger? Vous avez lancé l'exécution et celle
+    ci a démarré dans la classe <span class="java-class">JavaBasicStep1</span>, 
+    dans la méthode
+    <span class="java-method">main</span>, à la ligne 6.
+    Regardez la vue <em>Variables</em>, vous pouvez voir les variables
+    dans la stack frame de l'invocation de la méthode 
+    <span class="java-method">main</span>.
+    A la ligne 8, la méthode 
+    <span class="java-method">translate</span> est invoquée,
+    donc l'exécution ajoute une nouvelle stack frame sur la pile d'appels,
+    contenant les arguments et les variables locales de la méthode
+    <span class="java-method">translate</span>. Puis,
+    l'execution se déplace ligne 11 dans la
+    classe <span class="java-class">Point</span>.
+  </xfr>
+</p>
+<p>
+  <b>WARNING:</b> do not just read and partially understand all this,
+  you need to really understand these concepts:
+  <xfr>
+    Ne faites pas que lire et comprendre superficiellement les concepts
+    abordés ici, vous devez acquis une solide compréhension des concepts
+    suivant:
+  </xfr>
+</p>
+<ul>
+  <li> Classes and objects </li>
+  <li> Fields and methods </li>
+  <li> Reference variables and object identity. </li>
+  <li> Method invocations, method receiver, and call stack </li>
+  <li> Object aliasing</li>
+</ul>
+<p>
+  You also need to make sure that you contrast <b>static methods</b>
+  and <b>non-static methods</b> that we just discussed. Remember that
+  static methods do not require a receiver object, they are more like
+  regular functions. The non-static methods are the regular methods in
+  object-oriented programming and always require a receiver object.
+  <xfr>
+    Vous devez aussi vous assurez de bien contraster les méthodes
+    statiques et non-statiques. Les méthodes statiques n'ont pas besoin
+    d'un receveur et sont ainsi semblables à des fonctions. Les méthodes
+    non-statique que nous venons de voir ont toujours un receveur.
+  </xfr>
+</p>

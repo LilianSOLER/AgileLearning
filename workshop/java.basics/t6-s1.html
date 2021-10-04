@@ -1,0 +1,132 @@
+<vars>
+  sprint=java.basics
+  task=t6
+  step=t6-s1
+</vars>
+
+
+<p>
+  A lot of the code is similar to the previous tasks,
+  with similar classes for points and rectangles. The novelty
+  is to introduce the concept of polygons. A polygon is described
+  by the class <span class="java-class">Polygon</span>,
+  using an array of points:
+  <xfr>
+    Beaucoup du code est le même que lors de la tâche précédente.
+    La nouveauté est la classe <span class="java-class">Polygon</span>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Polygon {
+    Point[] points;
+    Polygon(Point pts[]) {
+      points = pts;
+    }
+  }
+</pre>
+<p>
+  Notice that an array of points must be given to construct
+  a polygon. Therefore, a polygon object can be considered as
+  a single object, an instance of the
+  class <span class="java-class">Polygon</span>. But it makes
+  sense also to think a polygon as all the objects needed to represent
+  a polygon,
+  that is, the polygon object, the array object, and the point objects.
+  It is important that you start thinking in terms of such graphs of objects.
+  So a polygon is really represented by a graph of objects,
+  as depicted below:
+  <xfr>
+    Vous noterez qu'il faut fournir un tableau de points pour construire
+    un polygone. Un objet polygon est donc une instance de la classe
+    <span class="java-class">Polygon</span>, mais est-ce vraiment un
+    seul objet? Cela a du sense de considérer l'ensemble des objets
+    qui constituent un polygon: l'objet polygone, le tableau, et les
+    objet points. Il est important que vous commenciez à penser en
+    terme de graphes d'objets.
+  </xfr>
+</p>
+<img src="images/polygon-graph.svg"/>
+<p>
+  Remember that an array in Java is an object, like everything else that is not a
+  primitive type (boolean, byte, short, char, int, float, long, or double).
+  This means that an array must be created with
+  the <span class="java-lvar">new</span> operator, as follows:
+  <xfr>
+    Notez qu'un tableau est un objet en Java. C'est normal, tout est objet
+    en Java sauf les types primitifs
+    (boolean, byte, short, char, int, float, long, or double).
+    Cela veut dire qu'un tableau est créé avec l'opérateur
+    <span class="java-lvar">new</span> operator, comme tout objet:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Point[] points;
+  points = new Point[10];
+</pre>
+<p>
+  This creates an array, with 10 elements, each element being a reference
+  to a Point object.
+  <b>Important, the array does not contain points, it contains references
+    to point objects</b>. When created, such an array would be filled with
+  <span class="java-keyword">null</span> values. To fill it up with points,
+  one would have to do something like this:
+  <xfr>
+    Cela crée un tableau, de 10 éléments, chaque élément contenant une
+    référence vers un objet point.
+    <b>Important: le tableau ne contient donc pas les objets points, il
+      contient des références sur des objets points.</b> Lorsqu'il est
+    créé, comme tout object Java, le tableau est initialisé avec la valeur
+    binaire zéro, ce qui veut dire que chaque entrée du tableau contient
+    la référence <span class="java-keyword">null</span> values.
+    Pour remplir le tableau, il faut écrire quelque chose comme cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Point[] points;
+  points = new Point[10];
+  for (int i=0;i&lt;points.length;i++)
+    points[i] = new Point();
+</pre>
+<p>
+  The array object would now have valid references to point objects.
+  Each element of the array would contain the identity of one point object.
+  Notice that
+  an array object knows its length, that is, the number of elements it contains.
+  Arrays in Java have a fixed length. In other words, you cannot grow or
+  shrink an array. To do so, you need to instantiate a new array, longer
+  or shorter, and copy the elements that wish to copy.
+  <xfr>
+    Le tableau contiendra maintenant des références valides sur des objets points.
+    Chaque élément du tableau contiendra l'identité d'un objet point.
+    Vous remarquerez qu'un tableau connait sa longueur, c'est à dire le nombre
+    d'éléments qu'il contient. Les tableaux en Java sont de longueur fixe.
+    En d'autres termes, vous ne pouvez pas faire grandir un tableau, ni
+    le racourcir. Pour ce faire, vous devez créer un nouveau tableau,
+    plus grand ou plus petit, et copier les éléments que vous désirez
+    copier.
+  </xfr>
+</p>
+<p>
+  Arrays can also be used to hold primitive types as opposed to references.
+  Again, by default, arrays of primitive types are initialized with zero values.
+  So the array object referenced by the variable <span class="java-lvar">a</span>
+  and variable <span class="java-lvar">b</span> are filled with zeroes upon creation.
+  Then, the array referenced by the variable <span class="java-lvar">b</span>
+  is initialized through the loop with increasing values. 
+  <xfr>
+    Les tableaux peuvent aussi contenir des valeurs primitives, à la place de
+    références. Par défaut, les tableaux contenant des valeurs primitives sont
+    initialisés avec la valeur zéro. Donc les objets tableaux représentés par
+    la variable <span class="java-lvar">a</span>
+  	et la variable <span class="java-lvar">b</span> sont initialisés avec
+  	les valeurs zéro à leur création.
+  	Puis, le tableau représenté par la variable <span class="java-lvar">b</span>
+  	est initialisé avec des valeurs qui s'incrémentent au travers d'une boucle.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  int a[] = new int[25];
+  float b[] = new float[34];
+  for (int i=0;i&lt;b.length;i++)
+    b[i] = (float)i;
+</pre>

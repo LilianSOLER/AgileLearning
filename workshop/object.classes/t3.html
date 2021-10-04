@@ -1,0 +1,162 @@
+<vars>
+  sprint=object.classes
+  task=t3
+</vars>
+
+<p>
+  Our previous implementation of our file system works, which is already a good
+  thing. However, the design of our code may be improved. The design was an
+  object-oriented design, since we used classes and objects, but it was not
+	polymorphic. 
+  <xfr>
+    Notre impémentation de notre système de fichiers en mémoire fonctionne,
+    c'est déjà une bonne chose. La conception était une conception orientée-objet,
+    puisque nous avons utilisé des classes et des objets, mais nous n'avons
+    pas utilisé le polymorphisme.
+  </xfr>
+</p>
+
+<h3>Polymorphic Programming</h3>
+
+<p>
+  Let's discuss if we could use polymorphic programming and improve
+  the design of our code. We have a directory that contains both files
+  and directories. In our previous design, we used two different lists,
+  one for files and one for directories. There is an opportunity for
+  polymorphism here, we may consider that a parent directory
+  has a list of children nodes, a node being either
+  a file or a directory. Let's pursue this idea.
+  <xfr>
+    Nous allons introduire l'usage du polymorphisme pour améliorer
+    la conception de notre code. Dans notre système de fichiers,
+    nous avons un dossier qui contient des fichiers et des dossiers.
+    Dans notre conception précédente, nous utilisions deux listes,
+    l'une pour les dossiers et l'autre pour les fichiers.
+    Mais il y a une opportunité ici d'utilisé le polymorphisme.
+    On peut considérer qu'un dossier a une liste de noeuds,
+    un noeud étant soit un fichier soit un dossier.
+  </xfr>
+</p>
+<p>
+  Look in the source folder <em>task3</em> and in the package
+  <span class="java-package">oop.filesys.task3</span>.
+  Look at the class <span class="java-class">Node</span>
+  and its two subclasses
+  <span class="java-class">Directory</span>
+  and
+  <span class="java-class">File</span>.
+  Notice the following points:
+</p>
+<ul>
+  <li>
+    Some methods can be written once, on the class
+    <span class="java-class">Node</span>, rather than
+    duplicated on the classes
+    <span class="java-class">Directory</span>
+    and
+    <span class="java-class">File</span>
+    <xfr>
+      Certaines méthods peuvent être écrites qu'une seule fois,
+      sur la classe
+      <span class="java-class">Node</span>, plutôt que dupliquées
+      sur les classes 
+      <span class="java-class">Directory</span>
+      et
+      <span class="java-class">File</span>      
+    </xfr>
+  </li>
+  <li>
+    A directory can maintain a single list of nodes,
+    rather than two separate lists, one for directories
+    and one for files.
+    <xfr>
+      Un dossier peut maintenir une seule liste de noeuds,
+      plutôt que deux listes, l'une pour les dossiers et
+      l'autre pour les fichiers.
+    </xfr>
+  </li>
+</ul>
+<p>
+  This is looking good, so let's do it.
+</p>
+
+<h3>Implementation and Testing</h3>
+<p>
+  So go ahead,
+  carry over your previous implementation done in the
+  previous task. You will need to adapt it to our new design.
+  <xfr>
+    C'est parti, reporter ici votre implémentation précédente.
+    Vous allez bien sûr devoir l'adapter à notre nouvelle conception.    
+  </xfr>
+</p>
+<p>
+  <b>Nota Bene:</b> when cutting and pasting code in Eclipse,
+  across classes in different Java packages, Eclipse tends to
+  get lost on managing the import statements in your sources.
+  So, after a cut-and-paste operation, across source folders
+	(either tasks or steps), 
+  always check your import statements at the top of the
+  source files and check that they are correct.
+  <xfr>
+    <b>Nota Bene:</b> quand vous coupez et collez du code
+    dans Eclipse, d'une classe à une autre, à travers des
+    frontières de paquet Java, Eclipse a tendance à se perdre
+    dans la gestion des déclarations d'import au début de
+    votre fichier source. Donc, après un couper-coller,
+    toujours bien vérfier la correction des déclarations d'import.
+  </xfr>
+</p>
+<p> 
+  We suggest that you write simple tests to start debugging your
+  new implementation. Then, you may use our shell; use the
+  class <span class="java-class">oop.filesys.task3.Task3Shell</span>
+  as a way to launch our shell with your new implementation of the
+  file system.
+  <xfr>
+    Copiez et adaptez votre implémentation de la tâche précédente,
+    avec cette nouvelle conception, dans le source folder <em>"task3"</em>.
+    Nous vous suggérons de commencer par des petits tests simples pour
+    tester votre nouvelle implémentation. Puis, vous pourrez utiliser
+    notre shell pour poursuivre vos tests, utilisez la classe
+    <span class="java-class">oop.filesys.task3.Task3Shell</span>
+    pour lancer le shell avec votre implémentation.
+  </xfr>
+</p>
+
+<h3>Running our Tests</h3>
+
+<p>
+  Once you have tested your code and played around with the shell,
+  it is time to run our tests. 
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.classes"
+   classpath="bin;tests.jar;../object.collections/edu-polytech-oop-collections.jar"
+   classname="object.classes.tests.Task3Tests"> 
+  <banner>
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Nicely done.
+  </success>
+  <unfold name="check_unfold">
+  </unfold>
+</check>
+<div name="check_unfold" style="display:none;">  
+  <p>
+    That's all folks, for this step.
+    But before we move on, please make sure
+    that you commit and push your work to our server:
+  </p>
+  <textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.classes, Task3 completed"
+  $ git push --all
+  </textarea>
+</div>

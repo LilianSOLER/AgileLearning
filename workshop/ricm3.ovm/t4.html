@@ -1,0 +1,458 @@
+<vars>
+  sprint=ricm3.ovm
+  task=t4
+</vars>
+
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+table#t01 {
+    width: 100%;    
+    background-color: #f1f1c1;
+}
+</style>
+
+<p>
+  So let's talk about types, in details.
+  You know what is a type, you use it every day when coding. You use types
+  to <em>"type"</em> your variables, such as "int" or "char". You use
+  types to type your arrays, like "int[]". So what is a type?
+</p>
+<p>
+  A type describes what kind
+  of values can be stored somewhere, in the element of an array, in a variable,
+  or in the field of an object. A type also dictates what operations are legal
+  on such values.
+</p>
+<p>
+  Types in our language fulfill the same goal. Our types also describe
+  what kind of values can be stored in variables and elements of arrays.
+  Just like that:
+</p>
+<pre class="prettyprint lang-java">
+  int x = 2;
+  int[] array = new int[3];
+  array[0] = x + 3;
+</pre>
+<p>
+  Types are also used to type expressions. Indeed,
+  to assign "array[0]" with the value from the expression "x + 2",
+  you must make sure that the expression is typed as an integer.
+  This is the case in the code snippet above. In contrast,
+  you could not write something like this:
+</p>
+<pre class="prettyprint lang-java">
+  float x = 2.5;
+  int[] array = new int[3];
+  array[0] = x + 3.1;
+</pre>
+<p>
+  Why? Because the expression evaluates to "5.6", which is a float
+  value and the array only contains integer values. This last statement
+  should be rejected because it would entail a loss of
+  information, since the value "5.6" would have to be rounded
+  <em>implicitely</em> to the integer value "5". 
+  Of course, you can force <em>explicitly</em>
+  the conversion yourself:
+</p>
+<pre class="prettyprint lang-java">
+  float x = 2.5;
+  int[] array = new int[3];
+  array[0] = (int)(x + 3.1);
+</pre>
+<p>
+  The explicit cast operation expresses that you
+  know what you are doing and rounding the value "5.6"
+  into the integer value "5" is what you want. 
+</p>
+<p>
+  See types are used all the time, both by you and the
+  interpreter. You use types to express what you
+  want. The interpreter uses types to interpret what you typed.
+  So the type system in place is central to the dialog between you
+  and the interpreter, so the type system must be discussed
+  explicitly. Something that we did already when introducing
+  our language in this <a href="t2.html">task</a>.
+</p>
+
+<h3>Implementing a type system</h3>
+
+<p>
+  The discussion
+  here is the design of classes necessary for the interpreter to
+  represent our type system.
+  This all starts with two classes, the class 
+  <span class="java-class">Type</span> and the class
+  <span class="java-class">TypeSystem</span>.
+</p>
+<p>
+  The class
+  <span class="java-class">Type</span> is used
+  to represent all the known types:
+</p>  
+<ul>
+  <li>Primitive types:
+    <span class="java-keyword">boolean</span>,
+    <span class="java-keyword">char</span>,
+    <span class="java-keyword">int</span>,
+    <span class="java-keyword">float</span>
+  </li>
+  <li>
+    Special types:
+    <span class="java-keyword">void</span>,
+    <span class="java-keyword">any</span>
+  </li>
+  <li>
+    Array types such as 
+    <span class="java-keyword">int[]</span> or
+    <span class="java-keyword">char[]</span>
+  </li>
+</ul>
+<p>
+  So how do we represent a type? Well, using a class,
+  since a type is an entity manipulated by our
+  interpreter. So what are the fields and methods
+  of that class?
+</p>
+<pre class="prettyprint lang-java">
+public abstract class Type {
+
+  private String m_name;
+
+  protected Type(String name) {
+    m_name = name;
+    TypeSystem.add(this);
+  }
+
+  public abstract Value cast(Value v);
+  public abstract Value zero();
+</pre>
+<p>
+  Look at the constructor first, it tells us
+  that a type has a name (we voluntarily
+  ignore that a type may also have a number).
+  The name is the name
+  you use in the source code, such as
+  <span class="java-keyword">char</span> or
+  <span class="java-keyword">int</span>.
+  It is important to therefore understand
+  that there will be one instance of the
+  class <span class="java-class">Type</span>
+  per known type.
+  Look at the class
+  <span class="java-class">TypeSystem</span>,
+  you will see it is an index for all
+  known types.
+</p>
+<pre class="prettyprint lang-java">
+public class TypeSystem {
+  private static HashTable types = new HashTable();
+
+  public static void add(Type type) {
+    types.put(type.name(),type);
+  }
+
+  public static Type lookup(String name) {
+    return (Type) types.get(name);
+  }
+}
+</pre>
+<p>
+  Any type created is added to the hash table
+  of types, indexed by name, so that types
+  can be looked up by names when encountered
+  during the parsing of statements.
+  This indexing is done by the constructor
+  of the class
+  <span class="java-class">Type</span>.
+</p>
+<p>
+  A type describes the values of that type,
+  but it can also be used to cast values.
+  This is the purpose of the method
+  <span class="java-method">cast</span>.
+  This method is used by the interpreter
+  when it needs to transform a value of one
+  type to a value of another type.
+  For example, when you typed this:
+</p>
+<pre class="prettyprint lang-java">
+  int x = (int)(2.3+5.6);
+</pre>
+<p>
+  The addition produces a float value that
+  is then casted to an integer value. It is
+  the method
+  <span class="java-method">cast</span> that
+  does the transform. But which casts
+  are legal and which ones are not?
+</p>
+<table style="border: 1px solid black">
+  <tr>
+    <th>&nearr;</th>
+    <th>int</th>
+    <th>float</th>
+    <th>boolean</th>
+    <th>char</th>
+    <th>void</th>
+    <th>any</th>
+  </tr>
+  <tr>
+    <th>int</th>
+    <th>&check;</th>
+    <th>&check;</th>
+    <th></th>
+    <th>&check;</th>
+    <th></th>
+    <th>&check;</th>
+  </tr>
+  <tr>
+    <th>float</th>
+    <th>&check;</th>
+    <th>&check;</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th>&check;</th>
+  </tr>
+  <tr>
+    <th>boolean</th>
+    <th></th>
+    <th></th>
+    <th>&check;</th>
+    <th></th>
+    <th></th>
+    <th>&check;</th>
+  </tr>
+  <tr>
+    <th>char</th>
+    <th>&check;</th>
+    <th></th>
+    <th></th>
+    <th>&check;</th>
+    <th></th>
+    <th>&check;</th>
+  </tr>
+  <tr>
+    <th>void</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr>
+    <th>any</th>
+    <th>&check;</th>
+    <th>&check;</th>
+    <th>&check;</th>
+    <th>&check;</th>
+    <th></th>
+    <th>&check;</th>
+  </tr>
+</table>
+<p>
+  How do we read this matrix?
+  It tells you if a type (as a row) can be casted to
+  another type (as a column). For instance, the
+  type <span class="java-keyword">float</span> can
+  be casted to an
+  <span class="java-keyword">int</span>,
+  to a
+  <span class="java-keyword">float</span>,
+  and to a
+  <span class="java-keyword">any</span>.
+</p>
+<p>
+  The types
+  <span class="java-keyword">void</span> and
+  <span class="java-keyword">any</span> are
+  special types. 
+  The type
+  <span class="java-keyword">void</span>
+  is a type that never has a value, since
+  it is used to type functions that do not
+  return a value.
+  So casting is a non-issue for the type
+  <span class="java-keyword">void</span>.
+  The type
+  <span class="java-keyword">any</span>
+  is a bit harder to understand.
+</p>
+<p>
+  The type
+  <span class="java-keyword">any</span>,
+  is a polymorphic abstract type that allows
+  to define polymorphic variables and
+  polymorphic arrays. For example, look
+  at the snippets below:
+</p>
+
+<pre class="prettyprint lang-java">
+  any x = 2;
+  any[] array = new any[4];
+  array[0] = 2;
+  array[1] = 2.4;
+  array[2] = 'c';
+  array[3] = true;
+</pre>
+<p>
+  See, the use is a bit similar to the use of
+  the class
+  <span class="java-class">Object</span> in Java
+  where you could write this:
+</p>  
+
+<pre class="prettyprint lang-java">
+  Object[] array = new Object[4];
+  array[0] = new String("toto");
+  array[1] = new Foo();
+  array[2] = new Bar();
+</pre>
+<p>
+  The type <span class="java-keyword">any</span>
+  is abstract in the sense that there is no
+  value of the type <span class="java-keyword">any</span>,
+  except the value <em>"zero"</em> used to initialize
+  variables and array elements.
+  Look at the class <span class="java-class">AnyValue</span>.
+  You can verify that we have a single instance of the
+  class <span class="java-class">AnyValue</span>.
+</p>
+<pre class="prettyprint lang-java">
+public class AnyValue extends Value {
+
+  public static AnyValue zero;
+
+  public AnyValue() {
+    super(AnyType.TYPE());
+    if (zero != null)
+      throw new IllegalStateException("AnyValue is a singleton");
+    zero = this;
+  }
+}
+</pre>
+<p>
+  Now look at the class 
+  <span class="java-class">AnyType</span>,
+  you will be able to see that the type 
+  <span class="java-keyword">any</span> is
+  therefore only a way to view values of other types,
+  rather than defining values of its own.
+  This is what an abstract type is. It does not
+  define a value, it allows to view a value a certain way
+  and it allows to manipulate that value certains ways.
+  An abstract
+  type is all about what you can do to a value, rather
+  than about what is the format of a value.
+  How do you see that? Well, look at the method
+  <span class="java-method">cast</span>:
+</p>
+
+<pre class="prettyprint lang-java">
+public class AnyType extends Type {
+
+  @Override
+  public Value cast(Value v) {
+    return v;
+  }
+</pre>
+<p>  
+  See, casting is always allowed and does nothing
+  to the value. So
+  the type <span class="java-keyword">any</span>
+  is only a view on a value, not a format of
+  a value. A value is never transformed into
+  an <span class="java-keyword">any</span> value,
+  but it can always be seen as a value
+  of type <span class="java-keyword">any</span>.
+  So what is the use of all this?
+</p>
+<p>
+  Abstract types allow to write generic code, code that
+  applies to many types. For example, we can write a generic
+  method that copies arrays:
+</p>
+<pre class="prettyprint lang-java">
+void array_copy(any[] dst, any[] src) {
+  int i;
+  int len;
+  i = 0;
+  len = length(dst);
+  while (i &lt; len) {
+    dst[i]=src[i];
+    i=i+1;
+  }
+}
+</pre>
+<p>
+  Without the type
+  <span class="java-keyword">any</span>, we would have
+  to write a copy method for every single type of
+  arrays, such as
+  <span class="java-keyword">int[]</span>,
+  <span class="java-keyword">char[]</span>,
+  <span class="java-keyword">float[]</span>, and so on.
+  With the type
+  <span class="java-keyword">any</span>, we can
+  write a single method that works for arrays of
+  all types.
+</p>
+<p>
+  This is really cool and we hope it helps you understand
+  polymorphic programming in Java. Using interfaces is a
+  way to write generic code, it works on any object that implements
+  that interface. But object-oriented programming is polymorphic
+  at heart since any code is written to manipulate objects,
+  instances of certain classes, but in reality, these objects
+  may be instances of any subclass. Polymorphic programming
+  is your key for opening the door to a new world of
+  software development.
+</p>
+
+<h3>Finishing the implementation</h3>
+
+<p>
+  We gave you the complete class hiearchy for types,
+  but the implementation is incomplete and must be fixed.
+  Look at the class <span class="java-class">Type</span>,
+  see the method
+  <span class="java-method">cast</span> and
+  how it needs fixing:
+</p>
+
+<pre class="prettyprint lang-java">
+public abstract class Type {
+  public Value cast(Value v) {
+    return v; // TODO: fix me.
+  }
+}
+</pre>
+<p>
+  This is obviously wrong since not all types can cast
+  all values. So turn this method into an abstract method
+  and override it in all subclasses.
+  To help you get started, we gave you an implementation
+  for the class 
+  <span class="java-class">FloatType</span>.
+  We also gave you a fully implemented class
+  <span class="java-class">AnyType</span>.
+  So go have
+  a look, read and understand the code, then override
+  the same three methods for all the other types.
+</p>
+
+<h3>Testing the implementation</h3>
+
+<p>
+  <b>
+    MUST ADD CHECK HERE
+  </b>
+</p>

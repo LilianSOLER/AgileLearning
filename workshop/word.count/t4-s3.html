@@ -1,0 +1,435 @@
+<vars>
+  sprint=word.count
+  task=t4
+  step=t4-s3
+</vars>
+
+<p>
+  We will now revisit the code for the class
+  <span class="java-class">Vocabulary</span>,
+  incorporating the class
+  <span class="java-class">Bucket</span>.
+  The goal is to scan only one of the buckets, not all of them,
+  when searching for a word.
+  We will use the same idea used for centuries for paper dictionaries.
+  The idea is quite simple, as you all know, it is to use the first
+  letter of words as the index of the section where that word will be
+  added. That way, all words starting with the same
+  letter are grouped in the same section. This means that, given a word,
+  you can search only one section for the definition of that word,
+  the one section for all the words starting with the same first letter.
+  <xfr>
+  	Nous allons maintenant revoir le code de la classe 
+  	<span class="java-class">Vocabulary</span>,
+  	pour incorporer le code de la classe
+  	<span class="java-class">Bucket</span>.
+  	Le but est de réutiliser le principe du dictionnaire.
+  	L'idée est simple, colle vous le savez, elle est d'utiliser la 
+  	première lettre des mots comme l'index de la section dans laquelle
+  	le mot doit être ajouté. Ce faisant, tous les mots commençant par la
+  	même lettre seront groupés dans la même section. Etant donné un mot,
+  	il suffit de le rechercher dans une seule section, celle commençant
+  	par sa première lettre.
+  </xfr>
+</p>
+<p>
+  The idea is very simple but quite effective.
+  So if we have 1000 words and 10 buckets in our class
+  <span class="java-class">Vocabulary</span>,
+  we could have 100 words (1000/10) per bucket in average.
+  This would mean that each lookup, via the
+  method <span class="java-method">find</span>
+  would scan only one bucket with only 100 words.
+  We would have then gained a factor of 10 in performance.
+  <xfr>
+  	L'idée est simple mais très efficace.
+  	Si nous avons
+   	1000 mots et 10 buckets dans notre classe
+  	<span class="java-class">Vocabulary</span>,
+	 nous pouvons avoir 100 mots (1000/10) par bucket en moyenne.
+  	Ceci signifie qu'à chaque recherche, la
+  	méthode <span class="java-method">find</span>
+  	n'analysera qu'un bucket avec seulement 100 mots.
+ 	Nous devrions gagner un facteur 10 en termes de performances.
+  </xfr>
+</p>
+<p>
+  So let's use this idea, starting really simple.
+  Let's use the first letter
+  of a word to select a bucket, exactly like a real-life dictionary.
+  If we had
+  streams in a single human language, like french, we could directly
+  use the first letter. The french language has 26 letters, so we would
+  have 26 buckets. Of course, we would need to make sure that we handle
+  properly lower and upper cases ('a' and 'A').
+  So we would lookup a word like this:
+  <xfr>
+	Donc utilisons cette idée, utilisons la première lettre des mots
+	pour sélectionner un bucket, comme avec le dictionnaire.
+	S'il n'y avait qu'un seul langage humain, nous pourrions
+	directement utiliser la première lettre.
+	Dans le cas de la langue française, nous avons 26 lettres, donc
+	26 buckets. Bien sûr, il faut aussi gérer correctement les lettres
+	minuscules et majuscules ('a' and 'A').
+	Donc nous allons rechercher un mot comme suit:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  Bucket buckets = new Bucket[26];
+
+  int hashCode(Word word) {
+    char c = word.chars[0];
+    c = Character.toLowerCase(c);
+    return (int)c - (int)'a';
+  }
+  
+  Word find(Word word) {
+    int index = hashCode(word);
+    return buckets[index].find(word); 
+  }
+  </pre>
+<p>
+  And therefore add a new word like this:
+</p>
+<pre class="prettyprint lang-java">
+  Word add(Word word) {
+    Word w = find(word);
+    if (w==null) {
+      buckets[index].add(word);
+      w = word;
+    }
+    return w;
+  }
+</pre>
+<p>
+  But unfortunately, we have any kind of streams
+  of characters, with characters across many human languages
+  and symbols. Java characters are encoded on 16 bits, that is, codes
+  that range from -32768 to +32767, so 65535 different values.
+  We cannot have 65535 buckets, it is just too many.
+  A first idea is to simply use a modulo, which allows us to drastically
+  simplify the method <span class="java-method">hashCode</span>.
+  <xfr>
+	Mais malheureusement, nous avons différents langages, avec différents
+	caractères et symboles. Les caractères Java sont encodés sur 16 bits,
+	c'est à dire que leur valeur entière va de -32768 à +32767, ce
+	qui donne 65535 valeurs différentes.
+	Nous ne pouvons pas avoir 65535 buckets, c'est juste beaucoup trop
+	volumineux. Une première idée est d'ajouter un module, 
+	ce qui permet de simplifier drastiquement 
+	la méthode <span class="java-method">hashCode</span>.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  int hashCode(Word word) {
+    return (int)word.chars[0];
+  }
+
+  Word find(Word word) {
+    int index = hashCode(word) % buckets.length;
+    return buckets[index].find(word); 
+  }
+</pre>
+<p>
+  Well, not exactly because we need to be sure that
+  the method <span class="java-method">hashCode</span>
+  returns a positive number. So we really need this code:
+</p>
+<pre class="prettyprint lang-java">
+  int hashCode(Word word) {
+    return Math.abs((int)word.firstChar());
+  }
+</pre>  
+<p>
+  Last hurdle, the class <span class="java-class">Word</span>
+  does not have a method <span class="java-method">firstChar</span>.
+  Of course, we could add it. But wait, let's consider this
+  method <span class="java-method">hashCode</span> a bit longer.
+  It is so far on the class <span class="java-class">Vocabulary</span>,
+  but is it the right place? In fact, it looks more like
+  a method for the class <span class="java-class">Word</span>:
+    <xfr>
+	 De plus, la classe  <span class="java-class">Word</span>
+  	n'a pas de méthode <span class="java-method">firstChar</span>.
+  	Bien sûr, nous pourrions l'ajouter. Mais considérons plutôt la
+  	méthode <span class="java-method">hashCode</span> plus en détail.
+  	Elle est fournie par la classe <span class="java-class">Vocabulary</span>,
+  	mais est-elle au bon endroit? En fait, cela ressemble plus
+  	à une méthode de la classe <span class="java-class">Word</span>:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Word {
+      ...
+    int hashCode(Word word) {
+      return (int)chars[0];
+    }
+</pre>  
+<p>
+  That is cleaner, right? It is important that you realize this.
+  As a rule of thumb, any time you see a method on a class that never
+  uses "this", ask yourself if that method is where it is supposed to be.
+  This method clearly needs to be on the class 
+  <span class="java-class">Word</span>
+  rather than on the class
+  <span class="java-class">Vocabulary</span>.
+  If you are not convinced, discuss it with other students and the teaching
+  staff.
+   <xfr>
+	 C'est plus propre ainsi. En effet, à chaque fois que vous voyez
+	 une méthode dans une classe qui n'utilise pas "this", demandez-vous
+	 si la méthode est définie au bon endroit.
+	 Dans notre cas, la méthode doit clairement être définie
+	 dans la classe <span class="java-class">Word</span>
+  	plutôt que dans la classe
+   <span class="java-class">Vocabulary</span>.
+   Si vous n'êtes pas convaincu, parler en avec les autres étudiants
+   et les professeurs.
+  </xfr>
+</p>
+
+<h4>Discussing correctness</h4>
+  
+<p>
+  There is another reason to put the method 
+  <span class="java-method">hashCode</span>
+  on the class 
+  <span class="java-class">Word</span> rather
+  than on the class
+  <span class="java-class">Vocabulary</span>.
+  The reason is because the methods
+  <span class="java-method">hashCode</span>
+  and
+  <span class="java-method">equals</span>
+  are related and must be coherent.
+</p>
+<p>
+  Well, think about it. A dictionary groups words in different sections
+  based on their first letter. It works because when you compare words,
+  you do it based on their sequence of letters. In other words, the
+  criterium you use to group words together should be compatible with the
+  criterium you use to compare words when searching for a word. This is
+  why you can search only one section of a dictionary and not all sections.
+  With our class <span class="java-class">Word</span>, we have
+  something that works:
+  <xfr>
+	 Réfléchissez par rapport à cela. Un dictionnaire regroupe des mots
+	 en sections en fonction de leur première lettre. cela fonctionne parce
+	 que quand vous comparez des mots, vous le faite sur la base de leur
+	 séquence de caractères. Autrement dit, le critère utilisé pour grouper
+	 les mots ensemble doit être le même que le critère utilisé pour 
+	 chercher un mot. Avec notre classe <span class="java-class">Word</span>, 
+	 nous avons quelquechose qui fonctionne:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  class Word {
+    char[] chars;
+    Word() {
+      this.chars = new char[4];
+    }
+    int hashCode() {
+      return (int)chars[0];
+    }
+    public boolean equals(Word w) {
+      if (nchars!=w.nchars)
+        return false;
+      for (int i=0;i &lt; nchars;i++)
+        if (chars[i]!=w.chars[i])
+          return false;
+      return true;
+    }
+  } 
+</pre>
+<p>
+  Why does it work? Well, you should be able to convince yourself that
+  it does work. Here is a simple demonstration.
+  If two words are equal, are they always going in the same
+  bucket? The answer is yes. Indeed, if two words are equal, their
+  first characters are the same. Therefore, their hash codes are the
+  same. Therefore, the two words would go in the same bucket.
+  Since our class <span class="java-class">Vocabulary</span>
+  checks for the presence of a word, before adding it,
+  everything works as expected.
+  <xfr>
+	 Pourquoi cela fonctionne t-il? Vous devriez être capable d'être
+	 convaincus. Voici une petite démonstration.
+	 Si deux mots sont égaux, ils vont toujours aller dans le même bucket
+	 car leur premières lettres sont égales, donc leur hashcode
+	 sera le même. 
+	 Puisque notre classe <span class="java-class">Vocabulary</span>
+	 vérifie la présence d'un mot avant de l'ajouter,
+	 tout marche comme il faut.
+  </xfr>
+</p>
+
+<p>
+  Let's illustrate something that would not work. Let's assume that
+  a clerk gives words increasing tag numbers as he learns them.
+  Then, the clerk decides to use these tag numbers to organize the
+  dictionary, grouping words based on a modulo on their tag number.
+  Would it work? The code would look like this:
+    <xfr>
+	 Illustrons quelquechose qui ne fonctionnerait pas. Supposons
+	 qu'un clerc associe aux mots une étiquette qui s'incrémente
+	 au fur et à mesure qu'il les apprend. Puis le clerc décide
+	 d'utiliser ces étiquettes pour organiser le dictionnaire, groupant
+	 les mots sur la base du modulo sur leur étiquette.
+	 Cela marcherait-il? le code ressemblerait à cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+   class Word {
+     static int TagAllocator = 1;
+     int tag;
+     char[] chars;
+     Word() {
+       this.tag = TagAllocator++;
+       this.chars = new char[4];
+     }
+     int hashCode() {
+       return tag;
+     }
+     public boolean equals(Word w) {
+       if (nchars!=w.nchars)
+         return false;
+       for (int i=0;i &lt; nchars;i++)
+         if (chars[i]!=w.chars[i])
+           return false;
+       return true;
+     }
+  } 
+</pre>  
+<p>
+  This would never work with our
+  class <span class="java-class">Vocabulary</span>, right?
+  Make sure you convince yourself that this would not work.
+  Let's suppose that the class <span class="java-class">Vocabulary</span>
+  uses 100 buckets.
+  The first time the word "toto" would be seen, the corresponding
+  word object would get a tag number, let's say 1234. It would be inserted
+  in bucket 34 (1234 % 100). Later on, the same word
+  "toto" would be seen again, in the input stream.
+  but the corresponding word object would get another
+  tag number, let's say 1912. So when looking up the second word, we would
+  look in the bucket 12 (1912 % 100) and not in the bucket 34
+  (1234 % 100). Therefore the word "toto" would be added a second time.
+  This means that the word "toto" would appear in two buckets, not
+  something we would want, is it?
+  <xfr>
+	Cela ne marcherait pas du tout avec notre classe 
+	class <span class="java-class">Vocabulary</span>, n'est ce pas?
+  	Vous devez en être convaincus
+  	Supposons que la classe <span class="java-class">Vocabulary</span>
+  	utilise 100 buckets.
+  	La première fois que le mot "toto" apparait, le mot "toto" 
+  	se verra associer une étiquette, par exemple 1234. 
+  	Il sera inséré dans le bucket 34 (1234 % 100). 
+  	Plus tard, le même mot apparait à nouveau dans le flot d'entrée,
+  	mais le mot va être associé à une autre étiquette,
+  	par exemple 1912. Donc en cherchant le deuxième mot "toto", nous allons regarder
+  	dans le bucket 12 (1912 % 100) et non dans le bucket 34
+  	(1234 % 100). Et donc le mot "toto" sera ajouté une deuxième fois.
+  </xfr>
+</p>
+<p>
+	So go ahead, finish the implementation of the class
+	<span class="java-class">Vocabulary</span>, using
+	an array of buckets. <b>Do not forget</b> to add the code to update
+	the performance counters, like you did in the previous <em>word.count.step2</em>.
+	The idea is that the counters will help you see an improvement in
+  performance.
+	<xfr>
+		Allez-y, finissez l'implémentation de la classe Vocabulary,
+		en utilisant un tableau de buckets. <b>N'oubliez pas</b>
+		d'ajouter le code pour mettre à jour les compteurs de performance,
+		comme vous aviez fait lors pour les classes dans <em>word.count.step2</em>.
+		L'idée est que les conpteurs vont nous aider à confirmer que notre
+		nouvelle implémentation sera plus performante.
+	</xfr>
+</p>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="word.count.step3.TestVocabulary"> 
+  <banner>
+		Once you are done coding and testing your class <span class="java-class">Vocabulary</span>,
+		let's run our tests.
+  </banner>
+  <hint> 
+    Not quite. Try again.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check3_unfold">
+  </unfold>
+</check>
+<div name="check3_unfold" style="display:none;" >
+	<p>
+		If the test passed, you achieved at least a speedup ratio of 2.0.
+    This means that implementing buckets improved the performance of the
+    class <span class="java-class">Vocabulary</span>,
+    this is great.
+		<xfr>
+			Si le test est passé, vous avez amélioré les performances de la
+			classe <span class="java-class">Vocabulary</span> par un facteur
+			supérieur à 2. C'est super.
+		</xfr>
+	</p>
+	<p>
+		Look in the output of the above check, what is your speedup?
+    The speedup ratio should be above 4, if it is near towards 2.0,
+		it suggests that your coding is not the best it could be.
+    You should try to explain why your speedup is so low. <b>Note:</b>
+		if you sorted the bucket arrays in the previous step (word.count.step2),
+		it might explain why you speedup is relatively low. But there is no
+		need to sort bucket arrays unless we change the lookup algorithm
+    for a word within a bucket.
+		<xfr>
+			Regardez dans la sortie du test ci-dessous, quel est votre ratio?
+			Le ratio devrait être supérieur à 4, si il est proche de 2,
+			votre codage laisse probablement à désirer. Vous devriez
+			chercher dans votre code pourquoi vous ne voyez pas un ration
+			proche ou supérieur à 4.
+		</xfr>
+	</p>
+  <p>
+    So remember this, a program that works is a good first step.
+    But a program that works and runs fast is much better.
+    Even better, a program that runs fast and that is easy to read,
+    understand, and modify.
+    The difference here was about being smarter algorithmically,
+    using a better method to solve our problem. In this workshop,
+    we only show you the benefits of better algorithmic decisions,
+    but the real study of algorithms will happen in the algorithmic
+    courses.
+		<xfr>
+			Rappelez vous ce qui suit. Un programme qui marche est une bonne
+			première étape. Mais un programme qui marche et qui est plus efficace,
+			c'est encore mieux. La différence que nous venons d'étudier est
+			sur la possibilité de choisir différents algorithmes. Vous suivrez
+			d'autres cours cette année sur le choix du bon algorithme.			
+		</xfr>
+  </p>
+  <p>
+    If you are good and interested, the next step would be to sort the
+    words in buckets, exactly like the words are sorted per section
+    in a real dictionary. The challenge
+    would then be to fully exploit the fact that buckets are sorted
+    to speed up findind a word. This is optional work. 
+  </p>
+  
+  <h4>That's all folks</h4>
+  <p>
+    Please make sure that you commit and push your work to our server.
+  </p>
+  <textarea class="terminal" rows="5" width="60%" >
+    $ git add --all
+    $ git commit -m "Sprint word.count, Task4, Step3 completed"
+    $ git push --all
+  </textarea>
+</div>  

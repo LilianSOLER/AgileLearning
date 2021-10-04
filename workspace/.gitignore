@@ -1,0 +1,7 @@
+# Ignore these Eclipse directories, they are huge, around 80MB...
+# while the projects are typically less than .5MB
+# Of course, this will require students to import the sprint projects.
+.recommenders/
+.metadata/
+
+

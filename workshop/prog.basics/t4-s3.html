@@ -1,0 +1,250 @@
+<vars>
+  sprint=prog.basics
+  task=t4
+  step=t4-s3
+</vars>
+<p>
+  Now we will submit your TicTacToe game to our tests.
+  But before we can do that, we need to make a few changes
+  to your games so that our tests can drive them.
+	This is an exercise in evolving an existing code
+	to meet new requirements, something that most software engineers
+	will do over and over.
+  <xfr>
+    Maintenant vous allez soumettre votre jeux TicTacToe
+  	à nos tests. Mais avant cela, nous avons besoin de quelques
+  	changements au niveau de vos jeux pour que nos tests puissent
+  	être réalisés. C'est un exercise d'évolution d'un code
+		sous de nouvelles contraintes, ce qu'un ingénieur informaticien
+		devrait faire et refaire.
+  </xfr>
+</p>
+
+<h3>Making changes</h3>
+
+<p>
+  The changes are adding methods so that our tests can drive
+  your games programmatically, without requiring user inputs.
+  Our tests will initialize your game with the already existing
+  method:
+  <xfr>
+    Les changements consistent à ajouter des méthodes de manière à
+  	ce que nos tests puissent diriger vos jeux programatiquement,
+  	sans attendre d'inout utilisateur. Nos tests sont initialiser
+  	vos jeux avec la méthode déjà existante:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static void initGame(char first) { ... }
+</pre>
+<p>
+  But then, our tests will use a few more methods that
+  you need to implement. These methods are discussed below.
+</p>
+<p>
+  For the class
+  <span class="java-class">HorizontalTicTacToe</span>,
+  the methods are the following:
+</p>
+<pre class="prettyprint lang-java">
+  public static boolean echoGame();
+  public static boolean gameOver();
+  public static char winner();
+  public static boolean available(int row, int col);
+  public static void play(int row, int col);
+</pre>
+<p>
+  The method
+  <span class="java-method">echoGame</span> prints the board
+  to the console (System.out).
+</p>
+<p>
+  The method
+  <span class="java-method">gameOver</span> returns true
+  as soon as there is a winner or when the board is full.
+</p>
+<p>
+  The method
+  <span class="java-method">winner</span> returns a space (' ')
+  if there is no winner or the actual winner (either 'X' or 'O').
+</p>
+<p>
+  The method
+  <span class="java-method">available</span> returns true
+  if the cell at the given row and column is free and
+  can therefore be played.
+</p>
+<p>
+  The method
+  <span class="java-method">play</span> request to play
+  the cell at the given row and column. The cell is filled
+  with the character of the player whose turn it is to play.
+  This means that you keep track of player turns.
+</p>
+<p>
+  For the class
+  <span class="java-class">VerticalTicTacToe</span>,
+  the methods are the following:
+</p>
+<pre class="prettyprint lang-java">
+  public static boolean echoGame();
+  public static boolean gameOver();
+  public static char winner();
+  public static boolean available(int col);
+  public static void play(int col);
+</pre>
+<p>
+  The method
+  <span class="java-method">echoGame</span> prints the board
+  to the console (System.out).
+</p>
+<p>
+  The method
+  <span class="java-method">gameOver</span> returns true
+  as soon as there is a winner or when the board is full.
+</p>
+<p>
+  The method
+  <span class="java-method">winner</span> returns a space (' ')
+  if there is no winner or the actual winner (either 'X' or 'O').
+</p>
+<p>
+  The method
+  <span class="java-method">available</span> returns true
+  if the given column can be played, which means that it is
+  not full.
+</p>
+<p>
+  The method
+  <span class="java-method">play</span> request to play
+  the given column, dropping on that column the character
+  of the player whose turn it is to play.
+  This means that you keep track of player turns.
+</p>
+
+<h3>Passing our checks</h3>
+
+<p>
+  We have prepared a few tests that will run your games,
+  checking that they work.
+</p>
+<check
+   silent="onSuccess"
+   blocking="false"
+   lang="java"
+   cwd="workspace/prog.basics"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task4.TicTacToeTests">
+  <banner>
+  </banner>
+  <hint>
+    Your code failed our tests.
+  </hint>
+  <success>
+    Your code passed our tests.
+  </success>
+  <unfold name="unfold">
+  </unfold>  
+</check>
+
+  <p>
+    If your code passed our tests.
+    Well done. 
+  </p>
+  <p>
+    If you fail the tests, it means
+    your games are not behaving as we expected them to.
+    It may be the case that you did not respect the specification
+    of the various methods we asked you to implement.
+    Or it may be that you still have bugs in your code.
+   <xfr>
+     	Si les tests ne passent pas, cela signifie que vos jeux n'ont pas le
+   		comportement attendu. Vous n'avez peut être pas respecté la
+   		spécification des méthodes à implémenter, ou vous avez peut être
+   		encore des bugs dans votre code.
+  </xfr>
+  </p>
+  <p>
+    We suggest that you try to fix your code.
+    Look for our test classes
+    <span class="java-class">HorizontalTicTacToeTests</span>
+    and
+    <span class="java-class">VerticalTicTacToeTests</span>
+    in the Java package
+    <span class="java-package">tests.prog.basics.task4</span>.
+    The classes are in the Java Archive file <em>"tests.jar"</em>
+    in the project <em>"prog.basics"</em>.
+    You need add that Java Archive file to the build path,
+    do so with a right-click on the file and choosing
+    "Build Path" and then "Add to build path".
+    <xfr>
+      	Nous suggérons que vous essayiez de corriger votre code.
+    	regardez nos classes test
+    	<span class="java-class">HorizontalTicTacToeTests</span>
+    	et
+    	<span class="java-class">VerticalTicTacToeTests</span>
+    	dans le package
+    	<span class="java-package">tests.prog.basics.task4</span>.
+    	Les classes sont dans l'archive Java  <em>"tests.jar"</em>
+    	dans le projet <em>"prog.basics"</em>.
+    	Vous devez ajouter cette archive au build path,
+    	via un "right-click" sur le fichier archive, choisissez 
+    	"Build Path" et puis "Add to build path".
+    </xfr>
+  </p>
+  <p>
+    Our test classes are executable Java classes, with a method
+    <span class="java-method">main</span>. So go ahead,
+    launch the execution and look at the output.
+    For each test, we print the board configuration that the
+    test will play. If the test fails, it tries to print the
+    board as you managed it using your method
+    <span class="java-method">echoGame</span>.
+    You should see what is wrong pretty easily.
+    <xfr>
+    	Nos classes test sont des classes Java exécutables, avec
+    	une méthode  <span class="java-method">main</span>. 
+    	Lancez l'exécution et regardez la sortie. 
+    	Pour chaque test, nous affichons la configuration de la carte.
+    	Si le test échoue, il essaie d'afficher la carte telle
+    	que vous l'avez gérée en utilisant votre méthode 
+    	<span class="java-method">echoGame</span>.
+    	Vous devriez voir ce qui ne va pas assez facilement.
+    </xfr>
+  </p>
+  <p>
+    If not, remember that you can execute under the control of the
+    debugger... so go ahead debug your code and kill all those nasty
+    bugs... Happy debugging.
+    <xfr>
+    	Si ce n'est pas le cas, rappelez-vous que vous pouvez exécuter sous
+    	le contrôle du debugger, donc allez-y, débuggez votre code..
+    </xfr>
+  </p>
+  <p>
+    Once your code is debugged, you can re-check by clicking
+    the check button again. 
+    <xfr>
+    	Une fois votre code débuggé, vous pouvez le tester à nouveau en 
+    	cliquant sur le bouton check à nouveau.
+    </xfr>
+  </p>
+  <p>
+    <b>Note:</b> if you do not manage to pass our tests,
+    do not worry. First, you can and should ask for help,
+    from other students or the teaching staff.
+    If you are stuggling, you can finish debugging your code
+    later. You can continue with the workshop, improve
+    your coding abilities, and come back later to fix your
+    code.
+    <xfr>
+    	<b>Note:</b>  si vous n'arrivez pas à passer les tests, ne vous
+    	inquiétez pas. Premièrement, vous pouvez et devez demander de l'aide,
+    	soit des autres étudiants soit de l'équipe enseignante.
+    	Si vous êtes bloqués, vous pouvez finir de débugger votre code
+    	plus tard. Vous pouvez continuer le workshop, améliorer
+    	vos capacités et revenir plus tard à cette tâche.
+    </xfr>
+  </p>
+  
+

@@ -1,0 +1,241 @@
+<vars>
+  sprint=prog.basics
+  task=t2
+  step=t2-s2
+</vars>
+
+<p>
+  If you haven't done so already, open a terminal window and
+  start Eclipse on the workspace. 
+</p>
+<textarea class="terminal" rows="3">
+  ~$ cd ~/AgileLearning/workshops/oop
+  oop$ source setenv.sh
+  oop$ eclipse -data workspace
+</textarea>
+<p>
+  Eclipse will show you the Java perspective, normally.
+  If it does not, just switch to that perspective.
+  You don't remember how, go back to the previous step.
+  Note that the project: <em>prog.basics</em> still appears as a
+  project in the <em>Package Explorer</em> view, on the left-hand side of
+  the Eclipse workbench. Notice that you can see the source folder
+  <em>"src"</em>.
+  <xfr>
+	Eclipse va vous montrer la perspective Java normalement.
+	Si ce n'est pas le cas, allez dans cette perspective.
+	Si vous ne vous rappelez pas comment, allez à l'étape précédente.
+	Notez que le projet <em>prog.basics</em> apparait toujours
+	comme un projet dans la vue <em>Package Explorer</em>,
+	sur le coté gauche du workbench Eclipse.
+	Notez que vous pouvez voir le source folder <em>"src"</em>.
+  </xfr>
+</p>
+
+<h4>Creating Packages and Classes</h4>
+
+<p>
+  It is time to learn how to create packages and classes.
+  Hey, wait, you should know how to do this already.
+	So go ahead, in the source folder <em>"src"</em>:
+	<xfr>
+		Il est temps d'apprendre à créer des packages et des classes.
+		Mais attendez, vous devez savoir faire. C'est parti dans
+		le dossier source <em>"src"</em>.
+	</xfr>
+</p>
+<ol>
+  <li>
+    Create a package
+    <span class="java-package">greetings</span>.
+  </li>
+  <li>
+    Create a class
+    <span class="java-class">Greetings</span>.
+  </li>
+</ol>
+<p>
+  Now, let's fill up the source of our
+  class <span class="java-class">Greetings</span>.
+  You can open any file in Eclipse:
+  <em>Menu &rarr; File &rarr; Open File</em>.
+  So go ahead, open the file <em>"Greetings.java"</em>
+  we created in the previous task in the <em>"hello.greetings"</em>
+  project in our workspace.
+  Then, just copy and paste the source in our new 
+  class <span class="java-class">Greetings</span>
+  in the
+  package <span class="java-package">greetings</span>
+  in the Eclipse project
+  <span class="java-package">prog.basics</span>.
+  <xfr>
+  	Maintenant, remplissons le source de la classe
+   <span class="java-class">Greetings</span>.
+  	Vous pouvez ouvrir n'importe quel fichier dans Eclipse:
+  	<em>Menu &rarr; File &rarr; Open File</em>.
+  	Donc ouvrez le fichier <em>"Greetings.java"</em>
+  	que nous avons créé dans la tâche précédente dans 
+  	le répertoire <em>"hello.greetings"</em>.
+	Puis copiez et collez le source dans une nouvelle
+	classe <span class="java-class">Greetings</span>
+  	dans le package <span class="java-package">greetings</span>
+  	dans le projet Eclipse 
+  	<span class="java-package">prog.basics</span>.
+  </xfr>
+</p>
+<p>
+  You should see something like this:
+</p>
+<img width="100%" src="images/eclipse-prog-basics-greetings.png"/>
+
+<h3>Automated Compilation</h3>
+
+<p>
+  Remember, the compilation of your classes is fully automated
+  in Eclipse, but only when <b>you save
+  your changes</b>. So always check if there are <em>"*"</em>
+  in front of the tab names, such as <em>"*Greetings"</em>.
+  If you save
+  your changes, using the "Ctrl-S" shortcut, or the menu
+  <em>File &rarr; Save</em>, the <em>"*"</em> disappears and
+  Eclipse will automatically recompile your modified source.
+  <xfr>
+  	Rappelez-vous, la compilation de vos classes est totalement
+  	automatisée dans Eclipse, mais seulement quand <b>sous sauvez
+  	vos modifications</b>. Donc vérifiez souvent s'il y a une <em>"*"</em>
+  	devant vos noms de fichiers, comme par exemple <em>"*Greetings"</em>.
+  	Si vous sauvez vos changements, en utilisant le raccourci "Ctrl-S", 
+  	ou le menu 
+  	<em>File &rarr; Save</em>, l'<em>"*"</em> disparait et 
+  	Eclipse recompile automatiquement votre source.
+  </xfr>
+</p>
+
+<h3>Launching an execution</h3>
+
+<p>
+  Once Eclipse compiled your classes, you can launch the execution.
+  We already did that before. Remember? If not, go back to the
+	<a href="/prog.basics/t1-s3.html">third step</a> of the first
+	task.
+</p>
+<p>
+  Notice that we launch the execution under debugger.
+  Always do so, unless you have a very good reason not to.
+  If you need to pass arguments to your program,
+  do so via launch configurations. To see/modify your launch
+	configurations, you can do it from the debugger icon
+  <img src="images/eclipse-debugger-icon.png" height="16" />.
+  Select the drop-down menu with the little black triangle
+  and then select <em>"Debug Configurations"</em>.
+	If you want to change the arguments given to the
+	method <span class="java-class">main</span>,
+  select the tab <em>"Arguments"</em> and fill in the
+  <em>"Program arguments"</em> with your arguments.
+  <xfr>
+		Notez que nous avons lancé l'exécution depuis le debugger.
+		Faites toujours cela, à moins d'avoir une bonne raison de 
+		ne pas le faire. Si vous avez besoin de passer des arguments
+		à votre programme, faites le via les configurations de lancement.
+		Pour voir ou modifier vos configurations, vous pouvez le faire
+		par l'icône du debugger
+		<img src="images/eclipse-debugger-icon.png" height="16" />.
+		Selectionez dans le menu déroulant (le petit triangle noir)
+		l'option <em>"Debug Configurations"</em>.
+    Voyez vous l'onglet <em>Arguments</em>? Il vous permet
+		de changer les arguments passés à la méthode
+		<span class="java-class">main</span>.
+		Rajoutez les arguments "Albert Eintein".
+  </xfr>
+</p>
+<p>
+	Add the arguments "Albert Einstein" and apply your changes.
+</p>
+<p>
+  Now let's execute the configuration we just created, with
+  the name <em>"Greetings"</em>, using the debugger icon
+  <img src="images/eclipse-debugger-icon.png" height="16" />.
+  Look at the <em>"Console"</em> view and see the correct
+  output: <em>Greetings Albert Einstein!</em>.
+</p>
+<img src="images/eclipse-launched-greetings-with-arguments.png" width="100%" />
+<p>
+  Congratulations!
+  Hey, wait a second, let us check that you did succeed before we congratulate you.
+  We will check that you created
+  a class <span class="java-class">Greetings</span>
+  in the package
+  <span class="java-package">greetings</span>.
+  We will also test that it prints any argument given to it.
+  Like this:
+  <xfr>
+   	Félicitations!
+  	Attendez une seconde, laissez nous vérifiez que vous avez réussi avant
+  	de vous féliciter.
+  	Nous allons vérifier que vous avez créé une classe 
+	<span class="java-class">Greetings</span>
+  	dans le package
+  	<span class="java-package">hello.greetings</span>.
+  	Nous allons aussi tester qu'elle affiche tous les
+  	arguments qui lui sont donnés en entrée.
+	Comme cela:
+  </xfr>
+</p>
+<textarea class="terminal" rows="5">
+  ~$ cd ~/AgileLearning/workshops/oop/workspace/prog.basics
+  prog.basics$ java -cp ./bin greetings.Greetings Pr. Olivier Gruber
+  Greetings Pr. Olivier Gruber!
+  prog.basics$
+</textarea>
+
+<check
+   blocking="false"
+   silent="onSuccess"
+   lang="java"
+   cwd="workspace/prog.basics"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task2.Check1a">
+  <banner>
+    If you pass the test below, there is a good chance you did it
+    correctly. If you do not, you missed something. Fix your
+    code and retry. If you do not succeed, after trying to fix
+    your code, please ask for help from those who succeeded.
+  </banner>
+  <hint>
+    Hum, seems you didn't get it quite right.
+    Please check your <em>prog.basics</em> project
+    in the <em>workspace</em> directory:
+    <ol>
+      <li>
+				Make sure that you have a file called Greetings.java under
+				the "src/greetings" directory.
+      </li>
+      <li>
+	Make sure that you also have a file called "Greetings.class"
+	under the "bin/greetings" directory.
+      </li>
+      <li>
+				Make sure that you can load and execute your class Greetings
+				like this:
+				<textarea class="terminal" rows="4" >
+  hello.world$ java -classpath ./bin ricm3.oop.Greetings Albert Einstein
+  Greetings Albert Einstein!
+	</textarea>
+      </li>
+    </ol>
+    Ask for help if you need to.
+    The output box is the output of the failed test.
+    Have a look, you may see the reason why your code failed our test.
+    If it is too complicated for you, as a beginner in Java programming,
+    it is not a problem, ask for help.
+  </hint>
+  <success>
+    Cool. Congratulations seems in order!
+  </success>
+  <unfold></unfold>
+</check>  
+<p>
+  We will now move onto debugging with Eclipse.
+</p>
+
+

@@ -1,0 +1,77 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html lang="en-US" >
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Eclipse Guided Tour</title>
+    <meta name="CHANGEDBY" content="Pr. Olivier Gruber">
+    <link rel="stylesheet" href="/style.css" type="text/css" /> 
+    <link rel="stylesheet" href="/prettify.css" type="text/css" rel="stylesheet" />
+    <script src="/prettify.js" type="text/javascript"></script>
+  </head>
+  <body lang="en-US" onload="prettyPrint()">
+    <script src="/progress.js"></script> 
+    <script src="eclipse.js"></script> 
+    
+    <div id="outer-container" >
+      <div id="header" >
+	<div id="logo" >
+	  <img src="/logo_uga.png" height="100" border="0" alt="Polytech" />
+	  <img src="/logo_reseau_polytech.gif" height="80" border="0" alt="Polytech" />
+	</div>
+	<div id="top-links">
+	  <a href="/">Home</a> 
+	  <a href="/about">About</a> 
+	  <a href="/contact">Contact</a>
+	</div>
+      </div>
+      <div id="inner-container" >
+
+	<h1>Eclipse Workspace</h1>
+	<p>
+	  The Eclipse Platform uses the concept of <em>Workspaces</em>, that is,
+	  collections of related projects. Usually, a workspace corresponds to a
+	  directory in your file system. In that directory, sub-directories are
+	  considered by Eclipse as <em>projects</em>.
+	</p>
+	<p>
+	  When you start Eclipse, you will select a <em>workspace</em> directory.
+	  From the Java Perspective, you will look at your workspace through
+	  the <em>Package Explorer</em> view, usually on the left-hand side
+	  of the Java perspective.
+	</p>
+	<img src="images/Package-Explorer-Highlighted.png" width="90%" />
+	<p>
+	  You can see the list of your projects in the Workbench. If a project
+	  is a Java project, you can see the source folders and in each source
+	  folders you can seen the Java packages and then the Java classes.
+	  In other words, you see your code.
+	</p>
+	<p>
+	  Eclipse allows you to switch from one workspace to another, but it is
+	  not really efficient as it amounts to restarting Eclipse on the other
+	  workspace. But the important point is that Eclipse remembers everything
+	  per workspace. It remembers how you setup all the preferences,
+	  which perspectives you were looking at, the layout of your perspectives.
+	</p>
+	<p>
+	  Everything you do in Eclipse is local to your workspace. This means
+	  that when creating a new workspace, you need to go through your setup
+	  again. In particular, installing JREs is something that is local
+	  to a workspace. This may seem a burden, but it is necessary for advanced
+	  users that are managing and configuring multiples workspaces differently.
+	  It is possible to export and import preferences, something we suggest
+	  you do. Configure your Java preferences once, export them in a know
+	  place, and then import them for any new workspace.
+	</p>
+	<div id="footer" >
+	  &copy; Pr. Olivier Gruber
+	  <div id="bottom-links" style="float: right">
+	    <a href="/">Home</a> 
+	    <a href="/about">About</a> 
+	    <a href="/contact">Contact</a>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </body>
+</html>

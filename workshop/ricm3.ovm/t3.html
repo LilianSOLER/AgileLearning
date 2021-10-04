@@ -1,0 +1,428 @@
+<vars>
+  sprint=ricm3.ovm
+  task=t3
+</vars>
+
+<p>
+  This task is to get you started with the large code base we provided
+  you with. We know, you do not like that much being given an existing
+  code base; you often prefer starting from scratch. Nothing wrong
+  with that, but being able to grasp and modify an existing code base
+  is an important skill to have.
+</p>
+<p>
+  First, from a teaching perspective, giving you a code base allows to
+  cover more intersting projects. At your level, starting from scratch
+  a Java interperter would be rather difficult and would require much more
+  time than we have. So why attempt such a project? Because it offers you
+  the opportunity to not only learn a programming language to develop with,
+  but also implement a language to get a finer understanding of the concepts
+  of programming languages. There is nothing better than trying to implement
+  a concept to understand its finer points.
+</p>
+<p>
+  Second, in your future jobs and internships, very few of you will have
+  to start from scratch. Most of the time, you join a team of developers
+  with an existing code base. That code base is rarely small, it is usually
+  large or even huge. It can range from a few thousands of lines to
+  millions of lines of code. So learning how to navigate a large code
+  base is important. Furthermore, learning how modularity and encapsulation
+  helps with such complexity is also important.
+</p>
+
+<h3>Modularity and Encapsulation</h3>
+
+<p>
+  Rely on the modularity and encapsulation of the code to better navigate
+  and learn the given code base. So far, many of you are probably looking
+  at object-oriented programming techniques as hard and as a lot of concepts
+  that may not seem like very useful. Well, here is the opportunity to see
+  object-oriented programming in action for the better.
+</p>
+<p>
+  The code base is several thousands of lines of code, with dozens of classes,
+  so it is a large code base by your standards. Do not be intimidated, you will
+  be able to ease yourself in, incrementally, thanks to the object-oriented
+  design of the code. Let us give you a few tips.
+</p>
+<ol>
+  <li>
+    Look at the source folders.
+  </li>
+  <li>
+    Look at the Java package structure.
+  </li>
+  <li>
+    Grow an idea of the class hierarchy.
+  </li>
+  <li>
+    Use the debugger to grasp the overall execution flow
+  </li>
+</ol>
+<p>
+  <b>Look at the source folders:</b>
+  it is often a coarse-grain modularity
+  that helps a first understanding of the large features at play.
+</p>
+<ul>
+  <li><em>src</em> folder: the implementation.</li>
+  <li><em>tests</em> folder: available tests.</li>
+</ul>
+<p>
+  <b>Look at the Java package structure:</b>
+  it provides a finer-grain modularity
+  that helps a first understanding of the main features at play.
+</p>
+<ul>
+  <li><em>ricm3.ovm</em>: the core package</li>
+  <li><em>ricm3.ovm.ast</em>: the abstract syntax tree</li>
+  <li><em>ricm3.ovm.builder</em>: the builder for the AST</li>
+  <li><em>ricm3.ovm.parser</em>: the parser</li>
+</ul>
+<p>
+  In the core package, you will find the entry point to launch
+  the execution, look at the class
+  <span class="java-class">OvmMain</span>.
+  You will find exception classes.
+  You will find in that
+  package classes that you know already the purpose of:
+  <span class="java-class">Variable</span>,
+  <span class="java-class">Context</span>, and
+  <span class="java-class">Interpreter</span>.
+  The classes 
+  <span class="java-class">Type</span> and
+  <span class="java-class">TypeSystem</span> are new
+  to you, but you can guess what they are about: types
+  in the language such as 
+  <span class="java-keyword">int</span> or
+  <span class="java-keyword">float</span>.
+</p>
+<p>
+  For the abstract syntax tree, you can see it is itself
+  composed of different packages:
+</p>
+<ul>
+  <li><em>ricm3.ovm.ast.arith</em>: about arithmetic expressions</li>
+  <li><em>ricm3.ovm.ast.array</em>: about arrays</li>
+  <li><em>ricm3.ovm.ast.bool</em>: about boolean expressions and comparators</li>
+  <li><em>ricm3.ovm.ast.flow</em>: about the execution flow</li>
+</ul>
+
+<p>
+  <b>Grow an idea of the class hierarchy:</b> this one is very imporant.
+  Use the <b>F4</b> key in Eclipse with a class or an interface selected
+  in the Eclipse editor. Eclipse will show you the class hierarchy.
+  Write it down on paper, study and understanding it. The sooner you
+  will get familiar with the class hierarchy, the sooner you will be
+  efficient and feel empowered to do the changes we will be asking you
+  to do.
+</p>
+
+<h3>Arithmethic Support</h3>
+
+<p>
+  The arithmetic support is implemented, so we asked that you launch
+  the interpreter and try arithmetic expressions under the control
+  of the debugger. Remember not to single step through the parser,
+  this is ugly generated code, so set breakpoints where you have an
+  interest in and then single step from there.
+</p>
+<p>
+  Since you have implemented a calculator before, start with the
+  arithmetic expressions, focusing on learning what is different
+  in this implementation. You will find the same concepts that you
+  know about: operators, values, variables, and a context.
+  Try out expressions like this:
+</p>
+<pre class="prettyprint lang-java">
+  int x;
+  int y = 2;
+  x = 1;
+  y = y + 2 * x;
+  float z = 2.3;
+  z = z + y;
+</pre>
+<p>
+  Learn how the AST is built and how it is evaluated.
+  Look at the class
+  <span class="java-class">ArithValue</span> and its subclasses
+  <span class="java-class">IntValue</span> and
+  <span class="java-class">FloatValue</span>.
+  This will give you the knowledge you need to implement
+  the boolean support.
+</p>  
+
+<h3>Boolean Support</h3>
+
+<p>
+  Speaking of changes, the first one is to finish the support for
+  boolean expressions and comparators. The coding has been started
+  already and the features have been integrated in the code base,
+  but the implementation is essentially a skeleton, methods
+  mostly throw a NotImplementedException.
+</p>
+
+<h4>Boolean Value</h4>
+
+<p>
+  This is the perfect place to start. A boolean value is obviously
+  a value, so go look at the super class
+  <span class="java-class">Value</span>.
+  You will be not be suprised to see that it is abstract
+  and it is an expression. What can you do with a value?
+  You can evaluate it to itself. Again, you should not be
+  surprised there. And you can compare values: equals
+  (<span class="java-method">eq</span>) or not equals 
+  (<span class="java-method">ne</span>).
+</p>
+<p>
+  Back to the class 
+  <span class="java-class">BooleanValue</span>,
+  you find the methods overriding the abstract
+  methods 
+  <span class="java-method">eq</span> and
+  <span class="java-method">ne</span>.
+  And you find new methods that are
+  the operations that are specific for boolean values:
+</p>
+<ol>
+  <li>Method <span class="java-method">not</span> when parsing "!x" for example</li>
+  <li>Method <span class="java-method">and</span> when parsing "x && y" for example</li>
+  <li>Method <span class="java-method">or</span> when parsing "x || y" for example</li>
+</ol>
+<p>
+  These methods are really easy to implement.
+</p>
+
+<h4>Boolean Type</h4>
+
+<p>
+  We will cover types fully in the next task, so we will keep it simple here.
+  You know what is a type, you use it every day when coding. You use types
+  to <em>"type"</em> your variables, such as "int" or "char". So here,
+  the class 
+  <span class="java-class">BooleanType</span>
+  represents the type 
+  <span class="java-keyword">boolean</span> in our language.
+</p>
+<p>
+  This is a singleton class, that is, a class with a single instance.
+  So look at the constructor in details, see how we use a static variable
+  to hold that unique instance of the class
+  <span class="java-class">BooleanType</span>.
+  Look also how the constructor ensures that the class
+  <span class="java-class">BooleanType</span> is instantiated
+  only once.
+</p>
+<p>
+  Notice also the static variable
+  <span class="java-svar">zero</span> that also holds
+  a singleton, the object that represents the value zero.
+</p>
+<pre class="prettyprint lang-java">
+  private static BooleanValue zero = new BooleanValue(false);
+  @Override
+  public Value zero() {
+    return zero;
+  }
+</pre>
+<p>
+  Remember that Java initializes all your variables with
+  the value zero corresponding to their type. Well, we will
+  do the same and rather than instantiating zero values all
+  the time, we will use a single object to represent all
+  zero values.
+</p>
+<p>
+  <b>Does it work you wonder?</b> Can we use a single object
+  to represent all the zero values?
+  What if someone changes that value
+  object? Then zero would no longer be the value zero. That would
+  be really confusing, would it not?
+</p>
+<p>
+  Very good question, but fortunately, the design is correct.
+  Changing the object that represents the value zero is not possible,
+  so we are good. Look at the class 
+  <span class="java-class">BooleanValue</span> for example
+  and see that it is read-only. See, the field
+  <span class="java-field">m_value</span> is private
+  and there are not setter methods. Therefore, once a value object
+  has been constructed with a given value, its value can never
+  be changed. Relieved? Of course, this all works fine.
+</p>
+<p>
+  Look briefly at the super class
+  <span class="java-class">Type</span> to read the description
+  of the methods
+  <span class="java-method">cast</span> and
+  <span class="java-method">checkcast</span>.
+  Now look at the given implementation,
+  it is obviously wrong:
+</p>
+<pre class="prettyprint lang-java">
+  @Override
+  public Value cast(Value v) {
+    return v;
+  }
+  @Override
+  public boolean checkcast(Type t) {
+    return true;
+  }
+</pre>
+<p>
+  Can you figure out why the above methods are wrong?
+  We hope you do because you know that in Java you cannot
+  cast a boolean to anything else than a boolean.
+  For instance, you cannot write this:
+</p>
+<pre class="prettyprint lang-java">
+  int x = (int)true;
+</pre>
+<p>
+  But the code we just wrote considers that all values
+  are boolean values, which is wrong. It also considers
+  that all types can be casted to a boolean type, which is
+  also entirely wrong.
+  You can check this launching the execution of our
+  interpreter and typing this:
+</p>
+<pre class="prettyprint lang-java">
+  > int x = 2;
+  > boolean z;
+  > z = x;
+  > z;
+  -> 2
+</pre>
+<p>
+  This is all wrong, the boolean variable 'z' know
+  holds an integer value '2'. 
+  So let's fix this:
+</p>
+<pre class="prettyprint lang-java">
+  @Override
+  public Value cast(Value v) {
+    if (this!=v.type())
+      throw new CastException(this, v);
+    return v;
+  }
+  @Override
+  public boolean checkcast(Type t) {
+    return (t == this);
+  }
+</pre>
+<p>
+  This is more like it, right?
+  Well, let's try it.
+</p>
+<pre class="prettyprint lang-java">
+  > int x = 2;
+  > boolean z = x;
+  OK: boolean z = x;
+
+  ricm3.ovm.CastException: Invalid: (boolean)(int)
+ 	at ricm3.ovm.ast.bool.BooleanType.cast(BooleanType.java:41)
+	at ricm3.ovm.Variable.write(Variable.java:64)
+	at ricm3.ovm.ast.VarDecl.eval(VarDecl.java:62)
+	at ricm3.ovm.Interpreter.loop(Interpreter.java:29)
+	at ricm3.ovm.Interpreter.interactive(Interpreter.java:68)
+	at ricm3.ovm.OvmMain.main(OvmMain.java:35)  
+</pre>
+<p>
+  The parser says the text is OK, which is fine, the syntax
+  is correct. But the interpreter now understands the
+  semantics is wrong, it understands that an integer value
+  cannot be casted to a boolean value. 
+</p>
+<p>
+  If you are lost,
+  ask questions, you <b>must understand this</b>.
+  Understanding types is important for this sprint,
+  but more importantly, it is important to be a decent
+  developers, since you use types everyday when writing code.
+  Also, it will get more complex about types
+  in the next task, so do not get lost already.
+</p>
+
+<h4>Boolean Operators</h4>
+
+<p>
+  This is going to be a walk in the park for you, since
+  you already coded a calculator with similar operators.
+</p>
+<ol>
+  <li>Operator "!": method <span class="java-method">not</span></li>
+  <li>Operator "&&": method <span class="java-method">and</span></li>
+  <li>Operator "||": method <span class="java-method">or</span></li>
+</ol>
+<p>
+  Notice that you have methods on the class
+  <span class="java-class">BooleanValue</span> for all those
+  operators, so use them when implementing the method
+  <span class="java-method">eval</span> on the
+  operator classes 
+  <span class="java-class">AndOp</span>,
+  <span class="java-class">OrOp</span>, and
+  <span class="java-class">NotOp</span>.
+</p>
+<p>
+  Now that you have implemented operators, try using them
+  from the interpretor. For example, you could type:
+</p>
+<pre class="prettyprint lang-java">
+  > boolean z = true;
+  > z && false;
+  -> false
+  >
+</pre>
+<p>
+  Take charge of your learning, test all operators.
+</p>
+
+<h4>Boolean Comparison</h4>
+
+<p>
+  This is also going to be a walk in the park for you, since
+  we adopted an implementation that is likely to be quite
+  intuitive for you. In contrast to boolean operators, we
+  do not use yet another class hierarchy. This time,
+  we went for the switch-based implementation, just to show
+  you that both designs are possible.
+  So look at the class 
+  <span class="java-class">CompOp</span>, you can see
+  the enum for all the possible operators:
+</p>
+<ol>
+  <li> EQ for "==", the equality of values</li>
+  <li> NE for "!=", the inequality of values</li>
+  <li> GT for "&gt;", greater than </li>
+  <li> GE for "&gt;=", greater or equal</li>
+  <li> LT for "&lt;", less than</li>
+  <li> LE for "&lt;=", less or equal</li>
+</ol>
+
+<p>
+  Now that you have implemented comparisons, try using them
+  from the interpretor. For example:
+</p>
+<pre class="prettyprint lang-java">
+  > int x = 2;
+  > int y = 3;
+  > (x == y);
+  -> false
+  >
+</pre>
+<p>
+  Take charge of your learning, test all operators.
+</p>
+
+
+<p>
+  That's all folks, don't forget to commit and push your work.
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint ricm3.ovm, Task3 completed"
+  $ git push --all
+</textarea>
+

@@ -1,0 +1,162 @@
+<vars>
+  sprint=object.calculator
+  task=t1
+</vars>
+
+<p>
+  This first two versions are given, for learning purposes. We gave you the code in the source folder <em>task1</em>, in packages <span class="java-package">ricm3.calculator.v0</span> and <span class="java-package">ricm3.calculator.v1</span>. You can launch it using the class <span class="java-class">CalcMainV0</span> and <span class="java-class">CalcMainV1</span> . The goal is for you to learn how you could implement a calculator in the most straightforward approach. We expect you to read and understand the code in details, for both versions V0 and V1.
+  <xfr>
+    Cette première version est donnée, pour l'apprentissage. Nous vous avons donné le code dans le dossier source <em>task1</em>, dans les paquets <span class="java-package">ricm3.calculator.v0</span> et  <span class="java-package">ricm3.calculator.v1</span>. Vous pouvez lancer le calculator avec la classe <span class="java-class">CalcMainV0</span> puis <span class="java-class">CalcMainV1</span>. Ce code vous montre l'implémentation la plus triviale d'une calculatrice en mode ligne de commande. On vous demande de lire et de comprendre le code en détails des versions V0 et V1.
+  </xfr>
+</p>
+<p>
+  These versions are not the way to do it, using object-oriented programming, but they are probably the way you would have done it yourself. The two versions are mostly written using standard imperative programming techniques rather than the proper object-oriented techniques that we are learning this semester. So these versions are interesting to illustrate how a calculator could be implemented, in non-object-oriented programming languages such as C. But they are also interesting to illustrate that straightforward imperative coding often leads rapidly to complexity, even when adding simple features. This is to introduce to you why using object-oriented programming will help you tackle more complex coding with much more ease. In the next versions, we will incrementally use object-oriented programming techniques, hopefully helping you understand the power of object-oriented programming.
+  <xfr>
+    Ces deux versions ne sont pas vraiment la bonne façon de s'y prendre dans une programmation orientée-objet, mais elles sont probablement proches de ce que vous auriez fait naturellement. Ces deux versios vont illustrer une façon simple d'implémenter une calculatrice qui serait adaptée aux langages de programmation non-orienté-objet tel que le C. De plus, elles vont vous montrer que l'ajout de fonctionalités, même simples, conduit rapidement à un code complexe. L'idée étant de montrer que l'usage de la programmation orientée-objet va venir réduire cette compléxité tout en permettant de faire bien plus. Dans les versions suivantes, on va revoir notre code en introduisant les concepts de la programmation objets.
+  </xfr>
+</p>
+
+<h3>Version 0</h3>
+
+<p>
+  The V0 calculator uses a <a href="https://en.wikipedia.org/wiki/Polish_notation">polish notation</a>, a notation that is really easy to parse. The idea of the polish notation is that the operator comes first and then the operands. Therefore, the use of parenthesis can be entirely avoided. Let's look at a few examples:
+  <xfr>
+    La version V0 utilise la notation polonaise inversée, c'est une notation qu'il est très facile de parser. L'idée de cette notation est d'avoir toujours l'opérateur en premier, puis les arguments. En conséquence, l'utilisation des parenthèses peut être entièrement éliminée.
+  </xfr>
+</p>
+<textarea class="terminal" rows="12" width="60%" >
+  > + 2 3
+  = 5
+  > + * 2 3 4
+  = 10
+  > + 2 * 3 4
+  14
+  > 2
+  = 2
+  > 2 * 3
+  malformed expression.
+  >
+</textarea>
+<p>
+  So each line you type is parsed as an arithmetic expression and the corresponding integer value is computed and printed. Let give the correspondance between a polish and standard notation for a few of the above  examples:
+  <xfr>
+    Chaque ligne que vous avez tapez est parsée comme une expression arithmétique et la valeur entière résultat est calculée et imprimée à l'écran. Voyons la correspondance entre notation polonaise et la notation traditionnelle avec parenthèse: 
+</p>
+<textarea class="terminal" rows="4" width="60%" >
+  + 2 3         (2 + 3)
+  + * 2 3 4     ((2 * 3) + 4)
+  + 2 * 3 4     (2 + (3 * 4))
+</textarea>
+<p>
+  Now, go look at the code, it is pretty straightforward. We could be just happy with this code, it is clean and simple. It is a never-ending loop that reads a line of characters, parses it, and then evaluates that line. This is a process common to all interpreters, they read the input and then interpret that input, hence the name <em>interpreter</em>. Here, the interpretation is the evaluation of an expression, written in the polish notation.
+  <xfr>
+    Maintenant, allez voir le code, il est simple et facile à comprendre. On pourrait bien sûr être content avec ce code, il est simple et il marche. C'est une simple boucle qui lit une ligne, la parse, et l'évalue. C'est une structure logicielle qui est commune à tous les interpréteurs, ils lisent l'entrée standard et ils interprètent ce qu'ils ont lu, d'ou le nom <em>interpréteurs</em>. Ici, l'interprétation est celle de la notation polonaise.
+  </xfr>
+</p>
+
+<h3>Version 1</h3>
+
+<p>
+  Let's evolve our calculator by introducing the concept of boolean values and operators.  Let's look at a few examples below. In those examples, 'T' stands for "true" and 'F' stands for "false". The operator '|' is the logical or and the operator '&' is the logical and. The operator '!' is the logical negation.
+  <xfr>
+    Nous allons étendre notre calculateur avec des expressions booléennes. Regardons quelques exemples ci-dessous. Le caractère 'T' indique la valeur "vrai" et le caractère 'F' indique la valeur "faux". L'opérateur '|' est l'opérateur logique "ou" et l'opérateur '&' est l'opérateur logique "et". L'opérateur '!' est la négation logique.
+  </xfr>
+</p>
+<textarea class="terminal" rows="9" width="60%" >
+  > + 2 3
+  = 5
+  > & T F
+  = false
+  > | ! F & T F
+  = true
+  > + 2 & T F
+  malformed
+</textarea>
+<p>
+  We gave you the code so that you can see how rapidly it grows complex and error-prone. So go read and understand that code, focusing on perceiving the complexity added by just adding one new type (boolean), two values (True and False), and three operators '&', '|', and '!'. Notice how we have to manage the duality
+  <span class="java-keyword">int</span>. versus <span class="java-keyword">boolean</span> everywhere in the code. The code grows rapidly in size, in complexity, and therefore it is harder to read and understand.
+  <xfr>
+    Nous vous avons donné le code pour que vous puissiez voir que sa complexité augmente rapidement. Aller voir le code et faites vous une idée de cette complexité. Cela reste raisonnable, bien sûr, mais pour une petite évolution, on voit bien que la complexité croit trop vite. En particulier, regardez bien comment le code est obligé de gérer la dualité entre valeurs booléennes et entières partout. Le code finit par être plus dure à lire et à comprendre.
+  </xfr>
+</p>
+<p>
+  For instance, did you notice that we lost functionality
+  in the change? Try out the following:
+  <Xfr>
+    Aviez vous vu que nous avions perdu une fonctionalité dans le changement? Essayez la chose suivante:
+  </xfr>
+</p>
+<textarea class="terminal" rows="7" width="60%" >
+  > T
+  -> true
+  > 2
+  malformed expression
+  java.lang.ArrayIndexOutOfBoundsException: 1
+    ...
+</textarea>
+<p>
+  That worked before, in the V0. The problem comes from
+  the fact that sometimes the parser does not know what to parse.
+  This is the case when there is no operator, just
+  a value. Is the value a boolean value or is it a integer
+  value? So our code tries out both:
+  <xfr>
+    Cela marchait avant, dans la version V0. Le problème vient du fait que des fois le code ne sait pas ce qu'il doit avoir comme valeurs, une valeur booléenne ou entière. C'est bien sûr le cas lorsqu'il n'y a pas d'opérateur, comme dans l'exemple ci-dessus. Dans l'incertitude, le code essaie les deux possibilités, comme ceci:
+</p>
+<pre class="prettyprint lang-java">
+  try {
+    boolean val = boolValue();
+    ps.println("-> "+val);
+  } catch (Exception ex) {
+    int val = intValue();
+    ps.println("-> "+val);
+  }
+</pre>
+<p>
+  The above code looks good, using a
+  <span class="java-keyword">try-catch</span> to handle
+  the error if the value is not a boolean value.
+  But it does not work. Figure out why and correct
+  the code.
+  <xfr>
+    Le code semble être bon, n'est-ce pas? L'utilisation d'un "try-catch" semble bien adaptée à la situation. Pourtant, ce code ne marche pas, trouvez pourquoi et corriger la situation.
+  </xfr>
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.calculator"
+   classpath="bin;tests.jar"
+   classname="calculator.TestCalcV1_01"> 
+  <banner>
+    When you have fix the bug, let's check that you did it right.
+  </banner>
+  <hint>
+    Not quite.
+    Remember that when using a try-catch to handle an exception,
+    you may continue the execution only if the exception left
+    your program in a correct state. This is not the case
+    after the exception is thrown by the method 
+    <span class="java-method">boolValue</span>.
+    Look at the code and figure out what is left changed
+    in the case an IllegalStateException is thrown. 
+  </hint>
+  <success>
+    Bug removed. Great!
+    Remember this about exceptions, if the program has to continue,
+    unwanted changes must be undone before the execution may resume
+    normally. The unwanted changes may be undone before the exception
+    is thrown or when catching the exception.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+
+<h3> That's all folks</h3>
+
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint calculator, Task1 completed"
+  $ git push --all
+</textarea>

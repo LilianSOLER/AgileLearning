@@ -1,0 +1,27 @@
+
+Welcome to the "Object-Oriented Programming" workshop.
+This is a short readme file to help you understand
+how to follow this workshop.
+
+The workshop is installed on your personnal machine
+and can be followed entirely locally, without any
+network connectivity. However, if you are connected
+to the Internet, your progress will be uploaded to
+the "Agile Learning" website and it will be integrated
+to the dashboard.
+
+The workshop is composed of a series of sprints, each
+sprint being composed of a series of tasks. The sprints
+and tasks are described by web pages, served locally
+by a small web server. You need to launch that web
+server this way:
+
+  $ cd ~/2019/workshops/oop
+	$ ./oop.sh
+
+It will tell you to point your local web browser to the
+following URL:
+
+					http://localhost:9090/
+
+

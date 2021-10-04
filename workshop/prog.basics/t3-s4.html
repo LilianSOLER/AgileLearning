@@ -1,0 +1,253 @@
+<vars>
+  sprint=prog.basics
+  task=t3
+  step=t3-s4
+</vars>
+<p>
+  The <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">TicTacToe game</a> is
+  an old paper-and-pencil guessing game that you may have played as a child.
+  We will do a simple computer version, working at the command line in your
+  shell. The goal is that playing a game will look like this:
+  <xfr>
+  Le jeu <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">TicTacToe game</a> 
+  est un vieux jeu à base de papier et crayon, que vous avez probablement
+  connu enfant. Nous allons réaliser une version électronique simple, 
+  à base de lignes de commandes dans votre shell. Le but est qu'une partie
+  ressemble à cela:
+  </xfr>
+</p>
+<textarea class="terminal" rows="18">
+prog.basics$ java -cp ./bin oop.games.GameMain
+Hello!
+What do you want to play?
+ 0) Nothing, I am done.
+ 1) Tic Tac Toe 
+1
+Let's play Tic-Tac-Toe then...
+Player X: row,col?
+0,0
+-----
+|X--|
+|---|
+|---|
+-----
+Player O: row,col?
+1,1
+-----
+|X--|
+|-O-|
+|---|
+-----
+Player X: row,col?
+2,1
+-----
+|X--|
+|-O-|
+|-X-|
+-----
+</textarea>
+
+<p>
+  Let's discuss the code now. Have a look at the class
+  <span class="java-class">GameMain</span> and the method
+  <span class="java-method">main</span>.
+  As you can see, we impose very little on the class
+  <span class="java-class">TicTacToe</span>. The goal is that
+  you read the specification of the few methods we imposed
+  and that you design your game accordingly.
+  <xfr>
+    Discutons du code maintenant. Regardez la classe
+    <span class="java-class">GameMain</span> et la méthode
+    <span class="java-method">main</span>.
+    Comme vous pouvez le voir, nous imposons très peu de choses 
+    sur la classe 
+    <span class="java-class">TicTacToe</span>. Le but est
+    que vous lisiez la spécification des quelques méthodes
+    que l'on impose et que vous fassiez une conception
+    de votre jeu qui corresponde.
+  </xfr>
+</p>
+<p>
+  Once you have a design, that is, a vision of how you will
+  implement your game, then and only then it is time to code.
+  Write the classes and the methods and make sure your game works.
+  Then, and only then, will you try to pass our tests.
+  If you want to learn and benefit the most from this game design
+  and coding, you will respect these steps.
+  <xfr>
+    Une fois que vous avez une conception, c'est à dire une vision
+    de comment vous allez vous y prendre pour écrire le code, et
+    bien alors il est temps de commencer à écrire le code et de
+    le faire marcher. Une fois que votre jeu marche d'après vous,
+    alors il est temps de passer nos tests. Vous respecterez ces
+    étapes si vous souhaitez profiter pleinement de l'expérience
+    de concevoir et code votre propre jeu.
+  </xfr>
+</p>
+
+<h3>Some Advices</h3>
+
+<p>
+  The method
+  <span class="java-method">initGame</span> is expected to initialize
+  a brand new game, with the given player letter as the first player to play.
+  The given player must be either 'X' or 'O'. If not, your code
+  should throw an IllegalArgumentException.
+  <xfr>
+    La méthode
+    <span class="java-method">initGame</span> doit initialiser
+    le jeu, avec le joueur donné comme le premier jouer.
+    Le joueur donné peut être 'X' ou 'O'. Si ce n'est pas le cas, votre code
+    doit lever une IllegalArgumentException.
+  </xfr>
+</p>
+<p>
+  The method
+  <span class="java-method">playGame</span> plays one game and one game
+  only. It is called after the method
+  <span class="java-method">initGame</span> has been called.
+  <xfr>
+    La méthode 
+    <span class="java-method">playGame</span> joue une et une seule
+    partie,
+    du début à la fin. Elle est invoquée après avoir invoquée
+    la méthode 
+    <span class="java-method">initGame</span>.
+  </xfr>
+</p>
+
+<p>
+  We expect you to experience difficulties with three facets of coding
+  this game:
+  <xfr>
+    On s'attends à ce que vous ayez des soucis avec ces trois facettes du jeu:
+  </xfr>
+</p>
+<ol>
+  <li>The grid of cells, as
+    <span class="java-keyword">char[][]</span></li>
+  <li>Encoding player choices in cells</li>
+  <li>Determining the winner</li>
+</ol>
+<p>
+  Let's discuss the grid of cells. You know that an array can have elements that
+  are primitive values such as numbers or characters. But of course, an array
+  can have elements that are object references. Just like this:
+  <xfr>
+    Discutons de la grille de cellules. Vous savez qu'un 
+    tableau peut avoir des éléments qui sont des valeurs primitives comme des
+    nombres ou des caractères. Mais bien sûr, un tableau peut aussi avoir des
+    éléments qui soient des références d'objets. Comme par example un tableau
+    de chaîne de characters.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  String[] strings;
+</pre>
+<p>
+  Since you know that arrays are objects, you should be able to understand the concept
+  of arrays of arrays, which is of course a matrix. In particular, this means one can
+  create an array of arrays of characters. 
+  <xfr>
+    Puisqu'un tableau est un objet, vous comprenez que l'on peut faire des
+    tableaux de tableaux et donc en particulier un tableau de tableaux de
+    charactères, ce qui corresponds à une matrice de caractères.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  char[][] matrix;
+</pre>
+<p>
+  Take charge of your learning: you have everything you need to experiment.
+  Try out arrays of arrays, write small programs, execute them under
+  debugger, and browse arrays of arrays in the <em>Variables</em> view while
+  debugging. Experimenting is the best way to learn. This is also a good way for
+  you to check you understand of you have learned so far.
+  <xfr>
+    Soyez responsable de votre apprentissage: vous avez tout ce qu'il
+    faut sous la main pour cela. Essayez les tableaux, les tableaux de tableaux,
+    écrivez des petits programmes, et parcourez vos tableaux de tableaux
+    dans la vue <em>Variables</em>, sous debug. Expérimentez, c'est le 
+    meilleur moyen d'apprendre. C'est aussi un bon moyen pour vous de valider
+    ce que vous avez déjà compris.
+  </xfr>
+</p>
+<p>
+  The second delicate point is the encoding: use the letter 'X' for the player X,
+  the letter 'O' for the player O, and use a space ' ' to indicate an empty
+  cell. This is a very common trick in coding, use specific values of a large
+  domain of values to represent concepts. Here, the large domain is the domain
+  of all possible characters. The specific values are the characters ' ', 'O',
+  and 'X'. The corresponding concepts are an empty cell, a cell played by
+  player X, and a cell played by player 'O'.
+  <xfr>
+    Le second point délicat est l'encodage: utilisez la lettre 'X' pour le
+    joueur X, la lettre 'O' pour le joueur O, et utilisez un espace pour indiquer
+    une cellule vide. C'est une démarche classique pour ceux qui codent, d'utiliser
+    des valeurs spécifiques d'un domaine de valeurs pour représenter des
+    concepts. ici, le domaine est celui des caractères. Les valeurs 
+    spécifiques sont: ' ', 'O', and 'X'. Les concepts sont: cellule vide,
+    cellule jouée par le joueur X, cellule jouée par le joueur 'O'.
+  </xfr>
+</p>
+<p>
+  The third delicate point is about determining the winner, if any.
+  After each play, the program must inspect the board and determine if
+  one of the player won the game. 
+  Since the board is only 3x3, you can use brute force here, testing all
+  possibilities.
+  <xfr>
+    Le troisième point délicat est la détermination du gagnant, s'il y en a un.
+    Après chaque partie, le programme doit inspecter la carte et 
+    déterminer si l'un des joueurs a gagné la partie.
+    Puisque la carte est seulement 3x3, vous pouvez
+    tester toutes les options sans problème.
+  </xfr>
+</p>
+
+<h4>Passing our checks</h4>
+
+<p>
+  Are you done writing and testing your game?
+  <br>
+  Do you believe it works?
+  <br>
+  Well, let's check that with a few tests.
+  <xfr>
+    Avez-vous fini de coder votre jeu?
+    <br>
+    Est-ce qu'il marche? L'avez-vous testé?
+    <br>
+    OK, vous pouvez essayer de passer nos tests.
+  </xfr>
+</p>
+<check
+   silent="onSuccess"
+   blocking="false"
+   lang="java"
+   cwd="workspace/prog.basics"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task4.TicTacToeTests">
+  <banner>
+  </banner>
+  <hint>
+    Your code failed our tests. It may be that you still
+    have bugs or it may be that your game is not behaving as
+    it is expected to. In that case, you probably did not respect
+    the specification of the given methods on the class
+    <span class="java-class">TicTacToe</span>.
+    <xfr>
+      Si les tests ne passent pas, cela peut signifier que
+      vous avez encore quelques bugs ou bien que votre jeu ne se comporte
+      pas comme il devrait, vous n'avez probablement pas respecté la
+   	  spécification des méthodes à implémenter sur la classe
+      <span class="java-class">TicTacToe</span>.
+    </xfr>
+  </hint>
+  <success>
+    Your code passed our tests. Well done.
+  </success>
+  <unfold name="unfold">
+  </unfold>  
+</check>
+

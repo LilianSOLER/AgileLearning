@@ -1,0 +1,433 @@
+<vars>
+  sprint=hanoi.tower
+  task=t3
+</vars>
+
+<p>
+  This task is about finishing the puzzle and getting it to run.
+  We are missing two classes. The "main" class that carries
+  the usual entry point and the
+  class <span class="java-class">Solver</span>
+  that contains the algorithmic solution to the puzzle.
+  <xfr>
+ 	Cette tâche vise à finir et exécuter le jeu des tours de Hanoi. 
+ 	Il nous manque deux classes. La classe "main" qui lance l'exécution
+ 	et la classe <span class="java-class">Solver</span> qui
+ 	contient la solution algorithmique du jeu.
+  </xfr>
+</p>
+
+<h3> Creating the class <span class="java-class">Solver</span> </h3>
+
+<p>
+  Looking at Wikipedia again:
+</p>
+<em>
+  <p style="margin-left: .3in;">
+    The Tower of Hanoi is a mathematical game or puzzle.
+    It consists of three rods, and a number of disks of different sizes
+    which can slide onto any rod. The puzzle starts with the disks in a neat stack
+    in ascending order of size on one rod,
+    the smallest at the top, thus making a conical shape.
+    <xfr>
+ 		Les tours de Hanoi est un jeu mathématique. Il comprend
+ 		trois piliers et un nombre de disques de différentes
+ 		tailles qui peuvent s'empiler sur les piliers. Le jeu commence
+ 		avec les disques sur un pilier dans l'ordre ascendant de leur
+ 		taille, le plus petit au sommet, formant un cone.
+  </xfr>
+  </p>
+</em>
+<p>
+  So we have a good start for the specification of our
+  class <span class="java-class">Solver</span>. That is, you know
+  how it looks like, in terms of structure, so you can go ahead and
+  create the class:
+  <xfr>
+ 		Donc nous avons ce qu'il faut pour la spécification de la 
+ 		classe <span class="java-class">Solver</span>. Vous savez
+ 		à quoi elle ressemble, en termes de structure, donc vous pouvez
+ 		créer la classe:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public class Solver {
+  // our three pegs
+  private Peg pegA, pegB, pegC;
+
+  // keep track of how many times we move a disk
+  private int nmoves;
+
+  // remember the number of disks
+  private int ndisks;
+
+  /*
+  * The constructor is pretty simple, create the three pegs and 
+  * initialize pegA as a neat stack of disk of decreasing size.
+  */
+  public Solver(int ndisks) { ... }
+  }
+</pre>
+<p>
+  You will notice that all the fields are private. Any instance of
+  the class <span class="java-class">Solver</span> is self-contained,
+  its implementation is an internal matter and so there is no need
+  for any public field. However, anyone may instantiate a puzzle,
+  so the constructor needs to be public.
+  <xfr>
+ 	Notez que tous les champs sont privés. Toute instance de la classe
+ 	<span class="java-class">Solver</span> sont cachés, son implémentation
+ 	est interne et il n'y a rien à rendre visible. Toutefois, n'importe
+ 	qui doit pouvoir instancier le jeu, donc le constructeur doit être 
+ 	public.
+  </xfr>
+</p>
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/hanoi.tower"
+   classpath="bin;tests.jar"
+   classname="hanoi.tower.TestSolver">
+  <banner>
+    <b>TODO:</b> Create the class <span class="java-class">Solver</span>
+    with the proper constructor, following the above specification.
+    Let's check that everything is ok when you are done.
+  </banner>
+  <hint>
+    Not quite, fix your code please.
+  </hint>
+  <success>
+    Great. We have a good start.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+<div name="check1_unfold">
+    
+  <h3> Solving the puzzle </h3>
+  <p>
+    This may seem surprising to you to ask that question now,
+    before wondering how we will actually solve the puzzle.
+    But given the puzzle, it is interesting to do first.
+    Looking at Wikipedia again:
+    <xfr>
+ 		Cela peut paraître surprenant de vous poser cette question maintenant,
+ 		avant de savoir comment nous allons résoudre le jeu. Mais 
+ 		il est intéressant de faire comme cela. Regardez Wikipedia
+ 		à nouveau:
+   </xfr>
+  </p>
+  <em>
+    <p style="margin-left: .3in;">
+      The objective of the puzzle is to move the entire stack to another peg,
+      obeying the following simple rules:
+    </p>
+    <ol style="margin-left: .3in;">
+      <li> Only one disk can be moved at a time. </li>
+      <li>
+	Each move consists of taking the upper disk from one of the pegs
+	and placing it on top of another peg, i.e. a disk can only be moved
+	if it is the uppermost disk on a peg.
+      </li>
+      <li>
+	No disk may be placed on top of a smaller disk.
+      </li>
+    </ol>
+  </em>
+  <p>
+    Well, it is a puzzle, so it is supposed to be a challenge.
+    But we are not here to design a solution, we are here to code one.
+    Wikipedia is kind enough to give us an iterative solution that is
+    real easy to translate into code.
+    <xfr>
+ 		Bien, c'est un jeu, donc un challenge. Mais nous ne sommes pas
+ 		là pour simplement concevoir une solution, nous sommes là pour
+ 		coder une solution. Wikipedia nous donne la solution itérative
+ 		qui est facile à coder.
+   </xfr>
+  </p>
+  <ul>
+    <li> Solution for an even number of disks:
+      <ul>
+	<li>make the legal move between pegs A and B (in either direction)</li>
+	<li>make the legal move between pegs A and C (in either direction)</li>
+	<li>make the legal move between pegs B and C (in either direction)</li>
+	<li>repeat until the puzzle is completed, checking if complexted after each move.</li>
+      </ul>
+    </li>
+    <li>Solution for an odd number of disks:
+      <ul>
+	<li>make the legal move between pegs A and C (in either direction)</li>
+	<li>make the legal move between pegs A and B (in either direction)</li>
+	<li>make the legal move between pegs B and C (in either direction)</li>
+	<li>repeat until the puzzle is completed, checking if complexted after each move.</li>
+      </ul>
+    </li>
+  </ul>
+  <p>
+    So how do we go about coding these two solutions.
+    It is just a while loop until the puzzle is completed.
+    So we need to know when a puzzle is completed.
+    Since we started with our disks on pegA, a puzzle
+    is complete when the pegA is empty and either one
+    of the two other pegs are empty. Which translates
+    immediately to a method like this:
+    <xfr>
+ 		Comment coder ces deux solutions? Juste avec une boucle
+ 		while jusqu'à ce que le jeu soit fini. Donc nous avons besoin de
+ 		savoir quand le jeu est fini. Comme nous avons démarré
+ 		avec les disques sur le pilier A, le jeu est fini quand le pilier
+ 		A est vide et au moins l'un des deux autres piliers est vide.
+ 		Ceci se traduit par la méthode suivante:
+   </xfr>
+  </p>
+  <pre class="prettyprint lang-java">
+  boolean completed() {
+    return (pegA.size() == 0 && (pegB.size() == 0 || pegC.size() == 0));
+  }
+  </pre>
+  <p>
+    Now, let's look at one of the move above and see how we could
+    code it:
+  </p>
+  <ul>
+    <li> make the legal move between pegs A and C (in either direction) </li>
+  </ul>
+  <p>
+    This translates to code almost word for word, thanks to the methods
+    we already coded on the class <span class="java-class">Peg</span>:
+  </p>
+  <pre class="prettyprint lang-java">
+  if (pegA.legalMove(pegC)) 
+    pegC.push(pegA.pop());
+  else if (pegC.legalMove(pegA)) 
+    pegA.push(pegC.pop());
+  nmoves++;
+  </pre>
+  <p>
+    That code works, but it is not coded right.
+    So look again at the code above and then answer the following questions.
+  </p>
+  <quizz name="hanoi.tower.t1.s3.q1" >
+    <question >
+      <p>
+	Can the variable
+	<span class="java-lvar">nmoves</span> be incremented
+	althrough no move happened?
+      </p>
+      <checkboxes>
+	<checkbox>Yes</checkbox>
+	<checkbox>No</checkbox>
+      </checkboxes>
+      <hints>
+	<hint checks="?C">
+	  Sorry, but the variable may be incremented if the two moves are illegal
+	    and yet no move would take place since they are both illegal.
+	</hint>
+      </hints>
+      <answers>
+	<answer checks="CU">
+	  You are right, it may be incremented if the two moves are illegal.
+	</answer>
+      </answers>
+      <finally>
+	Are you having difficulies? If so, please ask for help.
+	The variable may be incremented if the two moves are illegal
+	and yet no move would take place since they are both illegal.
+      </finally>
+    </question>
+    <unfold name="quizz1_next">
+    </unfold>
+  </quizz>
+  <div name="quizz1_next" style="display: none;">
+    <p>
+      Technically, you are right, the two conditions of the if-statements
+      may be false, which would mean that no moves would happen and
+      yet we would increment the counter <span class="java-lvar">nmoves</span>.
+      But in reality, one of the two moves will be legal.
+      So in fact, we did not translate the solution properly.
+      A much better translation is the following:
+     <xfr>
+ 		Techniquement, vous avez raison, les deux conditions 
+ 		des blocs conditionnels peuvent être fausses, ce qui signifie 
+ 		qu'aucun mouvement ne peut avoir lieu alors que nous
+ 		incrémentons le compteur <span class="java-lvar">nmoves</span>.
+ 		Mais en réalité, l'un des deux mouvements sera légal. Donc en fait,
+ 		nous n'avons pas traduit la solution comme il faut.
+ 		Une meilleure traduction est la suivante:
+   </xfr>
+    </p>
+    <pre class="prettyprint lang-java">
+  if (pegA.legalMove(pegC)) 
+    pegC.push(pegA.pop());
+  else 
+    pegA.push(pegC.pop());
+  nmoves++;
+    </pre>
+    <p>
+      The code above really translates that one of the two moves
+      is possible, always. This is the truth, trust us.
+      But if you have any doubts, it is a perfect example
+      of when to use an assert for safety.
+     <xfr>
+ 		Le code ci-après traduit que l'un des deux mouvements
+ 		est possible, toujours. Ceci est vrai, faites nous
+ 		confiance. Si vous avez des doutes, c'est un cas
+ 		parfait d'usage des assertions.
+     </xfr>
+    </p>
+    <pre class="prettyprint lang-java">
+  if (pegA.legalMove(pegC)) 
+    pegC.push(pegA.pop());
+  else {
+    assert(pegC.legalMove(pegA)); 
+    pegA.push(pegC.pop());
+  }
+  nmoves++;
+    </pre>
+    <p>
+      Now, you have almost everything you need to code the solution to the puzzle.
+      Do not forget to check if the puzzle is solved calling the
+      method <span class="java-lvar">completed</span> after every move.
+      <xfr>
+ 		Maintenant, vous avez quasiment tout pour coder le leu. 
+ 		N'oubliez pas de vérifier si le jeu est terminé en appelant la méthode
+ 		<span class="java-lvar">completed</span>  après chaque mouvement.
+     </xfr>
+    </p>
+    <p>
+      To help you move things along faster, please find below the
+      code for printing the status of your Hanoi puzzle:	
+      <xfr>
+ 		Pour vous aider à avancer plus rapidement, vous trouverez ci-après
+ 		le code pour afficher l'état de votre jeu:
+     </xfr>      
+    </p>
+    <pre class="prettyprint lang-java">
+  /*
+   * This is to print the current state of the puzzle, 
+   * neatly showing the disks on the pegs.
+   */
+   void echo() {
+     System.out.println("------------------------------------------");
+     System.out.println("Step " + nmoves);
+     for (int d = ndisks - 1; d >= 0; d--) {
+       Disk a = pegA.peekAt(d);
+       Disk b = pegB.peekAt(d);
+       Disk c = pegC.peekAt(d);
+       if (a == null && b == null && c == null)
+         continue;
+       if (a != null)
+         System.out.printf("\t[%d]", a.size());
+       else
+         System.out.printf("\t   ");
+       if (b != null)
+         System.out.printf("\t[%d]", b.size());
+       else
+         System.out.printf("\t   ");
+       if (c != null)
+         System.out.printf("\t[%d]", c.size());
+       else
+         System.out.printf("\t   ");
+	 System.out.println();
+     }
+     System.out.printf("\t A\t B\t C\n");
+  }
+    </pre>
+    <p>
+      Notice the different uses of the print abilities of Java.
+      One form is the more traditional Java way of printing stuff,
+      using <span class="java-method">println</span>.
+      The other form, using <span class="java-method">printf</span>,
+      is borrowed from C and helps with more complex printing
+      requirements. The code shows you that you can mix both,
+      as you deem fit.
+      <xfr>
+ 		Notez les différents usages du print de Java. 
+ 		L'usage traditionnel est basé sur <span class="java-method">println</span>.
+ 		L'autre usage, basé sur <span class="java-method">printf</span>,
+ 		est repris au langage C et permet d'afficher des formats
+ 		plus complexes. Le code vous montre que vous pouvez mixer les deux.
+     </xfr>     
+    </p>
+    <p>
+      The last difficulty is to determine if you have an odd or an even
+      number of disks. Here is the code to do that:
+    </p>
+    <pre class="prettyprint lang-java">
+  boolean even = 2 * (ndisks / 2) == ndisks;
+    </pre>
+    <p>
+      How does it work? Well, it relies on the fact that the division
+      is a division on integer numbers
+      (Java type <span class="java-keyword">int</span>),
+      not a division on real numbers
+      (Java type <span class="java-keyword">float</span> or
+      <span class="java-keyword">double</span>).
+      In other words, 3/2 is not equal to 1.5, it is equal to 1.
+      Hence, 2*(3/2)==2, not 3. And 3 is an odd number.
+      But, 2*(4/2)==4, and 4 is an even number.
+      <xfr>
+       	Comment cela fonctionne t-il? Bien, il faut considérer que la division 
+       	est une division d'entiers
+      	(Java type <span class="java-keyword">int</span>),
+      	pas une division de réels
+      	(Java type <span class="java-keyword">float</span> ou
+      	<span class="java-keyword">double</span>).
+      	Autrement dit, 3/2 n'est pas égal à 1.5, c'est égal à 1.
+      	Donc, 2*(3/2)==2, non pas 3. Et 3 est impair.
+      	Mais, 2*(4/2)==4, et 4 est pair.
+     </xfr>   
+    </p>
+    <p>
+      You could also use a modulo 2, like this:
+    </p>
+    <pre class="prettyprint lang-java">
+	boolean even = (ndisks % 2) == 0;
+    </pre>
+    <p>
+      Now it is time that you go code the class
+      <span class="java-class">Solver</span>.
+      Let us agree on what the signature of the method to solve
+      the puzzle should be,
+      so that the automated tests will be able run.
+      <xfr>
+       	Maintenant il est temps que vous codiez la classe
+       	<span class="java-class">Solver</span>.
+       	Mettons nous d'accord surla signature de la méthode pour
+       	résoudre le jeu, de manière à pouvoir automatiser les tests.
+     </xfr>   
+    </p>
+    <pre class="prettyprint lang-java">
+      class Solver {
+        /* Solve the Solver tower puzzle.
+         * Returns when the puzzle is completed.
+        */
+	public void solve();
+    </pre>
+    <check
+       silent="false"
+       blocking="false"
+       lang="java"
+       cwd="workspace/hanoi.tower"
+       classpath="bin;tests.jar"
+       classname="hanoi.tower.TestSolver2">
+      <banner>
+      </banner>
+      <hint>
+	Not quite, fix your code please.
+      </hint>
+      <success>
+	Fantastic. Well done.
+      </success>
+      <unfold name="check2_unfold">
+      </unfold>
+    </check>
+    <div name="check2_unfold" >
+    </div>
+  </div>
+</div>
+
+
+

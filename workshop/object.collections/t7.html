@@ -1,0 +1,248 @@
+<vars>
+  sprint=object.collections
+  task=t7
+</vars>
+
+<p>
+  Since we want to keep and use our collections, we want to start
+  some unit testing. For Java, there is a nice framework for helping
+  writing unit tests and running them, it is called <em>JUnit</em>.
+  <xfr>
+    Puisque nous voulons garder nos collections et les utiliser,
+    il est intéressant de commencer à parler de tests unitaires.
+    En Java, il y a un canevas très utile pour faire tourner des
+    tests, il s'appelle <em>JUnit</em>.
+  </xfr>
+</p>
+<p>
+  JUnit is useful for several reasons.
+  First, it gives you a simple framework to structure your tests.
+  Second, it gives you the ability to run all your tests easily and
+  get a report of what is running and what is not.
+  Third, it is nicely integrated in Eclipse, so it is really easy
+  to use.
+  <xfr>
+    JUnit est utile pour plusieurs raisons.
+    Tout d'abord, il donne un cannevas simple pour structurer nos tests.
+    Ensuite, il donne la possibilité de tourner tous vos tests facilement
+    et d'obtenir un rapport sur leur exécution (Passed or Failed).
+    Troisièmement, il est parfaitement intégré dans Eclipse, donc il
+    est très facile à utiliser.
+  </xfr>
+</p>
+<p>
+  Have a look at these online ressources, the
+	<a href="https://junit.org/junit4/">JUnit4 website</a> and the Eclipse
+  <a href="http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.jdt.doc.user%2FgettingStarted%2Fqs-junit.htm">JUnit Get Started</a>.
+	<!--  <a href="http://junit.sourceforge.net/doc/cookbook/cookbook.htm">
+    JUnit Cook Book</a> and the
+		-->
+</p>
+<p>
+  In Eclipse, adding JUnit to a Java project is really simple.
+  Go back to the project properties, select the <em>Java Build Patch</em>
+  and select the <em>Libraries</em> tab. Click on the <em>Add Library</em>
+  button and select <em>JUnit</em>. That's it, couldn't be easier, right?
+</p>
+<p>
+  Now, right-click on the project, select <em>Debug As</em> or
+  <em>Run As</em>, as you did before and notice there is a new option:
+  <em>JUnit Test</em>. Try it. It fails because it cannot find a JUnit
+  test, which is correct since you didn't write one. Close the dialog
+  window.
+</p>
+<p>
+  So let's add a test case, you will see, it is really easy.
+  First, let's <b>create a different source folder,
+    called <em>"junit"</em></b>,
+  so that we can
+  easily include our tests or not in the project build path.
+  We know, not very original, but the name says what it needs to say.
+</p>
+<p>
+  Then we need to create Java packages. Usually, we need two packages.
+  One package needs to be the same as the classes you are testing.
+  This is because you may want to be testing functionalities that are
+  package private, not visible outside the package. We haven't really
+  discussed this concept yet, but it is similar to private/public at a
+  class level, but at a package level.
+  So let's add the
+  package <span class="java-package">edu.polytech.ricm.oop.collections</span>.
+</p>
+<p>
+  The other package is just any other package.
+  So let's add the package
+  <span class="java-package">edu.polytech.ricm.oop.collections.junit</span>.
+  We use that name so that we know that this package is containing JUnit
+  classes for the package
+  <span class="java-package">edu.polytech.ricm.oop.collections</span>.
+</p>
+<p>
+  Back to adding a test case for JUnit, so right-click on the
+  package <span class="java-package">edu.polytech.ricm.oop.collections</span>,
+  select <em>New</em> and notice that there is a new option:
+  <em>JUnit Test Case</em>. Type in the most original class name:
+  <span class="java-class">TestCaseA</span>. That's it, you setup
+  your first JUnit test case.
+</p>
+<pre class="prettyprint lang-java">
+  package edu.polytech.ricm.oop.collections;
+
+  import static org.junit.Assert.*;
+
+  import org.junit.Test;
+
+  public class TestCaseA {
+
+  @Test
+  public void test() {
+  fail("Not yet implemented");
+  }
+
+  }
+</pre>
+<p>
+  First of all, notice the use of <em>import static</em>
+  on the class <span class="java-class">org.junit.Assert</span>,
+  it is a cool feature. Notice how the method
+  <span class="java-class">fail(String)</span> is called.
+  It is not called
+  using <span class="java-class">Assert.fail(String)</span>,
+  or even <span class="java-class">org.junit.Assert.fail(String)</span>.
+  It is called like if it was a local static method.
+  That is really cool to use and it works for static fields as well.
+</p>
+<p>
+  Now, let's run this auto-generated test...
+  even though we can see it will fail.
+  Right-click on the project <em>object.collections</em>
+  and select <em>Run As</em> and then <em>Junit Test</em>.
+  Notice that it opens a new view, as a tab next to the
+  <em>Package Explorer</em> view.
+</p>
+<img src="images/junit-first-run.png" width="100%" />
+<p>
+  As expected, it shows you that there was one failure
+  running your test. If you click on the test line
+  in the JUnit view, Eclipse will navigate you in
+  the Java editor where the failure occured. 
+</p>
+<p>
+  Now, go in the <em>Launch Configurations</em>,
+  using the drop-down menu next to the debugger icon.
+  Select <em>Debug Configurations</em> and then
+  the <em>TestCaseA</em>, select <em>run all tests</em>,
+  just like this:
+</p>
+<img src="images/junit-launch-all.png" width="100%" />
+<p>
+  This way, we will be able to run all test cases,
+  from this launch configuration.
+</p>
+<p>
+  Now, let's make a real test on our class HashTable,
+  changing the code of the method
+  <span class="java-method">test</span> as follows:
+</p>
+<pre class="prettyprint lang-java">
+  public class TestCaseA {
+    @Test
+    public void test() {
+      HashTable ac;
+      ac = new HashTable();
+      Object key = new String("One");
+      Object value = "toto";
+      ac.put(key, value);
+      Object key2 = new String("One");
+      Object value2 = ac.get(key2);
+      assertTrue(value == value2);
+    }
+  }
+</pre>
+<div id="id_quizz1" name="object.collection.packaging">
+  <question >
+    <p>
+      If you run this test again, does it succeed? 
+    </p>
+    <checkboxes>
+      <checkbox>Yes</checkbox>
+      <checkbox>No</checkbox>
+    </checkboxes>
+    <hints>
+      <hint checks="?C">
+	Well, it should... Fix the problem and try again.
+      </hint>
+    </hints>
+    <answers>
+      <answer checks="CU">
+	Cool. Nice feeling, right?
+      </answer>
+    </answers>
+    <finally>
+      <b>Please ask for help</b>.
+    </finally>
+  </question>
+</div>
+<div id="id_quizz1_next">
+	<p>
+		Time to speak of other features of JUnit.
+		These are rather self explanatory.
+	</p>
+	<pre class="prettyprint lang-java">
+  public class TestCaseA {
+    @BeforeClass // Executed once before all tests
+    public void beforeAll() { ... }
+    @AfterClass  // Executed after all tests
+    public void afterAll() { ... }  
+    @Before // Executed before each test
+    public void beforeEach() { ... }
+    @After  // Executed after each test
+    public void afterEach() { ... }  
+    @Test(expected = IllegalArgumentException.class)
+    public void test1() { ... }
+	  @Test(timeout=5000)
+    public void test2() { ... }
+	}
+	</pre>
+	<p>
+		It is possible to group tests in suites,
+		just like this:
+	</p>
+	<pre class="prettyprint lang-java">
+  import org.junit.runner.RunWith;
+  import org.junit.runners.Suite;
+  import org.junit.runners.Suite.SuiteClasses;
+
+  @RunWith(Suite.class)
+  @SuiteClasses({ a.b.TestsA.class, b.c.TestsB.class, })
+  public class AllTests {
+    
+  }
+	</pre>
+  <p>
+    Time to add more tests. We gave you a bunch of tests in
+    the various steps. We ask that you transform them into
+    JUnit tests and get them all to pass. This is mostly
+    about learning how to use JUnit but also to practice
+    code restructuring.
+    <xfr>
+      Il est temps maintenant d'incorporer plus de tests.
+      Nous vous avons donné des tests dans les différentes
+      étapes de ce sprint, nous vous demandons d'en faire
+      des tests JUnit qui passent. Ceci est principalement
+      pour apprendre JUnit mais aussi pratiquer la
+      restructuration de code.
+    </xfr>
+  </p>
+</div>
+<p>
+  That's all folks for this task. But before we move on,
+  please make sure
+  that you commit and push your work to our server.
+  This is how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.collections, Task7 completed"
+  $ git push --all
+</textarea>

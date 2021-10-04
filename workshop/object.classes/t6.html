@@ -1,0 +1,408 @@
+<vars>
+  sprint=object.classes
+  task=t6
+</vars>
+
+<p>
+  In this task, we will continue to leverage polymorphic programming,
+  introducing a new implementation, one that wraps the Linux file system.
+  The idea is simple. Linux has a file system, composed of directories
+  and files. Since we modeled our file system interfaces on the linux
+  file system, it seems possible to wrap the Linux file system with
+  our file system.
+  <xfr>
+    Dans cette tâche, nous allons continuer à utiliser le polymorphism,
+    en introduisant une nouvelle implémentation qui encapsule le
+    système de fichier Linux. Linux a un système de
+    fichiers, composé de dossiers et de fichiers. Comme nous avons conçu
+    notre système de fichiers de la même façon, il est possible de voir
+    le système de fichiers de Linux au travers de notre système de fichiers
+    en Java.
+  </xfr>
+</p>
+<p>
+  But to access the Linux file system, in Java, one has to go through
+  the official wrapper layer of the underlaying file system. This official
+  wrapping is provided in the Java package
+  <span class="java-package">java.io</span> and the class
+  <span class="java-class">File</span> and the class
+  <span class="java-class">RandomAccesFile</span>, among others.
+  This is a full read-write wrapping. Through these classes,
+  one might create and remove directories or files. One might
+  also read and write the contents of files. 
+  <xfr>
+    Mais pour accéder le système de fichier Linux, en Java, on doit passer
+    par la couche d'adaptateurs officielle de Java. Elle est disponible
+    dans le paquet 
+    <span class="java-package">java.io</span> et la classe 
+    <span class="java-class">File</span> et la classe 
+    <span class="java-class">RandomAccesFile</span>, parmi d'autres.
+    C'est une couche d'adapteurs qui est complète, elle permet de
+    créer et de détruire des dossiers ou des fichiers. Elle permet
+    aussi de lire et d'écrire le contenu d'un fichier.
+  </xfr>
+</p>
+<p>
+  We will wrap these official Java classes, as an implementation layer,
+  in order to build our own file system view, based on our interfaces
+  in the package <span class="java-package">ricm3.filesys</span>.
+  Important, we want to design a <b>safe read-only wrapping</b>,
+  one that allows to see what is in the Linux file system, but does not
+  allow any modifications. This is for obvious safety reasons.
+  This is really important, we do
+  not want a bug in your code to damage the machine you use to work
+  everyday, do we? Of course not.
+  <xfr>
+    Nous allons faire une couche d'adaptation autour de ces classes
+    officielles, pour fournir une vue du système de fichiers Linux
+    via nos interfaces du paquet
+    <span class="java-package">ricm3.filesys</span>.
+    Important, nous voulons être serein et ne pas risquer la perte
+    de fichiers ou de dossiers sur votre machine, donc nous voulons
+    que notre couche d'adaptation soit sûre et seulement en lecture.
+    Nous ne voulons permettre aucune modifications du système Linux
+    sous-jacent.
+    Cela est très important, nous ne voudrions pas qu'un bug dans votre code
+    efface des dossiers ou des fichiers sur votre système Linux, n'est-ce pas?
+    Bien sûr que non. 
+  </xfr>  
+</p>
+
+<h3>Safe Wrapping the Linux File System</h3>
+
+<p>
+  For directories, we will start from a root directory, in the
+  Linux file system. This Linux directory will be wrapped as the root
+  of our file system. For every Linux subdirectory, we will create a
+  directory object, instance of the class
+  <span class="java-class">WrapDirectory</span>. So we will create
+  a hiearchy of directory objects that is identical to the hierarchy of
+  directories in your Linux file system, starting at the chosen
+  root directory.
+  Then for the files in those directories,
+  we will wrap them as well, creating for each Linux file
+  a corresponding file object, instance of
+  the class <span class="java-class">WrapFile</span>.
+  <xfr>
+    Pour les dossiers, nous allons donc démarrer depuis
+    un dossier <em>racine</em> dans le système de fichier Linux.
+    Ce dossier racine sera vu par votre implémentation comme
+    le dossier racine "/" en Java.
+    Puis, pour chaque dossier dans l'arborescence de votre dossier racine
+    sous Linux, vous allez créer un object, instance de la classe
+    <span class="java-class">WrapDirectory</span>. Vous allez donc
+    créer une hiérarchie d'objets "dossiers" qui corresponds à
+    la hiérarchie des dossiers sous Linux, avec comme racine le
+    dossier de départ choisi.
+    Pour les fichiers, cela sera pareil. Nous allons créer un objet,
+    instance de la classe 
+    <span class="java-class">WrapFile</span> pour les représenter.
+  </xfr>
+</p>
+<p>
+  <b>Safe wrapping</b> means that any removal of a directory will
+  only have effect in the Java world, not in the Linux file system.
+  <b>Safe wrapping</b> also means that we will load files but we will
+  never write any
+  modification back. Also, any removal of a file will only
+  take effect in the Java world, not in the Linux file system.
+  <xfr>
+    Avoir des adapteurs sûres veut dire que tout suppression d'un dossier
+    n'aura d'effet que dans le monde Java, en mémoire, et pas du tout
+    sur le système sous-jacent Linux.
+    Avoir des adapteurs sûres veut aussi dire que tout suppression d'un fichier
+    n'aura d'effet que dans le monde Java, en mémoire, et pas du tout
+    sur le système sous-jacent Linux.
+  </xfr>
+</p>
+<p>
+  <b>
+    DO NOT MESS AROUND WITH SAFETY OR YOU WILL CORRUPT YOUR MACHINE
+    WHEN RUNNING YOUR TESTS OR OUR TESTS.
+  </b>
+</p>
+<p>
+  We will come back to that later.
+</p>
+
+<h4>Eager and Lazy File Wrapping</h4>
+
+<p>
+  We have a delicate point to discuss: eager or lazy wrapping of files.
+  We want to create a file object to represent a file,
+  but we do not want to load its contents unless we have to. That way,
+  we will avoid loading all the contents of all the files in memory.
+  So we will implement lazy loading for the contents of files,
+  but eager wrapping for directories and files.
+  <xfr>
+    Nous devons
+    parler du chargement agréssif ou fainéant du contenu des fichiers.
+    En effet, nous voulons créer des objets fichiers pour représenter les
+    fichiers de votre système de fichier Linux, mais nous ne voulons pas
+    charger tous les contenus de tous ces fichiers. N'est-ce pas?
+    C'est charger beaucoup trop d'un coup.
+    Nous allons donc aggressivement créer les objets pour les dossiers
+    et les fichiers, au démarrage, mais nous allons chargé à la demande
+    seulement les contenus des fichiers.
+  </xfr>
+</p>
+<p>
+  Lazy loading means that when creating a file wrapper object
+  (<span class="java-class">WrapFile</span>), we do not load the
+  contents of the wrapped file. But if the file wrapper object is
+  used to read bytes or write bytes, we will load the Linux file contents
+  only at that time in a byte array. All reads and writes will then
+  be performed on this byte array.
+  <xfr>
+    Le chargement fainéant veut dire que la création d'un objet fichier
+    ne provoque pas le chargement du contenu du fichier depuis le système
+    de fichier Linux. Cela veut dire
+    que votre objet fichier existe, mais il n'a pas encore son contenu.
+    Il ne chargera son contenu que lorsqu'il sera nécessaire à l'exécution
+    d'une méthode.
+  </xfr>
+</p>
+<!--
+<p>
+  <b>IMPORTANT</b> <b>IMPORTANT</b> <b>IMPORTANT</b><br>
+  Remember, you must not alter the underlying file
+  system in anyway, for safety reasons. Otherwise, a bug in your code
+  might damage your file system and you may no longer be able to use
+  your machine. Therefore, you must pay attention to that requirement
+  and you must
+  <b>never</b> write back any data from a wrapper file to the underlying
+  Linux file. Also, you must <b>never</b> progagate any change from a
+  wrapper directory to the underlying directory. This means that you
+  do not rename, remove, or create files in the Linux file
+  system. This also means that you
+  do not rename, remove, or make new directories in the Linux file
+  system.
+  <xfr>
+    Vous ne devez en aucun cas altérer votre système de fichiers Linux.
+    Il faut faire attention à ce point pour qu'un bug dans votre code
+    n'endommage pas votre machine. <b>Il va falloir faire attention</b>.
+  </xfr>
+</p>
+-->
+
+<h4>Class <span class="java-class">WrapDirectory</span></h4>
+
+<p>
+  Let's discuss the class <span class="java-class">WrapDirectory</span>
+  in more details. You can see that it extends
+  the class
+  <span class="java-class">RamDirectory</span>. And you can see that
+  it does not override any method but for the method
+  <span class="java-method">toString</span>. But let's focus on
+  the constructors: see how they load
+  the contents of the corresponding Linux directory, creating
+  Java objects to represent each directory and each file.
+</p>
+<p>
+  Notice the recursion through the constructor,
+  since constructing a wrapper directory loads its contents, which
+  constructs more wrapper directories that load their contents, 
+  and so on.
+  <xfr>
+    Nous allons discuter la classe
+    <span class="java-class">WrapDirectory</span>
+    en premier. Regarder les constructors et la récursion
+    qui en découle pour créer l'arborescence des dossiers
+    et des fichiers.
+  </xfr>
+</p>
+<p>
+  And this is pretty much it. Once a wrapper directory has loaded
+  the contents of its corresponding Linux directory, it behaves as
+  a ramfs directory, that is, as its super-class, the class
+  <span class="java-class">RamDirectory</span>. How cool is that?
+</p>
+<p>
+  Are you concinced this is a <b>safe implementation</b>? Well,
+  you better be, right? Otherwise, you risk damaging your file
+  system. So you need to convince yourself it is a safe implementation
+  before you proceed.
+</p>
+
+<h4>Class <span class="java-class">WrapFile</span></h4>
+
+<p>
+  Let's discuss the class <span class="java-class">WrapFile</span>
+  in more details. 
+  First of all, most of the methods of the class
+  <span class="java-class">WrapFile</span>
+  are not implemented, so you need to precisely understand what
+  we are trying to achieve here.
+  <xfr>
+    Nous allons discuter la classe
+    <span class="java-class">WrapFile</span> plus en détails.
+    Elle est intéressante car elle étends la classe
+    <span class="java-class">RamFile</span> mais elle
+    redéfinie la plupart des méthodes.
+  </xfr>
+</p>
+<p>
+  Let's look at the constructor. A wrapper file
+  is created for a corresponding Linux file, but 
+  the constructor does not load the contents of the Linux file.
+  Can you tell why?
+  <xfr>
+    Regardez le constructeur. Un object "wrapper file" est créé
+    à partir d'un fichier Linux, mais l'objet Java ne charge pas
+    le contenu du fichier Java. Pouvez vous expliquer pourquoi?
+  </xfr>
+</p>
+<p>
+  Well? Any ideas? Lazy loading? Yes, that was the purpose
+  of the above discussion about lazy loading and saving memory.
+  This is where it applies. When wrapping a linux file, the constructor
+  does not load the file contents into a byte array. We are
+  smart, we will wait to load the file contents until
+  we are sure we need it. This means overridding all the
+  methods accessing that contents:
+  <xfr>
+    Alors? Des idées? Vous pensez chargement fainéant? Oui, tout
+    à fait. C'est comme cela que se traduit la discussion précédente
+    sur le chargement aggressif ou fainéant. Ici, nous sommes
+    intelligent, nous ne chargons pas tous les contenus de tous
+    les fichiers, nous allons attendre d'en avoir besoin pour
+    charger le contenu d'un fichier. Cela exige de redéfinir toutes
+    les méthodes qui accèdent ce contenu:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public int size() throws IOException;
+  public int available() throws IOException;
+  public byte read() throws IOException, EOFException;
+  public void write(byte val) throws IOException;
+  public void seek(int offset) throws IOException;
+</pre>
+<p>
+  For the first two, we do not need to load the contents, since
+  a Linux file (java.io.File) knows its length. Beware though that
+  once you loaded the file, into a byte array, that byte array is
+  telling you the size and the available number of bytes. Indeed,
+  once the file is loaded, the byte array might be modified and
+  may no longer correspond to the original file. So, until the
+  file is loaded, the file tells you the size and the available
+  number of bytes, but not once you loaded the file contents in
+  memory.
+  <xfr>
+    Pour les deux premières méthodes, vous n'avez pas besoin de charger
+    le contenu du fichier Linux. En effet, un fichier Linux connait
+    sa longer. Mais attention, après avoir chargé le contenu, c'est
+    le byte array en mémoire qui fait foi. En effet, il sera possible
+    d'écrire dans le fichier en mémoire, changeant la taille du fichier
+    et la position courante. Il faut donc bien gérer les choses ici.
+  </xfr>
+</p>
+<p>
+  For the other methods of a file, the contents of the file must be
+  first loaded. Look at the method
+  <span class="java-method">load</span> that loads the Linux file
+  contents into a byte array.
+  Look at the code, you will see how to read from a Linux file in Java,
+  using a random acces file. Make sure you use this method wisely and
+  load each file contents at most once.
+  <xfr>
+    Pour les autres méthodes, nous n'avons pas le choix, il faut charger
+    le contenu du fichier. Regardez la méthode statique 
+    <span class="java-method">load</span> qui charge le contenu d'un
+    fichier linux dans un tableau de bytes. Il faut l'utiliser
+    à bon escient et ne charge chaque fichier au plus une seule fois.
+  </xfr>
+</P>
+<p>
+  Notice the use of a <span class="java-keyword">try-finally</span>
+  statement in order to make sure that the random access file is always
+  closed, no matter what happens. A <span class="java-keyword">try-finally</span>
+  statement always executes the <span class="java-keyword">finally</span> block,
+  that the execution flow returns or throws an exception.
+  So in this case, even if the <span class="java-keyword">try</span> block
+  throws an IOException because of an error during the reading of the contents
+  of the file, the the <span class="java-keyword">finally</span> block will
+  be executed. This is even the case with a
+  <span class="java-keyword">return</span> statement in the
+  <span class="java-keyword">try</span> block.
+  <xfr>
+    Notez l'usage d'une construction
+    <span class="java-keyword">try-finally</span> pour être sûre que le
+    fichier à accès aléatoire est toujours fermé, quelque soit la situation.
+    Avec une construction <span class="java-keyword">try-finally</span>, vous
+    avez la guarantie que le bloc de code <span class="java-keyword">finally</span>
+    est toujours exécuté, même si dans le bloc
+    <span class="java-keyword">try</span> il y a un
+    <span class="java-keyword">return</span> ou une exception est
+    levée.
+  </xfr>
+</p>
+<P>
+  Once the bytes are loaded, the wrapper file should behave exactly as
+  a regular ramfs file (the class <span class="java-class">RamFile</span>).
+  Remember that you can use the keyword <span class="java-keyword">super</span>
+  to invoke the super-class implementation of overriden methods.
+  <xfr>
+    Une fois que vous avez chargé le contenu d'un fichier Linux dans un
+    fichier "WrapFile", cet object Java doit se comporter comme un fichier
+    "RamFile", la super classe. Rappelez vous que vous pouvez toujours invoquer
+    une méthode de la super-classe en utilisant le mot-clé
+    <span class="java-keyword">super</span>.
+  </xfr>
+</p>
+<p>
+  Are you concinced this is a <b>safe implementation</b>? Well,
+  you better be, right? Otherwise, you risk damaging your file
+  system. So you need to convince yourself it is a safe implementation
+  before you proceed.
+</p>
+
+<h3>Running our tests</h3>
+
+<p>
+  <b>WARNING</b><br>
+  You must do your own checks and you must ensure
+  that your implementation is safe before attempting to run our tests.
+  Safety here is about making sure that your code never modifies
+  the underlying file system. You code never writes back any modification
+  to the contents of files in the Linux file system.
+  Your code never creates or removes files from directories in the
+  Linux file system. You code never creates or removes directories
+  in the Linux file system.
+</p>
+<p>
+  Failure to do so may result in loss of files or directories.
+</p>
+<p>
+  <b>You have been warned!</b>
+</p>
+
+<check
+   silent="false"
+   blocking="false"
+   lang="java"
+   cwd="workspace/object.classes"
+   classpath="bin;tests.jar;../object.collections/edu-polytech-ricm-oop-collections.jar"
+   classname="object.classes.tests.Task5WrapTests"> 
+  <banner>
+  </banner>
+  <hint>
+    Not quite.
+  </hint>
+  <success>
+    Well done. 
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+<div name="check1_unfold" style="display:none;">
+  <p>
+    That's all folks for this step.
+    But before we move on, please make sure
+    that you commit and push your work to our server:
+  </p>
+  <textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.classes, Task5 completed"
+  $ git push --all
+  </textarea>
+</div>

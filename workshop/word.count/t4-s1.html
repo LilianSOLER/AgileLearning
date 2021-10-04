@@ -1,0 +1,738 @@
+<vars>
+  sprint=word.count
+  task=t4
+  step=t4-s1
+</vars>
+
+<p>
+  Evaluating performance is a wide and difficult subject, we are going to
+  only scratch the surface here, just giving a few basic ideas about
+  what performance is about, focusing on the following two concepts
+</p>
+<ul>
+  <li> Elapsed time</li>
+  <li> Invocation counters</li>
+  <li> Object counters</li>
+</ul>
+<p>
+  The concept of <em>elapsed time</em> is about the time it takes for
+  your program to execute a given method, across a complete execution.
+  The idea is simpler, there is the elapsed time for a particular
+  invocation of that method and there is the global elapsed time,
+  that is, the amount of time the program spent executing all the
+  invocations of that method.
+</p>
+<p>
+  The concept of <em>invocation counters</em> goes hand in hand
+  with the concept of elapsed time. An invocation counter simply 
+  counts the number of times a particular method has been invoked
+  throughout the execution of a program. 
+  Combining both the elapsed time and invocation counters give a good
+  idea of where a program spends most its time and may allow to detect
+  algorithmic problems that are affecting the overall performance.
+</p>
+<p>
+  Finally, the concept of <em>object counters</em> is about the object graph
+  and trying to have a survey of the population of objects in it.
+  Since objects are born and die all the time, it is really difficult
+  to actually build such a survey accurately. Nevertheless,
+  we know that creating objects is not free, so counting the number of
+  created objects, which is easy to do, is often a simple yet usefull
+  measure of potential algorithmic problems that could affect
+  performance negatively.
+</p>
+
+<h3> Adding Performance Counters </h3>
+<p>
+  We are going to add performance counters in order to evaluate
+  the performance of our <em>WordCount</em> program, in the
+  Java package <span class="java-package">word.count.step2</span>.
+  Find below the counters that we are interested in:
+  <xfr>
+		Nous allons ajouter des compteurs de performance pour évaluer
+		les performances de notre programme <em>WordCount</em>,
+		dans le package <span class="java-package">word.count.step2</span>.
+		Voici les compteurs qui nous intéressent:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+public class Counters {
+
+  static int  Vocabulary_add_count;
+  static long Vocabulary_add_elapsed;
+
+  static int  Vocabulary_find_count;
+  static long Vocabulary_find_elapsed;
+
+  static int WordCount_parse_count;
+  static long WordCount_parse_elapsed;
+}
+</pre>
+<p>
+  The names of the counters are pretty much self explanatory.
+  Notice that for certain methods, we count the number of invocations
+  and the elapsed time in these invocations.
+  The notion of <em>elapsed time</em> is an important one;
+  it is the time spent in that function. How do we measure
+  the elapsed time in a function? Just like this:
+  <xfr>
+  	Les noms de compteurs sont assez parlant. Notez que pour
+  	certaines méthodes, nous comptons le nombre d'invocations
+  	et le temps écoulé dans ces invocations.
+  	La notion de <em>elapsed time</em> est importante, elle
+  	correspond au temos passé dans chaque fonction.
+  	Comment mesurons-nous ce temps? comme cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public void foo() {
+    long start = System.nanoTime(); // time when it starts
+    ...
+    long end = System.nanoTime();   // time when it is finished.
+    long elapsed = end - start;     // elapsed in nano-seconds.
+    return;
+  }
+</pre>
+<p>
+  This idea of performance often seems obscure at first,
+  when discussed in the context of programming. But it is
+  actually pretty simple to understand. We do it in real life
+  all the time. This is called evaluation and optimization of
+  human processes. Let's take an example of a manager of a sport
+  team. They travel a lot and arrive often late. So he evaluates
+  the travel process, from packing to unpacking. He evaluates
+  the time spent in the different tasks, this is our elapsed
+  time. That way, he gets a feeling of where the most time is
+  spent.
+  <xfr>
+  	L'idée de performance semble souvent obscure au début, dans
+  	le contexte de la programmation. Mais en fait cet aspect est
+  	relativement simple à comprendre. Nous l'approchons
+  	quotidiennement dans la vraie vie, sous le terme 
+  	d'évaluation et optimisation des processus humains.
+  	Considérons un entraîneur d'une équipe de sport. 
+  	L'entraineur et son équipe voyagent beaucoup et arrivent 
+  	souvent tard. Donc l'entraineur évalue le processus de
+  	voyage, le temps passé dans les différentes tâches,
+  	qui correspond à notre notion de temps écoulé (elapsed time).
+  	Ce faisant, il acquiert une idée de la répartition du temps 
+  	et des tâches qui coûtent cher en temps.
+  </xfr>
+</p>
+<p>
+  But he often needs a breakdown of the elapsed times when looking
+  at complex tasks. For instance, let's say that unpacking takes the
+  longest. But in reality, once broken down, unpacking is really
+  multiple steps, one being packing in itself but another being about
+  going shop for needed hardware items. Looking at the breakdown, he sees that
+  the shopping around for needed items takes the longest. He can decide
+  to better prepare for avoiding the time wasted shopping for such items.
+	<xfr>
+		Mais il a souvent besoin d'avoir le détails lorsqu'il s'agit de
+		tâches assez complexes. Par exemple, disons que le temps pour
+		s'installer une fois sur place prends le plus temps. Ce temps
+		est en fait composé par l'installation des sportifs à l'hotel,
+		mais aussi d'un temps pour faire des courses pour des petites
+		choses qui manquent. Ces petites courses sont ce qui prends le plus
+		de temps. L'entraineur pourra ainsi décider de mieux préparer les
+		voyages pour éviter qu'il manque tant de petites choses à l'arrivée.
+	</xfr>
+</p>
+<p>
+  So about our word count, we have the global elasped time, the time
+  it takes to parse an entire input stream. For this, 
+  we will evaluate the elapsed time in the method
+  <span class="java-method">parse</span>. 
+  But that time can be
+  broker down further.
+  The idea is
+  to get an idea of how costly is the maintenance of the
+  vocabulary, compared to the cost of the overall parsing.
+  Therefore, we will be looking at evaluating the method
+  <span class="java-method">add</span>
+  on the class <span class="java-class">Vocabulary</span>.
+  Why? Because it is the one that is called for each
+  parsed word.
+  <xfr>
+  	Donc à propos de wordcount,nous avons le temps écoulé global, 
+  	qui correspond au temps permettant d'analyser un flot d'entrée complet. 
+  	Pour cela, 
+  	nous allons évalué le temps écoulé dans la méthode
+  	<span class="java-method">parse</span>. 
+  	Mais ce temps peut être décomposé encore.
+  	L'idée est d'avoir une idée du coût de la gestion du
+  	vocabulaire, comparé au coût de l'analyse globale du
+  	flot d'entrée.
+  	Donc, nous allons regarder l'évaluation de la méthode
+  	<span class="java-method">add</span>
+  	de la classe <span class="java-class">Vocabulary</span>.
+  	Pourquoi? Parce que c'est celle qui est appelée
+  	pour chaque mot.
+  </xfr>
+</p>
+<p>
+  And since the method
+  <span class="java-method">add</span>
+  invokes the method
+  <span class="java-method">find</span>, we want
+  to further breakdown the elapsed time in order
+  to see how the elapsed time is distributed between
+  the method <span class="java-method">add</span>
+  and the method <span class="java-method">find</span>.
+  <xfr>
+    Et puisque la méthode
+  	<span class="java-method">add</span>
+  	invoque la méthode
+  	<span class="java-method">find</span>, nous voulons
+  	décomposer encore le temps écoulé
+  	pour voir la répartition entre la 
+  	méthode <span class="java-method">add</span>
+  	et la méthode <span class="java-method">find</span>.
+  </xfr>
+</p>
+<p>
+  The goal is to identify which methods are the most costly so
+  that we can concentrate our efforts to optimize our code
+  where it matters the most.
+	<xfr>
+		Le but est d'identifier quelles méthodes sont les plus
+		coûteuses de façon à pouvoir concentrer nos efforts
+		pour améliorer leur code et avoir le meilleur retour
+		sur nos efforts. 
+	</xfr>
+</p>  
+<p>
+  Let's look at an easy way to update these counters.
+  We want to count the number of invocations and the elapsed
+  time. There is an easy and very effective way to do this.
+  Let's assume we have a method like the one below:
+	<xfr>
+		Regardons à une façon simple de mettre à jour ces compteurs.
+		Nous voulons compter le nombre d'invocations et le temps
+		écoulé pendant ces invocations. Voici comment faire
+		sur un exemple:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public Word find(Word word) {
+    for (int i = 0; i &lt; nwords; i++) {
+      if (words[i].equals(word))
+        return words[i];
+    }
+    return null;
+  }
+</pre>
+<p>
+  Look below how to modify that method, using
+  a try-finally construct:
+	<xfr>
+		Regardez ci-dessous comment changer le code
+		pour mettre à jour les compteurs:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public Word find(Word word) {
+    long start = System.nanoTime();
+    try {
+      for (int i = 0; i &lt; nwords; i++) {
+        if (words[i].equals(word))
+          return words[i];
+      }
+      return null;
+    } finally {
+      long end = System.nanoTime();
+      Counters.Vocabulary_find_count++;
+      Counters.Vocabulary_find_elapsed += (end - start);
+    }
+  }
+</pre>
+<p>
+  See how we just surrounded the normal code of the method by
+  a try-finally construct, taking the start and end times,
+  and computing the elapsed time. Notice that there are
+  return statements in the <em>try</em> blocks. This is not
+  a mistake. A try-finally construct works like this: no
+  matter what happens in the <em>try</em> block, the
+  <em>finally</em> block gets executed. So return statements
+  are ok but exceptions are also ok. In both cases,
+  the <em>finally</em> block is executed last.
+  <xfr>
+ 		Voyez, nous avons encerclé le code normal
+ 		de la méthode par un bloc try-finally, prenant le
+ 		temps de début et de fin et calculant le temps écoulé.
+ 		Notez qu'il y a des instructions return dans le bloc 
+ 		<em>try</em>. Ce n'est pas une erreur. Un bloc 
+ 		try-finally fonctionne comme suit: quelquesoit ce qui 
+ 		arrive durant le bloc <em>try</em> , le bloc <em>finally</em>
+ 		sera exécuté. Donc des instructions return sont
+ 		possibles et des exceptions également. Dans tous les cas, 
+ 		le bloc <em>finally</em> sera exécuté, en dernier.
+  </xfr>
+</p>
+<check
+   silent="false"
+   blocking="true"
+   lang="java"
+   cwd="workspace/word.count"
+   classpath="bin;tests.jar"
+   classname="word.count.step2.TestCounters"> 
+  <banner>
+    So go ahead, implement these counters.
+    When done, check what you did.
+  </banner>
+  <hint>
+    Not quite. Try again.
+  </hint>
+  <success>
+    Everything looks fine.
+  </success>
+  <unfold name="check1_unfold">
+  </unfold>
+</check>
+
+
+<h3> Performance Analysis </h3>
+
+<div name="check1_unfold" style="display: true">
+  <p>
+    Let's run the class
+    <span class="java-class">WordCountStep2</span>
+		to parse the given file <em>test-large.utf8</em>.
+		Here is how to do it and the output:
+		<xfr>
+			Nous allons exécuter la classe 
+			<span class="java-class">WordCountStep2</span>
+			pour parser le fichier <em>test-large.utf8</em>.
+			Voici comment faire et le sortie qui en résulte:
+		</xfr>
+  </p>
+  <pre class="terminal">
+$ java -cp bin word.count.step2.WordCountStep2 test-large.utf8
+	Vocab	Lines	Words	Chars 
+	240	  309	  13459	91317	test-large.utf8
+Found 240 different words among 13457 words 
+	217	et 
+	188	ac 
+	179	in 
+	179	vel 
+	179	quis 
+	175	id 
+	174	sed 
+	173	non 
+	171	at 
+	170	ut 
+Vocabulary:
+  add:		13457	39227 us
+  find:		13457	33487 us
+WordCount:
+  parse:	1	85572 us
+  </pre>
+	<p>
+		Let's first read the output.
+	</p>
+	<ul>
+		<li>
+			The document has 13457 words, 309 lines, with a vocabulary of 239 distinct words.
+			<xfr>
+				Le document contient 13457 mots, 309 lines, avec un vocabulaire de 239 mots.
+			</xfr>
+		</li>
+		<li>Method <span class="java-method">parse</span>: called 1 time, took 85572 micro-seconds,
+			so about 85 milli-seconds.
+			<xfr>
+				La méthode <span class="java-method">parse</span>: appelée 1 seule fois, s'exécute en 85572 micro-secondes,
+				juste au dessus de 85 milli-secondes.
+			</xfr>			
+		</li>
+		<li>Method <span class="java-method">add</span>: called 13457 times, took 39227 micro-seconds,
+			so just over 39 milli-seconds.
+			<xfr>
+				La méthode <span class="java-method">add</span>: appelée 13457 fois, s'exécute en 39227 micro-secondes
+				juste au dessus de 39 milli-secondes.
+			</xfr>
+		</li>
+		<li>Method <span class="java-method">find</span>: called 13457 times, took 33487 micro-seconds,
+			so just over 33 milli-seconds.
+			<xfr>
+				La méthode <span class="java-method">find</span>: appelée 13457 fois, s'exécute en 33487 micro-secondes
+				juste au dessus de 33 milli-secondes.
+			</xfr>
+		</li>
+	</ul>
+	<p>
+		So what can we tell from these numbers.
+		First, it is normal that the method 
+    <span class="java-method">parse</span> is called only once since we parse only one file.
+		Second, it is also normal that the methods
+		<span class="java-method">find</span> and
+		<span class="java-method">add</span> are called the same number of times
+		since the method
+    <span class="java-method">parse</span> only invokes the method
+		<span class="java-method">add</span> which in turn invokes
+		the method <span class="java-method">find</span> only once.
+		<xfr>
+			Que nous disent ces chiffres? En premier, il est normale de voir que la méthode
+			<span class="java-method">parse</span> est appelée une seule fois puisque nous parsons
+			qu'un seul fichier. Puis, il est aussi normale que les méthodes 
+			<span class="java-method">find</span> et
+			<span class="java-method">add</span> soient appelées le même nombre de fois
+			puisque la méthode 
+			<span class="java-method">parse</span> appelle seulement la méthode 
+			<span class="java-method">add</span> qui appelle la méthode
+			<span class="java-method">find</span> une seule fois.			
+		</xfr>
+	</p>
+	<p>
+		<b>ATTENTION:</b> If the two numbers giving the number of times the two methods
+		<span class="java-method">add</span> and
+		<span class="java-method">find</span> are not the same,
+		you have poorly coded your method
+		<span class="java-method">add</span>.
+		We ask that you go back and fix your implementation.
+		The method
+		<span class="java-method">find</span>	should be invoked
+		only once from the method
+		<span class="java-method">add</span>.
+		<xfr>
+			<b>ATTENTION:</b>
+			Si vos deux chiffres du nombre d'appel de vos méthodes
+			<span class="java-method">add</span> et
+			<span class="java-method">find</span> ne sont pas les mêmes,
+			vous n'avez pas codé votre méthode
+			<span class="java-method">add</span> correctement.
+			Nous vous demandons de corriger votre implémentation
+			en comprenant pourquoi la méthode
+			<span class="java-method">find</span>	ne doit être appelée
+			qu'une seule fois depuis la méthode
+			<span class="java-method">add</span>.
+		</xfr>
+	</p>
+	<p>
+		Now, since the method
+		<span class="java-method">add</span> calls
+		the method	<span class="java-method">find</span> only once,
+		we can deduce
+		that the most time is spent in the latter. Indeed, all the calls
+		to the method
+		<span class="java-method">add</span> takes 39 milli-seconds,
+		out of which the execution of all the calls to the method
+		<span class="java-method">find</span> taks 33 milli-seconds,
+		leaving only 6 milli-seconds (39ms-33ms) for the 13457 executions of
+		the code of	the body of the method <span class="java-method">add</span>
+		<xfr>
+			Maintenant, puisque la méthode 
+			<span class="java-method">add</span> n'appelle qu'une seule fois
+			la méthode <span class="java-method">find</span>, nous pouvons
+			déduire de nos chiffres que c'est cette dernière qui prends beaucoup
+			de temps. En effet, les appels de la méthode
+			<span class="java-method">add</span> prennent au total 39 milli-seconds,
+			dont 33 milli-seconds sont prises par l'exécution des appels à la
+			méthode <span class="java-method">find</span>. Cela veut dire que les
+			instructions du corps de la méthode 
+			<span class="java-method">add</span> ne prennent que 6 milli-seconds
+			pour s'exécuter 13457 fois.
+		</xfr>
+	</p>
+  <p>
+    So we know that the method
+    <span class="java-method">find</span> is costly.
+    But why is it so costly? 
+    Let's parse a small file, running the class
+    <span class="java-class">WordCountStep2</span>
+    on the given file <em>test-small.utf8</em>,
+    which is a much smaller file.
+    Do you see something like this?
+		<xfr>
+			Donc nous savons que la méthode
+			<span class="java-method">find</span> est coûteuse.
+			Mais pourquoi?
+			Faisons le parsing d'un petit fichier, comme le fichier
+			<em>test-small.utf8</em>, toujours avec la classe
+			<span class="java-class">WordCountStep2</span>.
+			Vous devriez voir des chiffres comme cela:
+		</xfr>
+  </p>
+  <pre class="terminal">
+$ java -cp bin word.count.step2.WordCountStep2 test-small.utf8
+  Vocab  Lines  Words  Chars 
+  132    19     169    1124   test-small.utf8
+Found 132 different words among 169 words 
+	7	the 
+	6	Lorem 
+	5	Ipsum 
+	4	of 
+	4	in 
+	3	and 
+	2	dummy 
+	2	text 
+	2	typesetting 
+	2	has 
+Vocabulary:
+  add:		169	4695 us
+  find:		169	521 us
+WordCount:
+  parse:	1	7858 us
+  </pre>
+  <p>
+    Do you see a different picture here?
+		<xfr>
+			Est-ce que ces chiffres vous racontent une autre histoire?
+		</xfr>
+	</p>
+	<p>
+		Of course, the method <span class="java-method">find</span>
+		does not seem so costly after all, only 521us versus 4695us
+		for the method <span class="java-method">add</span>.
+		This is only about 10% of the time spent in the method
+    <span class="java-method">add</span>. 
+    That tells us that the performance of
+    the implementation of the method
+    <span class="java-method">find</span> degrades
+    as the vocabulary size grows or the file size grows.
+		This is often the case, the performance of some 
+		algorithms degrade faster that others when the working set
+		grows. This is what the complexity metric tries to capture,
+		something you will study in other courses this year.
+		<xfr>
+			Bien sûr que oui, la méthode <span class="java-method">find</span>
+			ne semble plus aussi coûteuse, seulement 521us versus 4695us
+			pour la méthode     <span class="java-method">add</span>. 
+			C'est à peu près 10% du temps de la méthode
+			<span class="java-method">add</span>.
+			Cela nous dit que les performances de notre implémentation
+			de la méthode 
+			<span class="java-method">find</span> se dégradent lorsque
+			le vocabulaire grossi ou que le fichier grossi.
+			C'est souvent le cas et c'est tout le sujet de l'étude
+			de la complexité des algorithmes, ce que vous verrez dans
+			d'autres cours cette année.
+		</xfr>
+	</p>
+	<p>
+		With the small text file, the method <span class="java-method">find</span>
+		is called only 169 times and takes 521us. In average, this
+		means about 3.08us per call.
+		With the larger text file, the method <span class="java-method">find</span>
+		is called 13457 times and takes 33487 micro-seconds.
+		In average, this means about 2.48us per call.
+		This seems to contradict what we are seeing. Well, the average time
+		is not always the most useful metrics.
+		<xfr>
+			Avec un fichier plus petit, la méthode
+			<span class="java-method">find</span>
+			n'est appelée que 169 times et ne prends que 521us.
+			En moyenne, cela donne 3.08 micro-seconds par appelle.
+			Avec un fichier plus grand, la méthode <span class="java-method">find</span>
+			est appelée 13457 fois et prends maintenant 33487 micro-seconds.
+			En moyenne, cela donne 2.48us par appel. Cela semble contredire
+			ce que nous voyons. Bien souvent, les temps moyens ne sont pas
+			les chiffres les plus parlant.
+		</xfr>
+  </p>
+  <p>
+    Here, we have a problem with our algorithm, that is,
+    we have a problem with the way we designed the code of the method 
+    <span class="java-method">find</span>.
+    So let's go back and reflect on how is the method
+    <span class="java-method">find</span> implemented?
+    Can you see why it gets more expensive as the
+		vocabulary size grows and/or the size of the parsed
+		file grows? 
+		<xfr>
+			Ici, nous avons un problème avec notre algorithme, c'est
+			à dire avec la façon dont nous avons conçu notre code
+			pour la méthode <span class="java-method">find</span>.
+			Donc vous allez revenir sur ce code et comprendre ce
+			qui ne va pas. Il faut comprendre pourquoi le code
+			prends de plus en plus de temps lorsque soit la taille
+			du vocabulaire grossi soit la taille du fichier grossi?
+		</xfr>
+  </p>
+  <p>
+    We hope that you see why. 
+		<xfr>
+			Nous espérons que vous pouvoir voir pourquoi.
+		</xfr>
+	</p>
+	<p>
+		If you do not, well, it is cause for concerns because you should.
+    See, studying performance is an excellent way to check that you
+    are actually understanding what programming is about. Not all code
+    are equal when it comes to execution and performance. There are codes
+    that perform well and others that perform poorly. Both compile.
+    Both execute. Both may be correct in terms of doing the right thing.
+    But some are better than others because they perform better.
+    <xfr>
+      Si vous ne voyez pas, il est probablement temps de vous inquiétez.
+      En fait, l'étude de la performance est un excellent moyen de vérifier
+      vos compétences de développeur. Tous les codes ne sont pas identiques
+      quand il s'agit de la performance de leur exécution. Certains codes
+      sont efficaces, d'autres non. Pourtant, ces codes compilent tous,
+      ils tournent tous, et ils font tous un calcul correct. Mais certains
+      le font mieux que d'autres.
+    </xfr>
+  </p>
+  <p>
+    Why is performance important? Well, aren't you tired of waiting on
+    your machine to do this or that? Well, this is you experiencing poor
+    performance. Better performance may be also important to tackle larger
+    problems. Why is this important? Well, let's discuss a real-life example,
+    weather forecasting. About 20 years ago, we had the programs to forecast
+    the weather 3 days in the future, but it took more than 4 days to compute.
+    See the problem? Of course, we are not saying that the algorithms were
+    poor, the problem was simply too complex to tackle on the machines available
+    20 years ago, but this story illustrate the importance of performance.
+    Today, there are still many software simulation that are
+    limited by performance. If you play games, you know that performance is
+    important because game engines are constantly improving their performance
+    and if it is not enough you are forced to buy faster hardware.
+    This is again about performance:
+    trying to obtain better performance with better software and faster hardware.
+    <xfr>
+      Pourquoi est-ce que la performance est une point important?
+      Et bien, n'êtes vous pas régulièrement frustrés par le fait d'attendre
+      que votre machine fasse ceci ou cela? Et bien c'est un problème de
+      mauvaises performances. Parlons d'un exemple concret que nous connaissons
+      tous: la prévision météorologique. Il y a 20 ans, nous avions déjà les
+      programmes pour calculer le temps qu'il fera dans 3 jours, mais ce
+      programme prenait plus de 4 jours pour s'exécuter. Vous voyez le problème?
+      Nous ne sommes pas en train de dire que le code était mauvais, le taille
+      du problème à résoudre était simplement trop grande pour les machines de
+      l'époque. Mais cette petite histoire montre cependant l'importance des
+      performances. Si vous jouez à des jeux, vous savez que la performance
+      est importante, vous savez que les moteurs de jeux ne cessent de s'améliorer
+      mais que cela n'est pas suffisant parfois et vous devez acheter régulièrement
+      des machines plus puissantes. Tout
+      cela est encore à propos de la performance: améliorer le logiciel et le
+      matériel.
+    </xfr>
+  </p>
+  <p>
+    For some of you, it is important to realize that you are no longer
+    in high school to do just what you asked to do. You are supposed to learn
+    a trade, new skills, a know-how that will allow you perform in your
+    future internships and jobs. This requires you to pay attention to the
+    quality of the code you write and not just trying to code as quickly
+    as possible whatever would compile and pass the required tests. If you
+    recognize yourself in this description, you are wasting your time,
+    you are not really learning, and you are not giving yourself the
+    best chances of long-term success. Something you should reflect upon.
+		<xfr>
+      Pour certains d'entre vous, il est important de réaliser que vous
+      n'étes plus au lycée, suivant des cours parce qu'ils sont obligatoires
+      mais sans trop savoir pourquoi vous les suivez. Vous apprenez un
+      métier maintenant, des nouvelles compétences et savoir-faire
+      qui vous seront nécessaires dans vos stages et votre future métier.
+      Vous devez prêter attention à la qualité du code que vous écrivez
+      et ne pas simplement essayer d'écrire le plus vite possible un
+      code dont le seul but est de passer les tests obligatoires. Si vous
+      vous reconnaissez dans cette description, vous perdez votre temps,
+      vous n'apprenez pas vraiment, et vous ne vous donnez pas les meilleurs
+      chances de succès sur le long terme. C'est peut-être quelque chose
+      sur lequel vous devriez prendre le temps de réfléchir.
+		</xfr>
+	</p>
+	<p>
+		So try again. Go back over the code you wrote. Discuss it
+		with other students or the teaching staff. We are confident
+		that you have the ability to figure out what is happening,
+    if you really try and to really try you have to be convinced
+    it is important, hence the pep talk above.
+		<xfr>
+			Donc essayez encore, relisez le code que vous avez écrit.
+			Discutez votre code avec les autres étudiants et les
+			professeurs. Nous sommes confiant que vous allez y parvenir,
+      si vous êtes motivés, et pour être motivé il faut comprendre
+      pourquoi c'est important, d'où la petite discussion que nous
+      venons d'avoir sur l'attitude à avoir.
+		</xfr>
+	</p>
+
+  <h3> Towards a solution </h3>
+
+	<p>
+    The overhead comes from scaning over and over the array,
+    looking for already encountered words.
+    Indeed, as the vocabulary and the parsed file grow,
+    so does the array of words and the number of times
+    we scan it. The compound effect is not good.
+    <xfr>
+  		Le surcoût vient de 
+  		l'analyse récurrente du tableau, à la recherche de mots
+  		rencontrés. En effet, comme le vocabulaire grossit, le
+  		tableau de mots grossit également, vérifier si un mot
+			existe coûte donc de plus en plus chèr en fonction de la
+			taille du vocabulaire. Aussi, plus le fichier est gros,
+			plus il y a de mot et plus il faut rechercher si un mot
+			est déjà dans le vocabulaire connu. L'effet cumulé n'est
+  		pas bon. 
+		</xfr>
+  </p>
+  <p>
+    So what could we do?
+  </p>
+  <p>
+    We could apply a classical approach to improve performance:
+    <em>divide and conquer</em>. So
+    if we could divide the long array into smaller arrays
+    and if we could only scan one of those smaller arrays,
+    the cost for finding out if a word has been already encountered
+    or not would be much smaller.
+    <xfr>
+		 Nous pourrions appliquer une approche classique pour améliorer
+ 		les performances: <em>divide and conquer</em>.  Si nous pouvons
+ 		diviser le tableau en tableaux plus petits, et si nous pouvons
+ 		analyser un sous-tableau seulement, le coût pour déterminer si
+ 		un mot a déjà été rencontré ou pas serait bien plus petit.
+    </xfr> 
+  </p>
+  <p>
+    Not clear to you?
+  </p>
+  <p>
+    Well, think of a real dictionary.
+    When you search for a word in a paper dictionary (we know
+    you are no longer doing it), do you scan in sequence
+    all the words of
+    the dictionary for a match? Not really, the dictionary is
+    organized in sections of words, words that are all starting
+    with the same letter. This grouping of words allows you
+    to look only at one section when searching for a word.
+    Why? Because you know if the word is not in that section,
+    it is not in the dictionary, and there is no need
+    to go scan the other sections.
+    <xfr>
+		Pensez à un dictionnaire. Quand vous cherchez un mot
+		dans un dictionnaire papier (nous savons, vous n'utilisez
+		plus trop ce genre de choses..), analyser-vous la séquence
+		de tous les mots? Pas vraiment, le dictionnaire est
+		organisé en sections de mots qui commencent tous avec la
+		même lettre. Ce regroupement de mots vous permet
+		de ne considérer qu'une section dans votre recherche.
+		Parce que vou savez que si le mot n'est pas dans cette section,
+		il n'est pas dans le dictionnaire.
+    </xfr> 
+  </p>
+  <p>
+    In the next steps of this task, we will use the same idea
+    to organize our vocabulary, speeding up the whole process.
+    First, we will code a class 
+    <span class="java-class">Bucket</span> that will be used
+    to group words that are alike (like a section of a dictionary).
+    Second, we will use that class
+    <span class="java-class">Bucket</span>
+    in our class
+    <span class="java-class">Vocabulary</span> to group
+    words and speedup the lookup process of a given word.
+  </p>
+
+  <h4>That's all folks</h4>
+  <p>
+    Please make sure that you commit and push your work to our server.
+  </p>
+  <textarea class="terminal" rows="5" width="60%" >
+    $ git add --all
+    $ git commit -m "Sprint word.count, Task4, Step1 completed"
+    $ git push --all
+  </textarea>
+</div>

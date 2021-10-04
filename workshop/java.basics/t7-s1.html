@@ -1,0 +1,137 @@
+<vars>
+  sprint=java.basics
+  task=t7
+  step=t7-s1
+</vars>
+
+<p>
+  The code is in the <em>step7</em> source folder.
+  First, you will browse the code to understand it.
+  Since it is based on classes that you studied
+  earlier during the previous tasks, it should be
+  <em>a walk in the park, not mission impossible</em>.
+  <xfr>
+	Le code à considérer est dans le source folder <em>step7</em>.
+	Premièrement, vous allez parcourir ce code pour le comprendre.
+	Puisqu'il est basé sur des classes que vous avez étudiées
+	précédemment, cela devrait être simple pour vous.
+  </xfr>
+</p>
+<p>
+  You can ignore the class <span class="java-class">GUI</span>,
+  which would be <em>mission difficult</em> for you at this stage.
+</p>
+<p>
+  Once you feel comfortable with the code, you will
+  instrument it with counters, so that you can
+  evaluate the behavior of the code
+  when executed. We will be looking at performance
+  mostly, always keeping in mind correctness.
+  Indeed, improving performance is only interesting
+  as long as the program keeps doing what it is supposed
+  to do.
+  <xfr>
+	Une fois que vous avez compris le code, vous allez l'instrumenter
+	avec des compteurs, de manière à évaluer ses performances.
+	Nous allons essayer d'améliorer les performances tout
+	en ayant en tête de conserver la correction du code.
+	Améliorer les performances n'est intéressant qu'à cette
+	condition..
+  </xfr>
+</p>
+<p>
+  Imagine driving a fast car. It is fun, exhilirating.
+  But if it has no breaks, the fun will stop at the first
+  curve. Fast and incorrect only means you will get faster
+  to a memorable crash. Not a good goal for developers.
+  So improve performance, sure, but always make sure the
+  optimized program is still correct.
+  <xfr>
+	Imaginez conduire une voiture à grande vitesse. C'est grisant, mais
+	si la voiture n'a pas de freins.. Des programmes rapides mais
+	incorrects amèneront toujours à un crash mémorable.
+	Donc attention, améliorez les performances, mais en étant sûrs
+	de conserver la correction du programme.
+  </xfr>
+</p>
+<p>
+  The code we gave you runs until you stop it. It loops over
+  a very basic behavior. It creates a circle,
+  represented as a polygon with only four points.
+  Over time, the number of points is incremented
+  so to produce a smoother circle, up to a certain limit.
+  When that limit is reached, it starts all over again.
+  The Graphical User Interface simply renders the
+  circle, as it grows smoother and smoother.
+  <xfr>
+	Le code que nous vous avons donné s'exécute jusqu'à ce que vous le
+	stoppiez. Il crée un cercle, représenté par un polygone avec 
+	seulement quatre points. Au fil du temps, le nombre de points est
+	incrémenté de manière à produire un cercle plus régulier,
+	jusqu'à une certaine limite.
+	Quand cette limite est atteinte, tout recommence.
+	L'interface graphique (GUI) affiche le cercle, montrant son 
+	évolution.
+  </xfr>
+</p>
+<p>
+  Launch the execution and enjoy.
+  See circles getting smoother as they are represented with more
+  and more lines. Look at the top of the window, you are given
+  the number of points in the polygon.
+  This is a well-know technique to represent curves and surfaces
+  in graphic programs. The more points, the more
+  expensive it is to manage geometrical shapes,
+  but the smoother the graphics.
+  <xfr>
+	Lancez l'exécution et appréciez.
+	Voyez les cercles devenir plus réguliers. Regardez au sommet de la
+	fenêtre, vous voyez le nombre de points du polygone.
+	Ceci est une technique bien connue pour représenter des courbes
+	et des surfaces dans les programmes graphiques.
+	Plus il y a de points, plus les formes sont chères à gérer,
+	mais plus les graphiques sont précis et réguliers.
+  </xfr>
+</p>
+<!--
+<quizz name="java.basics.t7.q1" >
+  <question >
+    <p>
+      Maximum number of points used in polygons?
+    </p>
+    <checkboxes>
+      <checkbox>64</checkbox>
+      <checkbox>128</checkbox>
+      <checkbox>256</checkbox>
+      <checkbox>512</checkbox>
+    </checkboxes>
+    <hints>
+      <hint checks="???U">
+	The number of points is printed at the top of the window.
+      </hint>
+    </hints>
+    <answers>
+      <answer checks="UUUC">
+	Indeed.
+      </answer>
+    </answers>
+    <finally>
+    </finally>
+  </question>
+  <unfold name="quizz1_next" >
+  </unfold>
+</quizz>
+<div name="quizz1_next" style="display: none">
+</div>
+-->
+<p>
+  Now it is time to put performance counters in place
+  to further understand how the code executes.
+  This will be the next step.
+  <xfr>
+	 	Maintenant il est temps de placer des compteurs de performances
+	 	pour mieux comprendre comment le code s'exécute. Cela va être la
+	 	prochaine étape.
+  </xfr>
+</p>
+

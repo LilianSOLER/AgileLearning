@@ -1,0 +1,497 @@
+<vars>
+  sprint=java.basics
+  task=t3
+</vars>
+<p>
+  This task explores the concept of static fields and methods
+  and how they differ from regular fields and methods. You have
+  already encountered static methods, the methods
+  <span class="java-method">main</span> in our previous
+  tasks, but we never really discussed what that
+  qualifier <span class="java-keyword">static</span>
+  meant. We also encountered static fields, when we
+  did our first games.
+  <xfr>
+    Cette tâche explore les concepts de champs statiques
+    et de méthodes statiques. Le concept n'est pas nouveau,
+    vous en avez déjà rencontrés, nous n'avions que partiellement
+    expliqué le concept.
+  </xfr>
+</p>
+<p>
+  With object-oriented programming, classes and objects
+  are the two concepts at the center of the programming
+  paradigm. As we already discussed, a class defines
+  both fields and methods. The fields are found in
+  each object, instance of that class.
+  The methods can be invoked on each object,
+  instance of that class.
+  There is just no concept of static methods or static
+  fields in regular object-oriented programming.
+  <xfr>
+    Les concepts de classe et object sont les pilliers de la
+    programmation orientée-objet. Comme nous l'avons vu,
+    une classe définie à la fois des champs et des méthodes.
+    Les champs sont ceux que posséderont ses instances,
+    les objets qu'elle aura crée par l'opérateur
+    <span class="java-keyword">new</span>.
+    Les méthodes peuvent être invoquées sur une instance
+    de cette classe. Dans le paradigme usuel objet, il
+    n'y a pas le concept de méthodes ou champs statique.
+  </xfr>
+</p>
+<p>
+  The concept of static methods and fields is specific
+  to the Java programming language. In some sense,
+  static fields and methods are closer to global variables
+  and functions than they are related to objects.
+  In fact, static fields and methods are not related
+  to any objects. Static fields and methods are defined
+  on the class, but they do not apply to the objects
+  that are instances of that class.
+  <xfr>
+    Le concept de champs et de méthodes statiques
+    est un choix spécifique au langage Java.
+    Les champs statiques sont en fait des variables globales.
+    Les méthodes statiques sont en des fonctions, comme
+    dans le langage de programmation C. En effet, les
+    champs statiques ne font pas parti de la structure des
+    instances de la classe, ils ne sont pas présent dans
+    les instances de la classe. Les méthodes statiques
+    ne font pas parties du comportement, elles
+    ne peuvent pas être invoquées sur les instances de la
+    classe.
+  </xfr>
+</p>
+
+<h3>Static Methods</h3>
+
+<p>
+  Static methods are defined on classes and
+  qualified with the <span class="java-keyword">static</span>
+  keyword. But the distinction from regular methods
+  is much more important than just a mere qualifier
+  would suggest.
+  <xfr>
+    Les méthodes statiques sont définies sur les classes
+    avec le qualifieur <span class="java-keyword">static</span>.
+    Mais la différence avec les autres méthodes est importante.
+  </xfr>
+</p>
+<p>
+  The most important difference is that a static method
+  has no receiver. In other words, a static method is not
+  invoked on an object, like a regular method. Therefore,
+  a static method does not have a built-in variable called
+  <span class="java-lvar">this</span>. In that sense, a
+  static method is really a function, like a function
+  in the C programming language or JavaScript.
+  <xfr>
+    La différence essentielle est qu'une méthode statique
+    n'a pas de receveur. En d'autres termes, elle n'est pas
+    invoqué sur un objet, comme les autres méthodes.
+    En conséquence, les méthodes statiques n'ont pas de	    
+    variable <span class="java-lvar">this</span>.
+    De fait, une méthode statique est plus une fonction
+    qu'une méthode, fonction au sens d'autres langages
+    de programmation tels que le C ou JavaScript.
+  </xfr>
+</p>
+<p>
+  Look at the <span class="java-method">main</span>
+  methods we encountered so far, none used
+  <span class="java-lvar">this</span>. Try and
+  the Java compiler will complain. Let's go back
+  to our HelloWorld program. 
+</p>
+<pre class="prettyprint lang-java">
+  public class HelloWorld {
+    public static void main(String[] args) {
+      System.out.println("Hello World!");
+      return;
+    }
+  }
+</pre>
+<p>
+  As you can see, we do not create any object.
+  Let's try to rewrite the code, using a static
+  method. 
+</p>
+<pre class="prettyprint lang-java">
+  public class HelloWorld {
+    public static void main(String[] args) {
+      say("Hello World!");
+      return;
+    }
+    static void say(String msg) {
+      System.out.println(msg);
+      return;
+    }
+  }
+</pre>
+<p>
+  See, we really have a function, called
+  <span class="java-method">HelloWorld.main</span>, calling
+  another function, called
+  <span class="java-method">HelloWorld.say</span>.
+  In fact, you can call
+  static methods across different classes using exactly that syntax.
+</p>
+<pre class="prettyprint lang-java">
+  public class HelloWorld {
+    public static void main(String[] args) {
+      Speaker.say("Hello World!");
+      return;
+    }
+  }
+  public class Speaker {
+    public static void say(String msg) {
+      System.out.println(msg);
+      return;
+    }
+  }
+</pre>
+<p>
+  And of course, if you involve packages, the actual name
+  gets longer, as the real name of a class includes the
+  name of its package. 
+</p>
+<pre class="prettyprint lang-java">
+  public class HelloWorld {
+    public static void main(String[] args) {
+      edu.common.Speaker.say("Hello World!");
+      return;
+    }
+  }
+  package edu.common;
+  public class Speaker {
+    static void say(String msg) {
+      System.out.println(msg);
+      return;
+    }
+  }
+</pre>
+<p>
+  Although static methods are more functions than methods,
+  it does not mean that they are not sometimes very usefull.
+  Nevertheless, we suggest that you
+  refrain as much as possible from using them. The more you use
+  static methods, the less likely you will ever understand and
+  master object-oriented programming. So say that static
+  methods are evil and adopting them is to turn to the dark
+  side. And remember, <em>Yoda</em> is right,
+  <em>"fear the dark side"</em>.
+  <xfr>
+    Bien que lesméthodes statiques puissent être utiles,
+    nous vous recommandons d'éviter de les utiliser.
+    Pour bien comprendre la programmation orientée objet,
+    il est important de se focaliser sur les méthodes
+    du comportement des objets et non pas sur les
+    méthodes statiques.
+  </xfr>
+</p>
+<p>
+  But one needs to know the dark side to avoid it.
+  So look at the class <span class="java-class">Operations</span> below.
+  It defines a static method <span class="java-method">translate</span>,
+  it is therefore a function rather than a method.
+</p>
+<pre class="prettyprint lang-java">
+  class Operations {
+    static void translate(Point self, int dx, int dy, int dz) {
+      self.x += dx;
+      self.y += dy;
+      self.z += dz;
+    }
+  }
+</pre>
+<p>
+  See how we are forced to pass an object explicitly, as there is no
+  built-in variable <span class="java-arg">this</span>. To have a
+  point object to work with, we have to explicitly add an argument
+  <span class="java-arg">self</span>.
+  Look below at how to use a static method:
+</p>
+<pre class="prettyprint lang-java">
+  static public void main(String args[]) {
+    Point p = new Point();
+    Operations.translate(p,5,10,3);
+  }
+</pre>
+<p>
+  Now compare the code snippet above with the one below,
+  showing you how to use the real method <span class="java-method">translate</span>
+  defined on the class <span class="java-class">Point</span>:
+</p>
+<pre class="prettyprint lang-java">
+  static public void main(String args[]) {
+    Point p = new Point();
+    p.translate(5,10,3);
+  }
+</pre>
+<p>
+  Now you know one of the main differences between a method and a function,
+  there are others as we will discover throughout this workshop, but this
+  is the most fundamental difference: the receiver.
+  Remember, static methods are evil, they are functions disguised as
+  methods, they intent to trap your mind in function-oriented programming
+  forever, never letting you see the light and power of object-oriented
+  programming. As Morpheus would say: <em>"Free you mind, Neo"</em>.
+  <xfr>
+   Maintenant vous savez l'une des différences majeures entre une
+   méthode et une fonction: le receveur. Il y en a d'autres que nous découvrirons
+   à travers ce workshop. rappelez-vous, les méthodes statiques sont
+   à proscrire, elles sont des fonctions déguisées en méthodes, elles
+   vous maintiennent dans une vision orientée-fonction et non orientée-objet.
+  </xfr>
+</p>
+<p>
+  To sum up, functions are methods that are
+  declared <span class="java-keyword">static</span>,
+  they are <b>not</b> invoked on an object,
+  they do <b>not</b> have the built-in variable <span class="java-lvar">this</span>.
+  Because they are declared static in Java, functions are often called
+  static methods, but this is a misnomer.
+  Sometimes, static methods are called class methods, because they are
+  defined as part of a class. But this is even worse.
+  Let people call them what they want, just remember, they are global functions,
+  not methods applied on an object. And do not use them unless you really have to.
+  <xfr>
+    Pour résumer, les fonctions sont des méthodes qui sont
+    déclarées avec <span class="java-keyword">static</span>.
+    Elles ne sont pas invoquées sur un objet, elles n'ont pas
+    de variable <span class="java-lvar">this</span>.
+    Ces fonctions ne sont pas appelés fonctions en Java,
+    elles sont appelées méthodes, mais c'est un abus de langage.
+    Parfois, elles sont appelées méthodes de classe, mais c'est
+    encore pire. Qu'importe le nom, rappelez vous que
+    les méthodes statiques sont des fonctions. Rappelez vous
+    aussi d'éviter de les utiliser, sans dans quelques cas
+    particulier que nous verrons.
+  </xfr>
+</p>
+
+<h3> Static fields </h3>
+
+<p>
+  Static fields are another path to the dark side, they are global variables
+  in disguise. If you have coded before in other programming languages,
+  you already have been warned about the dangers of using global variables.
+  You may have been burned using them.
+  But let's be honest, everybody criticize global variables, but
+  sometimes, they are usefull and even unavoidable.
+  But always refrain to use them as much as you can.
+  <xfr>
+    Les champs statiques sont des variables globales. Si vous avez déjà
+    programmé dans d'autres langages, vous avez déjà été prévenu des
+    dangers potentiels des variables globales. Mais soyons honnêtes,
+    tout le monde critique les variables globales mais elles sont souvent
+    utiles et même parfois indispensable. Mais quand même, évitez de
+    les utiliser.
+  </xfr>
+</p>
+<p>
+  We have seen one common use of a static variable since the beginning,
+  with the use of System.out.
+</p>
+<pre class="prettyprint lang-java">
+  static public void main(String args[]) {
+    System.out.println("Hello World!");
+  }
+</pre>
+<p>
+  The class <span class="java-class">System</span> represents your system, that is,
+  the underlying operating system on which your program runs.
+  As any program that runs on an operating system,
+  your program gets the ability to interact with its environment
+  through various character streams. These are the well-know
+  standard input, output, and error streams.
+  In C, they are called stdin, stdout, stderr.
+  <xfr>
+    La classe <span class="java-class">System</span>
+    représente le système, c'est à dire le système d'expoitation sous-jacent à
+    la plateform Java. Comme tout programme, vos programmes Java ont la possibilité
+    d'interagir avec leur environment. En particulier, vous avez accès à plusieurs
+    flux de caractères, dont les fameux flux standards (in, out, et err). En C,
+    ils s'appellent stdin, stdout, et stderr.
+  </xfr>
+</p>
+<p>
+  These streams are global objects, so Java decided to use three static fields
+  in the class <span class="java-class">System</span>. 
+  This is how the HelloWorld program actually printed out the string
+  <em>"Hello World!"</em>. In this case, the static field
+  <span class="java-field">in</span> in the class
+  <span class="java-class">System</span> is a reference field.
+  But of course, a static field can be of any primitive type as well,
+  for instance it can be an integer value or a float value.
+  <xfr>
+   	Ces flots sont des objets globaux, donc Java a décidé d'utiliser trois
+   	champs statiques dans la classe <span class="java-class">System</span>. 
+   	C'est comme cela que le programme HelloWorld a affiché la chaine
+   	<em>"Hello World!"</em>. dans le cas présent, le champ statique
+   	<span class="java-field">in</span> dans la classe
+   	<span class="java-class">System</span> est un champ de type référence.
+   	Mais bien sûr, un champ statique peut être de type primitif,
+	comme par exemple un entier ou un réel.
+  </xfr>
+</p>
+<p>
+  Notice that naming convention for accessing fields is the same
+  convention that was used to call static methods.
+</p>
+
+<h3>The Dark Side</h3>
+
+<p>
+  Let's look at code written with static methods and fields.
+  Look at the code in the <em>step3</em> source folder.
+  We just took some earlier code, about points and lines,
+  and used only static methods and fields. As you can
+  see, it is possible.
+  <xfr>
+   Regardons le code écrit avec les méthodes et champs statiques.
+   regardez le code dans le folder source <em>step3</em> .
+   Nous avons juste repris du code précédent, sur les lignes et 
+   les points, et utilisé seulement des méthodes et des champs
+   statiques. Comme vous voyez, cela est possible.
+  </xfr>
+</p>
+<p>
+  Launch the execution, under debugger, with a breakpoint
+  in the method <span class="java-class">main</span>
+  on the class <span class="java-class">JavaBasicsStep3</span>. 
+  Do you notice something as you single step with <b>F6</b>?
+  Look at the <em>Variables</em> view...
+  <xfr>
+    Lancez l'exécution, sous debug, avec un breakpoint
+  	dans la méthode <span class="java-class">main</span>
+  	de la classe <span class="java-class">JavaBasicsStep3</span>. 
+  	Remarquez-vous quelquechose de particulier quand vous allez en pas à pas <b>F6</b>?
+  	Regardez la vue <em>Variables</em> ...
+  </xfr>
+</p>
+<p>
+  Indeed, there is nothing there. As you can see, Eclipse
+  developers are not really expecting you to use static
+  methods and fields only. You can coerce the debugger
+  to show you static fields:
+</p>
+<img src="images/eclipse-variables-show-static.png" width="60%" />
+<p>
+  As you can see, in the screen capture above, Eclipse
+  is showing the static variables. To get that, click
+  on the triangular drop-down icon on the upper left-hand-side
+  corner, select <em>Java</em> and then <em>Show Static Variables</em>.
+  But again, we ask you to refrain from using static fields and methods
+  as much as you can.
+  <xfr>
+ 	Comme vous pouvez le voir, dans la capture d'écran ci-dessus, Eclipse
+ 	montre les variables statiques. Pour obtenir cela, cliquez sur l'icone
+ 	triangulaire sur le "left-hand-side" coin de votre fenêtre, sélectionnez 
+ 	<em>Java</em> puis <em>Show Static Variables</em>.
+ 	Mais à nouveau, nous vous demandons de vous freiner dans l'usage des 
+ 	variables et méthodes statiques, au maximum de ce que vous pouvez.
+  </xfr>
+</p>
+
+<quizz ntries="0" name="java.basics.t3.q1" >
+  <question>
+    <div>
+      <pre class="prettyprint lang-java">
+  class Foo {
+    static int s;
+    int f;
+    static void foo() {
+      s = f;
+    }
+    static void bar(Foo f) {
+      s = f.f;
+    }
+  }
+      </pre>
+      <p>
+	Can the method <span class="java-method">foo</span> access the field
+	<span class="java-field">s</span>?
+      </p>
+    </div>
+    <checkboxes>
+      <checkbox>Yes</checkbox>
+      <checkbox>No</checkbox>
+    </checkboxes>
+    <hints>
+      <hint checks="?C">
+	Really? A static method could not access a static field?
+      </hint>
+    </hints>
+    <answers>
+      <answer checks="CU">
+	Absolutely.
+      </answer>
+    </answers>
+    <finally>
+      <b>Please ask for help</b>.
+    </finally>
+  </question>
+  <question>
+    <p>
+      Can the method <span class="java-method">foo</span> access the field
+      <span class="java-field">f</span>?
+    </p>
+    <checkboxes>
+      <checkbox>Yes</checkbox>
+      <checkbox>No</checkbox>
+    </checkboxes>
+    <hints>
+      <hint checks="C?">
+	Really? A static method could access a non-static field?
+      </hint>
+    </hints>
+    <answers>
+      <answer checks="UC">
+	Absolutely.
+      </answer>
+    </answers>
+    <finally>
+      <b>Please ask for help</b>.
+    </finally>
+  </question>
+  <question>
+    <p>
+      Can the method <span class="java-method">bar</span> access the field
+      <span class="java-field">f</span>?
+    </p>
+    <checkboxes>
+      <checkbox>Yes</checkbox>
+      <checkbox>No</checkbox>
+    </checkboxes>
+    <hints>
+      <hint checks="?C">
+	Really? Why not? The field <span class="java-field">f</span>
+	is accessible since it is through an object reference.
+      </hint>
+    </hints>
+    <answers>
+      <answer checks="CU">
+	Absolutely.
+      </answer>
+    </answers>
+    <finally>
+      <b>Please ask for help</b>.
+    </finally>
+  </question>
+  <unfold name="quizz1_next">
+  </unfold>
+</quizz>	
+<div name="quizz1_next" style="display: none">
+  <p>
+    That's all folks for this task.
+    Please make sure that you commit and push your work to our server.
+    Let us remind you how:
+  </p>
+  <textarea class="terminal" rows="5" width="60%" >
+    $ git add --all
+    $ git commit -a -m "Sprint java.basics, task3 completed"
+    $ git push --all
+  </textarea>
+</div>

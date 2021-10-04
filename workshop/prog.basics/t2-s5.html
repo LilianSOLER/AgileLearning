@@ -1,0 +1,1198 @@
+<vars>
+  sprint=prog.basics
+  task=t2
+  step=t2-s5
+</vars>
+
+<p>
+  This part two introduces important
+  concepts about objects.
+  We will keep it as simple as possible, but it is
+  important that you understand these concepts. So take your time
+  and ask around for help.
+  What are we trying to do?
+  <xfr>
+    Cette étape introduit des concepts importants à propos des objets.
+    Nous allons essayer de rester simple, mais il est crucial que
+    vous compreniez ces concepts. Donc prenez votre temps
+    et demandez de l'aide si besoin. 
+    Qu'essayons-nous de faire?
+  </xfr>
+  
+</p>
+<p>
+ Well, we want to finish the
+  implementation of our
+  class <span class="java-class">HalGreetings</span>.
+  Remember that we didn't implement the method
+  <span class="java-method">readFullName</span>.
+  We just crafted some code, so that we can execute
+  the rest of the program.
+  But we were not reading the actual user name from
+  the keyboard.
+  <xfr>
+    Nous voulons finir l'implémentation de notre classe
+    <span class="java-class">HalGreetings</span>.
+  	Rappelez-vous, nous n'avons pas implémenté la méthode
+  	<span class="java-method">readFullName</span>.
+  	Nous avons juste esquissé du code, de manière à pouvoir exécuter 
+ 	le reste du programme.
+  	Mais nous ne lisons pas, pour l'instant, le nom
+  	de l'utilisateur depuis le clavier.
+  </xfr>
+</p>
+<p>
+  Unfortunately, reading what a user types on the keyboard
+  is not as easy as printing on the
+  screen. In fact, it uses a lot of advanced concepts
+  that are completely out of reach for now, with the
+  skills we have in Java. But this is where object-oriented
+  programming is great, you can use advanced functionality
+  without understanding the details.
+  <xfr>
+    Malheureusement, lire ce qu'un utilisateur tape au clavier
+    n'est pas aussi évident qu'écrire à l'écran. En fait, cela 
+    utilise beaucoup de concepts qui ne sont pas compréhensibles
+    pour l'instant. Mais grâce aux capacités de la programmation
+    objet, vous pouvez utiliser des fonctionnalités avancées 
+    sans en comprendre les détails.
+  </xfr>
+</p>
+<p>
+  How? Well, if you have an object, you have an entity that
+  knows how to do some stuff. That means that you can ask that
+  object for a service and it will do it for you. Even better, 
+  you do not have to know how it does it, you will just enjoy
+  the end result. Just like in real life, you can ask someone
+  a favor and you do not need to know how he or she does it.
+  <xfr>
+   Si vous avez un objet, vous avez une entité qui sait comment
+   réaliser certaines tâches (ou services). cela signifie que vous pouvez
+   demander à cet objet de réaliser un service particulier, et il va le 
+   faire. Vous n'avez même pas à savoir comment il le réalise, vous
+   allez juste connaître le résultat du service. Un peu comme
+   dansla vie réelle, vous pouvez demander un quelqu'un un service
+   mais vous n'avez pas besoin de savoir comment il va s'y prendre.
+  </xfr>
+</p>
+<p>
+  The best analogy is with an auto repair shop. If you know
+  a mechanic, you can ask him to fix your car. You don't know
+  how he does it, you don't even know how your car is designed internally.
+  You just have a car, you know a mechanic, and you can ask the
+  mechanic to fix your car when it is broken.
+  <xfr>
+   La meilleur analogie est celle d'un garage automobile. Si vous
+   connaissez un mécanicien, vous pouvez lui demander de réparer
+   votre voiture. Vous ne savez pas comment il fait, vous
+   ne savez pas non plus comment fonctionne votre voiture sous le 
+   capot, vous connaissez juste un mécanicien et vous lui
+   demandez un service.
+  </xfr>
+</p>
+<p>
+  In Java parlance, you would have two objects, one for your car
+  and one for your mechanic. You can ask your "mechanic" object
+  to fix your "car" object. So you could write something like this:
+  <xfr>
+   Dans la parlance Java, vous auriez deux objets, l'un représentant 
+   votre voiture et l'autre représentant le mécanicien. Vous pouvez
+   demander à l'objet "mécanicien" de réparer l'objet "voiture",
+   en écrivant quelque chose comme:
+  </xfr>
+</p>
+
+<pre class="prettyprint lang-java">
+  Mechanic m = new Mechanic();
+  Car c = new Car();
+  if (c.isBroken())
+    m.fixCar(c);
+  c.startEngine();
+</pre>
+<p>
+  In this simple example, in the first two lines,
+  you create a mechanic and you create a car.
+  Convenient, right?
+  Objects are like that, easy to create.
+  Then, you ask the car object if it is broken or not, via the method
+  <span class="java-method">boolean isBroken()</span> that
+  returns true if broken and false if not. If broken, you
+  ask your mechanic object to fix a car. Which car?
+  The car object passed as an argument to his method
+  <span class="java-method">void fixCar(Car c)</span>.
+  <xfr>
+   	Dans cet exemple simple, dans les deux premières lignes,
+   	vous créer un objet mécanicien et vous créez un objet voiture.
+   	Puis vous interrogez l'objet voiture pour savoir s'il est
+   	cassé, via la méthode
+  	<span class="java-method">boolean isBroken()</span>. Si c'est le cas, 
+  	vous demandez à l'objet "mécanicien" de réparer la voiture,
+  	via la méthode  <span class="java-method">void fixCar(Car c)</span>,
+  	en passant l'objet voiture en argument.
+  </xfr>
+</p>
+<p>
+  This is what is great with objects. Objects are like real life
+  entities. They have a behavior, that is, they have methods that
+  represent what they know how to do. You can invoke those methods,
+  providing arguments to operate on, often objects or primitive values
+  such as integers or real numbers. 
+  Where do you find these methods?
+  <xfr>
+   C'est ce qui est génial avec les objets. Ils sont comme dans la vraie
+   vie. Ils ont un comportement, c'est à dire, ils ont des méthodes
+   qui représentent ce qu'ils sont capables de faire. Vous pouvez invoquer
+   ces méthodes, en fournissant les arguments attendus, souvent des
+   objets ou des valeurs numériques comme des entiers ou des réels.
+  </xfr>
+</p>
+<p>
+  An object is an instance of a class and the class describes the
+  object. In other words, you create an object from a class,
+  like above with the <em>new Mechancic()</em> or
+  <em>new Car()</em> statements where
+  <span class="java-class">Mechanic</span> 
+  and
+  <span class="java-class">Car</span>
+  are classes. 
+  For instance, the class <span class="java-class">Car</span> would define
+  the methods available on cars, since car objects are
+  instances of the class <span class="java-class">Car</span>.
+  <xfr>
+   	Un objet est une instance d'une classe et la classe décrit 
+   	comment est structuré l'objet. Autrement dit, vous créez un objet
+   	depuis une classe, comme ci-après avec l'instruction
+    <em>new Mechancic()</em> or
+  	<em>new Car()</em>  où
+  	<span class="java-class">Mechanic</span> et
+  	<span class="java-class">Car</span>
+  	sont des classes. 
+  	Par exemple, la clases <span class="java-class">Car</span> définit
+  	les méthodes disponibles sur les voitures.
+  </xfr>
+</p>
+<p>
+  Again, the concept of objects and classes do exist in real life.
+  You have classes for many things, like students, mammals, or cars.
+  You know what mammals are and what they can do because they are mammals.
+  A mammal is a class of animals that share characteristics, similar
+  properties and behaviors. A class in object-oriented programming is
+  the same, it describes a class of objects with similar properties
+  and behaviors. See, as humans, we have used classes to describe
+  entities forever. The original designers
+  of object-oriented programming languages got inspired by that
+  and reused the approach.
+  <xfr>
+  	A nouveau, les concepts d'objet et de classe existent dans la vie réelle.
+  	Vous avez des classes pour beaucoup de choses, telles que les
+  	étudiants, mammifères, voitures..
+  	Vous savez ce qu'un mammifère est et peut faire. Pourquoi?
+    Parce la classe mammifère décrit des animaux qui ont des propriétés
+    et des comportements similaires.
+  	Les hommes utilisent les classes pour décrire des entités depuis 
+  	tout temps.
+  	Les concepteurs des langages de programmation orientés
+  	objets s'en sont inspirés.
+  </xfr>
+</p>
+<p>
+  With that in mind, let's
+  look at the code of our method
+  <span class="java-method">readFullName</span>.
+</p>
+
+<h4>A first version </h4>
+
+<p>
+  Here is a first version of the method
+  <span class="java-method">readFullName</span>.
+</p>
+<pre class="prettyprint lang-java">
+ public static String[] readFullName() {
+	InputStreamReader r = new InputStreamReader(System.in);
+ 	BufferedReader br = new BufferedReader(r);
+	String line = br.readLine();
+	int index = line.indexOf(' ');
+	String[] names;
+	names = new String[2];
+ 	names[0] = line.substring(0, index);
+ 	names[1] = line.substring(index);
+ 	return names;
+ }
+</pre>
+<p>
+  The object referenced by the
+  variable <span class="java-lvar">System.in</span> is the
+  standard input stream of your program. What is that? It is
+  more or less the stream of characters that the user types on
+  the keyboard. So if you type the keys "abcd" on your keyboard,
+  once you are running your program, 
+  that stream will produce the corresponding sequence of
+  characters 'a', 'b', 'c', and 'd', as you type them on the
+  keyboard.
+  <xfr>
+ 	  L'objet référencé par la variable <span class="java-lvar">System.in</span> 
+ 	  est le "standard input stream (stdin)", c'est à dire le flot d'entrée 
+ 	  standard de votre programme. Cela signifie que c'est le flot
+ 	  de caractères que l'utilisateur tape au clavier. Si vous
+ 	  tapez "abcd" sur votre clavier, quand vous exécutez votre
+ 	  programme, stdin va produire la séquence correspondante
+ 	  de caractères 'a', 'b', 'c', et 'd' au fur et à mesure
+    que vous les tapez sur le clavier.
+  </xfr>
+</p>
+<p>
+  To read from that standard input stream,
+  we create another object, a reader,
+  that is, an object who
+  knows how to read the characters as they are typed in.
+  Then we create another
+  object, a buffered reader that allows us to read lines
+  rather than individual characters. It is called a
+  buffered reader because it can buffer characters typed
+  by the user until a full line has been typed. A line is a sequence
+  of characters that ends with the hit of the "enter" key on the keyboard.
+  <xfr>
+ 	Pour lire depuis le flot stdin, nous créons un objet dédié
+ 	qui sait comment lire les caractères qui sont tapés.
+ 	Puis nous créons encore un autre objet (appelé 
+ 	buffered reader) qui nous permet
+ 	de lire des lignes plutôt que des caractères.
+ 	Cet autre objet est capable de bufferiser (mémoriser)
+ 	les caractères tapés jusqu'à ce qu'un caractère de fin de
+ 	ligne soit tapé.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+ 2  InputStreamReader r = new InputStreamReader(System.in);
+ 3  BufferedReader br = new BufferedReader(r);
+ 4  String line = br.readLine();
+</pre>
+<p>
+  So you see, in the snippet above,
+  all we do is creating objects that will
+  be able to help us reading what the user will type on his keyboard.
+  Once he or she will have typed a full line, ended with pressing "enter",
+  our code will get all the characters in a string.
+  That string will be referenced
+  from the variable
+  <span class="java-lvar">line</span>.
+  <xfr>
+ 	Donc vous allez voir, dans l'exemple ci-apr§s, tout ce que nous faisons
+ 	est de créer des objets qui vont nous permettre de lire ce que l'utilisateur
+ 	tape au clavier.
+ 	Une fois qu'il/elle a tapé une ligne complète, terminée avec "enter",
+ 	notre code va récupérer tous les caractères dans une chaine, 
+ 	référencée depuis la variable  <span class="java-lvar">line</span>.
+  </xfr>
+</p>
+<p>
+  So if the user types in "Albert Einstein", the string object
+  referenced from the variable
+  <span class="java-lvar">line</span> would be "Albert Einstein".
+  Then, what do we need to do?
+  we need to divide that string into the first and last name
+  of the user. This is what the following lines do:
+  <xfr>
+  	Donc si l'utilisateur tape "Albert Einstein", l'objet chaine
+  	référencé depuis la variable
+  	<span class="java-lvar">line</span> aura pour valeur "Albert Einstein".
+  	Donc que devons nous faire?
+  	Nous devons séparer cette chaine en un nom et prénom. C'est ce que 
+  	font les lignes suivantes:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+5  int index = line.indexOf(' ');
+6  String[] names;
+7  names = new String[2];
+8  names[0] = line.substring(0, index);
+9  names[1] = line.substring(index);
+</pre>
+<p>
+  It is almost plain english, so it is pretty easy to read.
+  Line 5, we ask the string object referenced by the variable
+  <span class="java-lvar">line</span> to search for the
+  first character that is a space (' ') and to tell us
+  its index in the string.
+  <xfr>
+  	Ligne 5, nous demandons à l'objet chaine référencé par la
+  	variable <span class="java-lvar">line</span> de chercher
+  	le premier caractère ' ' et de nous donner son index.
+  </xfr>
+</p>
+<p>
+  Line 7, we are creating a new array with a length of two.
+  One element of that array will be the last name, the other element
+  will be the first name.
+  <xfr>
+  	Ligne 7, nous créons un tableau avec une longueur de deux.
+  	Le premier élément sera le nom, le deuxième le prénom.
+  </xfr>
+</p>
+<p>
+  Line 8, we are again asking the string object referenced
+  by the variable 
+  <span class="java-lvar">line</span> to do something for us.
+  We are asking to create the substring, starting at the first character
+  and including all characters 
+  until the given index, that is, until the first occurence of
+  the space character (' ').
+  <xfr>
+  	Ligne 8, nous demandons à l'objet chaîne
+  	référencé par la variable <span class="java-lvar">line</span>
+  	de renvoyer la sous-chaine allant du premier caractère
+  	à l'index du premier caractère ' '.
+  </xfr>
+</p>
+<p>
+  Line 9, we are asking this time for a new string representing
+  the remaining of the line.
+</p>
+<p>
+  Assuming that the user typed in
+  "Albert Einstein", the string object
+  referenced from the variable
+  <span class="java-lvar">line</span> would be "Albert Einstein".
+  Therefore, the string object referenced by the first
+  element of the array (names[0]) would be a string object
+  whose value is "Albert". The
+  second element would reference the string object whose
+  value is "Einstein".
+  <xfr>
+  	Supposant que l'utilisateur a tapé "Albert Einstein", l'objet chaine
+  	référencé par la variable
+  	<span class="java-lvar">line</span> sera "Albert Einstein".
+  	Donc, le premier élément du tableau est la chaine "Albert"
+  	et le deuxième la chaine "Einstein".
+  </xfr>
+</p>
+
+<h4>Trying it out</h4>
+
+<p>
+  So go ahead, cut and paste the code above in the body of the
+  method
+  <span class="java-method">readFullName</span>. Oops... it does
+  not compile, does it?
+  <xfr>
+  	Continuez, coupez et collez le code ci-dessus dans le 
+  	corps de la méthode <span class="java-method">readFullName</span>. 
+  	Oops... cela ne compile pas, n'est ce pas?
+  </xfr>
+</p>
+<p>
+  Eclipse is complaining with a red cross, is it not?
+  Over your mouse on top of this red cross...
+  you will see the following error message:
+  <xfr>
+  	Eclipse se plaint avec une croix rouge, n'est ce pas?
+  	Placez votre souris sur cette croix rouge..
+  	Vous verrez le message d'erreur suivant:
+  </xfr>
+</p>
+<pre>
+Multiple markers at this line
+	- InputStreamReader cannot be resolved to a type
+	- BufferedReader cannot be resolved to a type
+	- BufferedReader cannot be resolved to a type
+</pre>
+<p>
+  What it means is that the Java compiler does not find
+  the classes
+  <span class="java-class">InputStreamReader</span>
+  and
+  <span class="java-class">BufferedReader</span>.
+  We forgot to tell the compiler where to find those
+  classes, that is, in which package.
+  Remember, <b>a class is always part of a Java package</b>.
+  So we need to add the following lines
+  at the top of your source file, right under the
+  package declaration of your class
+  <span class="java-class">HalGreetings</span>.
+  <xfr>
+   	Cela signifie que le compilateur Java ne trouve pas
+   	les classes 
+  	<span class="java-class">InputStreamReader</span>
+  	et
+  	<span class="java-class">BufferedReader</span>.
+  	Nous avons oublié de dire au compilateur où trouver les
+  	classes (dans quels packages).
+  	Vous devez ajouter les lignes suivantes au sommet de
+  	votre fichier, juste sous la déclaration de package de
+  	votre classe
+  <span class="java-class">HalGreetings</span>.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+package greetings;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+class HalGreetings {
+...
+}
+</pre>
+<p>
+  Note: you can ask Eclipse to do it for you, with <b>Ctrl-Shift-O</b>,
+  it is a useful shortcut to remember.
+</p>
+<p>
+  Eclipse is happier, but not entirely happy,
+  we still have an error message.
+  So do it again, over your mouse on top of this red cross...
+  you will see the following error message:
+</p>
+<pre>
+  Unhandled thrown exception java.io.IOException
+</pre>
+<p>
+  What that means is the following. We are asking a service
+  from the object referenced by the variable 
+  <span class="java-lvar">br</span>, but the request may
+  fail, in which case it will throw an exception, of the type
+  java.io.IOException.
+  What are exceptions about? Throwing an exception is the way for objects
+  to say <em>"sorry, can't do"</em>. See again, it is like in real life,
+  when you ask a service from someone, sometimes, they start and
+  then they realize that they cannot do it, so they call you back
+  to tell you there is a problem.
+  <xfr>
+   	Cela signifie que nous demandons un service à l'objet
+   	référencé par la variable <span class="java-lvar">br</span>, 
+   	mais cette demande peut échouer, auquel cas elle émettra une
+   	exception, du type java.io.IOException.
+   	Que sont les exceptions? Lever une exception est le moyen
+   	pour les objets de dire:  <em>"désolé, ne peut pas faire" </em>. 
+   	Comme dans la vraie vie, quand vous demandez un service à quelqu'un,
+   	parfois la personne vous dit qu'elle ne peut pas le réaliser.
+  </xfr>
+</p>
+<p>
+  What can a developer do in this situation when writing his or her code?
+  Well what can your code do to handle the situation if it arises?
+  Well, not much in this case, right?
+  So let's accept that fact and indicate that our method
+  <span class="java-method">readFullName</span> may therefore
+  throw an IOException if the object referenced by the variable 
+  <span class="java-lvar">br</span> does throw one. 
+  Just like this:  
+  <xfr>
+   	Que peut faire un développeur lorsqu'il écrit du code pour gérer 
+   	ce type de situation? Pas grand chose en fait..
+   	Acceptons cela et indiquons que la méthode 
+   	<span class="java-method">readFullName</span> peut 
+  	lever une IOException si l'objet référencé par la variable 
+  	<span class="java-lvar">br</span> émet cette exception. 
+  	Comme cela:  
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static String[] readFullName() throws java.io.IOException {
+    ...
+  }
+</pre>
+<p>
+  What your code says here is the following. It says: <em>"if the
+  BufferedReader object says that it can't do it, then I will also
+  say that I can't do, just passing whatever was the reason
+  why it could not do it, that is, the exception"</em>.
+  <xfr>
+   	Le code dit donc: si l'objet BufferedReader dit qu'il ne peut
+   	pas réaliser le service demandé, je vais à mon tour dire que je ne
+   	peut pas réaliser le service demandé.
+  </xfr>
+</p>
+<p>
+  <b>Note</b>: in the method declaration, we used a fully qualified class
+  name: <span class="java-class">java.io.IOException</span>.
+  As you can see, it is both the package and class name.
+  If you want to use just the class name, omitting the package name, you can.
+  What will happen? Well Eclipse will complain that it does not
+  know how to resolve <em>IOException</em>. So use the trick you just
+  learned, ask Eclipse to organise your imports, it will make that
+  red cross dissapear and add a new import, just like that:
+  <xfr>
+   	<b>Note</b>: dans la déclaration de la méthode,
+   	nous avons utilisé un nom complet: 
+   	<span class="java-class">java.io.IOException</span>.
+  	Comme vous pouvez le voir, c'est le nom du package et le nom de la classe.
+  	Si vous voulez utiliser juste le nom de la classe, vous pouvez, mais 
+  	Eclipse va se plaindre qu'il ne sait pas comment résoudre
+    <em>IOException</em>.
+	  Utilisez ce que vous avez appris, demandez à Eclipse d'organiser vos imports,
+	  il ajoutera automatiquement les imports nécessaires:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+package greetings;
+
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+class HalGreetings {
+...
+}
+</pre>
+<p>
+  But that is not enough, there is a new red cross.
+  Eclipse is now complaining that the method
+  <span class="java-method">readFullName</span> may throw
+  an IOException when invoked from the method
+  <span class="java-method">main</span>. We can't say it is
+  not the case, right? Indeed, we just declared that our method
+  <span class="java-method">readFullName</span> may throw
+  an IOException. Well, let's again accept that fact and
+  declare that the method <span class="java-method">main</span>
+  may also throw an IOException.
+  <xfr>
+   	Mais ceci n'est pas suffisant, il y a une nouvelle croix rouge.
+  	Eclipse se plaint maintenant que la méthode
+  	<span class="java-method">readFullName</span> peut lever une IOException 
+  	quand invoquée depuis la méthode
+  	<span class="java-method">main</span>. 
+  	Déclarons donc que la méthode <span class="java-method">main</span>
+  	peut aussi lever une IOException.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static void main(String[] args) throws java.io.IOException {
+    ...
+  }
+</pre>
+<p>
+  So now we compile. Can we execute? Try it... Launch the execution,
+  after removing all your breakpoints. Then, click in the console
+  and after the first output, type your first and last name, like this:
+</p>
+<pre>
+  Hello, I am Hal, and you are?
+  Albert Einstein
+  Greetings Albert  Einstein!
+</pre>
+<p>
+  Cool, it executes and does not crash. That is good news.
+</p>
+<p>
+  But the output is not quite right. It seems that there are two spaces
+  in between Albert and Einstein. Is that normal?
+</p>
+<p>
+  Not really, there should be only one.
+  Look at the code and convince yourself that there should be indeed
+  only one space between the first and last name. Also convince
+  yourself that there are two spaces in the output in the <em>Console</em>
+  view. Oh well, it seems that some more debugging is in order.
+  <xfr>
+   	Pas vraiment, il devrait n'y avoir qu'un seul espace,
+   	regardez le code pour vous en convaincre.
+   	Il semble qu'une session de debug soit nécessaire pour comprendre..
+  </xfr>
+</p>
+
+<h4> Debugging </h4>
+
+<p>
+  We will help you this time throughout this debugging session,
+  but it will not be always the case. Pretty soon, you will be
+  asked to debug on your own. You can try to do it by yourself
+  first, and only then read the following. If you feel that you
+  can give it a try, that is fantastic.
+  <xfr>
+   Nous allons vous aider au travers de cette session de debug,
+   ce ne sera pas le cas dans les sessions suivantes.
+   Vous pouvez ici essayer par vous-même, sans suivre cette aide
+   au départ. Si vous pensez que vous pouvez le faire, c'est
+   génial.
+  </xfr>
+</p>
+<p>
+  The bug is in the method
+  <span class="java-method">readFullName</span>, so go ahead,
+  put a breakpoint at the beginning of that method.
+  Launch the execution under the control of the debugger
+  and use the <b>F6</b> command to step over the different
+  creations of objects and the execution of any method invoked
+  on them.
+  <xfr>
+   Le bug est dans la méthode <span class="java-method">readFullName</span>, 
+   donc poser un breakpoint au début de la méthode.
+   Lancez l'exécution sous debug et utilisez <b>F6</b> pour
+   exécuter en pas à pas et voir les différentes créations d'objets
+   et invocations de méthodes.
+  </xfr>
+</p>
+<p>
+  Why use <b>F6</b> and not <b>F5</b>? So that you stay
+  in the code you understand.
+  If you would hit <b>F5</b>, the debugging would continue
+  in very complex code that is part of the Java runtime
+  libraries. Not a good idea. If it ever happens to you,
+  just hit <b>F7</b> that means <em>step out</em> of there.
+  At some point, you will find yourself back in your code.
+  In this case, the code of the method
+  <span class="java-method">readFullName</span>.
+  <xfr>
+   Pourquoi utiliser <b>F6</b> et pas <b>F5</b>? de manière
+   à ce que vous restiez dans le code que vous comprenez.
+   Si vous utilisez <b>F5</b>, le debugger
+   va vous montrer du code très complexe qui fait partie des
+   librairies Java.  Pas une bonne chose à ce stade.. 
+   Si vous utilisez <b>F5</b> par mégarde, <b>F7</b> 
+   vous permettra de revenir à votre code,
+   plus précisément à la méthode
+  	<span class="java-method">readFullName</span>.  
+  </xfr>
+</p>
+<p>
+  So go ahead, single step through the code, look at the
+  values of all the variables and try to figure out the
+  problem. Have fun... but...
+</p>
+<p>
+  Oh no! You got stuck when stepping
+  over the 4<sup>th</sup> lines in the method:
+</p>
+<pre class="prettyprint lang-java">
+ 4    String line = br.readLine();
+</pre>
+<p>
+  Hum, what happens there? Well, think about it. You asked
+  a service from the object referenced from the variable
+  <span class="java-lvar">br</span>. Right? It is trying
+  its best to do it, so it is waiting for the user to type
+  his first and last name in the <em>Console</em>.
+  Well? Are you typing your first and last name in the
+  <em>Console</em>? 
+  <xfr>
+   	Hum.. que se passe t-il ici? Réfléchissez. Vous avez
+   	invoqué un service à l'objet référencé par la variable
+   	<span class="java-lvar">br</span>. Cet objet 
+  	attend que l'utilisateur tape un nom et prénom
+  	dans la <em>Console</em>.
+  	Etes-vous en train de taper un nom et prénom dans la
+  	<em>Console</em>? 
+  </xfr>
+</p>
+<p>
+  No? 
+  Well that is why the debugger is
+  blocked, because it is waiting for the method to finish,
+  and the method is waiting for you to type your first
+  and last name. So go ahead, click in the <em>Console</em>
+  view and type your first and last name followed by the
+  <em>enter</em> key...
+  <xfr>
+    Non? c'ets pourquoi le debugger est bloqué. Donc cliquez
+    dans la vue <em>Console</em> et tapez nom et prénom
+    suivi de la touche  <em>enter</em>..
+  </xfr>
+</p>
+<p>
+  Fantastic! The debugger is responding again, having
+  stopped the execution 
+  on the next line. The variable
+  <span class="java-lvar">line</span>
+  now contains what you typed. You can verify that in the
+  <em>Variables</em> view. 
+  OK, no more surprises, keep on single stepping and try
+  to figure what we are doing wrong.
+  <xfr>
+    Génial, le debugger répond à nouveau ! Il a suspendu
+    l'exécution à la ligne suivante. La variable 
+     <span class="java-lvar">line</span>
+    contient ce que vous avez tapé. Vous pouvez vérifier cela
+    dans la vue  <em>Variables</em>. 
+  	OK, plus de surprises,poursuivez en pas à pas et essayez 
+  	de comprendre ce qui ne va pas.
+  </xfr>
+</p>
+<p>
+  Succeeded?
+</p>
+<p>
+  No? Pay close attentions to the strings in the array
+  referenced by the variable
+  <span class="java-lvar">names</span>. Any extra space
+  character that should not be there? See it?
+  Great, so the problem is at that line:
+</p>
+<pre class="prettyprint lang-java">
+  9    names[1] = line.substring(index);
+</pre>
+<p>
+  You understand why? Great.
+</p>
+<p>
+  Well, let's explain it anyway. Understand that the index
+  points to the space character in the string and we are
+  asking the substring starting at that index. So we are
+  asking for the substring starting with the space character
+  as the first character. Not exactly what we want.
+  So you need to correct the code like this:
+  <xfr>
+    Ok, essayons d'expliquer. L'index pointe sur le caractère ' '
+    dans la chaine et nous demandons de récupérer la sous-chaine
+    démarrant à cet index. Donc il vous faut corriger comme cela:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+ 9    names[1] = line.substring(index+1);
+</pre>
+<p>
+  See programming can be sometimes about very small details.
+</p>
+<p>
+  You need to learn to be rigorous. You need to pay attention
+  to details. A developer must be rigorous and pay attention to
+  details, exactly like a painter or a musician should do.
+  A musician can't really drop or add notes to a melody without
+  changing the melody. Sometimes, he can, this is called improvisation,
+  but only really good musician can do that and keep it enjoyable
+  for the audience. With programming, this is the same.
+  <xfr>
+ 	Vous devez apprendre à être rigoureux. Vous devez faire attention
+ 	aux détails. Un développeur doit être rigoureux et faire
+ 	attention aux détails, exactement comme un peintre ou
+ 	un musicien doivent le faire.
+  </xfr>
+</p>
+<p>
+  To be good at any craft requires work and dedication.
+  Cooking is another good analogy, the final
+  taste of the meal may be in direct relation with the implication
+  of the Chef. Of course, anyone can cook pasta and they will taste good,
+  although italians would disagree. But as the simple meal
+  becomes a full banquet, the rigor, the skills, and the attention
+  to details of the Chef will make all the difference in the world.
+  This is exactly what the Michelin stars are about.
+ <xfr>
+ 	Etre bon dans l'artisanat requière travail et détermination.
+ 	La cuisine est une autre analogie, le goût final d'un plat
+ 	étant en relation directe avec l'implication du chef cuisinier.
+ 	Bien sûr, n'importe qui peut cuisiner des pates qui seront bonnes,
+ 	bien que les Italiens pourraient ne pas avoir la même opinion..
+ 	Mais dès que l'on passe à des plats plus sérieux, la rigueur,
+ 	les compétences et l'attention aux détails du chef cuisinier
+ 	feront toute la différence. C'est exactement ce que les étoiles
+  au Michelin récompensent.
+  </xfr>
+</p>
+
+<h4>Are they bugs lurking in the dark?</h4>
+
+<p>
+  Our code compiles. Cool.
+</p>
+<p>
+  Our code executes. We tried it out.
+</p>
+<p>
+  Everything is cool, right?
+</p>
+<p>
+  We are done! Right?
+</p>
+<p>
+  <b>What do you think?</b>
+</p>
+<p>
+  Well try this. Launch the execution, but instead of typing your
+  full name, with first and last name, just type in your first name.
+  See what happens... it will happen something like this:
+</p>
+<pre>
+Hello, I am Hal, and you are?
+Olivier
+Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String index out of range: -1
+	at java.lang.String.substring(String.java:1954)
+	at greetings.HalGreetings.readFullName(HalGreetings.java:23)
+	at greetings.HalGreetings.main(HalGreetings.java:12)
+</pre>  
+<p>
+  The execution did not end well, did it? Well, you know what to do.
+  Get debugging again, just like we did, only enter your first
+  name, and try to understand what happens.
+</p>
+<p>
+  Here is the explanation.
+  The string object referenced by the variable
+  <span class="java-lvar">line</span>
+  did not find a space in the string and returned an
+  index of -1. Then, the request for the substring
+  from 0 to index failed line 23. Indeed, the
+  substring(0,-1) does not really exist, does it?
+  <xfr>
+   	L'explication est la suivante. L'objet chaine référencé par
+   	la variable <span class="java-lvar">line</span>
+  	ne trouve pas d'espace et retourne -1.
+	Puis, la requête pour récupérer la sous-chaine
+  	allant de 0 à l'index échoue line 23. En effet,
+  	la sous-chaine(0,-1) n'existe pas..
+  </xfr>
+</p>
+<p>
+  Let's discuss a bit more what happened.
+  Well, we asked an object for a service and we gave
+  arguments that do not make sense. So the object rejected
+  our request and raised an exception, an exception telling
+  us that the value -1 is an index out of bounds. This is
+  definitely true since the first element of a Java array is
+  always at the position 0. The same is true about the index of
+  the first character in a string. So there is no character at
+  index -1. The string object rightfully complains, throwing
+  an exception, called <em>StringIndexOutOfBoundsExeption</em>.
+  <xfr>
+    Discutons plus en détail. Nous avons demandé un service à
+    un objet en donnant des arguments incorrects. Donc l'objet 
+    a rejeté notre demande et levé une exception disant que
+    la valeur -1 est en dehors des limites de la chaine.
+    Le premier élément d'une chaine ou d'un tableau est toujours
+    à l'index 0. 
+  </xfr>
+</p>
+<p>
+  Not that the exception gives you the call stack at the moment
+  when the exception was thrown. So what is a call stack? It is
+  the current nesting of method calls or invocations. So the call
+  stack tells you the exception was raised line 1954 in the Java source
+  <em>String.java</em> for the
+  class <span class="java-class">String</span>. But how did the
+  execution got there? Well, the call stack tells you that
+  it got from line 23 in the Java source
+  <em>HalGreetings.java</em> for the class
+  class <span class="java-class">HalGreetings</span>. And indeed,
+  at that line, our code calls the method
+  <span class="java-method">substring</span> of the
+  class <span class="java-class">String</span> on a string.
+  <xfr>
+    Notez que l'exception nous informe de la pile d'appel
+    au moment où elle est levée. Qu'est une pile d'appel?
+    C'est l'enchainement en cours des invocations de méthodes.
+    Cette pile nous dit ici que l'exception a été levée ligne 1954
+    dans le source 
+    <em>String.java</em> de la classe
+  	class <span class="java-class">String</span>. 
+  	Mais comment l'exécution est arrivée là?
+  	La pile d'appel nous dit qu'elle vient
+  	de la ligne 23 dans <em>HalGreetings.java</em>. En effet
+  	à cette ligne, notre code invoque la méthode
+  	<span class="java-method">substring</span> de la classe
+   	<span class="java-class">String</span>.
+  </xfr>
+</p>
+<p>
+  And of course, it goes on, so how did the execution got there?
+  Look at the call stack, what does it tell you? The previous call
+  was made at line 12 in the Java source 
+  <em>HalGreetings.java</em> for the class
+  class <span class="java-class">HalGreetings</span>. And indeed,
+  it was the execution of the method
+  <span class="java-method">main</span> where all executions start.
+  <xfr>
+   Et bien sûr, cela continue.
+   La pile d'appel nous dit ainsi que l'invocation précédente 
+   a été faite ligne 12 dans <em>HalGreetings.java</em>. En effet,
+   c'était l'exécution de la méthode
+   <span class="java-method">main</span>.  
+  </xfr>
+</p>
+<p>
+  Experience the call stack first hand, click in the <em>Console</em>
+  on the different
+  lines of the call stack, on the URL-like part, and watch
+  Eclipse navigate you to the different locations in the different
+  Java sources. With this, you can see where the execution has flown
+  through, in your code, before it got to the location where the exception
+  was thrown.
+  <xfr>
+    Manipulez les informations données par Eclipse sur la pile d'appel,
+    cliquez sur la vue <em>Console</em> sur les différentes lignes de
+    la pile d'appel, sur la partie URL, et regardez comment Eclipse
+    navigue automatiquement dans les sources associés.
+    Vous pouvez ainsi voir où l'exécution est passée avant que l'exception
+    soit levée.
+  </xfr>
+</p>
+<p>
+  Often, a call stack will be a mix of locations that you know of
+  and others that you do not. It is the case in this call stack.
+  The first two locations are known to you, there are within your
+  source code, for the 
+  class <span class="java-class">HalGreetings</span>, line
+  12 and then 23. The last location is within the source of
+  the class <span class="java-class">String</span>, a class
+  that you did not write. Click in the <em>Console</em>
+  on the line <em>String.java:1954</em>, Eclipse will navigate you
+  to that file, showing the implementation of the method
+  <span class="java-method">substring</span>
+  on the
+  class <span class="java-class">String</span>
+  in the
+  package <span class="java-package">java.lang</span>.
+  As you can see, this is indeed where the exception was thrown.
+  <xfr>
+  	Souvent, une pile d'appels sera un mix de "places" que vous
+  	connaissez et d'autres pas. C'est le cas ici.
+  	Les deux premières places vous sont connues, elles viennent
+  	de votre code, pour la  
+  	classe <span class="java-class">HalGreetings</span>, ligne
+  	12 et puis 23. La dernière place est dans le source de la
+  	classe <span class="java-class">String</span>, une classe
+  	que vous n'avez pas écrite. Cliquez dans la vue <em>Console</em>
+  	sur la ligne <em>String.java:1954</em>, Eclipse vous amènera à ce fichier,
+  	vous montrant l'implémentation de la méthode
+  	<span class="java-method">substring</span> dans la
+  	classe <span class="java-class">String</span> du
+  	package <span class="java-package">java.lang</span>.
+  	Comme vous pouvez le voir, c'est là que l'exception a été émise.
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+1954    throw new StringIndexOutOfBoundsException(subLen);
+</pre>
+<p>
+  So now we have a better idea of what is an exception:
+  it is an object that is thrown. The object in this case
+  is an instance of the class
+  <span class="java-class">StringIndexOutOfBoundsException</span>.
+  Just get an intuitive understanding here, but do not worry,
+  we will come back many times on this concept of creating
+  new objects and throwing exceptions, but in due time.
+  <xfr>
+    Nous avons maintenant une meilleur idée de ce qu'est une
+    exception: c'est un object qui est jeté. L'objet dans notre
+    cas ici est une instance de la classe 
+    <span class="java-class">StringIndexOutOfBoundsException</span>.
+    L'idée ici est de déveloper une intuition de ce que sont les
+    exceptions et à quoi elles servent, mais ne vous inquiétez pas,
+    nous reviendrons sur la création de nouveaux objets et la levée
+    d'exceptions. 
+  </xfr>
+</p>
+
+<h4>Safer Coding</h4>
+
+<p>
+  What did we just learn: a program can compile
+  and still not be correct. A program can compile and execute,
+  but it may still not be correct. Again,
+  to make sure a program is correct in all conditions will
+  require work, rigor, and a great attention to details.
+  <xfr>
+  	Qu'avons nous appris? un programme peut compiler et ne pas
+  	être correct. un programme peut s'exécuter et ne pas
+  	être correct. Pour être sûr qu'un programme est correct
+  	dans toutes les conditions, il faut du travail, de
+  	la rigueur et une grande attention aux détails.
+  </xfr>
+</p>
+<p>
+  In our case, we made a mistake, we assume the user would
+  always input a first and last name. So we assume that
+  the index would always be a valid index. Never do this.
+  Always check that the services you asked for did work
+  as you expected them to.
+  The safe version of our code should be the following:
+  <xfr>
+   Dans notre cas, nous avons fait une erreur, nous avons supposé
+   que l'utilisateur entrerait toujours un nom et prénom. Donc 
+   nous avons supposé que l'index serait toujours valide.
+   Ne faites jamais cela. Testez toujours que le service que
+   vous demandez a bien réalisé le travail souhaité.
+   En regard, la version correcte de notre code est la suivante:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static String[] readFullName() {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    String line = br.readLine();
+    String[] names;
+    int index = line.indexOf(' ');
+    if (index!=-1) {
+      names = new String[2];
+      names[0] = line.substring(0, index);
+      names[1] = line.substring(index+1);
+    } else {
+      names = new String[1];
+      names[0] = line;
+    }
+    return names;
+  }
+</pre>
+<p>
+  How do you know about the value -1 indicating an error?
+  Well, you look at the Java documentations, called <em>javadocs</em>.
+  Hover your mouse over
+  the invocation of the method
+  <span class="java-method">indexOf</span>, Eclipse
+  will show you the javadoc in a popup window.
+  Click in that popup and scroll to the end, you can 
+  read the following:
+  <xfr>
+   	Comment savez-vous que -1 indique une erreur?
+   	Bien, il faut regarder la documentation Java, appelée <em>javadocs</em>.
+   	Posez votre souris sur l'invocation de la méthode
+  	<span class="java-method">indexOf</span>, Eclipse
+  	va vous montrer la javadoc dans une fenêtre popup.
+  	Cliquez sur ce popup et scroller jusqu'à la fin, vous pouvez lire:
+  </xfr>
+</p>
+<pre>
+  Returns:
+  the index of the first occurrence of the character in the character sequence
+  represented by this object, or -1 if the character does not occur.
+</pre>
+<p>
+  Whenever you use an object, invoking methods on that object, you must
+  read and understand the associated javadocs. Like in real life, never sign
+  a contract that you did not read, in Java, never use methods that you have
+  not read the javadoc of.
+  <xfr>
+    A chaque fois que vous utilisez un objet, invoquant des méthodes, vous
+    devez lire et comprendre la javadoc associée. Comme dans la vie relle,
+    vous ne signez pas avant d'avoir lu..
+  </xfr>
+</p>
+
+<h4>Even Safer Coding</h4>
+
+<p>
+  The code above is getting there, but not quite correct yet.
+  What happens if the user inputs
+  more than a first and last name? Something like "Andrew J. Smith".
+  This is not good since we allocate an array that has only two elements.
+  We would want to have as many elements as the number of words in
+  the user input. For this, we will create a second version of
+  our class, the new and improved 
+  class <span class="java-class">HalGreetings2</span>,
+  in the same package
+  <span class="java-package">greetings</span>.
+  As a starting point, copy all the methods from the first
+  version of the
+  class <span class="java-class">HalGreetings</span>.
+  <xfr>
+    Le code précédent est pas totalement correct. Qu'arrive t'il
+    si l'utilisateur tape plus qu'un nom et un prénom? par exemple, 
+    "Andrew J. Smith". Ceci ne fonctionne pas puisque nous allouons
+    un tableau de deux éléments seulement. Nous souhaiterions avoir
+    autant d'éléments que le nombre de mots tapés. Pour cela, nous
+    allons créer une deuxième version de la classe,  
+   	<span class="java-class">HalGreetings2</span>,
+  	dans le même package
+  	<span class="java-package">greetings</span>.
+  	Pour commencer, copiez toutes les méthodes depuis la version précédente
+  	<span class="java-class">HalGreetings</span>.
+  </xfr>
+</p>
+<p>
+  Why did we make a copy? So that you can keep the first version
+  intact, if you may want to ever look at it again. Also, it preserves
+  the ability to pass earlier tests, since the code is still there.
+  Now, we need to evolve the code in the 
+  class <span class="java-class">HalGreetings2</span>.
+  <xfr>
+ 	Pourquoi faire une copie? pour garder la première version
+ 	intacte, si jamais vous voulez la regarder à nouveau.
+ 	De plus, cela préserve la capacité de passer les tests, puisque
+ 	le code est toujours là. Maintenant nous allins modifier le
+ 	code de la classe <span class="java-class">HalGreetings2</span>.
+  </xfr>
+</p>
+<p>
+  How could we count the number of names in the string the user typed
+  on his keyboard? We could fist count the number of spaces,
+  which will give us the number of elements in our array.
+  This code below is one simple way to do it:
+  <xfr>
+ 	Comment compter le nombre de mots dans la chaine que l'utilisateur 
+ 	a tapé? Nous pouvons tout d'abord compter le nombre d'espaces,
+ 	ce qui nous permet de connaitre le nombre d'éléments de notre tableau.
+ 	Le code ci-après fait cela simplement:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+  public static int computeNumberOfNames(String line) {
+    int nnames = 1;
+    int index = line.indexOf(' ');
+    while (index!=-1) {
+      line = line.substring(index+1);
+      index = line.indexOf(' ');
+      nnames = nnames + 1;
+    }
+    return nnames;
+  }
+</pre>
+<p>
+  Given the above code, you can modify the method
+  <span class="java-method">readFullName</span>
+  in the following way:
+</pre>
+<pre class="prettyprint lang-java">
+  public static String[] readFullName() throws java.io.IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    String line = br.readLine();
+    int nnames = computeNumberOfNames(line);
+    String[] names = new String[nnames];
+    int i = 0;
+    while (i &lt; nnames-1) {
+      int index = line.indexOf(' ');
+      names[i] = line.substring(0, index);
+      line = line.substring(index+1);
+      i = i + 1;
+    }
+    names[i] = line;
+    return names;
+  }
+</pre>
+
+<h4> Take charge of your learning</h4>
+
+<p>
+  So go ahead, execute the new version of our code,
+  the class <span class="java-class">HalGreetings2</span>,
+  under the control of the debugger. Have fun understanding
+  the code. 
+</p>
+
+<check
+   silent="onSuccess"
+   blocking="false"
+   lang="java"
+   cwd="workspace/prog.basics"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task2.Check3b">
+  <banner>
+    When you are done understanding the code, 
+    let us check that it does work. 
+  </banner>
+  <hint>
+    <p>
+      Something is not quite right. The failure may be due to the following
+      points:
+    </p>
+    <ol>
+      <li>
+	We ran the code and gave the arguments "Prof. Olivier Gruber".
+	It is possible that the output is not correct and
+	does not correspond to "Greetings Prof. Olivier Gruber!".
+      </li>
+      <li>
+	We invoked the method
+	<span class="java-method">computeNumberOfNames</span> and
+	it did not compute the number of names correctly.
+      </li>
+    </ol>
+    <p>
+      Please Fix your code.
+    </p>
+  </hint>
+  <success>
+    Cool, nicely done.
+  </success>
+  <unfold></unfold>
+</check>
+
+

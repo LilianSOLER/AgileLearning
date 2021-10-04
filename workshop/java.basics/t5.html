@@ -1,0 +1,329 @@
+<vars>
+  sprint=java.basics
+  task=t5
+</vars>
+<p>
+  This task is an exercise in coding style where we are
+  contrasting object-oriented programming with regular imperative
+  programming. Why do this? Because it is important that you
+  start learning that object-oriented programming is more
+  than regular imperative programming. This is to get you
+  started with the productive habbits of good object-oriented
+  programming.
+  The classes are all in the <em>step5</em> source folder.
+  <xfr>
+    Cette tâche est un exercise sur les styles de programmation,
+    nous allons constrater la programmation orientée-objet
+    et la programmation impérative classique. Pourquoi faire
+    cela? Parce qu'il est important que vous commenciez à
+    comprendre que la programmation orientée-objet est
+    bien plus que la programmation impérative traditionnelle
+    comme dans le langage C. Prenez de bonnes habitudes
+    rapidement et vous serez plus productifs rapidement.
+  </xfr>
+</p>
+<p>
+  A word of advice before we start.
+  This task is about reading code, comparing coding styles, and learning
+  from that comparison. You will
+  not write code, you will read the same code written in two
+  different ways. Many of you will not like that and may be
+  tempted to just skip this task. You can, there is no coding,
+  there is no mandatory tests to run. But if you feel like skipping
+  this task, unless you have already a lot of experience in both
+  C programming and Java programming, well, it seems that you are
+  not so motivated to learn. Your choice. If you do go through
+  with this task, make sure that you just don't blaze through
+  just to get rid of it. If you do, you will have learned nothing.
+  Make sure you understand the two coding styles we are discussing
+  in this task: C-coding style versus Java-coding style.
+  <xfr>
+    Un conseil pour vous avant que nous commencions cette tâche.
+    Cette tâche est une tâche de lecture de code, de comparaison
+    de code, et d'apprentissage par cette comparaison. Vous n'allez
+    pas écrire de code. Il n'y a pas de tests à passer. Vous pourriez
+    être tenté de sauter cette tâche. Vous pouvez, mais à moins
+    que vous ne soyez déjà très à l'aise en C et en Java,
+    sauter cette tâche en dirait long sur motivation d'apprendre
+    à programmer. C'est votre choix. Si vous décidez de faire
+    cette tâche, ne vous en débarassez pas au plus vite. Si vous
+    faites cela, vous n'apprendrez rien. Etudiez et comprenez les
+    deux styles de programmation illustés dans cette tâche.
+  </xfr>
+</p>
+<p>
+  First of all, it introduces the idea that not all codes are
+  equal. Coding does include a sense of aesthetics, really!
+  We are not joking here.
+  You will discover quickly that some code are easier to
+  read and understand than others. Some are definitely easier to debug
+  and maintain than others. You will see, it is not just a matter
+  of taste, some codes are just easier to work with.
+  Then, of course, within good aesthetic, there are variations
+  of coding style. There is never only one best way of writing code.
+  <xfr>
+    Mais avant tout, cette tâche discute de l'idée que tous les codes
+    ne sont pas égaux. Il y a une esthétique du code. Vraiment.
+    Nous ne plaisantons pas. Vous allez découvrir rapidement
+    que certains codes sont plus simple à lire, à comprendre,
+    et à modifer que d'autres. Vous verrez, ce n'est pas seulement
+    qu'une question de goût personnel, certains codes sont juste
+    plus facile. Après, bien sûr, il y a des variations et il est
+    rare qu'il existe une seule et unique façon d'écrire un code.
+  </xfr>
+</p>
+<p>
+  Second, object-oriented programming is really a coding style in its own
+  right. Of course, you can code in Java like you would in C, but
+  you are not doing yourself any favor. So for the many of you that
+  already coded in an imperative programming language such as C,
+  you will be introduced to some of the core differences, hands on.
+  If you want to become a good object-oriented programmer, you
+  need to leave your C-coding style behind.
+  <xfr>
+    En deuxième lieu, la programmation orientée-objet est une façon
+    de coder à part entière. Bien sûr, vous pouvez code en Java comme
+    vous codez en C, mais vous ne vous aidez pas en faisant cela.
+    Donc pour ceux qui programment déjà en C, il est important
+    de bien comprendre les différences et d'apprendre Java.
+  </xfr>
+</p>
+<p>
+  We will only cover a few basic patterns, nothing fancy, so
+  that the beginners among you can also benefit. These key points
+  will get everyone started on the right track. We will come back on
+  the aesthetic of code many times throughout this workshop,
+  covering increasingly more advanced features. If this task
+  comes easy for you, help others that may be struggling.
+  <xfr>
+    Nous n'allons pas voir des patterns trop compliqués, pour
+    que les débutants puissent aussi profiter de l'exercise.
+    Ces points sont importants cependant et permettront de
+    faire partir tout le monde du bon pied. Nous reviendrons
+    souvent sur l'esthétique du code dans cet atelier,
+    abordant les aspects plus complexes au fur et à mesure.
+    Si cette tâche est facile pour vous, aidez ceux pour qui
+    elle est plus difficile.
+  </xfr>
+</p>
+
+<h3> Overview of the given code </h3>
+
+<p>
+  The classes are all in the <em>step5</em> source folder.
+  We gave you two Java packages:
+</p>
+<ul>
+  <li>
+    In the package <span class="java-package">basics.step5.c</span>,
+    we wrote the classes almost as if we were coding in C.
+    Of course, we use the Java syntax, but we do not really use
+    any of the features of object-oriented programming that
+    makes it so interesting.
+  </li>
+  <li>
+    In contrast, in the package
+    <span class="java-package">basics.step5.java</span>,
+    we wrote the same classes as cleanly as possible,
+    following the principles of object-oriented programming,
+    but <em>keeping it simple</em>. 
+  </li>
+</ul>
+<p>
+  The intent is to help you feel the difference
+  and get increasingly accustomed with object-oriented
+  programming. Of course, we choose to remain purposedly
+  simple.
+  Look at the code, it is a mix of constructs, some that you
+  already know about and some others that will be new to you.
+  The code is heavily commented, and the comments
+  are a useful read, they are explaining something
+  about the code or pointing out important points
+  to understand.
+  The classes are very simple and not super interesting,
+  but their simplicity is an asset here, we can focus
+  on coding styles.
+  <xfr>
+    L'intention est de vous aider à sentir la différence
+    entre la programmation impérative et la programmation orientée-objet.
+    Nous avons choisi de rester simple.
+    Regardez le code, c'est un mix de constructions
+    que vous connaissez déjà en Java et de quelques nouveautés.
+    Le code est commenté pour vous aider à comprendre
+    le code mais surtout à comprendre les différences
+    entre la programmation impérative et la programmation
+    orientée-objet.
+  </xfr>
+</p>
+
+<h4> C-Coding Style </h4>
+
+<p>
+  Look at the classes in the package
+  <span class="java-package">basics.step5.c</span>
+  and the class <span class="java-class">JavaBasicsStep5CStyle</span>.
+  You will notice that the file <em>JavaBasicsStep5CStyle.java</em> defines
+  more than one Java class. Not something we really recommand to do,
+  but Java allows it. Furthermore, it provides an easier reading for you.
+  And after all,
+  this is C-style, so a little bit of ugliness is to be expected,
+  right? <img src="/emoticons/smile.png" height="16px" />
+  <xfr>
+    	Regardez les classe dans le package
+    	<span class="java-package">basics.step5.c</span>
+  		et la classe <span class="java-class">JavaBasicsStep5CStyle</span>.
+  		Vous noterez que le fichier <em>JavaBasicsStep5CStyle.java</em> definit
+  		plus qu'une classe. Ce n'est pas quelquechose que nous recommandons,
+  		mais Java le permet. De plus, cela vous permet une lecture plus simple.
+  		Après tout, ceci relève du style "C programming",
+  		n'est-ce pas? <img src="/emoticons/smile.png" height="16px" />
+   </xfr>
+</p>
+<p>
+  If you ever wrote
+  a C program before, you should recognize the coding style. We use
+  classes as we would C structs and we use the <em>new</em> operator
+  as we would <em>malloc</em>. Needless to say that this is not the way
+  to do it, even if the Java programming language permits it.
+  <xfr>
+ 		Si vous avez déjà programmé en C, vous devriez reconnaitre
+ 		le style de programmation. Nous utilisons les classes
+ 		comme nous utiliserions les structs en C, et nous utilisons
+ 		l'opérateur <em>new</em> comme nous utiliserions <em>malloc</em>.
+ 		Pas besoin de dire que ce n'est pas comme cela qu'il faut faire,
+ 		même si Java le permet.
+   </xfr>
+</p>
+
+<h4>Java Coding Style</h4>
+
+<p>
+  Compare the C-like version with a proper Java version,
+  in the package <span class="java-package">basics.step5.java</span>.
+  See how much the code is cleaner, easier to read, and ultimately
+  easier to understand?
+  <xfr>
+    Comparer maintenant le code écrit à la mode du C avec le même
+    code écrit correctement en Java. Le code se trouve dans le paquet
+    <span class="java-package">basics.step5.java</span>. Essayez de voir
+    à quel point le code est plus propre, plus facile à lire, et au bout
+    du compte plus facile à comprendre.
+  </xfr>
+</p>
+<ul>
+  <li>
+    Look at the positive impact of having constructors.
+    <xfr>
+      Regardez l'effet positif des constructeurs.
+    </xfr>
+  </li>
+  <li>
+    Look at how much better structured the entire code is,
+    thanks to classes to group related methods together.
+    <xfr>
+      Regardez à quel point le code est mieux structuré dans son ensemble,
+      grace aux classes qui organisent les méthodes avec beaucoup de sens.
+    </xfr>
+  </li>
+  <li>
+    Look at how classes provide modularity and therefore clearer focus when
+    reading or writing code.
+    <xfr>
+      Regardez comment les classes sont une source de modularité du code
+      et que donc l'attention du développeur est plus focalisé lors de la
+      lecture ou l'écriture de code.
+    </xfr>
+  </li>
+</ul>
+
+<p>
+  <b>Each class goes in a file.</b>
+  Java advocates that each class goes in its own file, as a default.
+  You will see soon enough that this rule has many exceptions.
+  But for now, it is a good default.
+  <xfr>
+  	<b>Chaque classe va dans un fichier.</b>
+  	Java impose que chaque classe soit définie dans un fichier propre, 
+  	par défaut. Vous verrez que cette règle a des exceptions. Mais
+  	pour l'instant, nous ne les considérons pas.
+  </xfr>
+</p>
+<p>
+  <b>Separate the "main" class.</b>
+  To separate the "main" class is also a good default. The main
+  class means the class that defines the entry point of the code,
+  that is, the method <span class="java-method">main(String[])</span>.
+  For now, the main class is pretty much empty, but soon enough
+  it will contain startup code, including the initialization of your
+  application. It will have a rôle of its own and an independent
+  class will be warranted.
+  <xfr>
+  	<b>Séparer la classe "main".</b>
+  	Séparer la classe "main" est aussi un bon pattern. La classe main
+  	est celle qui définit le point d'entrée du programme,
+  	c'est à dire, la méthode <span class="java-method">main(String[])</span>.
+  	Pour l'instant, la classe main est quasiment vide, mais rapidement
+  	elle contiendra le code de lancement, incluant l'initialisation de votre
+  	application. Elle aura un rôle bien à elle, et une classe à part sera
+  	très bien pour cela.
+  </xfr>
+</p>
+<p>
+  <b>Use constructors.</b>
+  Using constructors is really important because it helps to see
+  how an object is initialized. The constructors give the different
+  ways an object may be constructed. The code to construct an object
+  is written once and easy to find, as opposed to be duplicated at
+  every single new statement in your code.
+  Avoiding redundant code is an important step towards cleaner, safer,
+  and more robust code.
+  <xfr>
+  	<b>Utiliser des constructeurs.</b>
+  	Utiliser des constructeurs est vraiment important car cela aide
+  	à voir comment un objet est initialisé. Les constructeurs donnent
+  	les différents moyens d'initialiser un objet. Le code pour construire
+  	un objet est écrit une fois et ensuite utilisé autant que besoin,
+  	en opposition au fait de dupliquer le code d'initialisation à chaque
+  	fois qu'un objet est crée dans le code. 
+  	Eviter le code redondant est un principe majeur pour obtenir du code
+  	propre, fiable et robuste.
+  </xfr>
+</p>
+
+<h4>Code Aesthetic</h4>
+
+<p>
+  Learning the aesthetic of good programming is as important as learning
+  the syntax or the grammar of a programming language. When you code using
+  the C programming language, use the corresponding good practices. When
+  you code using the Java programming language, use good object-oriented
+  practices. Learning object-oriented good practices will take time,
+  so don't put too much pressure on yourself right away, but you need
+  to start paying attention from now on to the aesthetic of the classes you write
+  as well as those written by others that you read.
+  <xfr>
+    Apprendre à considérer l'esthétique d'une bonne programmation est aussi
+    important que d'apprendre la syntax ou la grammaire d'un langage de
+    programmation. Lorsque vous codez en C, utilisez les bonnes practiques
+    qui ont été développé pour ce langage. Lorsque vous codez en Java,
+    utiliser les bonnes pratiques de la programmation orientée-objet.
+    Il vous faudra du temps pour les apprendre, ne vous mettez pas trop de
+    pression tout de suite, mais il faut dès aujourd'hui pretter attention
+    à l'esthétique des classes que vous écrivez ainsi qu'a celle des classes
+    que vous lisez.
+  </xfr>
+</p>
+<p>
+  That's all folks.
+</p>
+<!--
+  Please make sure that you commit and push your work to our server.
+  Let us remind you how:
+</p>
+<textarea class="terminal" rows="5" width="60%" >
+  $ git add --all
+  $ git commit -a -m "Sprint java.basics, task 5 completed"
+  $ git push --all
+</textarea>
+-->
+

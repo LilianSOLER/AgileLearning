@@ -1,0 +1,702 @@
+<vars>
+  sprint=object.gui
+  task=t7
+</vars>
+<p>
+	This task is about event queues, the magic behind event-oriented programming.
+	Event queues are also called event pumps. But what is the relationship
+	between events and listeners? It is probably not entirely clear
+	since you have only used listeners so far.
+	As far as you know, listeners have been invoked somewhat magically,
+	expect for the timer listeners that you have invoked yourself.
+	In general terms, listeners are one specific type of reactions
+	to events, meaning
+	an event occurs and the reaction to this event occurence is to
+	invoke a listener.
+	<xfr>
+		Cette tâche est sur les files d'événements, qui se trouvent
+		être la magique derrière la programmation orientée-événements.
+		Les files d'événements portent aussi souvent le nom de
+		pompes à événements. Mais quelle est donc la relation entre
+		les événements et les écouteurs? Elle n'est probablement
+		pas entièrement	claire puisque vous avez utilisez des
+		écouteurs uniquement. De votre point de vue, vos écouteurs
+		ont été souvent appelé comme par magique, sauf pour les
+		écouteurs pour le timer que vous avez invoqué vous même.
+		En termes générales, un écouteur est un cas particulier
+		des réactions aux événements.
+	</xfr>
+</p>
+<p>
+	Let's talk about certain events that you have never actually seen, but
+	you saw their effects: the invocations on the toolkit as mouse listener
+	and a keyboard listener.
+	When the end user is pressing or releasing a key on the keyboard, it 
+	generates a keyboard event, which ultimately resulted in the toolkit
+	being invoked because it registered itself as a 
+	listener <span class="java-class">object.gui.window.KeyListener</span>
+	to the window.
+	The same is true for the mouse. When the end user moves the mouse,
+	presses a mouse button, or releases a mouse button, a mouse event
+	is generated, which ultimately results in the toolkit being invoked
+	because it registered itself as a 
+	listener <span class="java-class">object.gui.window.MouseListener</span>
+	to the window.
+	<xfr>
+		Parlons de certains événements que vous n'avez vu mais dont vous avez
+		vu les effets: l'invocation des listeners de souris et de clavier
+		sur le toolkit. Lorsque l'utilisateur presse ou relâche une touche sur
+		le clavier, cela génère un éveńement dont la réaction sera d'invoquer
+		les rappels correspondant sur l'écouteur de clavier. De même pour la souris,
+		lorsque l'utilisateur bouge la souris, appuie sur bouton, ou relâche
+		un bouton, un événement est crée dont la réaction sera d'invoquer
+		les rappels correspondant sur l'écouteur de souris. 
+	</xfr>
+</p>
+<p>
+	Of course, multiple events may occured somewhat simultaneously, but since
+	only one reaction can execute any point of time, this requires a queue
+	of pending events, awaiting their reactions to be invoked. 
+	More precisely, an event queue keeps track of events,
+	with the concept of an Estimated Time of Arrival (ETA),
+	which may be now. The ETA is the estimated time at
+	which the event's reaction should be invoked in
+	the future. Look at the corresponding abstract class
+	for defining what an event is:
+	<xfr>
+		Bien sûr il est possible que plusieurs événements se produisent en même
+		temps, mais comme une seule réaction ne peut s'exécuter à la fois, cela
+		nécessite une file d'événements en attente. Plus précisement, la file
+		ordonne les événements par leur ETA (heure estimée d'arrivée). Pour un
+		même ETA, les événements sont géré dans l'ordre Premier-Arrivé-Premier-Servi.
+	</xfr>
+</p>
+<p>
+	Now let's have a look at the corresponding classes
+	<span class="java-class">EventQueue</span> and
+	<span class="java-class">Event</span>:
+	<xfr>		
+		Regardons les classes 
+		<span class="java-class">EventQueue</span> et
+		<span class="java-class">Event</span> correspondante:
+	</xfr>
+</p>	
+<pre class="prettyprint lang-java">
+package object.events;
+
+public abstract class Event  {
+  Event next;
+  long eta;
+  protected Event(long eta) {
+    this.eta = eta;
+  }
+  protected Event(int delay) {
+    long now = System.currentTimeMillis();
+    eta = now + delay;
+  }
+  /**
+   * Subclasses will override this method to write
+   * the reaction to this event.
+   * @throws Exception
+   */
+  protected abstract void react() throws Exception;
+
+  /**
+   * Test if two events are the same, it is used to suppress
+   * redundant events in the queue. 
+   * @throws Exception
+   */
+  protected abstract boolean equals(Event e);
+}
+	
+public abstract class EventQueue {
+
+  protected EventQueue(PrintStream log) {}
+
+  public int length() {}
+  
+  public void push(Event r) { }
+}
+</pre>
+<p>
+	As you can see, coding with events are fairly easy to use, just
+	create new events and push them on the queue.
+	The events' reaction will be
+	called in due time depending on the events' ETA.
+	<xfr>
+		Comme vous pouvez le voir, coder avec des événements
+		est facile, il suffit de créer des événements et
+		de les pousser sur une file d'événements. Les réactions
+		des événements seront appelés en fonction de leur ETA.
+	</xfr>
+</p>
+<p>
+	You will notice however that both classes,
+	the class <span class="java-class">EventQueue</span> and
+	the class <span class="java-class">Event</span>, are both
+	abstract and are therefore relying on concrete sub-classes
+	to provide the missing behavior.
+	For events, nothing surprising, the abstract behavior
+	is the method <span class="java-class">react</span>, a
+	behavior that is specific to each type of events,
+	each type being implemented as a subclass of the class
+	<span class="java-class">Event</span>. For the event queue,
+	it is a slightly more complex design.
+	<xfr>
+		Vous noterez que les deux classes sont abstraites.
+		Pour les événements, la méthode abstraite est celle
+		de la réaction, ce qui fait sense. Pour la file d'événements,
+		la conception est un peu plus compliquée.
+	</xfr>
+</p>
+
+<h3>Abstract Event Queue Design</h3>
+
+<p>
+	Regarding the event queue, it can be mostly implemented
+	in the base abstract class 
+	<span class="java-class">object.events.EventQueue</span>.
+</p>
+<pre class="prettyprint lang-java">
+package object.events;
+
+public abstract class EventQueue {
+
+  protected EventQueue(PrintStream log) {}
+
+  public int length() {}
+  
+  public void push(Event r) { }
+
+  /**
+   * Ask to set or reset the timer to the given delay.
+   * When the timer will expire, it is expected that
+   * the method "timerExpired" is invoked.
+   * @param delay
+   */
+  protected abstract void setTimer(long delay);
+
+  /**
+   * Up-called by subclasses when the timer has expired.
+   * Here, we make sure that we support reactions to request
+   * new timers. Therefore, we first remove all requests 
+   * that are due and only then do we invoke their reaction.
+   */
+  protected void timerExpired() { }
+}
+</pre>
+<p>
+	The missing part is the timer management, delegated to
+	concrete subclasses. A concrete subclass will provide the
+	concrete implementation of the method 
+	<span class="java-method">setTimer</span>. 
+	The method <span class="java-method">setTimer</span>
+	requests to set a new timer, cancel any previous timer
+	that was set and that did not yet expired.
+  When the timer will expire, the subclass is expected
+	to invoke  
+  the method <span class="java-method">timerExpired</span>
+	of the superclass <span class="java-class">EventQueue</span>.
+	<xfr>
+		La partie qui manque est la gestion du timer, délégé aux
+		sous-classes concrètes. Une sous-classe concrète fournira
+		l'implémentation de la méthode
+		<span class="java-method">setTimer</span>.
+		Cette méthode est la demande d'un nouveau timer, qui
+		annule toute demande précédente, même si elle n'avait
+		pas expirée. Lorsque le timer expire, la sous-classe
+		se doit d'appeler la méthode
+		<span class="java-method">timerExpired</span> de la
+		super-classe <span class="java-class">EventQueue</span>.		
+	</xfr>
+</p>
+<p>
+	Notice that our overall design has a good separation
+	of concerns. We have a class
+	that provides a full implementation of a queue of events,
+	only assuming a timer provided by concrete subclasses.
+	Notice also that our design is also entirely 
+	independent of any particular event types since
+	we have an abstract class that provides the concept of an
+	event, as an abstract concept. 
+	This is good object-oriented programming, promoting
+	reusability and exploiting inheritance and polymorphism.
+	As usual, make sure you understand our design perfectly;
+	understanding why it is a good design with an appropriate
+	separation of concerns. Remember,
+	the idea is not just understand, you need to feel
+	that you would be able to design similar classes on your own,
+	fully leveraging the power of object-oriented programming.
+	<xfr>
+		Notez que la conception s'appuie une bonne séparation
+		des considérations. Nous avons une classe abstraite
+		avec une implémentation compléte d'une file d'événements,
+		à part la gestion du timer. Cette gestion est entièrement
+		fournie par les sous-classes concrètes. Notez aussi que
+		notre conception ne dépends d'aucun type d'événements puisque
+		la notion d'événements est abstraite. C'est une bonne
+		conception orientée-objet, faisant un bonne usage de l'héritage
+		et du polymorphisme. Comme toujours, assurez-vous de bien
+		comprendre l'approche et pourquoi nous disons que c'est une
+		bonne conception. Rappelez-vous, le but est que vous puissiez
+		de même lorsqu'il sera temps de concevoir vos classes.
+	</xfr>
+</p>
+<p>
+	For information, you may look at the implementation of the queue, it
+	shows you a very classical implementation of an
+	event queue where new events can be pushed.	
+	The design of this queue is quite straightforward, it uses a 
+	list of events that are kept ordered in growing ETAs.
+	The code appears more complex than necessary because of
+	the required reentrancy property that is required, as
+	it was the case in the previous task for your own code.
+	It is good practice for you to read the code and convince
+	yourself that it is indeed reentrant.
+	<xfr>
+		Pour information, vous pouvez regarder l'implémentation de
+		la file d'événements, c'est une implémentation assez classique
+		à base d'une liste simplement chaînée d'événements. Le code
+		apparaît un peu plus compliqué que nécessaire mais c'est à cause
+		de la propriété de ré-entrance qui est nécessaire ici comme
+		c'était le cas lors que la dernière tâche avec votre code.
+	</xfr>
+</p>
+
+<h3>An Example of Use</h3>
+<p>
+	Let's illustrate how the event queue works on an example,
+	the same example we used in the previous task.
+	The table below shows you when several requests are made
+	for different timer delays. A first request with a requested delay of 500ms.
+	A second request after 100ms with a requested delay of 250ms.
+	Finally, a third request after 400ms with a requested
+	delay of 225ms. The table shows you how the toolkit
+	will manage the single global window timer in response
+	to these requests and when it will invoke the widget listeners
+	corresponding to expired requests.
+	<xfr>
+		Pour vous aidez, nous allons regarder un exemple d'usage,
+		en fait le même exemple que nous avions discuté lors de
+		la dernière tâche. 
+	</xfr>
+</p>
+<table border="1" style="text-align:left; border-spacing: 1px; width=60%;font-size: 14px;
+    font-weight: normal; border: 1px solid black; ">
+	<tr style="border: 1px solid black;">
+		<th style="color:black;">Time</th>
+		<th style="color:blue;">
+			Events
+		</th>
+		<th style="color:red;">
+			Timer Operations
+		</th>
+		<th style="color:green;">
+			Event Reactions
+		</th>
+	</tr>
+	<tr>
+		<th> </th>
+		<th> </th>
+		<th> </th>
+		<th> </th>
+	</tr>
+	<tr>
+		<th>0ms</th>
+		<th style="color:blue;">A first event, delay of 500ms.</th>
+		<th style="color:red;">Set timer to 500ms.</th>
+		<th> </th>
+	</tr>
+	<tr>
+		<th>100ms</th>
+		<th style="color:blue;">A second event, delay of 250ms.</th>
+		<th style="color:red;">Cancel timer, reset to 250ms.</th>
+		<th> </th>
+	</tr>
+	<tr>
+		<th>350ms</th>
+		<th style="color:blue;"></th>
+		<th style="color:red;">The timer expires, reset it to 150ms.</th>
+		<th style="color:green;">Invoke the reaction of the second event.</th>
+	</tr>
+	<tr>
+		<th>400ms</th>
+		<th style="color:blue;">A third event, delay of 225ms.</th>
+		<th style="color:red;"></th>
+		<th> </th>
+	</tr>
+	<tr>
+		<th>500ms</th>
+		<th style="color:blue;"></th>
+		<th style="color:red;">Timer expires, reset it to 125ms.</th>
+		<th style="color:green;">Invoke the reaction on first event.</th>
+	</tr>
+	<tr>
+		<th>525ms</th>
+		<th style="color:blue;"></th>
+		<th style="color:red;">Timer expires.</th>
+		<th style="color:green;">Invoke the reaction on the third event.</th>
+	</tr>
+</table>
+<p>
+	The figure below shows you the corresponding evolution of the queue
+	through time and how the queue sets its timer:
+	<xfr>
+		La figure ci-dessous vous montre l'évolution correspondante de
+		la file d'événements et comment le timer est géré:
+	</xfr>
+</p>
+<img src="timer-queue.svg" />
+<p>
+	The blue squares represent new events being pushed on the queue.
+	The red squares represent the timer expiring, resulting
+	in the reaction of an event to be invoked. Notice the red arrows at
+	the bottom of the figure, they show how the queue sets
+	its timer,  invoking
+	the method <span class="java-method">setTimer</span>,
+	when the timer expires or as new event with a shorted ETA come in.
+	The timer is first set to 500ms, then 
+	reset to 250ms at 100ms in. When it expires at 350ms,
+	it is set 150ms. When it expires, at 500ms in, it is set to 25ms.
+	When it expires at 525ms in, it is not reset since the queue is
+	empty.
+	<xfr>
+		Le carrés bleus repésentent les nouvelles requêtes qui
+		arrivent. Les carrés rouges représentent les moments
+		où le timer de la fenêtre expire. Notez les flèches
+		rougent au bas de la figure, elles vous montrent comment
+		le timer de la fenêtre est armé au cours du temps. Le
+		timer est armé pour 500ms en premier. Puis, il est
+		re-armé pour 250ms at T=100ms. Lorsqu'il expire
+		à T=350ms, il est re-armé pour 150ms. Lorsqu'il expire
+		à T=500ms, il est re-armé pour 25ms. 		
+	</xfr>
+</p>
+
+<h3>Concrete EventQueue</h3>
+
+<p>
+	You are up!
+	You are asked to write a concrete class for a working event queue.
+	This means extending the abstract class
+	<span class="java-class">object.events.EventQueue</span>.
+	<b>Please do so in the class
+		<span class="java-class">object.gui.EventQueue</span></b>.
+	<xfr>
+		C'est à vous, on vous demande d'écrire une implémentation
+		pour la file d'événement. Cela veut dire étendre
+		la classe abstraite
+		<span class="java-class">object.events.EventQueue</span>.
+		On vous demande de le faire dans la classe
+		<span class="java-class">object.gui.EventQueue</span>.
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+package object.gui;
+public class EventQueue extends object.events.EventQueue { 
+
+  @Override
+  public void setTimer(long delay) {
+    ...
+  }
+}
+</pre>
+<p>
+	Wondering how to implement this method?
+  Well, remember that the window provides a timer, a
+	timer that you could use here.
+	<xfr>
+		Vous vous demandez comment implémenter cette méthode?
+		Et bien, ne vous rappelez-vous pas que la fenêtre
+		vous fournit un timer que vous pouvez utiliser ici.
+	</xfr>
+</p>
+<p>
+	We suggest that you test your implementation before moving
+	along. We provided you with a simple test, in the class
+	<span class="java-class">object.gui.examples.EventQueueTests</span>.
+	You can read it also as an example of how to use the event queue
+	and how to define events. This is really a simple test, you may
+	have to write your own.
+	<xfr>
+		Nous vous suggérons de tester votre implémentation avant de
+		poursuivre. Nous vous avons passer un petit tests dans la classe
+		<span class="java-class">object.gui.examples.EventQueueTests</span>.
+		Vous pouvez regarder le code comme un exemple de comment utiliser
+		les événements et la file d'événements. C'est vraiment un test
+		très simple, vous allez peut-être avoir besoin d'écrire les votres.
+	</xfr>
+</p>
+
+<h3>Toolkit Timers</h3>
+
+<p>
+	Next step, after the complete the implementation of the event queue,
+	you are up to design and code the support for
+	multiple timers in our class
+  <span class="java-class">Toolkit2</span>, overriding
+	your previous implementation in the class
+	<span class="java-class">Toolkit</span>.
+	These are the two methods to override:
+	<xfr>
+		Prochaine étape, après avoir fournit une implémentation
+		pour la file d'événements, on vous demande de faire la conception
+		et le code pour avoir plusieurs timers pour notre toolkit.
+		Vous allez le faire dans une sous-classe 
+		<span class="java-class">object.gui.Toolkit2</span>
+		extending the class
+		<span class="java-class">object.gui.Toolkit</span>,
+		overriding your implementation that you did in the
+		previous task.
+		These are the two methods to override:
+	</xfr>
+</p>
+<pre class="prettyprint lang-java">
+package object.gui;
+
+public class Toolkit2 extends Toolkit {
+
+  @Override
+  public void expired() {}
+
+  @Override
+  public void setTimer(int delay, TimerListener listener) {}
+}
+</pre>
+<p>
+	You also need a concrete class for your events, typically
+	an inner class to your class
+	<span class="java-class">object.gui.Toolkit2</span>.
+</p>
+<pre class="prettyprint lang-java">
+  private class TimerEvent extends object.events.Event {
+    @Override
+    public void react() { }
+    @Override
+    protected boolean equals(object.events.Event e) { }
+  }
+</pre>
+<p>
+	<b>Important:</b> remember that the toolkit allows the same listener to
+	reset a new delay <b>before</b> the previous one actually expired.
+	This means that you must allow for redundant events for the
+	same listener to be detected and removed by the event queue.
+	The event queue automatically does
+	this for events that are equals, based on the
+	method <span class="java-method">equals(Event e)</span> on
+	the class 	<span class="java-class">object.events.Event</span>.
+	Therefore, you must implement the 
+	method <span class="java-method">equals(Event e)</span> on
+	your subclass of the class
+	<span class="java-class">object.events.Event</span>.
+	<xfr>
+		<b>Important:</b> rappelez-vous que le toolkit permet
+		le même écouteurs de demander un nouveau délai, ce qui
+		annule le précédent, même si celui si n'avait pas expiré.
+		Cela veut dire que vous devez permettre aux événements
+		redondants pour le même écouteur d'être détectés et
+		supprimés par la file d'événements. La file le fait
+		automatiquement pour les événements qui sont égaux,
+		au sens de la méthode
+		<span class="java-method">equals(Event e)</span> de
+		la classe <span class="java-class">object.events.Event</span>.
+		Cela veut dire que vous devez implémenter cette méthode
+		sur votre inner classe.
+	</xfr>
+</p>
+<p>
+	Once you will have completed the code, you can try it out
+	with our example code, the class
+	<span class="java-class">ProgressExample2</span> in the package
+	<span class="java-package">object.gui.examples</span>.
+	It uses the class
+	<span class="java-class">Toolkit2</span>, so it will use
+	your new implementation.
+	The window should look like before, that is, like this:
+	<xfr>
+		Une fois que vous aurez complété le code, vous pourrez
+		l'essayer avec notre exemple, voir la classe
+		<span class="java-class">ProgressExample</span>
+		dans le paquet 
+		<span class="java-package">object.gui.examples</span>.
+		La fenêtre devrait ressembler à cela:
+	</xfr>
+</p>
+<!-- video controls autoplay -->
+<video controls width="40%" >
+	<source src="vokoscreen-composed.mp4" type="video/mp4">
+</video>
+
+<!--
+<h3>Implementation Points</h3>
+
+<p>
+	Let's come back on the implementation of the generic event
+	queue, the class <span class="java-class">object.events.EventQueue</span>.
+	We have two implementation points to discuss because
+	they are important for you to understand them. These two implementation
+	points stem from the following observations:
+</p>
+<ol>
+	<li>
+		A reaction might push	new events on the queue.
+	</li>
+	<li>
+		Uncaught exceptions	might be thrown by the execution of a reaction.
+	</li>
+</ol>
+<p>
+	<b>
+		If you do not understand the following discussion, make sure to ask
+		for help
+	</b>. A lack of understanding tells you that you are not
+	really understanding event-oriented programming.
+</p>
+<p>
+	Let's discuss the first point, which is about re-entrance.
+  Think about the blinking cursor, what is the reaction to an
+	expired timer? Well, it is to set up a new timer, right?
+	Indeed, we want
+	to keep our cursor blinking, we do not want it to blink only
+	once. As a result, during the execution of the reaction, the
+	timer is set again. <u>Can you tell what is this important?</u>
+</p>
+<p>
+	So what does this mean? It means that while events are popped
+	from the queue, other events are pushed on the same queue.
+	Therefore, the implementation must be designed to support that.
+	On the one hand, the toolkit is removing from the head of the queue
+	all the events that are due. On the other hand, through new timer requests,
+	the toolkit is pushing new events on that same queue. Depending on how
+	the code is written, it may work or not, consistently or occasionally.
+	We suggest that you convince yourself of the potential risks,
+	looking at the code below:
+</p>
+<pre class="prettyprint lang-java">
+01  package object.gui;
+02  public class EventQueue extends object.events.EventQueue { 
+03    protected void timerExpired() {
+04      long now = System.currentTimeMillis();
+05      while (m_head != null && m_head.eta &lt;= now) {
+06        m_head.react();
+07        m_head = m_head.next;
+08      }
+09      if (m_head != null)
+10        setTimer(m_head.eta - now);
+11    }
+12  }
+</pre>
+<p>
+	This code looks fine, right? It is probably very close to
+	what you would have written, isn't it? See, the code works
+	perfectly as long as the reaction to the head event does not
+	push other events on the queue. If this happens, the code
+	may still work, most of the time, but sometimes, it will fail.
+	Let's build a failure example. Let's assume a queue that contains
+	two events, with ETAs at T+200ms and T+300ms.
+</p>
+<p>
+	Now let's suppose now that the queue timer expired at T+250ms
+	and we are executing the method <span class="java-method">timerExpired</span>
+	at line 
+<p>
+	Once you have recognized the risk and understood the problem,
+	the solution is not hard. It is sufficient to remove
+	all the requests that	are due first and only then start
+	invoking their listeners. Look at the code of the
+	event queue in the
+	class <span class="java-class">object.events.EventQueue</span>.
+	Look at the 
+	method <span class="java-method">timerExpired</span>.
+	<b>Important:</b> if you do not understand this point, it
+	is <span style="color:red;">imperative</span> that you discuss
+	it with other students and the teaching staff until you do.
+</p>
+<p>
+	Now, let's move onto our second point: the fact that reactions
+	may throw uncaught exceptions. Look again at the
+	class <span class="java-class">object.events.EventQueue</span>,
+	at the 
+	method <span class="java-method">fireEvent</span>.
+	Notice that events are fired safely, executing the event
+	reaction within in a try-catch-it-all block.
+	Indeed, since a reaction may throw an uncaught exception,
+	it would seem logical	that such an exception shall not cause
+	the entire event queue to go down.
+</p>
+<pre class="prettyprint lang-java">
+  PrintStream m_log;
+  protected EventQueue(PrintStream log) {
+    if (log != null)
+      m_log = log;
+    else
+      m_log = System.out;
+  }	
+  private void fireEvent(Event evt) {
+    try {
+      evt.run();
+    } catch (Throwable th) {
+      Date d = new Date();
+      m_log.println("["+d+"] an event reaction raised an uncaught exception:");
+      th.printStackTrace(m_log);
+    }
+  } 	
+</pre>
+<p>
+	Notice that we print the exception and then ignore it happened.
+	Is this correct? Well, first, notice that it is logged, if
+	a log file was provided, otherwise, it is printed out on
+	the standard output. It is a simple design, yet efficient.
+	Notice that we timestamp our log record, helping the one
+	reading the log to understand if the records are old
+	or recent.
+</p>
+<p>
+	For more information on logging, 
+	you may want to look at the official Java logging framework,
+	start with the class
+	<span class="java-class">java.util.logging.Logger</span>.
+	Unfortunately, although a very interesting subject, it is
+	out of the scope of this workshop. You can however learn about
+	it on the Web.
+</p>
+<p>
+	Besides the quesion of logging versus printing, we need to
+	consider the fact that we are ignoring an uncaught exception.
+	Well, the argument goes that the event queue
+	is managing multiple events and one single event raising an
+	exception should not impact the execution of the other events.
+	This line of reasoning makes sense, but it is not without
+	problems.
+</p>
+<p>
+	Even though it is often the right decision, but it is important
+	to realize that a thrown exception that is not caught usually
+	means bad news in the near future. It may be that something did not
+	happen, like when an illegal argument exception is thrown.
+	Worse, it may mean something failed, most likely leaving
+	the object graph in an inconsistent state, jeopardizing the
+	ability to continue any kind of execution within that object
+	graph. Such failure may remain dormant for while and show
+	themselves at later seemingly random times.
+</p>
+<p>
+	With our game, it would be very suspicious to have uncaught exceptions.
+	Therefore, we suggest that you put a breakpoint in the catch block
+	in order to be able to debug any uncaught exception and so that you can
+	correct the corresponding bug. But we all know that real complex games
+	have remaining bugs. Usually, such bugs are ignored, trying to keep the
+	player playing... and hoping the game will keep running smoothly. We
+	all know that it is often the case, but not always...
+</p>
+-->
+
+<h3>That's it folks</h3>
+</p>
+	Please do commit your work.
+</p>
+<textarea class="terminal" rows="4" width="60%" >
+  $ git add --all
+  $ git commit -m "Sprint object.gui, Task7 completed"
+  $ git push --all
+</textarea>

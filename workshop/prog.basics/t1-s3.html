@@ -1,0 +1,834 @@
+<vars>
+  sprint=prog.basics
+  task=t1
+  step=t1-s3
+</vars>
+
+<p>
+  Before we go any further, we will start using
+  the <a href="http://www.eclipse.org">Eclipse</a> tool.
+  It will simplify your coding experience and
+  help you learn Java. But like any great tool,
+  it will require a learning curve.
+  At first, it will feel a bit complex and a loss of time.
+  <xfr>
+  Avant d'aller plus loi, nous allons commencer à utiliser
+  l'outil <a href="http://www.eclipse.org">Eclipse</a>. Cela va simplifier 
+  votre expérience de programmation et vous aider à apprendre
+  Java. Mais comme tout outil puissant, cela va demander une
+  phase d'apprentissage. Au départ, cela vous semblera un peu
+  complexe et vous donnera la sensation de perdre du temps.
+  </xfr>
+</p>
+<p>
+  First, this is not a loss of time because,
+  over the coming years, Eclipse will help you
+  code faster and save a lot of time.
+  This is true of any Integrated Development
+  Environment (IDE), but Eclipse is one of the
+  best IDE for Java, designed by Java developers,
+  for Java developers.
+  Also, the use of Eclipse will also be mandatory in certain
+  courses during the next three years.
+  Additionally, it is used by many development teams around
+  the world.  
+  <xfr>
+    Premièrement, il n'y a pas de perte de temps, parce
+    que durant les années à venir, Eclipse vous aidera à programmer
+    plus rapidement et à gagner beaucoup de temps.
+    Ceci est vrai de tout Environnement de Développement Intégré (IDE),
+    et Eclipse est certainement l'un des meilleurs pour Java, conçu
+    par des développeurs Java pour des développeurs Java.
+    De plus, l'usage d'Eclipse est obligatoire dans certains cours
+    pendant les 3 prochaines années. Enfin, c'est un outil
+    utilisé dans beaucoup d'équipe de développement à travers
+    le monde.
+  </xfr>
+</p>
+<p>
+  Unfortunately, every year, some students resist the learning
+  of Eclipse. They try to avoid it entirely
+  or they try to minimize the learning, but in the end, they are
+  just loosing time and preventing themselves from learning a
+  great tool for the job. Some students do learn as they read these
+  web pages, but they do not write down
+  what they learn about Eclipse... Well, guess what? They forgot
+  within a few days most of what they learned. So make sure you
+  create your own <b>Eclipse cheat sheet</b>.
+  <xfr>
+    Malheureusement, chaque année, certains étudiants résiste
+    l'apprentissage d'Eclipse. Le résultat est une perte de temps
+    au final. D'autres étudiants apprennent en lisant ces pages,
+    mais ils ne notent pas ce qu'ils apprennent... Et devinez
+    ce qui se passe? Ils oublient en quelques jours ce qu'ils ont
+    appris. Alors assurez vous que vous créez votre propre anti-sèche
+    sur Eclipse.
+  </xfr>
+</p>
+<p>
+  Third, Eclipse is not so complex, we will help you
+  through the learning curve. So enjoy the help
+  and let's get started on the right foot with Eclipse.
+  We will all use the same Eclipse:
+  <xfr>
+    Troisièmement, Eclipse n'est pas si complexe que cela;
+    de plus, nous allons vous aider
+  durant la phase d'apprentissage. Alors appréciez cette aide
+  et commencez du bon pied avec Eclipse. Pour faciliter cela,
+  nous allons tous utiliser le même Eclipse:
+  </xfr>
+</p>
+<ol>
+  <li><b>DO NOT INSTALL ECLIPSE VIA YOUR NORMAL INSTALLER</b>.</li>
+  <li><b>DO NOT DOWNLOAD ECLIPSE FROM THE ECLIPSE WEBSITE</b>.</li>
+  <li><b>SOURCE SETENV.SH IN EVERY TERMINAL WINDOW YOU OPEN</b>.</li>
+  <li><b>LAUNCH ECLIPSE SOLELY FROM THE COMMAND LINE.</b></li>
+</ol>
+<p>
+  <u>
+    Please respect this points, every year some students do not and
+    we waste a lot of time fixing the problems that ensue.
+  </u>
+  <xfr>
+    S'il vous plait, respectez ces points. Chaque année, certains
+    étudiants ne le font pas et nous gâchons beaucoup de temps
+    à résoudre les problèmes qui en découlent.
+  </xfr>
+</p>
+<p>
+  We have provided you with an Eclipse already.
+  It is important that you use the Eclipse we provided you.
+  We know, you all want to use the latest and greatest,
+  but we have to maintain the homogeneity of the environment.
+  You will all be using Java projects that we started under
+  the provided Eclipse and we do not want to run into configuration
+  problems.
+  <xfr>
+  Nous vous avons fourni Eclipse déjà. C'ets important que vous 
+  utilisiez cet Eclipse. Nous savons, vous voulez tous utiliser
+  le dernier et le meilleur, mais nous devons maintenir l'homogénéité
+  de l'environnement. Vous allez tous utiliser des projets Java
+  que nous avons démarré avec l'ECclipse fourni et nous voulons
+  éviter les problèmes de configuration.
+  </xfr>
+</p>
+<p>
+  Take it as your first step in the professional world. When you
+  will start in a new job, you will not choose your tools, your boss will.
+  When working
+  in a team, you have to adopt the same tools as the rest
+  of the team. Otherwise, you will undermine the team work,
+  and we do not want that, do we? So you may keep using the tools
+  you like for your personal projects, but you must agree with the
+  team decisions when working on a project within a team.
+  <xfr>
+  Considérez que c'est votre premier pas dans le monde professionnel.
+  Quand vous allez démarrer votre métier, vous n'allez pas choisir vos
+  outils, votre manager décidera pour vous. 
+  Quand vous allez travailler dans une équipe, vous allez devoir tous utiliser
+  le même outil. Dans le cas contraire, vous allez pénaliser le travail
+  de l'équipe et nous ne voulons pas cela, n'est ce pas? Donc vous pouvez
+  continuer à utiliser les outils que vous voulez pour vos projets
+  personnels, mais vous devez accepter les décisions d'équipe
+  lorsque vous travaillez dans une équipe.
+  </xfr>
+</p>
+
+<h3>Eclipse Help</h3>
+
+<p>
+  We remind you that we provided you with a summary of what you must know
+  about Eclipse in these
+  <a href="eclipse/eclipse.htm">pages</a>. Warning, these pages are not meant
+  to be browsed now. They are meant to be a reference
+  documentation that you will come back to when in doubt, throughout the year.
+  <xfr>
+    Nous vous rappelons que nous vous avonz fournit un résumé de ce qu'il
+    faut savoir pour utiliser Eclipse
+    dans ces <a href="eclipse/eclipse.htm">pages</a>. Attention, ces pages
+    ne sont pas là pour être parcouru maintenant, elles sont là comme
+    une référence vers laquelle vous reviendrez régulièrement au cours de
+    l'année. 
+  </xfr>
+</p>
+
+<h3>Launching Eclipse</h3>
+
+<p>
+  We will launch Eclipse manually, from a terminal.
+  This is really important, do follow <b>exactly</b> the instructions below.
+  <b>
+    DO NOT LAUNCH ECLIPSE BY CLICKING ON A DESKTOP ICON OR ANY OTHER MEANS.
+    REALLY, WE MEAN IT.
+  </b>
+	Always launch it like this:
+  <xfr>
+  Nous allons démarrer Eclipse manuellement, depuis un terminal.
+  Ceci est vraiment important, suivez <b>exactement</b> les instructions ci-après.
+	<br>
+	<b>Ne lancez pas l'exécution d'eclipse en cliquant sur une icône sur votre bureau.</b>
+	Lancez Eclipse toujours de cette façon:
+  </xfr>  
+  <br>
+  <br>
+</p>
+<pre class="terminal">
+  oop$ source setenv.sh 
+  oop$ eclipse -data workspace/
+</pre>
+<p>
+  <b>ALWAYS START ECLIPSE THIS WAY FOR THIS WORKSHOP.</b>
+</p>
+<p>
+  Eclipse will start a new window, with a welcome screen that you can close
+  right away. As soon as you close it, you will
+  find yourself in the Java perspective, that is, the Eclipse
+  graphical interface for Java developers. You should see something like this:
+  <xfr>
+ Eclipse va démarrer dans une nouvelle fenêtre, avec un écran d'accueil que vous
+ pouvez fermer immédiatement. Dès que vous le fermez, vous allez vous trouver 
+ dans la perspective Java, c'est à dire, l'interface graphique pour les
+ développeurs Java. Vous devez voir quelquechose comme cela:
+  </xfr>
+</p>
+<img width="80%" src="images/eclipse-initial-sceen.png"/>
+<p>
+  Your Eclipse can be configured using a dark or light theme. In this
+  case, you see a dark theme above. You may use any theme you like, but
+  configure your Eclipse on your own time, not right now. Let's get going
+  with this task.
+  <xfr>
+  Votre Eclipse peut être configuré avec un theme sombre ou clair.
+  Dans le cas présent, vous voyez un thème sombre. Vous pouvez utiliser
+  n'importe quel thème, mais nous vous demandons de configurer cela 
+  plus tard, sur votre temps personnel. Maintenant commençons avec
+  cette tâche.
+  </xfr>
+</p>
+<p>
+  When you launched Eclipse, you gave two arguments: "-data workspace".
+  The <em>"-data"</em> option tells Eclipse where is your <em>workspace</em>.
+  Eclipse uses the concept of a workspace, a directory where it manages
+  all your projects. We will use our <em>workspace</em> directory
+  for this, where we provided you with existing projects. We will import
+  them into Eclipse later, when it will make sense to do so.
+  <xfr>
+    L'option <em>"-data"</em> dit à Eclipse où se trouve votre workspace.
+    Eclipse utiliser le concept de workspace, répertoire où se trouvent
+    un ensemble de projets. Nous allons utiliser notre répertoire
+    <em>workspace</em> pour cela, que nous avons pré-rempli avec des projets
+    existants. Vous allez les importer dans Eclipse plus tard, quand cela
+    sera le moment. 
+  </xfr>
+</p>
+
+<h3>Installed JREs</h3>
+
+<p>
+  Let's make sure that your Eclipse knows where to find your installed
+  Java Development Kit (JDK), the version of the Java Runtime Environment (JRE)
+  for developers. We gave you also a version of the JDK, along with Eclipse.
+  Look where you cloned this workshop, under <em>~/AgileLearning</em>, you have
+  a directory <em>share/jdk</em> there. The complete path should
+  therefore be <em>/home/john/AgileLearning/share/jdk</em>, 
+  assuming that the directory <em>/home/john</em> is your home directory.
+  You can verify what is your home directory as follows:
+  <xfr>
+    Vérifions qu'Eclipse sait où trouver votre Java Development Kit (JDK), 
+    la version du Java Runtime Environment (JRE) pour les développeurs.
+    Nous vous avons donné une version du JDK avec Eclipse.
+    Regardons où vous avez cloné ce workshop, sous <em>~/AgileLearning</em>,
+    vous avez un répertoire <em>share/jdk</em>. Le chemin complet doit
+    être quelque chose comme <em>/home/john/AgileLearning/share/jdk</em>,
+    supposant que le répertoire <em>/home/john</em> est votre home directory.
+    Vous pouvez vérifier quel est votre home directory comme suit:
+  </xfr>
+</p>
+<pre class="terminal">
+  oop$ cd
+  $ pwd
+  /home/john
+</pre>
+<p>
+  So in Eclipse, you need to open the preference dialog, through the Eclipse menus:
+  Windows - Preferences. Go to the Java section and more specifically
+  the section called <em>"Installed JREs"</em>. 
+  You should see something like this:
+  <xfr>
+    Donc dans Eclipse, vous devez ouvrir le dialogue preference, via le menu:
+    Windows - Preferences. Allez dans la section Java et plus 
+    spécifiquement la section appelée <em>"Installed JREs"</em>. 
+    Vous devez voir quelquechose comme suit:
+  </xfr>
+</p>
+<img src="images/eclipse-installed-jres.png" width="80%">
+<p>
+  Make sure that the only JRE is for the following location in your
+  file system: <em>"/home/john/AgileLearning/share/jdk"</em>,
+  still assuming your login is "john" and your home directory
+  "/home/john". This is a Java-11 Development Kit,
+  <b>do not use a more recent one</b>.
+  <xfr>
+    Vous devez voir une JRE, à la place suivante dans votre système de fichier:
+    <em>"/home/john/AgileLearning/share/jdk"</em>,
+    en supposant que votre login est "john" et que votre home directory
+    est "/home/john".
+  </xfr>
+</p>
+<p>
+  If you see a different JRE, just remove it. Then add the correct one,
+	clicking on the <em>"Add"</em> button, then selecting a <em>"Standard VM"</em>
+  and finally browsing to the directory
+  <em>"~/AgileLearning/share/jdk"</em> as the JRE home.
+  <xfr>
+    Si vous ne voyez pas de JRE valide, ajoutez le, en cliquant sur 
+    le bouton <em>"Add"</em>, puis en sélectionnant <em>"Standard VM"</em>
+    et finalement en sélectionnant le répertoire 
+    <em>"~/AgileLearning/share/jdk"</em> comme JRE home.
+  </xfr>
+</p>
+<!--
+<p>
+  On your Linux machine, we suggest that you create symbolic links
+  from the <em>/opt</em> directory. Like this:
+</p>
+<textarea class="terminal" rows="3" width="60%" >
+  $ ln -s ~/AgileLearning/share/jdk /opt/jdk
+  $ ln -s ~/AgileLearning/share/eclipse /opt/eclipse
+</textarea>
+-->
+
+<h3>Importing a project</h3>
+
+<p>
+  Normally, you would create a new Java project, but in this case,
+  the <em>hello.world</em> directory is already configured as an
+  Eclipse project. So you can <em>import</em> it.
+  <xfr>
+  Normalement, vous devez creer un nouveau projet Java, mais dans le cas présent,
+  le répertoire <em>hello.world</em> est déjà configuré comme un projet  
+  Eclipse. Donc vous pouvez simplement l'<em>importer</em>.
+  </xfr>  
+</p>
+<p>
+  Right-click on  the <em>Package Explorer</em> view and select import.
+  Follow the popup dialog,
+  selecting <em>General</em> and then <em>Existing Projects in the workspace</em>.
+  Click on <em>"Next"</em>.
+  <xfr>
+  Après un clic-droit sur la vue <em>Package Explorer</em>, sélectionner import.
+  Suivez le popup, sélectionnez <em>General</em> puis 
+  <em>Existing Projects in the workspace</em>.
+  Enfin cliquez sur <em>"Next"</em>.
+  </xfr>  
+
+</p>
+<img src="images/eclipse-import-project.png" width="60%" />
+<p>
+  Keep following
+  and then choosing the location of the root directory that contains
+  the project to import
+  (here, it is <em>workshop/workspace/hello.world</em>). For now, only import
+  the <em>hello.world</em> project into your Eclipse workspace,
+  so deselect all projects (<em>Deselect All</em>) and only
+  select the <em>hello.world</em> project.
+  <xfr>
+  Choisissez l'emplacement du répertoire racine du projet à importer
+  (dans notre cas, <em>workshop/workspace/hello.world</em>). 
+  Importez simplement le projet <em>hello.world</em> dans votre
+  workspace Eclipse, donc dé-sélectionnez tous les projets
+  (<em>Deselect All</em>) et sélectionnez <em>hello.world</em>.
+  </xfr>  
+</p>
+<img src="images/eclipse-import-project2.png" width="40%" />
+<p>
+  Click <em>"Finish"</em>.
+</p>
+<img src="images/eclipse-import-project3.png" width="100%" />
+<p>
+  Note that the project: <em>hello.world</em> appears as a directory
+  in the <em>Package Explorer</em> view, on the left-hand side of
+  the Eclipse workbench. Notice that you can see the <em>src</em>
+  directory and you can see the Java packages we talked about earlier:
+  the <span class="java-package">default</span> and
+  <span class="java-package">edu.polytech.oop</span>.
+  The package <span class="java-package">default</span> contains
+  classes that are not within a specific package.
+  Notice how Eclipse nicely hides the directory tree (src/edu/polytech/oop)
+  into a flat representation showing the individual packages (edu.polytech.oop).
+  <xfr>
+    Notez que le projet <em>hello.world</em> apparait comme un répertoire
+    dans la vue <em>Package Explorer</em>, sur le coté gauche du workbench Eclipse. 
+    Notez également que vous pouvez voir le répertoire <em>src</em> avec les
+    packages dont nous avons parlé précédemment:
+    <span class="java-package">default</span> et
+    <span class="java-package">edu.polytech.oop</span>.
+    Notez comment Eclipse cache judicieusement l'arborescence de fichiers 
+    (src/edu/polytech/oop) derrière une représentation plate montrant les packages
+    (edu.polytech.oop).
+  </xfr>
+</p>
+<p>
+  Note: Just ignore the <em>tests.jar</em> for now.
+</p>
+<p>
+  Notice on the upper right corner that you
+  are indeed in the Java perspective, with the 
+  <img src="images/eclipse-java-perspective-icon.png" height="16" />
+  icon selected in the perspective switcher:
+  <xfr>
+  Vérifiez sur le coin haut droit que vous êtes bien dans la perspective
+  Java, avec l'icone <img src="images/eclipse-java-perspective-icon.png" height="16" />
+  sélectionnée dans le sélectionneur de perspective.
+  </xfr>  
+</p>
+<img style="margin-left: .3in;"
+     src="images/eclipse-perspective-switch.png" height="30" />
+<p>
+  Notice that you see the <em>Debug</em> perspective in this switcher,
+  something you may not see on your screen. You can open the <em>Debug</em>
+  perspective by clicking on the
+  <img src="images/eclipse-debug-perspective-icon.png" height="16" />
+  icon. But we will come back to debugging under Eclipse later.
+  <xfr>
+  Vérifiez que vous voyez la perspective <em>Debug</em> dans le sélectionneur
+  de perspective. Vous pouvez ouvrir la perspective <em>Debug</em> 
+  en cliquant sur l'icone 
+  <img src="images/eclipse-debug-perspective-icon.png" height="16" />.
+  Nous reviendrons plus tard sur l'aspect debug.
+  </xfr>  
+
+</p>
+
+<h3>Automated Compilation</h3>
+
+<p>
+  Another great thing about Eclipse is that it takes care of the
+  compilation of your sources, automatically, <b>when you save
+    your changes and only if you save them</b>. When there are
+  unsaved changes in a source file, there is a <em>"*"</em>
+  in front of the tab name; try it. If you save
+  your changes, using the "Ctrl-S" shortcut, or the menu
+  <em>File -&gt; Save</em>, the <em>"*"</em> disappears and
+  Eclipse will automatically recompile your modified source.
+  No more terminals, no more executing the Java compiler manually,
+  how great is that? Fantastic, right?
+  <xfr>
+    Un autre aspect majeur d'Eclipse est qu'il gère la compilation de
+    vos sources automatiquement, <b>dès que vous sauvegardez vos
+      changements</b>. Vous sauvez vos changements, via 
+    la touche "Ctrl-S", ou via le menu <em>File -&gt; Save</em>, 
+    l' <em>"*"</em> disparait et
+    Eclipse recompile automatiquement vos sources modifiés.
+  </xfr>    
+</p>
+<p>
+  Eclipse does everything automatically and does it well.
+  But sometimes, you will see persistent compilation errors,
+  appearing as red crosses in the <em>Package Explorer</em> and
+  in your class sources. If you really believe that your code
+  is correct, you may try to clean your project: <em>Project -&gt; Clean</em>.
+  This ask Eclipse to recompile everything, from scratch.
+  But you will seldom use this, so just make a mental note of the
+  possibility and trust Eclipse to do the right thing.
+  <xfr>
+    Eclipse fait presque tout automatiquement, comme il faut.
+    Cependant, certaines fois, vous verrez des erreurs de compilation,
+    apparaissant via des croix rouges dans le <em>Package Explorer</em> et
+    dans vos classes sources. 
+    Si vous pensez vraiment que votre code est correct, vous pouvez
+    re-essayer de nettoyer votre projet: <em>Project -&gt Clean</em>.
+    Cela va demander à Eclipse de tout recompiler, depuis le debut.
+    Mais vous allez utiliser cela rarement, donc retenez simplement 
+    cette possibilité et faites confiance à Eclipse pour faire ce qu'il
+    faut.
+  </xfr>    
+</p>
+<p>
+  Notice there is also a tab called <em>"Problems"</em> that lists
+  all the compilation problems in all the projects. This is a good
+  place to check more details about warning or errors when you see
+  red crosses (errors) or yellow triangles (warning). If you see
+  a red exclamation mark ('!') on your project in the "PackageExplorer",
+  this means you project is not compiling, more on that when we will discuss
+  the build path for a project.
+  <xfr>
+    Notez qu'il y a aussi un panneau appelé <em>"Problems"</em> qui liste
+    tous les problèmes de compilation dans tous les projets. C'est un endroit
+    où avoir les détails des erreurs (croix rouges) et des warnings (triangles
+    jaunes). Si vous voyez un point d'exclamation ('!') au niveau du nom de
+    votre projet dans le panneau "PackageExplorer", cela veut dire que votre
+    projet ne compile pas du tout, nous y reviendrons lorsque nous parlerons
+    du "build path" un peu plus tard.
+  </xfr>
+</p>
+
+<h3>Launching an execution</h3>
+
+<p>
+  From Eclipse, you can launch the execution of any class that has
+  a <span class="java-method">main</span> method.
+  Since all our classes 
+  <span class="java-class">HelloWorld</span> 
+  do have a method <span class="java-method">main</span>,
+  you can select any of our class in the <em>Package Explorer</em> view
+  and right-click on it. Just follow the popup menu,
+  selecting <em>"Run As"</em> and then <em>"Java Application"</em>.
+  Let's select and launched the
+  <span class="java-class">HelloWorld</span> class
+  in the package
+  <span class="java-package">edu.polytech.oop</span>.
+  <xfr>
+    Depuis Eclipse, vous pouvez lancer l'exécution de toute classe
+    qui a une méthode <span class="java-method">main</span>.
+    Puisque toutes nos classes ont une méthode 
+    <span class="java-method">main</span>,
+    vous pouvez sélectionner n'importe quelle classe via un clic-droit
+    sur la classe dans la vue <em>Package Explorer</em>.
+    Suivez simplement le menu popup, sélectionnez 
+    <em>"Run As"</em>
+    puis <em>"Java Application"</em>.
+    Essayons avec la classe
+    <span class="java-class">HelloWorld</span> du package
+    <span class="java-package">edu.polytech.oop</span>.
+  </xfr>    
+</p>
+<img src="images/eclipse-run-helloworld.png" width="80%" />
+<p>
+  Notice at the bottom, the output of the execution, in
+  the <em>Console</em> view. If you do not see a <em>Console</em>,
+  you can open it through the Eclipse menus:
+  <em>Windows</em> then <em>Show View</em> and then
+  <em>Console</em>. Remember this, you can open any view in
+  any perspective this way.
+  <xfr>
+  Remarquez en bas du workbench le résultat de l'exécution, dans 
+  la vue <em>Console</em>. Si vous ne voyez pas cette vue, vous
+  pouvez l'ouvrir via les menus Eclipse: 
+  <em>Windows</em> puis <em>Show View</em> puis
+  <em>Console</em>. Rappelez vous de cela, vous pouvez ouvrir
+  n'importe quelle vue par ce biais.
+  </xfr>    
+</p>
+
+<h3>Create a Java Project</h3>
+
+<p>
+  You learned to import a project, it is also important
+  to learn to create a new Java project from scratch.
+  This is what we will do now: create a project called
+  <em>hello.greetings</em>.
+  To create a Java project, you can use the Eclipse menus:
+  <xfr>
+  Vous avez appris à importer un projet existant, c'est également important
+  d'apprendre à créer un nouveau projet depuis zéro.
+  Nous allons le faire maintenant: créer un projet appelé  
+  <em>hello.greetings</em>.
+  Pour créer un projet, vous pouvez utiliser les menus Eclipse:
+  </xfr>    
+</p>
+<p style="margin-left: .6in">
+  File → New → Java Project. 
+</p>
+<div style="column-count: 2;column-gap: 20px; " >
+  <div style="float: left; width: 100%;">
+    <p>
+      A dialog appears to choose some of the features of your Java project.
+      First, pick the name <b>hello.greetings</b> and look at the default location,
+      it is exactly what we want (a subdirectory called <em>hello.greetings</em>
+      in the <em>workspace</em> directory). So let the box
+      <b>Use default location</b>
+      checked. But note that you could choose another location for your project.
+      <xfr>
+	      Un dialogue apparait pour configurer votre nouveau projet.
+	      Tout d'abord, choisissez le nom <b>hello.greetings</b> et vérifiez
+	      le dossier choisi par défault. C'est un sous dossier du dossier
+	      du workspace, c'est exactement ce que nous voulions. Parfait.
+	      Notez que vous pourriez choisir un autre endroit dans le système
+	      de fichier pour votre projet.
+      </xfr>
+    </p>
+    <p>
+      Very important, you must choose an execution environment.
+      Be sure to choose a level of Java that is compatible with the code you have
+      or intend to write. Like almost all programming languages, Java has
+      defined different versions over the years. The version
+      we will use is Java11 and this is why we gave you a JDK11.
+      So choosing <b>JavaSE-11</b> is good.
+      <xfr>
+	      Très important, vous devez choisir un environnement d'exécution,
+	      c'est à dire une version de la plateforme Java.
+	      Soyez certain de choisir une version qui soit compatible avec
+	      le code que vous avez ou que vous voulez écrire. Le langage
+	      Java a évolué au cours du temps, nous allons utiliser la version 11.
+	      Donc, choisir <b>JavaSE-11</b> est bien.
+	      Cela correspond d'ailleurs à la version de Java que vous
+	      avez installé.
+    </p>    
+  </div>
+  <div style="float: right; width: 350px; margin-right: -350px;">
+    <!--img src="images/eclipse-new-java-project.png" width="90%"-->
+    <img
+       style="float: right; "
+       src="images/eclipse-new-java-project.png" width="100%">
+  </div>
+</div>
+<p>
+  <b>Note:</b> if you do not see the version of Java you want,
+  click on the <b>Configure JREs...</b> link. 
+</p>
+<img src="images/eclipse-installed-jres.png" width="60%">
+<p>
+  Make sure that you leave the selected option about the project layout:
+  create separate folders for sources and class files. Remember, this is
+  what we did earlier, we created a <em>src</em> and <em>bin</em> directory
+  in the <em>hello.world</em> project. We want to keep this layout for
+  this new project and all future projects in the workshop.
+  <xfr>
+    Soyez certain de ne pas toucher à l'organisation standard de votre
+    projet. Rappelez vous, nous avions créer un dossier
+    <em>src</em> et un dossier <em>bin</em> dans notre projet 
+    <em>hello.world</em>. Nous voulons garder cette structure
+    pour ce nouveau projet et pour tous les projets de cet atelier.
+  </xfr>
+</p>
+
+<h3>Create a Java Package</h3>
+
+<p>
+  Let's create a Java package called
+  <span class="java-package">hello.greetings</span>.
+  Right-click on the <em>src</em> and select <em>New</em>
+  and then select <em>Package</em>. You can see that Eclipse
+  has prefilled the package name, with project name.
+      So just click <em>Finish</em>.
+  You should have something like the screen capture below.
+  <xfr>
+  Créons un package appelé <span class="java-package">hello.greetings</span>.
+  Avec un clic droit sur <em>src</em>, sélectionnez <em>New</em>
+  puis <em>Package</em>.  Vous devez voir qu'Eclipse a pré-rempli
+  le nom du package avec le nom du projet.
+  Cliquez simplement <em>Finish</em>.
+  Vous devez avoir quelque chose comme l'écran ci-après.
+  </xfr>
+</p>
+<img src="images/eclipse-hello-greetings-package.png" width="90%">
+
+<h3>Create a Java Class</h3>
+
+<p>
+  Now, we can create a new class in the package 
+  <span class="java-package">hello.greetings</span>.
+  Just right-click the package in the <em>Package Explorer</em>
+  and select <em>New class</em>. Name the new class
+  <span class="java-class">Greetings</span>.
+  Then add the following method:
+  <xfr>
+  Maintenant, vous pouvez créer une classe dans le package
+  <span class="java-package">hello.greetings</span>.
+  Faites simplement un clic droit sur le package dans le 
+  <em>Package Explorer</em>
+  et selectionnez <em>New class</em>. Nommez la nouvelle classe
+  <span class="java-class">Greetings</span>.
+  Puis ajoutez la méthode suivante:
+  </xfr>
+</p>
+<pre class="prettyprint lang-java">
+package hello.greetings;
+public class Greetings {
+  public static void main(String[] args) {
+    System.out.print("Greetings");
+    int i=0;
+    while (i &lt; args.length) {
+      System.out.printf(" %s", args[i]);
+      i = i + 1;
+    }
+    System.out.println("!");
+    return;
+  }
+}
+</pre>
+<p>
+  You should see something like this:
+</p>
+<img src="images/eclipse-greetings-class.png" width="90%">
+<p>
+  Notice how Eclipse nicely hides the directory tree (src/hello/greetings)
+  into a flat representation showing the individual packages (hello.greetings).
+  If it is not the case, you can control that via the <em>Package Explorer</em>
+  toolbar:
+</p>
+<img width="40%" src="images/eclipse-pkg-explorer-toolbar.png"/>
+<p>
+  Locate the little triangle icon on the right-hand side and
+  click on it, select from the drop-down menu the
+  <em>Package Representation</em>, as flat or hierarchical.
+</p>
+
+<h3>What is this new class doing?</h3>
+
+<p>
+  Try it yourself from
+  the command line. You know Eclipse has compiled the source
+  from the "src" directory to a class file in "bin" directory.
+  So you can launch the class 
+  <span class="java-class">Greetings</span> like this:
+  <xfr>
+		Que fait cette nouvelle classe? essayez depuis la ligne de 
+		commande.. Vous savez qu'Eclipse a compilé le source depuis
+		le répertoire "src" vers une classe dans le répertoire "bin".
+		Donc vous pouvez lancer la classe 
+		<span class="java-class">Greetings</span> comem suit:
+  </xfr>
+</p>
+<textarea class="terminal" rows="4" >
+hello.greetings$ java -classpath ./bin hello.greetings.Greetings
+Greetings!
+hello.greetings$
+</textarea>
+<p>
+  Nothing seems to have changed, right? Well, now try to add arguments
+  to the execution, like this:
+</p>
+<textarea class="terminal" rows="4" >
+hello.greetings$ java -classpath ./bin hello.greetings.Greetings Albert Einstein
+Greetings Albert Einstein!
+hello.greetingsworld$
+</textarea>
+<p>
+	Feel free to try other arguments, like your own name for instance.
+</p>
+<check
+   silent="onSuccess"
+   blocking="false"
+   lang="java"
+   cwd="workspace/hello.world"
+   classpath="bin;tests.jar"
+   classname="tests.prog.basics.task1.Check3">
+  <banner>
+    The following check will just try to execute your
+    class <span class="java-class">hello.greetings.Greetings</span>,
+    as illustrated above.
+  </banner>
+  <hint>
+    Something is not quite right, check your <em>hello.greetings</em> project
+    in the <em>workspace</em> directory:
+    <ol>
+      <li>
+				Make sure that you have a file called Greetings.java under
+				the "src/hello/greetings" directory.
+      </li>
+      <li>
+				Make sure that you also have a file called "Greetings.class"
+				under the "bin/hello/greetings" directory.
+      </li>
+      <li>
+				Make sure that you can load and execute your class Greetings
+				like this:
+				<textarea class="terminal" rows="4" >
+  hello.greetings$ java -classpath ./bin hello.greetings.Greetings John Smith
+  Greetings John Smith!
+				</textarea>
+      </li>
+    </ol>
+    Ask for help if you need to.
+  </hint>
+  <success>
+    Everything looks fine.<br>
+    Congratulations!
+  </success>
+  <unfold></unfold>
+</check>
+<p>
+  But how could we launch the execution from Eclipse, with arguments?
+	<br>
+	<br>
+  You can launch the class   <span class="java-class">Greetings</span>
+  as before, with a right-click on the class. Of course,
+  Eclipse will create a corresponding <em>Launch Configurations</em>.
+  Remember, you access launch configurations via the debugger
+  icon
+  <img src="images/eclipse-debugger-icon.png" height="16" />,
+  selecting the drop-down menu with the little black triangle
+  and then selecting <em>"Debug Configurations"</em>.
+  You should see something like this:
+  <xfr>
+		Mais comment faire pour lancer une exécution depuis Eclipse
+		avec des arguments?
+		<br><br>
+    Nous devons introduire le concept de <em>Configuration de Lancement</em>.
+    A chaque fois que vous lancez une exécution, Eclipse crée
+    automatiquement une configuration correspondante. Vous pouvez
+    les accéder par l'icon du debugger:
+  </xfr>
+</p>
+<img src="images/eclipse-greetings-debug-configuration.png" width="80%" />	
+<p>
+  See the tab called <em>Arguments</em>, in order to switch to it.
+  You can see you have two areas, one for the program arguments and
+  the other for the <em>VM</em> arguments. Here, the <em>VM</em>
+  means the Java Platform. Let's just ignore this for now since
+  we do not have special arguments to pass to the Java Platform.
+  Add the program arguments: Albert Einstein. You should have this:
+  <xfr>
+    Voyez vous l'onglet <em>Arguments</em>? Selectionnez le.
+    Vous voyez deux zones de saisie, une pour les arguments qui
+    seront passé au programme lancé et l'autre pour les arguments
+    qui seront passé à la plateforme Java. Nous n'avons pas d'arguments
+    à passer à la plateforme, mais nous voulons passer des arguments
+    à notre programme. Saisissez les arguments: Albert Einstein.
+    Vous devriez avoir cela:
+  </xfr>
+</p>
+<img src="images/eclipse-greetings-arguments.png" width="80%" />
+<p>
+  Now look at the <em>Debug</em> button, down on the right-hand
+  side corner. Debugging is another way to launch an execution,
+  just click on the <em>Debug</em> button. The class should
+  execute and you should see this:
+  <xfr>
+  Maintenant regardez le bouton <em>Debug</em>, sur le coin droit.
+  Debugger est un autre moyen de lancer une exécution. 
+   Cliquez sur le bouton <em>Debug</em>. Vous devriez voir cela:
+  </xfr>
+
+</p>
+<img src="images/eclipse-run-greetings-albert-einstein.png" width="80%" />
+
+<h3> Congrats and Quizz </h3>
+
+<p>
+  First, congrats! You have made you first steps using Eclipse.
+  Next step will be about debugging to learn more about Java programming.
+  Stay tuned!
+ <xfr>
+  En premier, félicitations, vous avez fait vos premiers pas avec Eclipse.
+  Les étapes suivantes concerneront les aspects debug.
+  Restez à l'écoute!
+  </xfr>
+</p>
+<p>
+  Second, how much do you think you will
+  remember about all this in 3 weeks or 6 months? Probably not much,
+  right? So then, how
+  will you go about finding that information again?
+  Did you take any notes? Did you organize what you have learned?
+  If you did, great! If you didn't, oh well... it means that you will
+  loose time on the Web to find it again... As we discussed earlier,
+  every year,
+  some students understand that they have to learn Eclipse and some
+  others try to escape it. Now, guess who will learn better and faster
+  during this year?
+  <xfr>
+    En second, est-ce que vous pensez que vous vous rappelerez
+    de tout ces points dans 6 mois? Probablement pas beaucoup, n'est-ce pas?
+    Et donc, comment ferez-vous pour retrouver l'information?
+    Avez-vous pris des notes? Si oui, c'est super. Si ce n'est pas le
+    cas... et bien c'est vous qui perdrez votre temps sur le Web.
+    Comme nous avons discuté déjà, certains étudiants comprennent
+    qu'il faut apprendre et maîtriser Eclipse, d'autres pensent
+    gagner du temps en l'évitant... lesquels d'après vous seront
+    en avance dans quelques semaines?
+  </xfr>
+</p>
+  
