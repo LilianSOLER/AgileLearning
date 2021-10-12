@@ -45,10 +45,10 @@ public class HalGreetings2 {
 		if(names != null) {
 			while (i < names.length) {
 				String s = names[i];
-				if(s != "null") {
+				if(s != null) {
 					System.out.print(" " + s);
-					i += 1;
 				}
+				i += 1;
 			}
 		}
 		System.out.println("!");
