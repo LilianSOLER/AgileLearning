@@ -1,6 +1,6 @@
 package snippet;
 
 public class Snippet {
-	eclipse -data workspace
+	//eclipse -data workspace
 }
 

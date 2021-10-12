@@ -12,7 +12,7 @@ public class MathUtils {
    * @return the absolute value of the given argument.
    */
   static public int abs(int n) {
-    throw new RuntimeException("Not Implemented Yet");
+    return Math.abs(n);
   }
 
   /**
@@ -20,7 +20,7 @@ public class MathUtils {
    * @return the absolute value of the given argument.
    */
   static public float abs(float n) {
-    throw new RuntimeException("Not Implemented Yet");
+	  return Math.abs(n);
   }
 
   /**
@@ -28,7 +28,7 @@ public class MathUtils {
    * @param x,y
    */
   static public int min(int x, int y) {
-    throw new RuntimeException("Not Implemented Yet");
+    return Math.min(x, y);
   }
 
   /**
@@ -36,7 +36,7 @@ public class MathUtils {
    * @param x,y
    */
   static public float min(float x, float y) {
-    throw new RuntimeException("Not Implemented Yet");
+	  return Math.min(x, y);
   }
 
   /**
@@ -44,7 +44,7 @@ public class MathUtils {
    * @param x,y
    */
   static public int max(int x, int y) {
-    throw new RuntimeException("Not Implemented Yet");
+	  return Math.max(x, y);
   }
 
   /**
@@ -52,7 +52,7 @@ public class MathUtils {
    * @param x,y
    */
   static public float max(float x, float y) {
-    throw new RuntimeException("Not Implemented Yet");
+	  return Math.max(x, y);
   }
   
   /**
@@ -63,7 +63,10 @@ public class MathUtils {
    *         +1 if the first is greater than the second
    */
   static public int comp(int x, int y) {
-    throw new RuntimeException("Not Implemented Yet");
+    if(x<y) {
+    	return -1;
+    }
+    return 1;
   }
 
   /**
@@ -74,7 +77,12 @@ public class MathUtils {
    *         +1 if the first is greater than the second
    */
   static public int comp(float x, float y) {
-    throw new RuntimeException("Not Implemented Yet");
+	  if(x<y) {
+	    	return -1;
+	    } else if (x == y) {
+	    	return 0;
+	    }
+	    return 1;
   }
 
   /**
@@ -86,7 +94,13 @@ public class MathUtils {
    * @param n
    */
   static public int factI(int n) {
-    throw new RuntimeException("Not Implemented Yet");
+    int i = n;
+    int res = 1;
+    while(0 < i) {
+    	res *= i;
+    	i--;
+    }
+    return res;
   }
 
   /**
@@ -101,7 +115,11 @@ public class MathUtils {
    * @param n
    */
   static public int factR(int n) {
-    throw new RuntimeException("Not Implemented Yet");
+    if(n == 1 || n == 0) {
+    	return 1;
+    }else {
+    	return n*factR(n-1);
+    }
   }
   
   /**
@@ -112,7 +130,7 @@ public class MathUtils {
    * @throws IllegalArgumentException in the case of divide-by-zero
    */
   static public float divide(float f1, float f2) {
-    throw new RuntimeException("Not Implemented Yet");
+    return f1/f2;
   }
 
   /**
@@ -132,7 +150,7 @@ public class MathUtils {
    * @since   1.2
    */
   public static float toRadians(float angle) {
-	    throw new RuntimeException("Not Implemented Yet");
+	    return (angle/360)*2*PI;
   }
 
   /**
@@ -147,7 +165,7 @@ public class MathUtils {
    * @since   1.2
    */
   public static float toDegrees(float angle) {
-	    throw new RuntimeException("Not Implemented Yet");
+	    return angle/(2*PI)*360;
   }
 
   /**
@@ -166,6 +184,6 @@ public class MathUtils {
    * @return  the value {@code a}<sup>{@code b}</sup>.
    */
   public static float power(float a, int b) {
-    throw new RuntimeException("Not Implemented Yet");
+    return (float) Math.pow(a, b);
   }
 }
