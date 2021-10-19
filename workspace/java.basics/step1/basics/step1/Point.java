@@ -6,17 +6,19 @@ package basics.step1;
  */
 public class Point {
   int x, y;
-
-  Point() {
-  }
-
-  Point(int x, int y) {
-    this.x = x;
-    this.y = y;
+  
+  void Point(Point p) {
+    this.x = p.x;
+    this.y = p.y;
   }
 
   void translate(int dx, int dy) {
     this.x += dx;
     this.y += dy;
+  }
+  
+  void translate(Vector v) {
+	  this.x += (int)(v.rho * Math.cos(v.theta));
+	  this.y += (int)(v.rho * Math.sin(v.theta));
   }
 }
