@@ -9,6 +9,7 @@ public class Line {
   Line(Point p1, Point p2) {
     this.p1 = p1;
     this.p2 = p2;
+    Counters.nLines++;
   }
 
   /*
@@ -44,6 +45,7 @@ public class Line {
      * them. Isn't that cool or what?
      */
     g.drawLine(x1, y1, x2, y2);
+    Counters.nLineDraws++;
     return;
   }
 }

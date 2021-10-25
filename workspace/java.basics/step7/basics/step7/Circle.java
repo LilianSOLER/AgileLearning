@@ -23,6 +23,7 @@ public class Circle {
     poly.add(p);
     p = new Point(0, -radius);
     poly.add(p);
+    Counters.nCircles++;
   }
 
   /*
@@ -56,6 +57,7 @@ public class Circle {
    * doubling the number of points to the polygon.
    */
   void smoother() {
+	long start = System.nanoTime();
     int npoints = poly.npoints;
     Point p1, p2, mp;
     int i;
@@ -69,6 +71,9 @@ public class Circle {
     p2 = poly.points[0];
     mp = midPoint(p1, p2);
     poly.add(mp);
+    long end= System.nanoTime();
+    Counters.nCircleSmooths++;
+    Counters.elapsedCircleSmooths+=(end-start);
   }
 
   /*
@@ -76,7 +81,11 @@ public class Circle {
    * the circle center at the given origin.
    */
   void draw(Graphics g, Point origin) {
-    poly.draw(g, origin);
+	  long start = System.nanoTime();
+      poly.draw(g, origin);
+      long end= System.nanoTime();
+      Counters.nCircleDraws++;
+      Counters.elapsedCircleDraws+=(end-start);
   }
 
 }

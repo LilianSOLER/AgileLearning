@@ -10,12 +10,16 @@ public class Polygon {
 
   Polygon() {
     points = new Point[4];
+    Counters.nPointArrays++;
+    Counters.nPoints += 4;
+    Counters.nPolygons++;
     npoints = 0;
   }
 
   void grow() {
     Point tmp[];
-    tmp = new Point[npoints + 4];
+    Counters.nPointArrays++;
+    tmp = new Point[2*npoints];
     System.arraycopy(points, 0, tmp, 0, npoints);
     points = tmp;
   }
@@ -27,6 +31,7 @@ public class Polygon {
     if (npoints == points.length)
       grow();
     points[npoints++] = p;
+    Counters.nPoints ++;
   }
 
   /*
@@ -40,6 +45,7 @@ public class Polygon {
 
     points[idx] = p;
     npoints++;
+    Counters.nPoints ++;
   }
 
   /*
@@ -90,6 +96,24 @@ public class Polygon {
     s += "]";
     return s;
   }
+  
+  /*
+   * Draw this line on the screen through the Graphics object,
+   * applying a translation to the given origin.
+   */
+  private void draw(Point p1, Point p2, Graphics g, Point origin) {
+	long start = System.nanoTime();
+    int x1, y1, x2, y2;
+    x1 = (int) (p1.x + origin.x);
+    y1 = (int) (p1.y + origin.y);
+    x2 = (int) (p2.x + origin.x);
+    y2 = (int) (p2.y + origin.y);
+    g.drawLine(x1, y1, x2, y2);
+    long end= System.nanoTime();
+    Counters.elapsedPolygonDraws+=(end-start);
+    Counters.nPolygonDraws++;
+    return;
+  }
 
   /*
    * Draw this circle on the screen through 
@@ -97,18 +121,20 @@ public class Polygon {
    * with the circle center at the given origin.
    */
   void draw(Graphics g, Point origin) {
+	long start = System.nanoTime();
     if (npoints > 1) {
       Point p1, p2;
       for (int i = 0; i < npoints - 1; i++) {
         p1 = points[i];
         p2 = points[i + 1];
-        Line l = new Line(p1, p2);
-        l.draw(g, origin);
+        draw(p1, p2, g, origin);
       }
       p1 = points[npoints - 1];
       p2 = points[0];
-      Line l = new Line(p1, p2);
-      l.draw(g, origin);
+      draw(p1, p2, g, origin);
+      long end= System.nanoTime();
+      Counters.elapsedPolygonDraws+=(end-start);
+      Counters.nPolygonDraws++;
     }
   }
 }

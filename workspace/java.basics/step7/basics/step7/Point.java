@@ -10,11 +10,13 @@ public class Point {
   Point(float x, float y) {
     this.x = x;
     this.y = y;
+    Counters.nPoints++;
   }
 
   Point(Point p) {
     x = p.x;
     y = p.y;
+    Counters.nPoints++;
   }
 
   public String toString() {
