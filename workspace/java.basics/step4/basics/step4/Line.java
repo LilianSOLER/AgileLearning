@@ -1,8 +1,31 @@
 package basics.step4;
 
 public class Line {
-  Point start;
-  Point end;
+  private Point start;
+  private Point end;
+  
+  public Line(){
+	  this.start = new Point();
+	  this.end = new Point();
+  }
+  
+  public Line(Point p, Point o){
+	  this.start = p;
+	  this.end = o;
+  }
+  
+  public Line(Line l){
+	  this.start = l.start;
+	  this.end = l.end;
+  }
+  
+  public Point getStartPoint() {
+	  return this.start;
+  }
+  
+  public Point getEndPoint() {
+	  return this.end;
+  }
   
   /*
    * Translating a line is just translating both points.
