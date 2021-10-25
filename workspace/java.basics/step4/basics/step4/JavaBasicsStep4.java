@@ -40,14 +40,14 @@ public class JavaBasicsStep4 {
     p2.translate(20, 22);
 
     Line l1 = new Line();
-    l1.start = p1;
-    l1.end = p2;
+    l1.setStart(p1);
+    l1.setEnd(p2);
 
     l1.translate(2, -2);
 
     Line l2 = new Line();
-    l2.start = p2;
-    l2.end = p3;
+    l2.setStart(p2);
+    l2.setEnd(p3);
     
     l2.translate(54, -12);
     

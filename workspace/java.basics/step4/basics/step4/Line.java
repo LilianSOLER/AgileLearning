@@ -5,40 +5,56 @@ public class Line {
   private Point end;
   
   public Line(){
-	  this.start = new Point();
-	  this.end = new Point();
+	  this.setStart(new Point());
+	  this.setEnd(new Point());
   }
   
   public Line(Point p, Point o){
-	  this.start = p;
-	  this.end = o;
+	  this.setStart(p);
+	  this.setEnd(o);
   }
   
   public Line(Line l){
-	  this.start = l.start;
-	  this.end = l.end;
+	  this.setStart(l.getStart());
+	  this.setEnd(l.getEnd());
   }
   
   public Point getStartPoint() {
-	  return this.start;
+	  return this.getStart();
   }
   
   public Point getEndPoint() {
-	  return this.end;
+	  return this.getEnd();
   }
   
   /*
    * Translating a line is just translating both points.
    */
   void translate(int dx, int dy) {
-    this.start.translate(dx, dy);
-    this.end.translate(dx, dy);
+    this.getStart().translate(dx, dy);
+    this.getEnd().translate(dx, dy);
   }
 
   /*
    * Rotating a line is just translating the end point.
    */
   void rotate(int dx, int dy) {
-    this.end.translate(dx, dy);
+    this.getEnd().translate(dx, dy);
   }
+
+public Point getStart() {
+	return start;
+}
+
+public void setStart(Point start) {
+	this.start = start;
+}
+
+public Point getEnd() {
+	return end;
+}
+
+public void setEnd(Point end) {
+	this.end = end;
+}
 }

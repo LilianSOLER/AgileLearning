@@ -20,10 +20,10 @@ public class JavaBasicsStep6 {
     p.translate(0, h);
     points[1] = p;
     p = new Point(p);
-    p.translate(w,h);  // w,h isn't this translation suspicious?
+    p.translate(w,0);  // w,h isn't this translation suspicious?
     points[2] = p;
     p = new Point(p);
-    p.translate(w,0);  // and what about this one?
+    p.translate(0,-h);  // and what about this one?
     points[3] = p;
 
     return new Polygon(points);
@@ -49,16 +49,17 @@ public class JavaBasicsStep6 {
     int w = 12;
     int h = 16;
     
+    Point points2[] = new Point[4];
     Point p = new Point(22, 35);
-    points[0] = p;
-    points[1] = new Point(p);
-    points[1].translate(0, h);
-    points[2] = new Point(p);
-    points[2].translate(w, h);
-    points[3] = new Point(p);
-    points[3].translate(w, 0);
+    points2[0] = p;
+    points2[1] = new Point(p);
+    points2[1].translate(0, h);
+    points2[2] = new Point(p);
+    points2[2].translate(w, h);
+    points2[3] = new Point(p);
+    points2[3].translate(w, 0);
 
-    poly2 = new Polygon(points);
+    poly2 = new Polygon(points2);
 
     poly3 = createPolygon(x, y, w, h);
   }
