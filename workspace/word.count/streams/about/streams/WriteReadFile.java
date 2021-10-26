@@ -33,7 +33,7 @@ public class WriteReadFile {
 
   public static void main(String[] args) {
     try {
-      int n = 256;
+      int n = 300;
       // writing something first, before reading it back.
       writeFile(n);
       // re-reading what we wrote earlier.
