@@ -1,14 +1,21 @@
 package hanoi.tower;
 
 public class Disk {
-  int size;
-  Peg peg;
+	private int size;
+	public Peg peg;
 
-  Disk(int size) {
-    this.size = size;
-  }
+	public Disk(int size) {
+		if (size < 1) {
+			throw new IllegalArgumentException("Illegal size");
+		}
+		this.size = size;
+	}
 
-  public int size() {
-    throw new RuntimeException("Not Yet Implemented");
-  }
+	public int getSize() {
+		return size;
+	}
+
+	public int size() {
+		throw new RuntimeException("Not Yet Implemented");
+	}
 }
