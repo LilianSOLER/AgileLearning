@@ -16,6 +16,6 @@ public class Disk {
 	}
 
 	public int size() {
-		throw new RuntimeException("Not Yet Implemented");
+		return getSize();
 	}
 }
