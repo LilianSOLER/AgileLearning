@@ -95,8 +95,14 @@ public class ScoreLedger {
    * @throws IOException
    */
   public void load(DataInputStream dis) throws IOException {
-    // TODO
-    throw new Error("Not Yet Implemented");
+    this.nscores = dis.readInt();
+    this.nscores = dis.readInt();
+    for(int i = 0 ; i < this.nscores(); i++) {
+    	this.scores[i] = dis.readInt();
+    	//dis.readInt();
+    	this.names[i] = dis.readUTF();
+        
+    }    
   }
 
   /**
@@ -105,8 +111,13 @@ public class ScoreLedger {
    * @throws IOException
    */
   public void save(DataOutputStream dos) throws IOException {
-    // TODO
-    throw new Error("Not Yet Implemented");
+    dos.writeInt(this.size());
+    dos.writeInt(this.nscores());
+    for(int i = 0 ; i < this.nscores(); i++) {
+    	dos.writeInt(this.scores[i]);
+    	//dos.writeInt(this.names[i].length());
+    	dos.writeUTF(this.names[i]);
+    }   
   }
 
   /**

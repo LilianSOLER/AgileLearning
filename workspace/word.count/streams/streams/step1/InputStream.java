@@ -1,14 +1,16 @@
 package streams.step1;
 
 public class InputStream {
+	private byte[] buffer;
+	private int position;
 
   /**
    * Constructs an input stream from an array of bytes.
    * Do NOT copy the buffer, alias it.
    */
   public InputStream(byte[] buff) {
-    // TODO
-    throw new RuntimeException("NYI");
+	buffer = buff;
+	position = 0;
   }
 
   /**
@@ -19,7 +21,7 @@ public class InputStream {
    * @return the read byte
    */
   public byte read() {
-    // TODO
-    throw new RuntimeException("NYI");
+	position++;
+    return buffer[position - 1];
   }
 }

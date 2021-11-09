@@ -4,7 +4,7 @@ import java.io.EOFException;
 
 public class InputStream {
   private byte[] buffer;
-  private int size;
+  private int size, position;
 
   /**
    * Constructs an input stream from the given output stream
@@ -14,6 +14,7 @@ public class InputStream {
   public InputStream(OutputStream s) {
     buffer = s.getBuffer();
     size = s.getSize();
+    position = 0;
   }
 
   /**
@@ -31,8 +32,11 @@ public class InputStream {
    * @return the read byte
    */
   public byte read() throws EOFException {
-    // TODO
-    throw new RuntimeException("NYI");
+	  if(this.position >= this.size) {
+		  throw new EOFException();
+	  }
+	position++;
+    return buffer[position - 1];
   }
   
 }

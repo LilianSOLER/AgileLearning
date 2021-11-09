@@ -1,15 +1,17 @@
 package streams.step1;
 
 public class OutputStream {
-
+	private byte[] buffer;
+	private int position;
   /**
    * Constructs an output stream from an array of bytes
    * Do NOT copy the buffer, alias it.
    * @param buff
    */
   public OutputStream(byte[] buff) {
-    // TODO
-    throw new RuntimeException("NYI");
+	  buffer = buff;
+	  position = 0;
+	  
   }
 
   /**
@@ -18,7 +20,10 @@ public class OutputStream {
    * the new byte. Of course, the current position needs to be advanced.
    */
   public void write(byte value) {
-    // TODO
-    throw new RuntimeException("NYI");
+	  if (position >= buffer.length) {
+			throw new RuntimeException("Full stack");
+		}
+		buffer[position] = value;
+		position++; 
   }
 }

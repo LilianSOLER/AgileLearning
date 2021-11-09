@@ -2,6 +2,7 @@ package streams.step2;
 
 public class OutputStream {
   private byte[] buffer;
+  private int position;
 
   /**
    * Constructs an output stream with an initial capacity
@@ -11,6 +12,7 @@ public class OutputStream {
    */
   public OutputStream(int nbytes) {
     buffer = new byte[nbytes];
+    position = 0;
   }
 
   /**
@@ -18,8 +20,7 @@ public class OutputStream {
    * that is, the number of bytes it contains.
    */
   public int getSize() {
-    // TODO
-    throw new RuntimeException("NYI");
+   return buffer.length;
   }
   
   /**
@@ -36,7 +37,14 @@ public class OutputStream {
    * Writes the given byte into this stream
    */
   public void write(byte value) {
-    // TODO
-    throw new RuntimeException("NYI");
+	  if (position >= this.getSize()) {
+			byte[] tmp = new byte[position+1];
+			for(int i = 0; i < position; i++) {
+				tmp[i] = buffer[i];
+			}
+			buffer = tmp;
+		}
+		buffer[position] = value;
+		position++;
   }
 }
