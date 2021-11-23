@@ -24,7 +24,8 @@ public class DataOutputStream {
    */
   public void writeFloat(float value) throws IOException {
     // TODO
-    throw new Error("Not Yet Implemented");
+	int a = Float.floatToIntBits(value);
+    writeInt(a);
   }
 
   /**
@@ -35,7 +36,11 @@ public class DataOutputStream {
    */
   public void writeInt(int value) throws IOException {
     // TODO
-    throw new Error("Not Yet Implemented");
+	int l = 4;
+    for(int i = 0; i < l; i++) {
+    	byte b = (byte)  ((value >> ((8) * ((l - 1) - i))) & 0xFF);
+    	os.write(b);
+    }
   }
   
   /**
@@ -46,7 +51,11 @@ public class DataOutputStream {
    */
   public void writeShort(short value) throws IOException {
     // TODO
-    throw new Error("Not Yet Implemented");
+	  int l = 2;
+	    for(int i = 0; i < l; i++) {
+	    	byte b = (byte)  ((value >> ((8) * ((l - 1) - i))) & 0xFF);
+	    	os.write(b);
+	    }
   }
 
   /**
@@ -57,7 +66,7 @@ public class DataOutputStream {
    */
   public void writeBoolean(boolean value) throws IOException {
     // TODO
-    throw new Error("Not Yet Implemented");
+	os.write((byte) (value ? 1 : 0));
   }
 
   /**
@@ -68,7 +77,7 @@ public class DataOutputStream {
    */
   public void writeChar(char c) throws IOException {
     // TODO
-    throw new Error("Not Yet Implemented");
+	os.write((byte) c);
   }
 
   /**
@@ -79,7 +88,38 @@ public class DataOutputStream {
    */
   public void writeUTF(String s) throws IOException {
     // TODO
-    throw new Error("Not Yet Implemented");
+    int slen = s.length();
+    
+    int ulen = 0;
+    int ch;
+    for(int i = 0; i < slen; i++) {
+    	ch = s.charAt(i);
+    	if ((ch >= 0x0001) && (ch <= 0x007F)) {
+            ulen++;
+        } else {
+        	if (ch > 0x07FF) {
+                ulen += 3;
+            } else {
+                ulen += 2;
+            }
+        }
+    }
+    writeShort((short) ulen);
+    
+    for(int i = 0; i < slen; i++) {
+    	ch = s.charAt(i);
+    	if ((ch >= 0x0001) && (ch <= 0x007F)) {
+            os.write((byte) ch);
+        } else {
+        	if (ch > 0x07FF) {
+        		os.write((byte) (0xE0 | ((ch >> 12) & 0x0F)));
+                os.write((byte) (0x80 | ((ch >>  6) & 0x3F)));
+                os.write((byte) (0x80 | ((ch >>  0) & 0x3F)));
+            } else {
+            	os.write((byte) (0xC0 | ((ch >>  6) & 0x1F)));
+                os.write((byte) (0x80 | ((ch >>  0) & 0x3F)));
+            }
+          }
+    }
   }
-
 }
