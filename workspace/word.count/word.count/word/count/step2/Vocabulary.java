@@ -7,8 +7,8 @@ public class Vocabulary {
   private int nadds;
 
   public Vocabulary() {
-    // TODO
-    throw new RuntimeException("NYI");
+    nwords = 0;
+    nadds = 0;
   }
 
   /**
@@ -16,7 +16,7 @@ public class Vocabulary {
    */
   public int getWordCount() {
     // TODO
-    throw new RuntimeException("NYI");
+    return nwords;
   }
 
   /**
@@ -27,7 +27,11 @@ public class Vocabulary {
    */
   public Word[] getWords() {
     // TODO
-    throw new RuntimeException("NYI");
+    Word[] word_tmp = new Word[nwords];
+    for(int i = 0; i < nwords; i++) {
+    	word_tmp[i] = words[i];
+    }
+    return word_tmp;
   }
 
   /**
@@ -40,7 +44,12 @@ public class Vocabulary {
    */
   public Word find(Word word) {
     // TODO
-    throw new RuntimeException("NYI");
+    for(int i = 0; i < nwords; i++) {
+    	if(words[i].equals(word)) {
+    		return words[i];
+    	}
+    }
+    return null;
   }
 
   /**
@@ -53,7 +62,23 @@ public class Vocabulary {
    */
   public Word add(Word word) {
     // TODO
-    throw new RuntimeException("NYI");
+    Word word_tmp = find(word);
+    if(word_tmp == (Word) null) {
+    	nwords++;
+    	nadds++;
+    	word.noccurrences++;
+    	
+    	Word[] words_tmp = new Word[nwords];
+    	 for(int i = 0; i < nwords - 1; i++) {
+    	    	words_tmp[i] = words[i];
+    	    }
+    	 words_tmp[nwords-1] = word;
+    	 words  = words_tmp;
+    	 return word;
+    } else {
+    	word_tmp.noccurrences++;
+    	return word_tmp;
+    }
   }
 
 }

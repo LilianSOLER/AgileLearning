@@ -7,7 +7,8 @@ public class Word {
 
   public Word() {
     // TODO
-    throw new RuntimeException("NYI");
+    nchars = 0;
+    noccurrences = 0;
   }
 
   /*
@@ -15,7 +16,13 @@ public class Word {
    */
   public Word(Word c) {
     // TODO
-    throw new RuntimeException("NYI");
+    this.nchars = c.nchars;
+    this.noccurrences = c.noccurrences;
+    
+    this.chars = new char[nchars];
+    for(int i = 0; i < nchars; i++) {
+    	this.chars[i] = c.chars[i];
+    }  
   }
 
   /*
@@ -31,7 +38,14 @@ public class Word {
    */
   public void add(char c) {
     // TODO
-    throw new RuntimeException("NYI");
+    nchars++;
+    
+    char[] chars_tmp = new char[nchars];
+    for(int i = 0; i < nchars -1; i++) {
+    	chars_tmp[i] = chars[i];
+    }
+    chars_tmp[nchars - 1] = c;
+    chars = chars_tmp;
   }
 
   /**
@@ -44,6 +58,17 @@ public class Word {
    */
   public boolean equals(Word w) {
     // TODO
-    throw new RuntimeException("NYI");
+    String a = w.toString();
+    String b = this.toString();
+    if(a.length() != b.length()) {
+    	return false;
+    } else {
+    	for(int i = 0; i < a.length(); i++) {
+    		if(a.charAt(i) != b.charAt(i)) {
+    			return false;
+    		}
+    	}
+    }
+    return true;
   }
 }
