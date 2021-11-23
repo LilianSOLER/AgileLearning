@@ -1,5 +1,6 @@
 package streams.step3;
 
+import java.io.EOFException;
 import java.io.IOException;
 
 /**
@@ -34,7 +35,7 @@ public class FileOutputStream {
    */
   public void seek(int offset) throws IOException {
     // TODO
-    throw new Error("Not Yet Implemented");
+	  this.offset = offset;
   }
 
   /**
@@ -47,7 +48,9 @@ public class FileOutputStream {
    */
   public void write(byte value) throws IOException {
     // TODO
-    throw new Error("Not Yet Implemented");
+	  file.write(offset, value);
+	  offset++;
+		
   }
   
   public void write(byte[] bytes, int start, int length) throws IOException {

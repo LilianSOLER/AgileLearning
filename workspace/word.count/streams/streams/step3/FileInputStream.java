@@ -35,7 +35,15 @@ public class FileInputStream {
    */
   public void seek(int offset) throws IOException {
     // TODO
-    throw new Error("Not Yet Implemented");
+	  if(offset < 0) {
+		  throw new IOException();
+	  }else {
+		  if(offset >= this.size()) {
+			  this.offset = this.size();
+		  }else {
+			  this.offset = offset;
+		  }
+	  }	 
   }
   
   /**
@@ -54,7 +62,11 @@ public class FileInputStream {
    */
   public int available() throws IOException {
     // TODO
-    throw new Error("Not Yet Implemented");
+	if(this.size() - this.offset < 0) {
+		throw new IOException();
+	}else {
+		return this.size() - this.offset;
+	}
   }
 
   /**
@@ -65,7 +77,11 @@ public class FileInputStream {
    */
   public byte read() throws EOFException, IOException {
     // TODO
-    throw new Error("Not Yet Implemented");
+    if(offset >= this.size()) {
+    	throw new EOFException();
+    }
+    offset++;
+	return file.read(offset - 1);
   }
   
   public int read(byte[] bytes, int off, int len) throws EOFException, IOException {
