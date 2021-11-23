@@ -59,12 +59,19 @@ public class WordCount {
       case ':':
       case ';':
       case ' ':
-        lastCharNotSeparator = false;
+    	if(lastCharNotSeparator) {
+	        lastCharNotSeparator = false;
+	        wordCount++;
+    	}
         break;
       // character that marks the end of a line,
       // also a separator
       case '\n':
-        lastCharNotSeparator = false;
+    	  lineCount++;
+    	  if(lastCharNotSeparator) {
+	        lastCharNotSeparator = false;
+	        wordCount++;
+    	  }
         break;
       // all other characters are not separators, 
       // they are making up words
@@ -72,6 +79,10 @@ public class WordCount {
         lastCharNotSeparator = true;
       }
       r = reader.read();
+      charCount++;
+    }
+    if(lastCharNotSeparator) {
+    	wordCount++;
     }
   }
 }
