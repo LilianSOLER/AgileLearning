@@ -16,7 +16,12 @@ public class Vocabulary {
 
   public Vocabulary() {
     // TODO
-    throw new RuntimeException("NYI");
+    buckets = new Bucket[NBUCKETS];
+    for(int i = 0; i < NBUCKETS; i++) {
+    	buckets[i] = new Bucket();
+    }
+    nwords = 0;
+    nadds = 0;
   }
 
   /**
@@ -31,7 +36,21 @@ public class Vocabulary {
    */
   public Word add(Word word) {
     // TODO
-    throw new RuntimeException("NYI");
+	Counters.Vocabulary_add_count++;
+	long start = System.nanoTime();
+	
+	Word word_tmp = find(word);
+	if(word_tmp == null) {
+		nwords++;
+		nadds++;
+		buckets[word.hashCode()].add(word);
+		long end = System.nanoTime();
+		Counters.Vocabulary_add_elapsed += end - start;
+		return word;
+	}
+	long end = System.nanoTime();
+	Counters.Vocabulary_add_elapsed += end - start;
+	return word_tmp;
   }
 
   /**
@@ -42,7 +61,17 @@ public class Vocabulary {
    */
   public Word[] getWords() {
     // TODO
-    throw new RuntimeException("NYI");
+    int c  = 0;
+    Word[] words = new Word[nwords];
+    for(int i = 0; i < NBUCKETS; i++) {
+    	Word[] words_tmp = new Word[buckets[i].getWordCount()];
+    	words_tmp = buckets[i].getWords();
+    	for(int j = 0; j < words_tmp.length; j++) {
+    		words[c] = words_tmp[j];
+    		c++;
+    	}
+    }
+    return words;
   }
 
   /**
@@ -50,7 +79,7 @@ public class Vocabulary {
    */
   public int getWordCount() {
     // TODO
-    throw new RuntimeException("NYI");
+    return nwords;
   }
 
   /**
@@ -62,7 +91,15 @@ public class Vocabulary {
    */
   public Word find(Word word) {
     // TODO
-    throw new RuntimeException("NYI");
+    long start = System.nanoTime();
+    try {
+    	int i = word.hashCode();
+    	return buckets[i].find(word);
+    } finally {
+    	long end = System.nanoTime();
+    	Counters.Vocabulary_find_count++;
+		Counters.Vocabulary_find_elapsed += (end - start);
+    }
   }
 
 }
