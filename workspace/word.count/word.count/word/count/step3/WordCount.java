@@ -3,12 +3,16 @@ package word.count.step3;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import word.count.step2.Counters;
+import word.count.step2.Word;
+
 public class WordCount {
 
   private int charCount;
   private int wordCount;
   private int lineCount;
-
+  private int vocabCount;
+  
   private InputStreamReader reader;
   private Vocabulary vocabulary;
 
@@ -39,7 +43,67 @@ public class WordCount {
 
   public void parse() throws IOException {
     // TODO: copy from previous step (step2)
-    throw new RuntimeException("NYI");
-  }
+	  	Counters.WordCount_parse_count++;
+		long start = System.nanoTime();
+	    char c;
+	    int r;
+	    // variable that tells if the last character, read from the stream,
+	    // was a separator character or any other character
+	    boolean lastCharNotSeparator = false;
+	    r = reader.read();
+	    Word word = new Word();
+	    while (r != -1) {
+	      c = (char) r;
+	      switch (c) {
+	      // characters that are word separators:
+	      case '(':
+	      case ')':
+	      case '.':
+	      case ',':
+	      case ':':
+	      case ';':
+	      case ' ':
+	    	if(lastCharNotSeparator) {
+	    		if(vocabulary.add(word) == word) {
+	    			vocabCount++;
+	    		}
+	    		word = new Word();
+	    		
+		        lastCharNotSeparator = false;
+		        wordCount++;
+	    	}
+	        break;
+	      // character that marks the end of a line,
+	      // also a separator
+	      case '\n':
+	    	  lineCount++;
+	    	  if(lastCharNotSeparator) {
+	    		  if(vocabulary.add(word) == word) {
+		    			vocabCount++;
+		    		}
+	    		  word = new Word();
+	    		  
+		        lastCharNotSeparator = false;
+		        wordCount++;
+	    	  }
+	        break;
+	      // all other characters are not separators, 
+	      // they are making up words
+	      default:
+	        lastCharNotSeparator = true;
+	        word.add(c);
+	      }
+	      r = reader.read();
+	      charCount++;
+	    }
+	    if(lastCharNotSeparator) {
+	    	if(vocabulary.add(word) == word) {
+  			vocabCount++; 
+  		}
+	    	wordCount++;
+	    }
+	    long end = System.nanoTime();
+		Counters.WordCount_parse_elapsed += end-start;
+	  }
 
 }

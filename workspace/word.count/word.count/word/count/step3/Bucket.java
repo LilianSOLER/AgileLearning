@@ -1,7 +1,5 @@
 package word.count.step3;
 
-import word.count.step3.Word;
-
 class Bucket {
 
   /*

@@ -18,7 +18,7 @@ public class Counters {
    * Counters for the class WordCount, method parse.
    */
   static int WordCount_parse_count;
-  static long WordCount_parse_elapsed;
+  public static long WordCount_parse_elapsed;
 
   static void echo() {
     long elapsed;
