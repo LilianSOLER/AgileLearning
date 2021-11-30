@@ -1,5 +1,7 @@
 package word.count.step3;
 
+import word.count.step3.Word;
+
 class Bucket {
 
   /*
@@ -10,10 +12,13 @@ class Bucket {
 
   private Word words[];
   private int nwords;
+  private int nadds;
 
   public Bucket() {
     // TODO
-    throw new RuntimeException("NYI");
+	  words = new Word[NWORDS];
+	  nwords = 0;
+	  nadds = 0;
   }
 
   /**
@@ -25,15 +30,34 @@ class Bucket {
    */
   public Word find(Word word) {
     // TODO
-    throw new RuntimeException("NYI");
-  }
-
+	  for (int i = 0; i < nwords; i++) {
+	        if (words[i].equals(word)) {
+	          return words[i];
+	        }
+	  }
+	  return null;
+	  }
+	  
   /**
    * Add a word to this bucket, aliasing the given word object.
    */
   public void add(Word word) {
-    // TODO
-    throw new RuntimeException("NYI");
+    // TODO	  
+	    Word word_tmp = find(word);
+	    if(word_tmp == (Word) null) {
+	    	nwords++;
+	    	nadds++;
+	    	word.noccurrences++;
+	    	
+	    	Word[] words_tmp = new Word[nwords];
+	    	 for(int i = 0; i < nwords - 1; i++) {
+	    	    	words_tmp[i] = words[i];
+	    	    }
+	    	 words_tmp[nwords-1] = word;
+	    	 words  = words_tmp;
+	    } else {
+	    	word_tmp.noccurrences++;
+	    }
   }
 
   /**
@@ -41,7 +65,7 @@ class Bucket {
    */
   public int getWordCount() {
     // TODO
-    throw new RuntimeException("NYI");
+    return nwords;
   }
 
   /**
@@ -50,7 +74,11 @@ class Bucket {
    */
   public Word[] getWords() {
     // TODO
-    throw new RuntimeException("NYI");
+    Word[] word_tmp = new Word[nwords];
+    for(int i = 0; i < nwords; i++) {
+    	word_tmp[i] = new Word(words[i]);
+    }
+    return word_tmp;
   }
 
 }
