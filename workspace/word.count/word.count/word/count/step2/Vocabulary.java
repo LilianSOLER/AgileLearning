@@ -44,12 +44,18 @@ public class Vocabulary {
    */
   public Word find(Word word) {
     // TODO
-    for(int i = 0; i < nwords; i++) {
-    	if(words[i].equals(word)) {
-    		return words[i];
-    	}
-    }
-    return null;
+	  long start = System.nanoTime();
+	    try {
+	      for (int i = 0; i < nwords; i++) {
+	        if (words[i].equals(word))
+	          return words[i];
+	      }
+	      return null;
+	    } finally {
+	      long end = System.nanoTime();
+	      Counters.Vocabulary_find_count++;
+	      Counters.Vocabulary_find_elapsed += (end - start);
+	    }
   }
 
   /**
@@ -62,6 +68,8 @@ public class Vocabulary {
    */
   public Word add(Word word) {
     // TODO
+	Counters.Vocabulary_add_count++;
+	long start = System.nanoTime();	  
     Word word_tmp = find(word);
     if(word_tmp == (Word) null) {
     	nwords++;
@@ -74,9 +82,13 @@ public class Vocabulary {
     	    }
     	 words_tmp[nwords-1] = word;
     	 words  = words_tmp;
+    	 long end = System.nanoTime();
+		 Counters.Vocabulary_add_elapsed += end - start;
     	 return word;
     } else {
     	word_tmp.noccurrences++;
+    	long end = System.nanoTime();
+		Counters.Vocabulary_add_elapsed += end - start;
     	return word_tmp;
     }
   }

@@ -46,6 +46,8 @@ public class WordCount {
    * @throws IOException
    */
   public void parse() throws IOException {
+	    Counters.WordCount_parse_count++;
+		long start = System.nanoTime();
 	    char c;
 	    int r;
 	    // variable that tells if the last character, read from the stream,
@@ -103,5 +105,7 @@ public class WordCount {
     		}
 	    	wordCount++;
 	    }
+	    long end = System.nanoTime();
+		Counters.WordCount_parse_elapsed += end-start;
 	  }
 }
