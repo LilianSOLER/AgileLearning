@@ -7,6 +7,7 @@ public class Word {
 
   public Word() {
     chars = new char[4];
+    noccurrences = 1;
   }
 
   public Word(Word c) {
@@ -24,7 +25,10 @@ public class Word {
     }
     chars[nchars++] = c;
   }
-
+  
+  public String toString() {
+	    return new String(chars,0,nchars);
+	  }
   /**
    * Returns a simple hash code for this word.
    * REMEMBER that the hash code and the equality of words

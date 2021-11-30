@@ -40,7 +40,7 @@ public class Vocabulary {
 	long start = System.nanoTime();
 	
 	Word word_tmp = find(word);
-	if(word_tmp == null) {
+	if(word_tmp == null && word.toString().length() != 0) {
 		nwords++;
 		nadds++;
 		buckets[word.hashCode()].add(word);
@@ -61,17 +61,17 @@ public class Vocabulary {
    */
   public Word[] getWords() {
     // TODO
-    int c  = 0;
-    Word[] words = new Word[nwords];
-    for(int i = 0; i < NBUCKETS; i++) {
-    	Word[] words_tmp = new Word[buckets[i].getWordCount()];
-    	words_tmp = buckets[i].getWords();
-    	for(int j = 0; j < words_tmp.length; j++) {
-    		words[c] = words_tmp[j];
-    		c++;
-    	}
-    }
-    return words;
+	  Word words1[] = new Word[nwords];
+		int c = 0;
+		for (int i = 0; i < NBUCKETS; i++) {
+			Word tmp[] = new Word[buckets[i].getWordCount()];
+			tmp = buckets[i].getWords();
+			for (int j = 0; j < tmp.length; j++) {
+				words1[c] = tmp[j];
+				c++;
+			}
+		}
+		return words1;
   }
 
   /**

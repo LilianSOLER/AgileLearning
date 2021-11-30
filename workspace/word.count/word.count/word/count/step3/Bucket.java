@@ -10,13 +10,11 @@ class Bucket {
 
   private Word words[];
   private int nwords;
-  private int nadds;
 
   public Bucket() {
     // TODO
 	  words = new Word[NWORDS];
 	  nwords = 0;
-	  nadds = 0;
   }
 
   /**
@@ -42,20 +40,14 @@ class Bucket {
   public void add(Word word) {
     // TODO	  
 	    Word word_tmp = find(word);
-	    if(word_tmp == (Word) null) {
+	    if(word_tmp == (Word) null && word.toString().length() != 0) {
 	    	nwords++;
-	    	nadds++;
-	    	word.noccurrences++;
-	    	
-	    	Word[] words_tmp = new Word[nwords];
-	    	 for(int i = 0; i < nwords - 1; i++) {
-	    	    	words_tmp[i] = words[i];
-	    	    }
-	    	 words_tmp[nwords-1] = word;
-	    	 words  = words_tmp;
-	    } else {
-	    	word_tmp.noccurrences++;
-	    }
+	    	Word words2[] = new Word[nwords];
+			System.arraycopy(words, 0, words2, 0, nwords - 1);
+			words2[nwords - 1] = word;
+			words = new Word[nwords];
+			System.arraycopy(words2, 0, words, 0, nwords);
+		}
   }
 
   /**
@@ -72,11 +64,9 @@ class Bucket {
    */
   public Word[] getWords() {
     // TODO
-    Word[] word_tmp = new Word[nwords];
-    for(int i = 0; i < nwords; i++) {
-    	word_tmp[i] = new Word(words[i]);
-    }
-    return word_tmp;
+	Word words2[] = new Word[nwords];
+	System.arraycopy(words, 0, words2, 0, nwords);
+	return words2;
   }
 
 }
