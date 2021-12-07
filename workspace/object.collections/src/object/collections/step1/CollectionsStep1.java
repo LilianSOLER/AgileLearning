@@ -71,13 +71,41 @@ public class CollectionsStep1 {
    */
   static boolean instanceOf(String classname, Object o) {
     Class cls = o.getClass(); // remember? an object always knows it class object.
-                              // the class object is the object at runtime describing
+    						  // the class object is the object at runtime describing
                               // the class that you defined in a source file (.java).
                               // the class object knows its name, the fields you defined, 
                               // and the methods. But that is another story...
-    return (classname.equals(cls.getName()));
+    boolean res = false;
+    
+    switch (classname) {
+    	case "Point":
+    		res = o instanceof Point;
+    		break;
+    	case "Line":
+    		res = o instanceof Line;
+    		break;
+    	case "Rectangle":
+    		res = o instanceof Rectangle;
+    		break;
+    	default:
+    		break;
+    }
+    		
+    return res;
+    
   }
 
+  static boolean isPoint(Object o) {
+	  return (o instanceof Point);
+  }
+  
+  static boolean isLine(Object o) {
+	  return (o instanceof Line);
+  }
+  
+  static boolean isRectangle(Object o) {
+	  return (o instanceof Rectangle);
+  }
   /**
    * This static method identifies the elements of the array. It scans the array
    * and for each element, typed as an Object, it tests if it is a point, a
